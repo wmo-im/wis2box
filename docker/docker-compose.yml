@@ -12,8 +12,8 @@ services:
     ports:
       - 80:80
 
-  app:
-    container_name: app
+  wis2node_app:
+    container_name: wis2node_app
     build: ..
     ports:
       - 9999:8000
