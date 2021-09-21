@@ -1,0 +1,15 @@
+{% extends "_base.html" %}
+{% block title %}{{ super() }} - Home{% endblock %}
+{% block body %}
+    <header>
+      <h1>Welcome to WIS 2.0 node in box!</h1>
+    </header>
+    <section id="containers">
+      <h2>Containers</h2>
+      <ul>
+        <li><a href="/pygeoapi">Catalogue</a></li>
+        <li><a href="/monitor">Service Monitor</a></li>
+        <li>PubSub</li>
+      </ul>
+    </section>
+{% endblock %}
