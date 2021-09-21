@@ -18,6 +18,13 @@
          text-align: left;
          float: left;
        }
+       footer {
+         height: 2px;
+         border-width: 0;
+         color: gray;
+         background-color: gray;
+         text-align: center;
+       }
     </style>
     {% block extrahead %}
     {% endblock %}
@@ -25,5 +32,6 @@
   <body>
     {% block body %}
     {% endblock %}
+    <footer><p>Powered by <a title="wis2node" href="https://github.com/wmo-im/wis2node">wis2node</a></p></footer>
   </body>
 </html>
