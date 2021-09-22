@@ -19,18 +19,36 @@
 #
 ###############################################################################
 
-__version__ = '0.0.1'
+import json
+import logging
 
-import click
+from pygeometa.core import read_mcf
+from pygeometa.schemas.ogcapi_records import OGCAPIRecordOutputSchema
 
-from wis2node.catalogue import catalogue
+LOGGER = logging.getLogger(__name__)
+
+METADATA_RECORD_TYPES = [
+    'mcf',
+    'oarec-record'
+]
 
 
-@click.group()
-@click.version_option(version=__version__)
-def cli():
-    """WIS 2.0 node in a box"""
-    pass
+def parse_record(metadata_record: bytes, metadata_type: str) -> dict:
+    """
+    Parses metadata into OARec record
 
+    :param metadata_record: string of metadata
+    :param metadata_type: metadata type
 
-cli.add_command(catalogue)
+    :return: `dict` of OARec record metadata
+    """
+
+    record = None
+
+    if metadata_type == 'mcf':
+        LOGGER.debug('reading MCF')
+        record = read_mcf(metadata_record)
+        return OGCAPIRecordOutputSchema().write(record)
+
+    elif metadata_type == 'oarec-record':
+        return json.load(metadata_record)

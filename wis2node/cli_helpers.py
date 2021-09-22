@@ -19,18 +19,35 @@
 #
 ###############################################################################
 
-__version__ = '0.0.1'
+import logging
+import sys
 
 import click
 
-from wis2node.catalogue import catalogue
+from wis2node.metadata import METADATA_RECORD_TYPES
+
+ARGUMENT_FILEPATH = click.argument('filepath', type=click.File())
+
+OPTION_METADATA_TYPE = click.option(
+    '--metadata-type', '-mt',
+    type=click.Choice(METADATA_RECORD_TYPES), help='Metadata type')
 
 
-@click.group()
-@click.version_option(version=__version__)
-def cli():
-    """WIS 2.0 node in a box"""
-    pass
+def OPTION_VERBOSITY(f):
+    logging_options = ['ERROR', 'WARNING', 'INFO', 'DEBUG']
+
+    def callback(ctx, param, value):
+        if value is not None:
+            logging.basicConfig(stream=sys.stdout,
+                                level=getattr(logging, value))
+        return True
+
+    return click.option('--verbosity', '-v',
+                        type=click.Choice(logging_options),
+                        help='Verbosity',
+                        callback=callback)(f)
 
 
-cli.add_command(catalogue)
+def cli_callbacks(f):
+    f = OPTION_VERBOSITY(f)
+    return f

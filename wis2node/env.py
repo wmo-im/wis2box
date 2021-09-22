@@ -19,18 +19,16 @@
 #
 ###############################################################################
 
-__version__ = '0.0.1'
+import logging
+import os
 
-import click
+LOGGER = logging.getLogger(__name__)
 
-from wis2node.catalogue import catalogue
+CATALOGUE_BACKEND = os.environ.get('WIS2NODE_CATALOGUE_BACKEND', None)
 
-
-@click.group()
-@click.version_option(version=__version__)
-def cli():
-    """WIS 2.0 node in a box"""
-    pass
-
-
-cli.add_command(catalogue)
+if None in [
+    CATALOGUE_BACKEND,
+]:
+    msg = 'Environment variables not set!'
+    LOGGER.error(msg)
+    raise EnvironmentError(msg)
