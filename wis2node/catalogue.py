@@ -23,7 +23,7 @@ import json
 import logging
 
 import click
-from tinydb import Query, TinyDB, where
+from tinydb import where, Query, TinyDB
 
 from wis2node import cli_helpers
 from wis2node.env import CATALOGUE_BACKEND
@@ -85,9 +85,12 @@ def upsert(ctx, filepath, metadata_type, verbosity):
 
 @click.command()
 @click.pass_context
-def delete(ctx):
+def delete(ctx, identifier):
     """Deletes a discovery metadata record from the catalogue"""
     pass
+
+    db = TinyDB(CATALOGUE_BACKEND)
+    db.remove(where('key1') == identifier)
 
 
 catalogue.add_command(delete)
