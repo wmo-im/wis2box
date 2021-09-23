@@ -19,9 +19,18 @@
 #
 ###############################################################################
 
+import os
+
 from flask import Flask, render_template
 
 app = Flask(__name__)
+
+
+@app.context_processor
+def context_processors():
+    return {
+        'WIS2NODE_BASEURL': os.environ.get('WIS2NODE_BASEURL')
+    }
 
 
 @app.route("/")
