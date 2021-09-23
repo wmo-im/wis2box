@@ -9,20 +9,16 @@ services:
       - pygeoapi
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    ports:
-      - 80:80
 
   wis2node_app:
     container_name: wis2node_app
     build: ..
-    ports:
-      - 9999:8000
+    environment:
+        - WIS2NODE_BASEURL=http://localhost
 
   pygeoapi:
     container_name: pygeoapi
     image: geopython/pygeoapi:latest
-    ports:
-      - 5000:80
     environment:
       - SCRIPT_NAME=/pygeoapi
       - PYGEOAPI_SERVER_URL=http://localhost/pygeoapi
@@ -39,8 +35,6 @@ services:
       - geohealthcheck/geohealthcheck.env
     volumes:
       - geohealthcheck_sqlitedb:/GeoHealthCheck/DB
-    ports:
-      - 8083:80
 
   geohealthcheck-runner:
     container_name: geohealthcheck_runner

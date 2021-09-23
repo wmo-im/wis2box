@@ -19,7 +19,7 @@
 #
 ###############################################################################
 
-DOCKER_COMPOSE=docker/docker-compose.yml
+DOCKER_COMPOSE_ARGS=-f docker/docker-compose.yml -f docker/docker-compose.override.yml
 
 help:
 	@echo
@@ -31,13 +31,13 @@ help:
 	@echo
     
 build:
-	docker-compose -f $(DOCKER_COMPOSE) build wis2node_app
+	docker-compose $(DOCKER_COMPOSE_ARGS) build wis2node_app
 
 up:
-	docker-compose -f $(DOCKER_COMPOSE) up -d
+	docker-compose $(DOCKER_COMPOSE_ARGS) up -d
 
 down:
-	docker-compose -f $(DOCKER_COMPOSE) down
+	docker-compose $(DOCKER_COMPOSE_ARGS) down
 
 prune:
 	docker container prune
