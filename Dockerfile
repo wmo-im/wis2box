@@ -19,21 +19,23 @@
 #
 ###############################################################################
 
-FROM ubuntu:focal
+FROM alpine:3.11
 
 MAINTAINER "tomkralidis@gmail.com"
 
-RUN apt-get update -y && \
-    apt-get install -y python3-pip python3-dev
+RUN apk add py3-pip
 
-# We copy just the requirements.txt first to leverage Docker cache
+ENV WIS2NODE_CATALOGUE_BACKEND=/data/wis2node-records.tinydb
+
 COPY ./requirements.txt /app/requirements.txt
 
 WORKDIR /app
 
 COPY . /app
 
-RUN pip install -r requirements.txt && python3 setup.py install
+RUN pip3 install -r requirements.txt && \
+    python3 setup.py install && \
+    mkdir -p /data
 
 EXPOSE 8000
 
