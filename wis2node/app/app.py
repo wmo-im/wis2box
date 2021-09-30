@@ -23,13 +23,16 @@ import os
 
 from flask import Flask, render_template
 
+from wis2node import __version__
+
 app = Flask(__name__)
 
 
 @app.context_processor
 def context_processors():
     return {
-        'WIS2NODE_BASEURL': os.environ.get('WIS2NODE_BASEURL')
+        'WIS2NODE_BASEURL': os.environ.get('WIS2NODE_BASEURL'),
+        'WIS2NODE_VERSION': __version__
     }
 
 
