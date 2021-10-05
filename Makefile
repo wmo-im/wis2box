@@ -39,6 +39,9 @@ up:
 down:
 	docker-compose $(DOCKER_COMPOSE_ARGS) down
 
+update:
+	docker-compose $(DOCKER_COMPOSE_ARGS) pull
+
 prune:
 	docker container prune
 	docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
@@ -46,4 +49,4 @@ prune:
 flake8:
 	find . -type f -name "*.py" | xargs flake8
 
-.PHONY: help build up down prune flake8
+.PHONY: help build up down update prune flake8
