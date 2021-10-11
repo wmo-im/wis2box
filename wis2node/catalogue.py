@@ -22,12 +22,9 @@
 import json
 import logging
 
-import click
 from tinydb import where, Query, TinyDB
 
-from wis2node import cli_helpers
 from wis2node.env import CATALOGUE_BACKEND
-from wis2node.metadata import parse_record
 
 LOGGER = logging.getLogger(__name__)
 
@@ -58,40 +55,14 @@ def upsert_metadata(record: str) -> None:
     return
 
 
-@click.group()
-def catalogue():
-    """Catalogue management"""
-    pass
+def delete_metadata(identifier: str) -> None:
+    """
+    Deletes a discovery metadata record from the catalogue
 
+    :param identifier: `str` of metadata record identifier
 
-@click.command()
-@click.pass_context
-@cli_helpers.ARGUMENT_FILEPATH
-@cli_helpers.OPTION_METADATA_TYPE
-@cli_helpers.OPTION_VERBOSITY
-def upsert(ctx, filepath, metadata_type, verbosity):
-    """Inserts or updates discovery metadata to catalogue"""
-
-    if metadata_type is None:
-        raise click.ClickException('missing --metadata-type/-m option')
-
-    try:
-        upsert_metadata(parse_record(filepath.read(), metadata_type))
-    except Exception as err:
-        raise click.ClickException(err)
-
-    click.echo('Done')
-
-
-@click.command()
-@click.pass_context
-def delete(ctx, identifier):
-    """Deletes a discovery metadata record from the catalogue"""
-    pass
+    :returns: None
+    """
 
     db = TinyDB(CATALOGUE_BACKEND)
     db.remove(where('key1') == identifier)
-
-
-catalogue.add_command(delete)
-catalogue.add_command(upsert)

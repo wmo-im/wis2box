@@ -31,10 +31,13 @@ help:
 	@echo
     
 build:
-	docker-compose $(DOCKER_COMPOSE_ARGS) build wis2node_app
+	docker-compose $(DOCKER_COMPOSE_ARGS) build --progress plain app metpx-sr3
 
 up:
 	docker-compose $(DOCKER_COMPOSE_ARGS) up -d
+
+logs:
+	docker-compose $(DOCKER_COMPOSE_ARGS) logs --follow
 
 down:
 	docker-compose $(DOCKER_COMPOSE_ARGS) down
@@ -44,7 +47,8 @@ update:
 
 prune:
 	docker container prune
-	docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
+	docker rmi $(docker images --filter "dangling=true" -q --no-trunc) || true
+	docker rm $(docker ps -a -q) || true
 
 flake8:
 	find . -type f -name "*.py" | xargs flake8

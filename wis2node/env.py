@@ -25,9 +25,11 @@ import os
 LOGGER = logging.getLogger(__name__)
 
 CATALOGUE_BACKEND = os.environ.get('WIS2NODE_CATALOGUE_BACKEND', None)
+OSCAR_API_TOKEN = os.environ.get('WIS2NODE_OSCAR_API_TOKEN', None)
 
 if None in [
     CATALOGUE_BACKEND,
+    OSCAR_API_TOKEN
 ]:
     msg = 'Environment variables not set!'
     LOGGER.error(msg)

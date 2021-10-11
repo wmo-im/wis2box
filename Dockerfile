@@ -25,7 +25,7 @@ MAINTAINER "tomkralidis@gmail.com"
 
 RUN apk add py3-pip
 
-ENV WIS2NODE_CATALOGUE_BACKEND=/data/wis2node-records.tinydb
+ENV WIS2NODE_CATALOGUE_BACKEND ${WIS2NODE_CATALOGUE_BACKEND}
 
 COPY ./requirements.txt /app/requirements.txt
 

@@ -19,18 +19,25 @@
 #
 ###############################################################################
 
-__version__ = '0.0.1'
+import logging
 
-import click
+from pyoscar import OSCARClient
 
-from wis2node.metadata import metadata
+from wis2node.env import OSCAR_API_TOKEN
 
-
-@click.group()
-@click.version_option(version=__version__)
-def cli():
-    """WIS 2.0 node in a box"""
-    pass
+LOGGER = logging.getLogger(__name__)
 
 
-cli.add_command(metadata)
+def upload_station_metadata(record: str) -> None:
+    """
+    Uploads a WIGOS Metadata Record (WMDR) to WMO OSCAR/Surface
+
+    :param record: `str` of WMDR
+
+    :returns: None
+    """
+
+    client = OSCARClient(api_token=OSCAR_API_TOKEN)
+
+    LOGGER.debug(f'Uploading metadata to OSCAR {client.api_url}')
+    return client.upload(record)

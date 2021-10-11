@@ -24,13 +24,7 @@ import sys
 
 import click
 
-from wis2node.metadata import METADATA_RECORD_TYPES
-
 ARGUMENT_FILEPATH = click.argument('filepath', type=click.File())
-
-OPTION_METADATA_TYPE = click.option(
-    '--metadata-type', '-mt',
-    type=click.Choice(METADATA_RECORD_TYPES), help='Metadata type')
 
 
 def OPTION_VERBOSITY(f):

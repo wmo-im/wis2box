@@ -5,7 +5,7 @@ services:
     ports:
       - 8999:80
 
-  wis2node_app:
+  app:
     environment:
         - WIS2NODE_BASEURL=http://localhost:8999
     ports:
@@ -21,3 +21,8 @@ services:
   geohealthcheck-web:
     ports:
       - 8083:80
+
+  rabbitmq:
+    ports:
+      - 5672:5672
+      - 15672:15672

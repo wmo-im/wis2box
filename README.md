@@ -24,6 +24,9 @@ make build
 # start system
 make up
 
+# view logs
+make logs
+
 # stop system
 make stop
 
@@ -47,7 +50,14 @@ From command line:
 # fetch version
 wis2node --version
 
-TODO
+# publish discovery metadata to local catalogue
+wis2node metadata discovery publish /path/to/discovery-metadata-file.mcf
+
+# unpublish discovery metadata to local catalogue
+wis2node metadata discovery unpublish some_identifier
+
+# publish station metadata to WMO OSCAR/Surface
+wis2node metadata station publish /path/to/station-metadata-file.mcf
 ```
 
 ### Running tests
