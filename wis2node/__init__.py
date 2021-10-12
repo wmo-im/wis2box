@@ -23,6 +23,7 @@ __version__ = '0.0.1'
 
 import click
 
+from wis2node.env import environment
 from wis2node.metadata import metadata
 
 
@@ -33,4 +34,5 @@ def cli():
     pass
 
 
+cli.add_command(environment)
 cli.add_command(metadata)

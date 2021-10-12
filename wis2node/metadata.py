@@ -20,6 +20,7 @@
 ###############################################################################
 
 import click
+import json
 import logging
 from typing import Union
 
@@ -29,7 +30,8 @@ from pygeometa.schemas.wmo_wigos import WMOWIGOSOutputSchema
 
 from wis2node import cli_helpers
 from wis2node.catalogue import delete_metadata, upsert_metadata
-from wis2node.oscar import upload_station_metadata
+from wis2node.env import DATADIR
+from wis2node.oscar import get_station_report, upload_station_metadata
 
 LOGGER = logging.getLogger(__name__)
 
@@ -90,6 +92,26 @@ def parse_record(metadata_record: bytes) -> dict:
 
 @click.command()
 @click.pass_context
+@cli_helpers.OPTION_VERBOSITY
+@cli_helpers.ARGUMENT_FILEPATH
+def sync(ctx, filepath, verbosity):
+    """Syncs local station metadata in with WMO OSCAR/Surface"""
+
+    for line in filepath:
+        wsi = line.strip()
+        try:
+            station_report = get_station_report(wsi)
+        except RuntimeError as err:
+            click.echo('Station not found')
+
+        filename = f'{DATADIR}/metadata/station/{wsi}.json'
+        LOGGER.debug(f'Writing file to {filename}')
+        with open(filename, 'w') as fh:
+            json.dump(station_report, fh)
+
+
+@click.command()
+@click.pass_context
 @cli_helpers.ARGUMENT_FILEPATH
 @cli_helpers.OPTION_VERBOSITY
 def publish(ctx, filepath, verbosity):
@@ -118,6 +140,7 @@ def unpublish(ctx, identifier):
 
 
 station.add_command(publish)
+station.add_command(sync)
 discovery.add_command(publish)
 discovery.add_command(unpublish)
 

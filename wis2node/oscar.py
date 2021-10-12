@@ -41,3 +41,18 @@ def upload_station_metadata(record: str) -> None:
 
     LOGGER.debug(f'Uploading metadata to OSCAR {client.api_url}')
     return client.upload(record)
+
+
+def get_station_report(identifier: str) -> dict:
+    """
+    Fetch OSCAR/Surface station metadata report
+
+    :param identifier: WIGOS Station Identifier (WSI)
+
+    :returns: `dict` of station metadata report
+    """
+
+    client = OSCARClient(api_token=OSCAR_API_TOKEN)
+
+    LOGGER.debug(f'Fetching station report for {identifier}')
+    return client.get_station_report(identifier)

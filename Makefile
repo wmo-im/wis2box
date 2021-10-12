@@ -31,7 +31,8 @@ help:
 	@echo
     
 build:
-	docker-compose $(DOCKER_COMPOSE_ARGS) build --progress plain app metpx-sr3
+	#docker-compose $(DOCKER_COMPOSE_ARGS) build --progress plain app metpx-sr3
+	docker-compose $(DOCKER_COMPOSE_ARGS) build --progress plain app #metpx-sr3
 
 up:
 	docker-compose $(DOCKER_COMPOSE_ARGS) up -d
