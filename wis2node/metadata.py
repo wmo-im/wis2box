@@ -101,7 +101,7 @@ def sync(ctx, filepath, verbosity):
         wsi = line.strip()
         try:
             station_report = get_station_report(wsi)
-        except RuntimeError as err:
+        except RuntimeError:
             click.echo('Station not found')
 
         filename = f'{DATADIR}/metadata/station/{wsi}.json'
