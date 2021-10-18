@@ -20,39 +20,39 @@
 ###############################################################################
 
 import logging
+from typing import Union
 
-from pyoscar import OSCARClient
-
-from wis2node.env import OSCAR_API_TOKEN
+from pygeometa.core import read_mcf
 
 LOGGER = logging.getLogger(__name__)
 
 
-def upload_station_metadata(record: str) -> None:
-    """
-    Uploads a WIGOS Metadata Record (WMDR) to WMO OSCAR/Surface
+class MetadataBase:
+    """base metadata"""
 
-    :param record: `str` of WMDR
+    def __init__(self):
+        pass
 
-    :returns: None
-    """
+    def generate(mcf: dict, schema: str = None) -> Union[dict, str]:
+        """
+        Generate metadata in a given schema
 
-    client = OSCARClient(api_token=OSCAR_API_TOKEN)
+        :param mcf: `dict` of MCF file
+        :param schema: `str` of metadata schema to generate
 
-    LOGGER.debug(f'Uploading metadata to OSCAR {client.api_url}')
-    return client.upload(record)
+        :returns: `dict` or `str` of metadata representation
+        """
 
+        raise NotImplementedError()
 
-def get_station_report(identifier: str) -> dict:
-    """
-    Fetch OSCAR/Surface station metadata report
+    def parse_record(metadata_record: bytes) -> dict:
+        """
+        Parses MCF metadata into dict
 
-    :param identifier: WIGOS Station Identifier (WSI)
+        :param metadata_record: string of metadata
 
-    :returns: `dict` of station metadata report
-    """
+        :return: `dict` of MCF
+        """
 
-    client = OSCARClient(api_token=OSCAR_API_TOKEN)
-
-    LOGGER.debug(f'Fetching station report for {identifier}')
-    return client.get_station_report(identifier)
+        LOGGER.debug('reading MCF')
+        return read_mcf(metadata_record)
