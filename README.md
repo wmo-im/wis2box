@@ -58,6 +58,9 @@ wis2node metadata discovery unpublish some_identifier
 
 # publish station metadata to WMO OSCAR/Surface
 wis2node metadata station publish /path/to/station-metadata-file.mcf
+
+# generate local station collection
+wis2node metadata station generate-collection
 ```
 
 ### Running tests

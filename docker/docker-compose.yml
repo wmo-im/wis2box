@@ -25,6 +25,7 @@ services:
     environment:
       - SCRIPT_NAME=/pygeoapi
       - PYGEOAPI_SERVER_URL=http://localhost/pygeoapi
+      - WIS2NODE_DATADIR=/data/wis2node
     volumes:
       - ./pygeoapi/pygeoapi-config.yml:/pygeoapi/local.config.yml:ro
 

@@ -33,9 +33,9 @@ ENV METPX_SR3_BASE_URL ${METPX_SR3_BASE_URL}
 
 RUN python3 -m pip install --upgrade pip && \
     pip3 install wheel && \
-    #pip3 install metpx-sr3
-    pip3 install metpx-sarracenia
+    pip3 install metpx-sr3
+    #pip3 install metpx-sarracenia
 
 COPY ./sr3_watch.conf /etc/metpx-sr3/sr3_watch.conf
 
-CMD ["sr_watch", "foreground", "/etc/metpx-sr3/sr3_watch.conf"]
+CMD ["sr3", "foreground", "/etc/metpx-sr3/sr3_watch.conf"]
