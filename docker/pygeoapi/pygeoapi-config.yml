@@ -79,8 +79,7 @@ resources:
             - type: text/html
               rel: canonical
               title: information
-              href: https://open.canada.ca/en/open-data
-              hreflang: en-US
+              href: https://example.org
         extents:
             spatial:
                 bbox: [-180,-90,180,90]
@@ -92,3 +91,58 @@ resources:
               id_field: identifier
               time_field: recordCreated
               title_field: title
+
+    stations:
+        type: collection
+        title:
+            en: Stations
+        description:
+            en: Stations
+        keywords:
+            en:
+                - wmo
+                - wis 2.0
+        links:
+            - type: text/html
+              rel: canonical
+              title: information
+              href: https://oscar.wmo.int/surface
+        extents:
+            spatial:
+                bbox: [-180,-90,180,90]
+                crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
+        providers:
+            - type: feature
+              name: GeoJSON
+              data: ${WIS2NODE_DATADIR}/metadata/station/stations.geojson
+              id_field: wigos_id
+              title_field: name
+
+    data:
+        type: stac-collection
+        title:
+            en: Data assets
+        description:
+            en: Data assets
+        keywords:
+            en:
+                - wmo
+                - wis 2.0
+                - bufr
+                - observations
+        links:
+            - type: text/html
+              rel: canonical
+              title: information
+              href: https://example.org
+        extents:
+            spatial:
+                bbox: [-180,-90,180,90]
+                crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
+        providers:
+        providers:
+            - type: stac
+              name: FileSystem
+              data: ${WIS2NODE_DATADIR}/data
+              file_types:
+                  - .bufr
