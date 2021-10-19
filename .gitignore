@@ -37,3 +37,5 @@ nosetests.xml
 
 # local
 wis2node-data
+.pytest_cache
+dev.env

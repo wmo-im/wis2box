@@ -1,7 +1,7 @@
 # wis2node
 
-[![Build Status](https://github.com/wmo-im/wis2node/workflows/flake8%20%E2%9A%99%EF%B8%8F/badge.svg)](https://github.com/wmo-im/wis2node/actions)
-[![Docs](https://github.com/wmo-im/wis2node/workflows/docs/badge.svg)](https://wmo-im.github.com/wis2node)
+[![Tests](https://github.com/wmo-im/wis2node/workflows/tests%20%E2%9A%99%EF%B8%8F/badge.svg)](https://github.com/wmo-im/wis2node/actions/workflows/tests.yml)
+[![Docs](https://github.com/wmo-im/wis2node/workflows/docs/badge.svg)](https://github.com/wmo-im/wis2node/actions/workflows/docs.yml)
 
 ## WIS 2.0 node in a box
 
