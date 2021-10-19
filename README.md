@@ -12,12 +12,19 @@ and access.
 
 ## Installation
 
-### Docker
-
 ```bash
+python3 -m venv wis2node
+cd wis2node
 git clone https://github.com/wmo-im/wis2node.git
 cd wis2node
 python3 setup.py install
+
+# setup local environment variables
+cp wis2node.env dev.env
+# edit/adjust accordingly
+vi dev.env
+# source
+. dev.env
 ```
 
 ## Running
@@ -27,20 +34,32 @@ From command line:
 # fetch version
 wis2node --version
 
+# create text file of stations (1 WSI per line)
+vi stations.txt
+
+# cache station metadata from OSCAR/Surface
+wis2node metadata station sync
+
+# publish station metadata to WMO OSCAR/Surface
+wis2node metadata station publish $WIS2NODE_DATADIR/metadata/station/1.yml
+wis2node metadata station publish $WIS2NODE_DATADIR/metadata/station/2.yml
+wis2node metadata station publish $WIS2NODE_DATADIR/metadata/station/3.yml
+
+# generate local station collection GeoJSON for pygeoapi publication
+wis2node metadata station generate-collection
+
+# create discovery metadata control file (MCF)
+# pygeometa MCF reference: https://geopython.github.io/pygeometa/reference/mcf
+vi $WIS2NODE_DATADIR/metadata/discovery/surface-weather-observations.yml
+
 # publish discovery metadata to local catalogue
-wis2node metadata discovery publish /path/to/discovery-metadata-file.mcf
+wis2node metadata discovery publish $WIS2NODE_DATADIR/metadata/discovery/surface-weather-observations.yml
 
 # unpublish discovery metadata to local catalogue
 wis2node metadata discovery unpublish some_identifier
-
-# publish station metadata to WMO OSCAR/Surface
-wis2node metadata station publish /path/to/station-metadata-file.mcf
-
-# generate local station collection
-wis2node metadata station generate-collection
 ```
 
-## Deploying
+## Deploying with Docker Compose
 
 ```bash
 # build local image
@@ -60,7 +79,13 @@ make update
 
 # redeploy containers
 make up
+```
 
+## Development workflows
+
+## Maintenance and code linting
+
+```bash
 # clean up dangling containers and images
 make prune
 
