@@ -17,7 +17,32 @@ and access.
 ```bash
 git clone https://github.com/wmo-im/wis2node.git
 cd wis2node
+python3 setup.py install
+```
 
+## Running
+
+From command line:
+```bash
+# fetch version
+wis2node --version
+
+# publish discovery metadata to local catalogue
+wis2node metadata discovery publish /path/to/discovery-metadata-file.mcf
+
+# unpublish discovery metadata to local catalogue
+wis2node metadata discovery unpublish some_identifier
+
+# publish station metadata to WMO OSCAR/Surface
+wis2node metadata station publish /path/to/station-metadata-file.mcf
+
+# generate local station collection
+wis2node metadata station generate-collection
+```
+
+## Deploying
+
+```bash
 # build local image
 make build
 
@@ -41,26 +66,6 @@ make prune
 
 # run a flake8 check on all Python code
 make flake8
-```
-
-## Running
-
-From command line:
-```bash
-# fetch version
-wis2node --version
-
-# publish discovery metadata to local catalogue
-wis2node metadata discovery publish /path/to/discovery-metadata-file.mcf
-
-# unpublish discovery metadata to local catalogue
-wis2node metadata discovery unpublish some_identifier
-
-# publish station metadata to WMO OSCAR/Surface
-wis2node metadata station publish /path/to/station-metadata-file.mcf
-
-# generate local station collection
-wis2node metadata station generate-collection
 ```
 
 ### Running tests

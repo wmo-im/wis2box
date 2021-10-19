@@ -23,7 +23,9 @@ FROM alpine:3.11
 
 MAINTAINER "tomkralidis@gmail.com"
 
-RUN apk add py3-pip
+ARG BUILD_DEPS="gcc python3-dev musl-dev"
+
+RUN apk add py3-pip libxml2-dev libxslt-dev ${BUILD_DEPS}
 
 ENV WIS2NODE_DATADIR ${WIS2NODE_DATADIR}
 ENV WIS2NODE_CATALOGUE_BACKEND ${WIS2NODE_CATALOGUE_BACKEND}
@@ -37,7 +39,8 @@ COPY . /app
 
 RUN pip3 install -r requirements.txt && \
     python3 setup.py install && \
-    mkdir -p /data
+    mkdir -p /data && \
+    apk del ${BUILD_DEPS}
 
 EXPOSE 8000
 
