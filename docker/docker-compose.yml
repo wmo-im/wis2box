@@ -66,10 +66,11 @@ services:
       - METPX_SR3_BROKER_USERNAME=wis2node
       - METPX_SR3_BROKER_PASSWORD=wis2node
       - METPX_SR3_PATH=/data/wis2node/data
-      - METPX_SR3_BASE_URL=http://app
+      - METPX_SR3_BASEURL=http://app
+      - WIS2NODE_DATADIR=/data/wis2node/data
     volumes:
       - ./metpx-sr3/sr3_watch.conf:/etc/metpx-sr3/sr3_watch.conf:ro
-      - /Users/tomkralidis/Dev/wmo/data:/data/wis2node/data:rw
+      - ../wis2node-data:/data/wis2node:rw
     depends_on:
       - rabbitmq
 
