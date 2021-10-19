@@ -1,10 +1,28 @@
 {% extends "_base.html" %}
 {% block title %}{{ super() }} - Home{% endblock %}
+{% block extrahead %}
+
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+ <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+ <script src="https://calvinmetcalf.github.io/leaflet-ajax/dist/leaflet.ajax.js"></script>
+
+ <style type="text/css">
+ #wis2node-map { height: 280px; }
+ </style>
+
+{% endblock %}
 {% block body %}
     <header>
       <a href="https://community.wmo.int/activity-areas/wis/wis2-implementation"><img width="68" height="77" src="https://public.wmo.int/sites/all/themes/wmo/logo.png"/></a>
       <h1>Welcome to WIS 2.0 node in box!</h1>
     </header>
+    <section id="dashboard">
+      <div id="wis2node-map"></div>
+    </section>
     <section id="containers">
       <h2>Containers</h2>
       <ul>
@@ -12,4 +30,47 @@
         <li><a href="{{ WIS2NODE_BASEURL }}/monitor/">Service Monitor</a></li>
       </ul>
     </section>
+
+    <script>
+
+      var stationStatusStyle = {
+          'color': 'green',
+          'weight': 2
+      }
+
+      var map = L.map('wis2node-map').setView([0, 0], 2);
+      map.addLayer(new L.TileLayer(
+        'https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+        }
+      ));
+
+      var geojsonLayer = new L.GeoJSON.AJAX("http://localhost:8999/pygeoapi/collections/stations/items?f=json", {
+          onEachFeature: function (feature, layer) {
+              layer.bindPopup(feature.properties.name);
+          },
+          pointToLayer: function (feature, latlng) {
+              let color;
+              // map to https://codes.wmo.int/wmdr/_ReportingStatus
+              switch (feature.properties.status) {
+                  case 'operational':
+                      color = 'green';
+                      break;
+                  case 'nonReporting':
+                      color = 'red';
+                      break;
+                  case 'closed':
+                      color = 'grey';
+                      break;
+              }
+              return L.circleMarker(latlng, {'color': color, 'weight': 2});
+          }
+      });
+
+      geojsonLayer.on('data:loaded', function() {
+          geojsonLayer.addTo(map);
+          map.fitBounds(geojsonLayer.getBounds());
+      });
+    </script>
 {% endblock %}

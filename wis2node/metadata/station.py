@@ -91,7 +91,9 @@ def gen_station_collection() -> None:
                 'properties': {
                     'wigos_id': wigos_id,
                     'name': d['name'],
-                    'url': f"{oscar_baseurl}/{wigos_id}"
+                    'url': f"{oscar_baseurl}/{wigos_id}",
+                    # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
+                    'status': 'operational'
                 }
             }
             feature_collection['features'].append(feature)
