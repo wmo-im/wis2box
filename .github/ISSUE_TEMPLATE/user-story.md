@@ -8,6 +8,8 @@ assignees:
 
 ## User story
 
+As a (user type), I want to (task) so that (goal).
+
 ## Acceptance criteria
 
 ## Definition of done
