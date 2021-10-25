@@ -37,8 +37,8 @@ wis2node --version
 # create text file of stations (1 WSI per line)
 vi stations.txt
 
-# cache station metadata from OSCAR/Surface
-wis2node metadata station sync
+# cache station metadata from OSCAR/Surface from a CSV of station name/WSI records
+wis2node metadata station sync /path/to/station_list.csv
 
 # publish station metadata to WMO OSCAR/Surface
 wis2node metadata station publish $WIS2NODE_DATADIR/metadata/station/1.yml

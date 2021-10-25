@@ -20,6 +20,7 @@
 ###############################################################################
 
 import click
+import csv
 import json
 import logging
 from pathlib import Path
@@ -108,14 +109,16 @@ def gen_station_collection() -> None:
 def sync(ctx, filepath, verbosity):
     """Syncs local station metadata in with WMO OSCAR/Surface"""
 
-    for line in filepath:
-        wsi = line.strip()
+    reader = csv.DictReader(filepath)
+
+    for row in reader:
+        wsi = row['wsi']
         try:
             station_report = get_station_report(wsi)
         except RuntimeError:
             click.echo('Station not found')
 
-        filename = f'{DATADIR}/metadata/station/{wsi}.json'
+        filename = f"{DATADIR}/metadata/station/{wsi}.json"
         LOGGER.debug(f'Writing file to {filename}')
         with open(filename, 'w') as fh:
             json.dump(station_report, fh)

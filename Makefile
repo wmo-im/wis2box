@@ -19,7 +19,7 @@
 #
 ###############################################################################
 
-DOCKER_COMPOSE_ARGS=-f docker/docker-compose.yml -f docker/docker-compose.override.yml
+DOCKER_COMPOSE_ARGS=-f docker/docker-compose.yml -f docker/docker-compose.override.yml -p wis2node
 
 help:
 	@echo
@@ -31,7 +31,7 @@ help:
 	@echo
     
 build:
-	docker-compose $(DOCKER_COMPOSE_ARGS) build --progress plain app metpx-sr3
+	docker-compose $(DOCKER_COMPOSE_ARGS) build --progress plain metpx-sr3
 
 up:
 	docker-compose $(DOCKER_COMPOSE_ARGS) up -d
