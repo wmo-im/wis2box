@@ -6,10 +6,8 @@ services:
       - 8999:80
 
   app:
-    environment:
-        - WIS2NODE_BASEURL=http://localhost:8999
     ports:
-      - 9999:8000
+      - 9999:80
 
   pygeoapi:
     ports:

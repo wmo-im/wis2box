@@ -1,5 +1,4 @@
-Flask
-gunicorn
 pygeometa
 pyoscar
+s3fs
 tinydb
