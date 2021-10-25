@@ -23,7 +23,9 @@ FROM alpine:3.11
 
 MAINTAINER "tomkralidis@gmail.com"
 
-RUN apk add py3-pip build-base python3-dev libffi-dev git
+RUN apk add py3-pip build-base python3-dev libffi-dev git py3-cryptography openssl-dev
+
+ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
 
 ENV METPX_SR3_HOST ${METPX_SR3_HOST}
 ENV METPX_SR3_BROKER_USERNAME ${METPX_SR3_BROKER_USERNAME}
@@ -31,11 +33,13 @@ ENV METPX_SR3_BROKER_PASSWORD ${METPX_SR3_BROKER_PASSWORD}
 ENV METPX_SR3_PATH ${METPX_SR3_PATH}
 ENV METPX_SR3_BASEURL ${METPX_SR3_BASEURL}
 
-RUN python3 -m pip install --upgrade pip && \
-    pip3 install wheel && \
-    pip3 install metpx-sr3
-    #pip3 install metpx-sarracenia
+WORKDIR /src
 
-COPY ./sr3_watch.conf /etc/metpx-sr3/sr3_watch.conf
+RUN addgroup -S metpx && adduser -S metpx -G metpx && \
+    python3 -m pip install --upgrade pip && \
+    git clone https://github.com/MetPX/sarracenia.git -b v03_wip && \
+    cd sarracenia && \
+    pip install cryptography==3.4.6 wheel && \
+    python3 setup.py install
 
-CMD ["sr3", "foreground", "/etc/metpx-sr3/sr3_watch.conf"]
+USER metpx
