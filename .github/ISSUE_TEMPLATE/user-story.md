@@ -19,3 +19,4 @@ As a (user type), I want to (task) so that (goal).
 <!-- this section is fixed and applies to all user story tickets -->
 - [ ] unit/functional tests added/updated
 - [ ] documentation updated
+- [ ] live demonstration provided
