@@ -47,7 +47,7 @@ services:
       - geohealthcheck_sqlitedb:/GeoHealthCheck/DB
 
   rabbitmq:
-    container_name: broker
+    container_name: rabbitmq
     image: rabbitmq:3.9-management-alpine
     environment:
       - RABBITMQ_DEFAULT_USER=wis2node
@@ -62,7 +62,6 @@ services:
       - METPX_SR3_BROKER_PASSWORD=wis2node
       - METPX_SR3_PATH=/data/wis2node/data
       - METPX_SR3_BASEURL=http://app
-      - WIS2NODE_DATADIR=/data/wis2node/data
     volumes:
       - ./metpx-sr3/sr3_watch.conf:/home/metpx/.config/sr3/watch/watch.conf:ro
       - ../wis2node-data:/data/wis2node:rw
