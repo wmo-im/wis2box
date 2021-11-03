@@ -31,9 +31,9 @@ WORKDIR /src
 
 RUN addgroup -S metpx && adduser -S metpx -G metpx && \
     python3 -m pip install --upgrade pip && \
+    pip install cryptography==3.4.6 wheel && \
     git clone https://github.com/MetPX/sarracenia.git -b v03_wip && \
     cd sarracenia && \
-    pip install cryptography==3.4.6 wheel && \
     python3 setup.py install
 
 USER metpx
