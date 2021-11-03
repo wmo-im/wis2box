@@ -16,7 +16,7 @@ As a (user type), I want to (task) so that (goal).
 - [ ] acceptance criteria 3
 
 ## Definition of done
-<!-- this section is fixed and applies to all user story tickets -->
+<!-- this section is fixed and applies to all user story tickets.  Do not edit -->
 - [ ] unit/functional tests added/updated
 - [ ] documentation updated
 - [ ] live demonstration provided
