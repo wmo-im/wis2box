@@ -29,11 +29,11 @@ ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
 
 WORKDIR /src
 
-RUN addgroup -S metpx && adduser -S metpx -G metpx && \
+RUN addgroup -S sarra && adduser -S sarra -G sarra && \
     python3 -m pip install --upgrade pip && \
     pip install cryptography==3.4.6 wheel && \
     git clone https://github.com/MetPX/sarracenia.git -b v03_wip && \
     cd sarracenia && \
     python3 setup.py install
 
-USER metpx
+USER sarra
