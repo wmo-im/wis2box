@@ -10,8 +10,8 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
 
-  app:
-    container_name: app
+  wis2node-ui:
+    container_name: wis2node-ui
     build: https://github.com/wmo-im/wis2node-ui.git#main
 
   pygeoapi:
@@ -61,7 +61,8 @@ services:
       - METPX_SR3_BROKER_USERNAME=wis2node
       - METPX_SR3_BROKER_PASSWORD=wis2node
       - METPX_SR3_PATH=/data/wis2node/data
-      - METPX_SR3_BASEURL=http://app
+      - METPX_SR3_BASEURL=http://wis2node-ui
+      - METPX_SR3_LOGLEVEL=DEBUG
     volumes:
       - ./metpx-sr3/sr3_watch.conf:/home/metpx/.config/sr3/watch/watch.conf:ro
       - ../wis2node-data:/data/wis2node:rw
