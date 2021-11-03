@@ -64,7 +64,7 @@ services:
       - METPX_SR3_BASEURL=http://wis2node-ui
       - METPX_SR3_LOGLEVEL=DEBUG
     volumes:
-      - ./metpx-sr3/sr3_watch.conf:/home/metpx/.config/sr3/watch/watch.conf:ro
+      - ./metpx-sr3/config:/home/metpx/.config/sr3:ro
       - ../wis2node-data:/data/wis2node:rw
     depends_on:
       - rabbitmq
