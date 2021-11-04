@@ -57,6 +57,7 @@ def create(ctx, verbosity):
     click.echo(f'Creating baseline directory structure in {DATADIR}')
     Path(DATADIR).mkdir(parents=True, exist_ok=True)
     Path(f'{DATADIR}/data').mkdir(parents=True, exist_ok=True)
+    Path(f'{DATADIR}/cache').mkdir(parents=True, exist_ok=True)
     Path(f'{DATADIR}/metadata/discovery').mkdir(parents=True, exist_ok=True)
     Path(f'{DATADIR}/metadata/station').mkdir(parents=True, exist_ok=True)
 

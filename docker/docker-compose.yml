@@ -55,7 +55,7 @@ services:
 
   metpx-sr3:
     container_name: metpx
-    build: ./metpx-sr3
+    build: https://github.com/MetPX/sarracenia.git#v03_wip
     environment:
       - METPX_SR3_HOST=rabbitmq
       - METPX_SR3_BROKER_USERNAME=wis2node
@@ -64,11 +64,12 @@ services:
       - METPX_SR3_BASEURL=http://wis2node-ui
       - METPX_SR3_LOGLEVEL=DEBUG
     volumes:
-      - ./metpx-sr3/config:/home/metpx/.config/sr3:ro
+      - ./metpx-sr3/config:/home/sarra/.config/sr3:ro
+      - ../wis2node-data/cache:/home/sarra/.cache:rw
       - ../wis2node-data:/data/wis2node:rw
     depends_on:
       - rabbitmq
-    command: sr3 foreground watch/watch.conf
+    command: sh -c "sr3 start && sleep infinity"
 
 volumes:
   geohealthcheck_sqlitedb:

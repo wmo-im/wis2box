@@ -23,16 +23,12 @@ DOCKER_COMPOSE_ARGS=-f docker/docker-compose.yml -f docker/docker-compose.overri
 
 help:
 	@echo
-	@echo " - build: build local Docker image"
 	@echo " - up: start system"
 	@echo " - down: stop system"
 	@echo " - prune: cleanup dangling containers and images"
 	@echo " - flake8: run PEP8 checks against local Python code"
 	@echo
     
-build:
-	docker-compose $(DOCKER_COMPOSE_ARGS) build --progress plain metpx-sr3
-
 up:
 	docker-compose $(DOCKER_COMPOSE_ARGS) up -d
 
@@ -53,4 +49,4 @@ prune:
 flake8:
 	find . -type f -name "*.py" | xargs flake8
 
-.PHONY: help build up down update prune flake8
+.PHONY: help up down update prune flake8
