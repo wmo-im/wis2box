@@ -1,6 +1,10 @@
-station_name,wsi
+Station_name,WIGOS Station Identifier (WSI)
 Balaka,0-454-2-AWSBALAKA
+Kayerekera, 0-454-2-AWSKAYEREKERA
+Lobi_EPA, 0-454-2-AWSLOBI	
+Malomo_EPA,0-454-2-AWSMALOMO	 
+Namitambo,0-454-2-AWSNAMITAMBO
+Nkhoma_University,0-454-2-AWSNKHOMA
+Toleza,0-454-2-AWSTOLEZA
 Chidoole,0-454-2-AWSCHIDOOLE
 Kasiya,0-454-2-AWSKASIYA
-Namitambo,0-454-2-AWSNAMITAMBO
-Toleza,0-454-2-AWSTOLEZA
