@@ -3,7 +3,7 @@
 [![Tests](https://github.com/wmo-im/wis2node/workflows/tests%20%E2%9A%99%EF%B8%8F/badge.svg)](https://github.com/wmo-im/wis2node/actions/workflows/tests.yml)
 [![Docs](https://github.com/wmo-im/wis2node/workflows/docs/badge.svg)](https://github.com/wmo-im/wis2node/actions/workflows/docs.yml)
 
-## WIS 2.0 node in a box
+## WIS 2.0 in a box
 
 WIS 2.0 node in a box provides a platform with the capabilities for centres to
 integrate their data holdings and publish them to the WMO Information System
