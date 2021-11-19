@@ -81,7 +81,7 @@ setup(
     description=DESCRIPTION.strip(),
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
-    license='MIT',
+    license='Apache Software License',
     platforms='all',
     keywords=' '.join(KEYWORDS),
     author='Tom Kralidis',
