@@ -30,7 +30,7 @@ from wis2node.metadata import metadata
 @click.group()
 @click.version_option(version=__version__)
 def cli():
-    """WIS 2.0 node in a box"""
+    """WIS 2.0 in a box"""
     pass
 
 
