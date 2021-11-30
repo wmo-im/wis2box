@@ -16,8 +16,7 @@ services:
       - SCRIPT_NAME=/pygeoapi
       - PYGEOAPI_SERVER_URL=http://localhost:8999/pygeoapi
     volumes:
-      - ../wis2node-data:/data/wis2node:ro
-
+      - ../wis2node-data:/data/wis2node:rw
 
   geohealthcheck-web:
     ports:
