@@ -13,6 +13,14 @@ wis2node |release| documentation
    :caption: Table of contents:
    :name: toc
 
+
+   overview
+   installation
+   configuration
+   administration
+   running
+   publishing
+   development
    license
 
 

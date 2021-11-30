@@ -87,7 +87,7 @@ resources:
         providers:
             - type: record
               name: TinyDBCatalogue
-              data: tests/data/open.canada.ca/sample-records.tinydb
+              data: ${WIS2NODE_DATADIR}/metadata/discovery/records.tinydb
               id_field: identifier
               time_field: recordCreated
               title_field: title
@@ -139,7 +139,6 @@ resources:
             spatial:
                 bbox: [-180,-90,180,90]
                 crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
-        providers:
         providers:
             - type: stac
               name: FileSystem

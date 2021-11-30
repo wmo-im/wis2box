@@ -112,7 +112,7 @@ def sync(ctx, filepath, verbosity):
     reader = csv.DictReader(filepath)
 
     for row in reader:
-        wsi = row['wsi']
+        wsi = row['wigos_station_identifier']
         try:
             station_report = get_station_report(wsi)
         except RuntimeError:

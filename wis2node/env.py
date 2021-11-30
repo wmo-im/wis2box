@@ -29,13 +29,21 @@ from wis2node import cli_helpers
 LOGGER = logging.getLogger(__name__)
 
 DATADIR = os.environ.get('WIS2NODE_DATADIR', None)
+DATADIR_INCOMING = os.environ.get('WIS2NODE_DATADIR_INCOMING', None)
+DATADIR_OUTGOING = os.environ.get('WIS2NODE_DATADIR_OUTGOING', None)
+DATADIR_PUBLIC = os.environ.get('WIS2NODE_DATADIR_PUBLIC', None)
 CATALOGUE_BACKEND = os.environ.get('WIS2NODE_CATALOGUE_BACKEND', None)
 OSCAR_API_TOKEN = os.environ.get('WIS2NODE_OSCAR_API_TOKEN', None)
+OGC_API_URL = os.environ.get('WIS2NODE_OGC_API_URL', None)
 
 if None in [
     DATADIR,
+    DATADIR_INCOMING,
+    DATADIR_OUTGOING,
+    DATADIR_PUBLIC,
     CATALOGUE_BACKEND,
-    OSCAR_API_TOKEN
+    OSCAR_API_TOKEN,
+    OGC_API_URL
 ]:
     msg = 'Environment variables not set!'
     LOGGER.error(msg)
@@ -56,7 +64,9 @@ def create(ctx, verbosity):
 
     click.echo(f'Creating baseline directory structure in {DATADIR}')
     Path(DATADIR).mkdir(parents=True, exist_ok=True)
-    Path(f'{DATADIR}/data').mkdir(parents=True, exist_ok=True)
+    Path(DATADIR_INCOMING).mkdir(parents=True, exist_ok=True)
+    Path(DATADIR_OUTGOING).mkdir(parents=True, exist_ok=True)
+    Path(DATADIR_PUBLIC).mkdir(parents=True, exist_ok=True)
     Path(f'{DATADIR}/cache').mkdir(parents=True, exist_ok=True)
     Path(f'{DATADIR}/metadata/discovery').mkdir(parents=True, exist_ok=True)
     Path(f'{DATADIR}/metadata/station').mkdir(parents=True, exist_ok=True)

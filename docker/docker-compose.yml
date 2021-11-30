@@ -60,7 +60,7 @@ services:
       - METPX_SR3_HOST=rabbitmq
       - METPX_SR3_BROKER_USERNAME=wis2node
       - METPX_SR3_BROKER_PASSWORD=wis2node
-      - METPX_SR3_PATH=/data/wis2node/data
+      - METPX_SR3_PATH_PUBLIC=/data/wis2node/data/public
       - METPX_SR3_BASEURL=http://wis2node-ui
       - METPX_SR3_LOGLEVEL=DEBUG
     volumes:

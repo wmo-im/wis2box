@@ -33,7 +33,7 @@ class MetadataBase:
     def __init__(self):
         pass
 
-    def generate(mcf: dict, schema: str = None) -> Union[dict, str]:
+    def generate(self, mcf: dict, schema: str = None) -> Union[dict, str]:
         """
         Generate metadata in a given schema
 
@@ -45,7 +45,7 @@ class MetadataBase:
 
         raise NotImplementedError()
 
-    def parse_record(metadata_record: bytes) -> dict:
+    def parse_record(self, metadata_record: bytes) -> dict:
         """
         Parses MCF metadata into dict
 

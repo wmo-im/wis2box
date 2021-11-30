@@ -20,12 +20,14 @@
 ###############################################################################
 
 import click
+from copy import deepcopy
 import logging
 
 from pygeometa.schemas.ogcapi_records import OGCAPIRecordOutputSchema
 
 from wis2node import cli_helpers
-from wis2node.catalogue import delete_metadata
+from wis2node.env import OGC_API_URL
+from wis2node.catalogue import delete_metadata, upsert_metadata
 from wis2node.metadata.base import MetadataBase
 
 LOGGER = logging.getLogger(__name__)
@@ -35,7 +37,7 @@ class DiscoveryMetadata(MetadataBase):
     def __init__(self):
         super().__init__()
 
-    def generate(mcf: dict) -> dict:
+    def generate(self, mcf: dict) -> dict:
         """
         Generate OARec discovery metadata
 
@@ -44,8 +46,22 @@ class DiscoveryMetadata(MetadataBase):
         :returns: `dict` of metadata representation
         """
 
+        md = deepcopy(mcf)
+
+        identifier = md['metadata']['identifier']
+
+        LOGGER.debug('Adding distribution links')
+        oafeat_link = {
+            'url': f"{OGC_API_URL}/collections/{identifier}",
+            'type': 'OAFeat',
+            'name': identifier,
+            'description': identifier,
+            'function': 'collection'
+        }
+        md['distribution'] = {'oafeat': oafeat_link}
+
         LOGGER.debug('Generating OARec discovery metadata')
-        return OGCAPIRecordOutputSchema().write(mcf)
+        return OGCAPIRecordOutputSchema().write(md)
 
 
 @click.group()
@@ -62,8 +78,9 @@ def publish(ctx, filepath, verbosity):
     """Inserts or updates discovery metadata to catalogue"""
 
     try:
-        record = DiscoveryMetadata().parse_record(filepath.read())
-        discovery.upsert_metadata(record.generate(record))
+        dm = DiscoveryMetadata()
+        record = dm.parse_record(filepath.read())
+        upsert_metadata(dm.generate(record))
     except Exception as err:
         raise click.ClickException(err)
 
