@@ -33,7 +33,7 @@ def upsert_metadata(record: str) -> None:
     """
     Upserts record metadata into catalogue
 
-    :param record: `dict` of record metadata
+    :param record: `str` of record metadata
 
     :returns: None
     """

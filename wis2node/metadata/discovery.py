@@ -21,8 +21,10 @@
 
 import click
 from copy import deepcopy
+import json
 import logging
 
+from pygeometa.helpers import json_serial
 from pygeometa.schemas.ogcapi_records import OGCAPIRecordOutputSchema
 
 from wis2node import cli_helpers
@@ -37,13 +39,13 @@ class DiscoveryMetadata(MetadataBase):
     def __init__(self):
         super().__init__()
 
-    def generate(self, mcf: dict) -> dict:
+    def generate(self, mcf: dict) -> str:
         """
         Generate OARec discovery metadata
 
         :param mcf: `dict` of MCF file
 
-        :returns: `dict` of metadata representation
+        :returns: `str` of metadata representation
         """
 
         md = deepcopy(mcf)
@@ -61,7 +63,19 @@ class DiscoveryMetadata(MetadataBase):
         md['distribution'] = {'oafeat': oafeat_link}
 
         LOGGER.debug('Generating OARec discovery metadata')
-        return OGCAPIRecordOutputSchema().write(md)
+        record = OGCAPIRecordOutputSchema().write(md, stringify=False)
+
+        anytext_bag = [
+            md['identification']['title']['en'],
+            md['identification']['abstract']['en']
+        ]
+
+        for k, v in md['identification']['keywords'].items():
+            anytext_bag.extend(v['keywords']['en'])
+
+        record['properties']['_metadata-anytext'] = ' '.join(anytext_bag)
+
+        return json.dumps(record, default=json_serial, indent=4)
 
 
 @click.group()
