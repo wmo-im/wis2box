@@ -57,6 +57,9 @@ wis2node metadata discovery publish $WIS2NODE_DATADIR/metadata/discovery/surface
 
 # unpublish discovery metadata to local catalogue
 wis2node metadata discovery unpublish some_identifier
+
+# process incoming data (manually/no PubSub)
+wis2node data observations process /path/to/file.csv --discovery-metadata /path/to/dm.yml --station-metadata /path/to/sm.json --mappings /path/to/mappings.json
 ```
 
 ## Deploying with Docker Compose

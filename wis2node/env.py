@@ -28,10 +28,12 @@ from wis2node import cli_helpers
 
 LOGGER = logging.getLogger(__name__)
 
-DATADIR = os.environ.get('WIS2NODE_DATADIR', None)
-DATADIR_INCOMING = os.environ.get('WIS2NODE_DATADIR_INCOMING', None)
-DATADIR_OUTGOING = os.environ.get('WIS2NODE_DATADIR_OUTGOING', None)
-DATADIR_PUBLIC = os.environ.get('WIS2NODE_DATADIR_PUBLIC', None)
+PROCESSING_PLUGINS = {}
+
+DATADIR = Path(os.environ.get('WIS2NODE_DATADIR', None))
+DATADIR_INCOMING = Path(os.environ.get('WIS2NODE_DATADIR_INCOMING', None))
+DATADIR_OUTGOING = Path(os.environ.get('WIS2NODE_DATADIR_OUTGOING', None))
+DATADIR_PUBLIC = Path(os.environ.get('WIS2NODE_DATADIR_PUBLIC', None))
 CATALOGUE_BACKEND = os.environ.get('WIS2NODE_CATALOGUE_BACKEND', None)
 OSCAR_API_TOKEN = os.environ.get('WIS2NODE_OSCAR_API_TOKEN', None)
 OGC_API_URL = os.environ.get('WIS2NODE_OGC_API_URL', None)
@@ -50,6 +52,13 @@ if None in [
     raise EnvironmentError(msg)
 
 
+LOGGER.debug('Loading processing plugins')
+
+for key, value in os.environ.items():
+    if key.startswith('WIS2NODE_PROCESSING_PLUGIN'):
+        PROCESSING_PLUGINS[key] = value
+
+
 @click.group()
 def environment():
     """Environment management"""
@@ -63,13 +72,13 @@ def create(ctx, verbosity):
     """Creates baseline data/metadata directory structure"""
 
     click.echo(f'Creating baseline directory structure in {DATADIR}')
-    Path(DATADIR).mkdir(parents=True, exist_ok=True)
-    Path(DATADIR_INCOMING).mkdir(parents=True, exist_ok=True)
-    Path(DATADIR_OUTGOING).mkdir(parents=True, exist_ok=True)
-    Path(DATADIR_PUBLIC).mkdir(parents=True, exist_ok=True)
-    Path(f'{DATADIR}/cache').mkdir(parents=True, exist_ok=True)
-    Path(f'{DATADIR}/metadata/discovery').mkdir(parents=True, exist_ok=True)
-    Path(f'{DATADIR}/metadata/station').mkdir(parents=True, exist_ok=True)
+    DATADIR.mkdir(parents=True, exist_ok=True)
+    DATADIR_INCOMING.mkdir(parents=True, exist_ok=True)
+    DATADIR_OUTGOING.mkdir(parents=True, exist_ok=True)
+    DATADIR_PUBLIC.mkdir(parents=True, exist_ok=True)
+    (DATADIR / 'cache').mkdir(parents=True, exist_ok=True)
+    (DATADIR / 'metadata' / 'discovery').mkdir(parents=True, exist_ok=True)
+    (DATADIR / 'metadata' / 'station').mkdir(parents=True, exist_ok=True)
 
 
 environment.add_command(create)

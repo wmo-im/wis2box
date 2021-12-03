@@ -1,11 +1,15 @@
 wis2node:
     retention: P30D
+    data_category: observations-surface-land
+    country_code: mw
+    originating_centre: FWCL
+    station_type: landFixed
 
 mcf:
     version: 1.0
 
 metadata:
-    identifier: landObservations.mw.malawi.weatherObservations
+    identifier: observations-surface-land.mw.FWCL.landFixed
     language: en
     language_alternate: fr
     charset: utf8

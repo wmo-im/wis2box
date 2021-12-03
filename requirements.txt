@@ -1,4 +1,5 @@
 pygeometa
 pyoscar
+PyYAML
 s3fs
 tinydb
