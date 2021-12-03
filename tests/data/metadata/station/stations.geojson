@@ -1,1 +1,167 @@
-{"type": "FeatureCollection", "features": [{"id": 91884, "type": "Feature", "geometry": {"type": "Point", "coordinates": [34.4992, -15.46674, 929]}, "properties": {"wigos_id": "0-454-2-AWSCHIDOOLE", "name": "CHIDOOLE", "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSCHIDOOLE", "status": "operational"}}, {"id": 65619, "type": "Feature", "geometry": {"type": "Point", "coordinates": [33.37965, -13.77303, 1095]}, "properties": {"wigos_id": "0-454-2-AWSKASIYA", "name": "KASIYA AWS", "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSKASIYA", "status": "operational"}}, {"id": 91893, "type": "Feature", "geometry": {"type": "Point", "coordinates": [34.966666, -14.983333, 618]}, "properties": {"wigos_id": "0-454-2-AWSBALAKA", "name": "BALAKA", "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSBALAKA", "status": "operational"}}, {"id": 91873, "type": "Feature", "geometry": {"type": "Point", "coordinates": [33.83727, -13.14202, 1088]}, "properties": {"wigos_id": "0-454-2-AWSMALOMO", "name": "MALOMO", "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSMALOMO", "status": "operational"}}, {"id": 91885, "type": "Feature", "geometry": {"type": "Point", "coordinates": [35.27428, -15.84052, 806]}, "properties": {"wigos_id": "0-454-2-AWSNAMITAMBO", "name": "NAMITAMBO", "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSNAMITAMBO", "status": "operational"}}, {"id": 91880, "type": "Feature", "geometry": {"type": "Point", "coordinates": [34.955, -14.948, 764]}, "properties": {"wigos_id": "0-454-2-AWSTOLEZA", "name": "TOLEZA", "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSTOLEZA", "status": "operational"}}, {"id": 91840, "type": "Feature", "geometry": {"type": "Point", "coordinates": [33.67305, -9.92951, 848]}, "properties": {"wigos_id": "0-454-2-AWSKAYEREKERA", "name": "KAYEREKERA", "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSKAYEREKERA", "status": "operational"}}, {"id": 65618, "type": "Feature", "geometry": {"type": "Point", "coordinates": [34.07244, -14.39528, 1288]}, "properties": {"wigos_id": "0-454-2-AWSLOBI", "name": "LOBI AWS", "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSLOBI", "status": "operational"}}, {"id": 91875, "type": "Feature", "geometry": {"type": "Point", "coordinates": [34.10468, -14.04422, 1230]}, "properties": {"wigos_id": "0-454-2-AWSNKHOMA", "name": "NKHOMA UNIVERSITY", "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSNKHOMA", "status": "operational"}}]}
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "id": 91884,
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    34.4992,
+                    -15.46674,
+                    929
+                ]
+            },
+            "properties": {
+                "wigos_id": "0-454-2-AWSCHIDOOLE",
+                "name": "CHIDOOLE",
+                "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSCHIDOOLE",
+                "status": "operational"
+            }
+        },
+        {
+            "id": 65619,
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    33.37965,
+                    -13.77303,
+                    1095
+                ]
+            },
+            "properties": {
+                "wigos_id": "0-454-2-AWSKASIYA",
+                "name": "KASIYA AWS",
+                "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSKASIYA",
+                "status": "operational"
+            }
+        },
+        {
+            "id": 91893,
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    34.966666,
+                    -14.983333,
+                    618
+                ]
+            },
+            "properties": {
+                "wigos_id": "0-454-2-AWSBALAKA",
+                "name": "BALAKA",
+                "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSBALAKA",
+                "status": "operational"
+            }
+        },
+        {
+            "id": 91873,
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    33.83727,
+                    -13.14202,
+                    1088
+                ]
+            },
+            "properties": {
+                "wigos_id": "0-454-2-AWSMALOMO",
+                "name": "MALOMO",
+                "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSMALOMO",
+                "status": "operational"
+            }
+        },
+        {
+            "id": 91885,
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    35.27428,
+                    -15.84052,
+                    806
+                ]
+            },
+            "properties": {
+                "wigos_id": "0-454-2-AWSNAMITAMBO",
+                "name": "NAMITAMBO",
+                "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSNAMITAMBO",
+                "status": "operational"
+            }
+        },
+        {
+            "id": 91880,
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    34.955,
+                    -14.948,
+                    764
+                ]
+            },
+            "properties": {
+                "wigos_id": "0-454-2-AWSTOLEZA",
+                "name": "TOLEZA",
+                "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSTOLEZA",
+                "status": "operational"
+            }
+        },
+        {
+            "id": 91840,
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    33.67305,
+                    -9.92951,
+                    848
+                ]
+            },
+            "properties": {
+                "wigos_id": "0-454-2-AWSKAYEREKERA",
+                "name": "KAYEREKERA",
+                "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSKAYEREKERA",
+                "status": "operational"
+            }
+        },
+        {
+            "id": 65618,
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    34.07244,
+                    -14.39528,
+                    1288
+                ]
+            },
+            "properties": {
+                "wigos_id": "0-454-2-AWSLOBI",
+                "name": "LOBI AWS",
+                "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSLOBI",
+                "status": "operational"
+            }
+        },
+        {
+            "id": 91875,
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    34.10468,
+                    -14.04422,
+                    1230
+                ]
+            },
+            "properties": {
+                "wigos_id": "0-454-2-AWSNKHOMA",
+                "name": "NKHOMA UNIVERSITY",
+                "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSNKHOMA",
+                "status": "operational"
+            }
+        }
+    ]
+}

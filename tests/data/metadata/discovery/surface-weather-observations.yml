@@ -1,12 +1,11 @@
 wis2node:
     retention: P30D
-    topic-hierarchy: mw.weatherObservations.data_category.dataset_name
 
 mcf:
     version: 1.0
 
 metadata:
-    identifier: mw.gov.metmalawi.surface_weather_observations
+    identifier: landObservations.mw.malawi.weatherObservations
     language: en
     language_alternate: fr
     charset: utf8
@@ -46,7 +45,7 @@ identification:
         wis2:
             keywords:
                 en:
-                    - mw.weatherObservations.data_category.dataset_name
+                    - mw.malawi.weatherObservations.dataset_name
             keywords_type: theme
             vocabulary:
                 name:

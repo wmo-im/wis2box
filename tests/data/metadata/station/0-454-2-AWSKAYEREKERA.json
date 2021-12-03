@@ -1,1 +1,296 @@
-{"id": 91840, "name": "KAYEREKERA", "typeName": "Land (fixed)", "typeId": 1, "wmoRaName": "I - Africa", "wmoRaId": 1, "lastModifiedOn": "2021-04-21", "lastModifiedBy": "3d8701fa-1142-4122-9cce-bf48726177b2", "lastModifiedByFullName": "Dzingomvera Fatsanawo", "aliases": [], "descriptions": [], "timezones": [{"id": 4092, "timezoneName": "UTC+2", "timezoneId": 3, "validSince": "2019-10-06"}], "organizations": [{"id": 20500, "organizationName": "Department of Climate Change and Meteorological Services [Malawi]", "organizationId": 474, "validSince": "2019-10-06", "xmlId": "id_8ead5c9e-0921-441b-ae80-ee45eb983899"}], "topographies": [{"id": 3509, "localTopographyName": "(unknown)", "localTopographyId": 9, "relativeElevationName": "at middle", "relativeElevationId": 4, "topographicalContextName": "within rises", "topographicalContextId": 4, "altitudeDepthName": "of high altitude", "altitudeDepthId": 10, "validSince": "2019-10-06", "xmlId": "id_a7bf398a-7e30-46eb-90a6-23f513aa0116"}], "territories": [{"id": 109321, "territoryName": "Malawi", "territoryId": 119, "validSince": "2019-10-06", "xmlId": "id_891b5432-e0f6-4657-b984-5884452b908b"}], "locations": [{"id": 113056, "latitude": -9.92951, "longitude": 33.67305, "elevation": 848, "validSince": "2019-10-06", "xmlId": "id_4bc171ef-3e1f-48e3-8357-987687adacfc"}], "surfaceRoughnesses": [], "surfaceCovers": [{"id": 3622, "surfaceCoverName": "Closed to open (>15%) (broadleaved or needleleaved, evergreen or deciduous) shrubland (<5m)", "surfaceCoverId": 107, "surfaceCoverSchemeId": 8, "surfaceCoverSchemeName": "Surface cover types (GlobCover2009)", "surfaceCoverSchemeUrl": "http://due.esrin.esa.int/files/GLOBCOVER2009_Validation_Report_2.2.pdf", "validSince": "2019-10-06", "xmlId": "id_afcd6fe4-942f-44e5-a2d1-94ce247d1342"}], "climateZones": [{"id": 4341, "climateZoneLongName": "Warm Temperate - Dry winter - Hot summer", "climateZoneId": 16, "validSince": "2019-10-06", "xmlId": "id_1efce7ec-6bd6-4f19-ba54-f36257da387c"}], "populations": [], "events": [], "imageFolderId": "22439859-72db-4c2f-9084-05a2c86e5dc8", "documentFolderId": "85505015-d31c-4481-a431-e7261b051010", "bibliographicReferences": [], "virtualStations": [], "contacts": [{"contactId": 1386, "contact": {"userId": "3d8701fa-1142-4122-9cce-bf48726177b2", "title": "Mr", "name": "Fatsanawo", "surname": "Dzingomvera", "surnameNameTitle": "Dzingomvera Fatsanawo, Mr", "email": "fatsanawo@gmail.com", "address": "P.o. Box 1808 Blantyre", "city": "BLANTYRE", "countryId": 119, "countryName": "Malawi", "phone": "+265999403996", "status": 1, "lastModifiedOn": "2021-04-28T22:00:00.000+00:00", "lastModifiedBy": "3d8701fa-1142-4122-9cce-bf48726177b2", "lastModifiedByFirstName": "Fatsanawo", "lastModifiedBySurname": "Dzingomvera", "administrator": false, "id": 1386, "organisationId": 474, "organisationName": "Department of Climate Change and Meteorological Services [Malawi]", "organizationUrl": "http://www.metmalawi.gov.mw", "wmoRaId": 1, "wmoRaName": "Africa", "otherPhone": "+265888855033", "functionValues": [], "functionNameValues": ["Instrument Expert", "National focal point in Malawi for GOS"], "stationIds": [56460, 65618, 65619], "stationNames": ["KASIYA AWS", "LOBI AWS", "Mhuju"], "stations": [{"id": 65619, "name": "KASIYA AWS", "wigosId": "0-454-2-AWSKASIYA"}, {"id": 65618, "name": "LOBI AWS", "wigosId": "0-454-2-AWSLOBI"}, {"id": 56460, "name": "Mhuju", "wigosId": "0-454-2-a10343014"}], "ie": true, "addedCountryList": [{"countryId": 119, "addedProgramsIds": [4], "removeAllPrograms": false, "officialNfp": true, "definition": "GOS"}], "addedProgramPfpList": [], "addedProgramPaList": []}, "measurementLeader": false}, {"contactId": 466, "contact": {"userId": "7739e7b1-8737-4013-abcf-901938793c34", "title": "Mr.", "name": "Jolamu", "surname": "Nkhokwe", "surnameNameTitle": "Nkhokwe Jolamu, Mr.", "email": "jnkhokwe@metmalawi.com", "address": "Meteorological Department, Malawi Meteorological Service\nP.O. Box 1808", "city": "Blantyre", "countryId": 119, "countryName": "Malawi", "phone": "265 1 822014", "status": -1, "lastModifiedOn": "2018-10-08T22:00:00.000+00:00", "lastModifiedBy": "866e186c-9c64-49a8-8bb2-23b994e06d92", "lastModifiedByFirstName": "Lucia", "lastModifiedBySurname": "Cappelletti", "administrator": false, "id": 466, "organisationId": 474, "organisationName": "Department of Climate Change and Meteorological Services [Malawi]", "organizationUrl": "http://www.metmalawi.gov.mw", "wmoRaId": 1, "wmoRaName": "Africa", "fax": "265 1 822215", "functionValues": [], "functionNameValues": ["Instrument Expert", "National focal point in Malawi for GAW, GOS"], "stationIds": [592, 65618, 65619], "stationNames": ["KASIYA AWS", "LOBI AWS", "Lilongwe"], "stations": [{"id": 65619, "name": "KASIYA AWS", "wigosId": "0-454-2-AWSKASIYA"}, {"id": 65618, "name": "LOBI AWS", "wigosId": "0-454-2-AWSLOBI"}, {"id": 592, "name": "Lilongwe", "wigosId": "0-20008-0-LIL"}], "ie": true, "addedCountryList": [{"countryId": 119, "addedProgramsIds": [1, 4], "removeAllPrograms": false, "officialNfp": true, "definition": "GAW, GOS"}], "addedProgramPfpList": [], "addedProgramPaList": []}, "measurementLeader": false}], "stationPrograms": [{"id": 165974, "program": "GOS", "programId": 4, "approvalStatus": "Approved", "programUrl": "https://community.wmo.int/activity-areas/global-observing-system-gos", "stationProgramStatuses": [{"id": "163320", "declaredStatusId": 1, "declaredStatusName": "Operational", "memberSince": "2019-10-06", "xmlId": "id_7e0bd67e-5216-492f-b65b-70181dd1e487"}], "stationProgramAssessedStatuses": [{"id": "4909", "assessedStatusId": 3, "assessedStatusName": "Non-reporting", "sinceDt": "2021-04-01", "tillDt": "2021-10-31", "dataCenterId": 16, "dataCenterName": "European Center for Medium Range Weather Forecasting"}], "assessedStatusId": 3, "assessedStatusName": "Non-reporting", "expired": false}], "approvalStatus": "Approved", "approvalStatusId": 1, "photos": [], "documents": [], "dateEstablished": "2019-10-06", "wigosIds": [{"id": 85543, "wid": "0-454-2-AWSKAYEREKERA", "primary": true, "stationId": 91840}], "operatingStatusId": 8, "operatingStatusName": "Silent", "declaredStatusId": 1, "declaredStatusName": "Operational"}
+{
+    "id": 91840,
+    "name": "KAYEREKERA",
+    "typeName": "Land (fixed)",
+    "typeId": 1,
+    "wmoRaName": "I - Africa",
+    "wmoRaId": 1,
+    "lastModifiedOn": "2021-04-21",
+    "lastModifiedBy": "3d8701fa-1142-4122-9cce-bf48726177b2",
+    "lastModifiedByFullName": "Dzingomvera Fatsanawo",
+    "aliases": [],
+    "descriptions": [],
+    "timezones": [
+        {
+            "id": 4092,
+            "timezoneName": "UTC+2",
+            "timezoneId": 3,
+            "validSince": "2019-10-06"
+        }
+    ],
+    "organizations": [
+        {
+            "id": 20500,
+            "organizationName": "Department of Climate Change and Meteorological Services [Malawi]",
+            "organizationId": 474,
+            "validSince": "2019-10-06",
+            "xmlId": "id_8ead5c9e-0921-441b-ae80-ee45eb983899"
+        }
+    ],
+    "topographies": [
+        {
+            "id": 3509,
+            "localTopographyName": "(unknown)",
+            "localTopographyId": 9,
+            "relativeElevationName": "at middle",
+            "relativeElevationId": 4,
+            "topographicalContextName": "within rises",
+            "topographicalContextId": 4,
+            "altitudeDepthName": "of high altitude",
+            "altitudeDepthId": 10,
+            "validSince": "2019-10-06",
+            "xmlId": "id_a7bf398a-7e30-46eb-90a6-23f513aa0116"
+        }
+    ],
+    "territories": [
+        {
+            "id": 109321,
+            "territoryName": "Malawi",
+            "territoryId": 119,
+            "validSince": "2019-10-06",
+            "xmlId": "id_891b5432-e0f6-4657-b984-5884452b908b"
+        }
+    ],
+    "locations": [
+        {
+            "id": 113056,
+            "latitude": -9.92951,
+            "longitude": 33.67305,
+            "elevation": 848,
+            "validSince": "2019-10-06",
+            "xmlId": "id_4bc171ef-3e1f-48e3-8357-987687adacfc"
+        }
+    ],
+    "surfaceRoughnesses": [],
+    "surfaceCovers": [
+        {
+            "id": 3622,
+            "surfaceCoverName": "Closed to open (>15%) (broadleaved or needleleaved, evergreen or deciduous) shrubland (<5m)",
+            "surfaceCoverId": 107,
+            "surfaceCoverSchemeId": 8,
+            "surfaceCoverSchemeName": "Surface cover types (GlobCover2009)",
+            "surfaceCoverSchemeUrl": "http://due.esrin.esa.int/files/GLOBCOVER2009_Validation_Report_2.2.pdf",
+            "validSince": "2019-10-06",
+            "xmlId": "id_afcd6fe4-942f-44e5-a2d1-94ce247d1342"
+        }
+    ],
+    "climateZones": [
+        {
+            "id": 4341,
+            "climateZoneLongName": "Warm Temperate - Dry winter - Hot summer",
+            "climateZoneId": 16,
+            "validSince": "2019-10-06",
+            "xmlId": "id_1efce7ec-6bd6-4f19-ba54-f36257da387c"
+        }
+    ],
+    "populations": [],
+    "events": [],
+    "imageFolderId": "22439859-72db-4c2f-9084-05a2c86e5dc8",
+    "documentFolderId": "85505015-d31c-4481-a431-e7261b051010",
+    "bibliographicReferences": [],
+    "virtualStations": [],
+    "contacts": [
+        {
+            "contactId": 1386,
+            "contact": {
+                "userId": "3d8701fa-1142-4122-9cce-bf48726177b2",
+                "title": "Mr",
+                "name": "Fatsanawo",
+                "surname": "Dzingomvera",
+                "surnameNameTitle": "Dzingomvera Fatsanawo, Mr",
+                "email": "fatsanawo@gmail.com",
+                "address": "P.o. Box 1808 Blantyre",
+                "city": "BLANTYRE",
+                "countryId": 119,
+                "countryName": "Malawi",
+                "phone": "+265999403996",
+                "status": 1,
+                "lastModifiedOn": "2021-04-28T22:00:00.000+00:00",
+                "lastModifiedBy": "3d8701fa-1142-4122-9cce-bf48726177b2",
+                "lastModifiedByFirstName": "Fatsanawo",
+                "lastModifiedBySurname": "Dzingomvera",
+                "administrator": false,
+                "id": 1386,
+                "organisationId": 474,
+                "organisationName": "Department of Climate Change and Meteorological Services [Malawi]",
+                "organizationUrl": "http://www.metmalawi.gov.mw",
+                "wmoRaId": 1,
+                "wmoRaName": "Africa",
+                "otherPhone": "+265888855033",
+                "functionValues": [],
+                "functionNameValues": [
+                    "Instrument Expert",
+                    "National focal point in Malawi for GOS"
+                ],
+                "stationIds": [
+                    56460,
+                    65618,
+                    65619
+                ],
+                "stationNames": [
+                    "KASIYA AWS",
+                    "LOBI AWS",
+                    "Mhuju"
+                ],
+                "stations": [
+                    {
+                        "id": 65619,
+                        "name": "KASIYA AWS",
+                        "wigosId": "0-454-2-AWSKASIYA"
+                    },
+                    {
+                        "id": 65618,
+                        "name": "LOBI AWS",
+                        "wigosId": "0-454-2-AWSLOBI"
+                    },
+                    {
+                        "id": 56460,
+                        "name": "Mhuju",
+                        "wigosId": "0-454-2-a10343014"
+                    }
+                ],
+                "ie": true,
+                "addedCountryList": [
+                    {
+                        "countryId": 119,
+                        "addedProgramsIds": [
+                            4
+                        ],
+                        "removeAllPrograms": false,
+                        "officialNfp": true,
+                        "definition": "GOS"
+                    }
+                ],
+                "addedProgramPfpList": [],
+                "addedProgramPaList": []
+            },
+            "measurementLeader": false
+        },
+        {
+            "contactId": 466,
+            "contact": {
+                "userId": "7739e7b1-8737-4013-abcf-901938793c34",
+                "title": "Mr.",
+                "name": "Jolamu",
+                "surname": "Nkhokwe",
+                "surnameNameTitle": "Nkhokwe Jolamu, Mr.",
+                "email": "jnkhokwe@metmalawi.com",
+                "address": "Meteorological Department, Malawi Meteorological Service\nP.O. Box 1808",
+                "city": "Blantyre",
+                "countryId": 119,
+                "countryName": "Malawi",
+                "phone": "265 1 822014",
+                "status": -1,
+                "lastModifiedOn": "2018-10-08T22:00:00.000+00:00",
+                "lastModifiedBy": "866e186c-9c64-49a8-8bb2-23b994e06d92",
+                "lastModifiedByFirstName": "Lucia",
+                "lastModifiedBySurname": "Cappelletti",
+                "administrator": false,
+                "id": 466,
+                "organisationId": 474,
+                "organisationName": "Department of Climate Change and Meteorological Services [Malawi]",
+                "organizationUrl": "http://www.metmalawi.gov.mw",
+                "wmoRaId": 1,
+                "wmoRaName": "Africa",
+                "fax": "265 1 822215",
+                "functionValues": [],
+                "functionNameValues": [
+                    "Instrument Expert",
+                    "National focal point in Malawi for GAW, GOS"
+                ],
+                "stationIds": [
+                    592,
+                    65618,
+                    65619
+                ],
+                "stationNames": [
+                    "KASIYA AWS",
+                    "LOBI AWS",
+                    "Lilongwe"
+                ],
+                "stations": [
+                    {
+                        "id": 65619,
+                        "name": "KASIYA AWS",
+                        "wigosId": "0-454-2-AWSKASIYA"
+                    },
+                    {
+                        "id": 65618,
+                        "name": "LOBI AWS",
+                        "wigosId": "0-454-2-AWSLOBI"
+                    },
+                    {
+                        "id": 592,
+                        "name": "Lilongwe",
+                        "wigosId": "0-20008-0-LIL"
+                    }
+                ],
+                "ie": true,
+                "addedCountryList": [
+                    {
+                        "countryId": 119,
+                        "addedProgramsIds": [
+                            1,
+                            4
+                        ],
+                        "removeAllPrograms": false,
+                        "officialNfp": true,
+                        "definition": "GAW, GOS"
+                    }
+                ],
+                "addedProgramPfpList": [],
+                "addedProgramPaList": []
+            },
+            "measurementLeader": false
+        }
+    ],
+    "stationPrograms": [
+        {
+            "id": 165974,
+            "program": "GOS",
+            "programId": 4,
+            "approvalStatus": "Approved",
+            "programUrl": "https://community.wmo.int/activity-areas/global-observing-system-gos",
+            "stationProgramStatuses": [
+                {
+                    "id": "163320",
+                    "declaredStatusId": 1,
+                    "declaredStatusName": "Operational",
+                    "memberSince": "2019-10-06",
+                    "xmlId": "id_7e0bd67e-5216-492f-b65b-70181dd1e487"
+                }
+            ],
+            "stationProgramAssessedStatuses": [
+                {
+                    "id": "4909",
+                    "assessedStatusId": 3,
+                    "assessedStatusName": "Non-reporting",
+                    "sinceDt": "2021-04-01",
+                    "tillDt": "2021-10-31",
+                    "dataCenterId": 16,
+                    "dataCenterName": "European Center for Medium Range Weather Forecasting"
+                }
+            ],
+            "assessedStatusId": 3,
+            "assessedStatusName": "Non-reporting",
+            "expired": false
+        }
+    ],
+    "approvalStatus": "Approved",
+    "approvalStatusId": 1,
+    "photos": [],
+    "documents": [],
+    "dateEstablished": "2019-10-06",
+    "wigosIds": [
+        {
+            "id": 85543,
+            "wid": "0-454-2-AWSKAYEREKERA",
+            "primary": true,
+            "stationId": 91840
+        }
+    ],
+    "operatingStatusId": 8,
+    "operatingStatusName": "Silent",
+    "declaredStatusId": 1,
+    "declaredStatusName": "Operational"
+}
