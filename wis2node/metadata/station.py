@@ -113,6 +113,7 @@ def sync(ctx, filepath, verbosity):
 
     for row in reader:
         wsi = row['wigos_station_identifier']
+        click.echo(f"Caching station metadata for {row['wigos_station_identifier']}")  # noqa
         try:
             station_report = get_station_report(wsi)
         except RuntimeError:

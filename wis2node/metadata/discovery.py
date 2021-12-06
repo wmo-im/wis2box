@@ -104,7 +104,8 @@ def publish(ctx, filepath, verbosity):
 @click.command()
 @click.pass_context
 @click.argument('identifier')
-def unpublish(ctx, identifier):
+@cli_helpers.OPTION_VERBOSITY
+def unpublish(ctx, identifier, verbosity):
     """Deletes a discovery metadata record from the catalogue"""
 
     delete_metadata(identifier)
