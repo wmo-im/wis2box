@@ -46,6 +46,7 @@ def upsert_metadata(record: str) -> None:
     record_query = Query()
 
     try:
+        LOGGER.info("Publishing discovery metadata {rec_dict['id']}")
         res = db.upsert(rec_dict, record_query.id == rec_dict['id'])
         LOGGER.info(f"Record {rec_dict['id']} upserted with internal id {res}")
     except Exception as err:
@@ -64,5 +65,6 @@ def delete_metadata(identifier: str) -> None:
     :returns: None
     """
 
+    LOGGER.info('Unpublishing discovery metadata {identifier}')
     db = TinyDB(CATALOGUE_BACKEND)
     db.remove(where('id') == identifier)
