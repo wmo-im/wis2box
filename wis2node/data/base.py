@@ -19,23 +19,13 @@
 #
 ###############################################################################
 
-from datetime import datetime
 import logging
 
+from wis2node.env import DATADIR_PUBLIC
 from wis2node.env import DATADIR_OUTGOING
 
 
 LOGGER = logging.getLogger(__name__)
-
-
-def get_today_as_string() -> str:
-    """
-    Helper function to generate today's date as YYYY-MM-DD
-
-    :returns: `str` representation of YYYY-MM-DD
-    """
-
-    return datetime.today().strftime('%Y-%m-%d')
 
 
 class AbstractData:
@@ -49,13 +39,11 @@ class AbstractData:
         """
 
         self.filename = None
-        self.file_extension = None
         self.incoming_filepath = None
 
         self.input_data = input_data
         self.output_data = {}
         self.discovery_metadata = discovery_metadata
-        self.date = get_today_as_string()
 
         self.topic_hierarchy = self.discovery_metadata['metadata']['identifier']  # noqa
 
@@ -73,19 +61,28 @@ class AbstractData:
         raise NotImplementedError()
 
     def publish(self) -> bool:
-        if self.file_extension is None:
-            raise ValueError('File extension not set')
-
         LOGGER.debug('Writing output data')
         for key, value in self.output_data.items():
-            filename = self.public_filepath / key
-            filename = filename.with_suffix(f'.{self.file_extension}')
+            LOGGER.debug('Writing product {key}')
 
-            LOGGER.debug(f'Writing data to {filename}')
-            filename.parent.mkdir(parents=True, exist_ok=True)
+            rfp = value['_meta']['relative_filepath']
 
-            with filename.open('wb') as fh:
-                fh.write(value.read())
+            for key2, value2 in value.items():
+                if key2 == '_meta':
+                    continue
+                filename = DATADIR_PUBLIC / (rfp) / key
+                filename = filename.with_suffix(f'.{key2}')
+
+                LOGGER.debug(f'Writing data to {filename}')
+                filename.parent.mkdir(parents=True, exist_ok=True)
+
+                if isinstance(value2, bytes):
+                    mode = 'wb'
+                if isinstance(value2, str):
+                    mode = 'w'
+
+                with filename.open(mode) as fh:
+                    fh.write(value2)
 
         return True
 
@@ -95,8 +92,7 @@ class AbstractData:
 
         return DATADIR_OUTGOING / self.filename
 
-    @property
-    def public_filepath(self):
+    def get_public_filepath(self):
         """Public filepath"""
 
         raise NotImplementedError()

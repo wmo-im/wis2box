@@ -20,15 +20,17 @@
 ###############################################################################
 
 import click
+from datetime import datetime
 import json
 import logging
+from pathlib import Path
 
 import yaml
 
+from csv2bufr import bufr2geojson
 from csv2bufr import transform as transform_csv2bufr
 
 from wis2node import cli_helpers
-from wis2node.env import DATADIR_PUBLIC
 from wis2node.data.base import AbstractData
 
 LOGGER = logging.getLogger(__name__)
@@ -48,7 +50,7 @@ class ObservationData(AbstractData):
 
         super().__init__(input_data, discovery_metadata)
 
-        self.file_extension = 'bufr4'
+        self.data_date = None
         self.mappings = mappings
         self.station_metadata = station_metadata
 
@@ -59,14 +61,28 @@ class ObservationData(AbstractData):
 
     def transform(self) -> bool:
         LOGGER.debug('Processing data')
-        self.output_data = transform_csv2bufr(self.input_data, self.mappings,
+        LOGGER.debug('Generating BUFR4')
+        self.output_data = transform_csv2bufr(self.input_data,
+                                              self.mappings['bufr4'],
                                               self.station_metadata)
+
+        LOGGER.debug('Generating GeoJSON')
+        for key, value in self.output_data.items():
+            geojson = bufr2geojson(key, value['bufr4'],
+                                   self.mappings['geojson'])
+            LOGGER.debug('Setting obs date for filepath creation')
+            self.data_date = datetime.fromisoformat(
+                geojson['properties']['phenomenonTime'])
+
+            self.output_data[key]['_meta'] = {
+                'relative_filepath': self.get_local_filepath()
+            }
+            self.output_data[key]['geojson'] = json.dumps(geojson)
+
         return True
 
-    @property
-    def public_filepath(self):
-        return (DATADIR_PUBLIC /
-                self.date /
+    def get_local_filepath(self):
+        return (Path(self.data_date.strftime('%Y-%m-%d')) /
                 'wis' /
                 self.data_category /
                 self.country_code /
@@ -76,10 +92,24 @@ class ObservationData(AbstractData):
 
 def process_data(data: str, mappings: dict, discovery_metadata: dict,
                  station_metadata: dict) -> bool:
+    """
+    Data processing workflow for observations
+
+    :param data: `str` of data to be processed
+    :param mappings: `dict` of mappings
+    :param discovery_metadata: `dict` of discovery metadata MCF
+    :param station_metadata: `dict` of station metadata
+
+    :returns: `bool` of processing result
+    """
 
     d = ObservationData(data, mappings, discovery_metadata, station_metadata)
+    LOGGER.info('Transforming data')
     d.transform()
+    LOGGER.info('Publishing data')
     d.publish()
+
+    return True
 
 
 @click.command()
@@ -89,14 +119,20 @@ def process_data(data: str, mappings: dict, discovery_metadata: dict,
 @cli_helpers.OPTION_STATION_METADATA
 @cli_helpers.OPTION_MAPPINGS
 @cli_helpers.OPTION_VERBOSITY
+@click.option('--geojson_mappings', type=click.File())
 def process(ctx, filepath, discovery_metadata, station_metadata, mappings,
-            verbosity):
+            geojson_mappings, verbosity):
     """Process observations"""
 
     click.echo(f'Processing {filepath}')
 
+    mappings_ = {
+        'bufr4': json.load(mappings),
+        'geojson': json.load(geojson_mappings),
+    }
+
     try:
-        _ = process_data(filepath.read(), json.load(mappings),
+        _ = process_data(filepath.read(), mappings_,
                          yaml.load(discovery_metadata, Loader=yaml.SafeLoader),
                          json.load(station_metadata))
     except Exception as err:
