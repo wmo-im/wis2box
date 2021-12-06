@@ -65,4 +65,4 @@ def delete_metadata(identifier: str) -> None:
     """
 
     db = TinyDB(CATALOGUE_BACKEND)
-    db.remove(where('key1') == identifier)
+    db.remove(where('id') == identifier)
