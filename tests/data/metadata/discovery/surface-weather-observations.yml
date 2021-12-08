@@ -9,7 +9,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: observations-surface-land.mw.FWCL.landFixed
+    identifier: observations-surface-land.mw.FWCL.landFixed.hourly
     language: en
     language_alternate: fr
     charset: utf8
@@ -24,9 +24,9 @@ identification:
     language: en
     charset: utf8
     title:
-        en: Surface weather observations
+        en: Surface weather observations (hourly)
     abstract:
-        en: Surface weather observations
+        en: Surface weather observations (hourly)
     dates:
         creation: 2021-11-29
         publication: 2021-11-29
@@ -65,6 +65,7 @@ identification:
         temporal:
             - begin: 2021-11-29
               end: null
+              resolution: P1H
     fees: None
     accessconstraints: otherRestrictions
     rights:
@@ -74,7 +75,7 @@ identification:
     maintenancefrequency: continual
 
 contact:
-    main: &contact_main
+    pointOfContact: &contact_poc
         organization: Department of Climate Change and Meteorologial Services (DCCMS)
         url: https://www.metmalawi.gov.mw
         individualname: Firstname Lastname
@@ -90,7 +91,7 @@ contact:
         hoursofservice: 0700h - 1500h UTC
         contactinstructions: email
 
-    distribution: *contact_main
+    distributor: *contact_poc
 
 dataquality:
     scope:
