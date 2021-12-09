@@ -1,92 +1,92 @@
 {
-    "id": 91884,
-    "name": "CHIDOOLE",
+    "id": 91840,
+    "name": "KAYEREKERA",
     "typeName": "Land (fixed)",
     "typeId": 1,
     "wmoRaName": "I - Africa",
     "wmoRaId": 1,
-    "lastModifiedOn": "2021-04-23",
+    "lastModifiedOn": "2021-04-21",
     "lastModifiedBy": "3d8701fa-1142-4122-9cce-bf48726177b2",
     "lastModifiedByFullName": "Dzingomvera Fatsanawo",
     "aliases": [],
     "descriptions": [],
     "timezones": [
         {
-            "id": 4113,
+            "id": 4092,
             "timezoneName": "UTC+2",
             "timezoneId": 3,
-            "validSince": "2019-08-31"
+            "validSince": "2019-10-06"
         }
     ],
     "organizations": [
         {
-            "id": 20521,
+            "id": 20500,
             "organizationName": "Department of Climate Change and Meteorological Services [Malawi]",
             "organizationId": 474,
-            "validSince": "2019-08-31",
-            "xmlId": "id_f038c9db-b69d-4012-be03-e4d94ad003ab"
+            "validSince": "2019-10-06",
+            "xmlId": "id_8ead5c9e-0921-441b-ae80-ee45eb983899"
         }
     ],
     "topographies": [
         {
-            "id": 3530,
+            "id": 3509,
             "localTopographyName": "(unknown)",
             "localTopographyId": 9,
             "relativeElevationName": "at middle",
             "relativeElevationId": 4,
-            "topographicalContextName": "within mountains",
-            "topographicalContextId": 7,
-            "altitudeDepthName": "of middle altitude",
-            "altitudeDepthId": 9,
-            "validSince": "2019-08-31",
-            "xmlId": "id_944a6edf-ebd4-4dfc-ad8f-55735b70dea3"
+            "topographicalContextName": "within rises",
+            "topographicalContextId": 4,
+            "altitudeDepthName": "of high altitude",
+            "altitudeDepthId": 10,
+            "validSince": "2019-10-06",
+            "xmlId": "id_a7bf398a-7e30-46eb-90a6-23f513aa0116"
         }
     ],
     "territories": [
         {
-            "id": 109365,
+            "id": 109321,
             "territoryName": "Malawi",
             "territoryId": 119,
-            "validSince": "2019-08-31",
-            "xmlId": "id_4202d30d-44a4-41d9-ada0-ad4501634603"
+            "validSince": "2019-10-06",
+            "xmlId": "id_891b5432-e0f6-4657-b984-5884452b908b"
         }
     ],
     "locations": [
         {
-            "id": 113134,
-            "latitude": -15.46674,
-            "longitude": 34.4992,
-            "elevation": 929,
-            "validSince": "2019-08-31",
-            "xmlId": "id_9a8922d1-4a42-445c-a94e-7468ac597719"
+            "id": 113056,
+            "latitude": -9.92951,
+            "longitude": 33.67305,
+            "elevation": 848,
+            "validSince": "2019-10-06",
+            "xmlId": "id_4bc171ef-3e1f-48e3-8357-987687adacfc"
         }
     ],
     "surfaceRoughnesses": [],
     "surfaceCovers": [
         {
-            "id": 3643,
-            "surfaceCoverName": "Open (15-40%) broadleaved deciduous forest/woodland (>5m)",
-            "surfaceCoverId": 95,
+            "id": 3622,
+            "surfaceCoverName": "Closed to open (>15%) (broadleaved or needleleaved, evergreen or deciduous) shrubland (<5m)",
+            "surfaceCoverId": 107,
             "surfaceCoverSchemeId": 8,
             "surfaceCoverSchemeName": "Surface cover types (GlobCover2009)",
             "surfaceCoverSchemeUrl": "http://due.esrin.esa.int/files/GLOBCOVER2009_Validation_Report_2.2.pdf",
-            "validSince": "2019-08-31",
-            "xmlId": "id_7d8725fb-c6d5-40c6-8212-d0cb1defad82"
+            "validSince": "2019-10-06",
+            "xmlId": "id_afcd6fe4-942f-44e5-a2d1-94ce247d1342"
         }
     ],
     "climateZones": [
         {
-            "id": 4362,
-            "climateZoneLongName": "Equatorial - Savannah - dry summer",
-            "climateZoneId": 4,
-            "validSince": "2019-08-31",
-            "xmlId": "id_69295172-3676-4f28-85a1-001f0858e34c"
+            "id": 4341,
+            "climateZoneLongName": "Warm Temperate - Dry winter - Hot summer",
+            "climateZoneId": 16,
+            "validSince": "2019-10-06",
+            "xmlId": "id_1efce7ec-6bd6-4f19-ba54-f36257da387c"
         }
     ],
     "populations": [],
     "events": [],
-    "imageFolderId": "e2f3ffb9-fa2c-40b3-b145-26f3e1e97f63",
-    "documentFolderId": "d1174ae0-3a57-47e4-b7c2-f338fdd6a324",
+    "imageFolderId": "22439859-72db-4c2f-9084-05a2c86e5dc8",
+    "documentFolderId": "85505015-d31c-4481-a431-e7261b051010",
     "bibliographicReferences": [],
     "virtualStations": [],
     "contacts": [
@@ -246,23 +246,23 @@
     ],
     "stationPrograms": [
         {
-            "id": 166023,
+            "id": 165974,
             "program": "GOS",
             "programId": 4,
             "approvalStatus": "Approved",
             "programUrl": "https://community.wmo.int/activity-areas/global-observing-system-gos",
             "stationProgramStatuses": [
                 {
-                    "id": "163371",
+                    "id": "163320",
                     "declaredStatusId": 1,
                     "declaredStatusName": "Operational",
-                    "memberSince": "2019-08-31",
-                    "xmlId": "id_b8af13a7-01ab-4bd3-8a24-76d99353524e"
+                    "memberSince": "2019-10-06",
+                    "xmlId": "id_7e0bd67e-5216-492f-b65b-70181dd1e487"
                 }
             ],
             "stationProgramAssessedStatuses": [
                 {
-                    "id": "4903",
+                    "id": "4909",
                     "assessedStatusId": 3,
                     "assessedStatusName": "Non-reporting",
                     "sinceDt": "2021-04-01",
@@ -280,13 +280,13 @@
     "approvalStatusId": 1,
     "photos": [],
     "documents": [],
-    "dateEstablished": "2019-08-31",
+    "dateEstablished": "2019-10-06",
     "wigosIds": [
         {
-            "id": 85587,
-            "wid": "0-454-2-AWSCHIDOOLE",
+            "id": 85543,
+            "wid": "0-454-2-AWSKAYEREKERA",
             "primary": true,
-            "stationId": 91884
+            "stationId": 91840
         }
     ],
     "operatingStatusId": 8,

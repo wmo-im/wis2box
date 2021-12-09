@@ -1,91 +1,91 @@
 {
-    "id": 65619,
-    "name": "KASIYA AWS",
+    "id": 65618,
+    "name": "LOBI AWS",
     "typeName": "Land (fixed)",
     "typeId": 1,
     "wmoRaName": "I - Africa",
     "wmoRaId": 1,
-    "lastModifiedOn": "2021-07-29",
+    "lastModifiedOn": "2020-06-04",
     "lastModifiedBy": "3d8701fa-1142-4122-9cce-bf48726177b2",
     "lastModifiedByFullName": "Dzingomvera Fatsanawo",
     "aliases": [],
     "descriptions": [],
     "timezones": [
         {
-            "id": 3366,
+            "id": 3365,
             "timezoneName": "UTC+2",
             "timezoneId": 3,
-            "validSince": "2019-10-15"
+            "validSince": "2019-11-14"
         }
     ],
     "organizations": [],
     "topographies": [
         {
-            "id": 2377,
+            "id": 2376,
             "localTopographyName": "(unknown)",
             "localTopographyId": 9,
-            "relativeElevationName": "at middle",
-            "relativeElevationId": 4,
-            "topographicalContextName": "within rises",
-            "topographicalContextId": 4,
+            "relativeElevationName": "at low",
+            "relativeElevationId": 3,
+            "topographicalContextName": "within valleys",
+            "topographicalContextId": 5,
             "altitudeDepthName": "of high altitude",
             "altitudeDepthId": 10,
-            "validSince": "2019-10-15",
-            "xmlId": "id_b074e824-fad4-7937-e053-148ef98d6de4"
+            "validSince": "2019-11-14",
+            "xmlId": "id_b074e824-fbcf-7937-e053-148ef98d6de4"
         }
     ],
     "territories": [
         {
-            "id": 83110,
+            "id": 83109,
             "territoryName": "Malawi",
             "territoryId": 119,
-            "validSince": "2019-10-15",
-            "xmlId": "id_b074e824-9733-7937-e053-148ef98d6de4"
+            "validSince": "2019-11-14",
+            "xmlId": "id_b074e824-a524-7937-e053-148ef98d6de4"
         }
     ],
     "locations": [
         {
-            "id": 77168,
-            "latitude": -13.77303,
-            "longitude": 33.37965,
-            "elevation": 1095,
+            "id": 77167,
+            "latitude": -14.39528,
+            "longitude": 34.07244,
+            "elevation": 1288,
             "geoposId": 1,
             "geoposName": "GPS",
-            "validSince": "2019-10-15",
-            "xmlId": "id_b074e825-6362-7937-e053-148ef98d6de4"
+            "validSince": "2019-11-14",
+            "xmlId": "id_b074e825-74e5-7937-e053-148ef98d6de4"
         }
     ],
     "surfaceRoughnesses": [],
     "surfaceCovers": [
         {
-            "id": 2476,
-            "surfaceCoverName": "Closed to open (>15%) (broadleaved or needleleaved, evergreen or deciduous) shrubland (<5m)",
-            "surfaceCoverId": 107,
+            "id": 2475,
+            "surfaceCoverName": "Open (15-40%) broadleaved deciduous forest/woodland (>5m)",
+            "surfaceCoverId": 95,
             "surfaceCoverSchemeId": 8,
             "surfaceCoverSchemeName": "Surface cover types (GlobCover2009)",
             "surfaceCoverSchemeUrl": "http://due.esrin.esa.int/files/GLOBCOVER2009_Validation_Report_2.2.pdf",
-            "validSince": "2019-10-15",
-            "xmlId": "id_b074e824-4b9b-7937-e053-148ef98d6de4"
+            "validSince": "2019-11-14",
+            "xmlId": "id_b074e824-4c69-7937-e053-148ef98d6de4"
         }
     ],
     "climateZones": [
         {
-            "id": 3474,
+            "id": 3473,
             "climateZoneLongName": "Warm Temperate - Dry winter - Hot summer",
             "climateZoneId": 16,
-            "validSince": "2019-10-15",
-            "xmlId": "id_b074e824-f1da-7937-e053-148ef98d6de4"
+            "validSince": "2019-11-14",
+            "xmlId": "id_b074e824-f22f-7937-e053-148ef98d6de4"
         }
     ],
     "populations": [],
     "events": [],
-    "imageFolderId": "4f96a682-4604-44df-9ebc-8bd59a479373",
-    "documentFolderId": "97b062d8-b7fd-4be0-9fe5-a8ed33d187ed",
+    "imageFolderId": "1d3e23f5-73de-4403-b067-442038007899",
+    "documentFolderId": "fd834ceb-ac57-44f8-a971-be25e43b6b75",
     "bibliographicReferences": [],
     "virtualStations": [],
     "contacts": [
         {
-            "id": 7089,
+            "id": 7085,
             "contactId": 1386,
             "contact": {
                 "userId": "3d8701fa-1142-4122-9cce-bf48726177b2",
@@ -159,14 +159,12 @@
                 "addedProgramPfpList": [],
                 "addedProgramPaList": []
             },
-            "roles": [
-                1
-            ],
+            "roles": [],
             "measurementLeader": false,
-            "xmlId": "id_b074e82c-5131-7937-e053-148ef98d6de4"
+            "xmlId": "id_b074e82c-51e8-7937-e053-148ef98d6de4"
         },
         {
-            "id": 7088,
+            "id": 7086,
             "contactId": 466,
             "contact": {
                 "userId": "7739e7b1-8737-4013-abcf-901938793c34",
@@ -243,28 +241,28 @@
             },
             "roles": [],
             "measurementLeader": false,
-            "xmlId": "id_b074e82c-512e-7937-e053-148ef98d6de4"
+            "xmlId": "id_b074e82c-51fa-7937-e053-148ef98d6de4"
         }
     ],
     "stationPrograms": [
         {
-            "id": 117193,
+            "id": 117192,
             "program": "GOS",
             "programId": 4,
             "approvalStatus": "Approved",
             "programUrl": "https://community.wmo.int/activity-areas/global-observing-system-gos",
             "stationProgramStatuses": [
                 {
-                    "id": "114580",
+                    "id": "114579",
                     "declaredStatusId": 1,
                     "declaredStatusName": "Operational",
                     "memberSince": "2020-06-04",
-                    "xmlId": "id_b074e828-235b-7937-e053-148ef98d6de4"
+                    "xmlId": "id_b074e828-18a8-7937-e053-148ef98d6de4"
                 }
             ],
             "stationProgramAssessedStatuses": [
                 {
-                    "id": "13839",
+                    "id": "13840",
                     "assessedStatusId": 3,
                     "assessedStatusName": "Non-reporting",
                     "sinceDt": "2021-01-01",
@@ -282,13 +280,13 @@
     "approvalStatusId": 1,
     "photos": [],
     "documents": [],
-    "dateEstablished": "2019-10-15",
+    "dateEstablished": "2019-11-14",
     "wigosIds": [
         {
-            "id": 59233,
-            "wid": "0-454-2-AWSKASIYA",
+            "id": 59232,
+            "wid": "0-454-2-AWSLOBI",
             "primary": true,
-            "stationId": 65619
+            "stationId": 65618
         }
     ],
     "operatingStatusId": 8,
