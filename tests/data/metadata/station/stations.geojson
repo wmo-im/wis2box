@@ -2,42 +2,6 @@
     "type": "FeatureCollection",
     "features": [
         {
-            "id": 91884,
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [
-                    34.4992,
-                    -15.46674,
-                    929
-                ]
-            },
-            "properties": {
-                "wigos_id": "0-454-2-AWSCHIDOOLE",
-                "name": "CHIDOOLE",
-                "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSCHIDOOLE",
-                "status": "operational"
-            }
-        },
-        {
-            "id": 65619,
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [
-                    33.37965,
-                    -13.77303,
-                    1095
-                ]
-            },
-            "properties": {
-                "wigos_id": "0-454-2-AWSKASIYA",
-                "name": "KASIYA AWS",
-                "url": "https://oscar.wmo.int/surface/#/search/station/stationReportDetails/0-454-2-AWSKASIYA",
-                "status": "operational"
-            }
-        },
-        {
             "id": 91893,
             "type": "Feature",
             "geometry": {
