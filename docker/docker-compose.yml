@@ -72,7 +72,7 @@ services:
       - WIS2NODE_DATADIR_PUBLIC=/data/wis2node/data/public
       - WIS2NODE_CATALOGUE_BACKEND=/data/wis2node/metadata/discovery/records.tinydb
       - WIS2NODE_OSCAR_API_TOKEN=some_token
-      - WIS2NODE_URL=http://wis2node-ui/data
+      - WIS2NODE_URL=http://wis2node-ui/
       - WIS2NODE_OGC_API_URL=http://pygeoapi/pygeoapi
     volumes:
       - ./wis2node/config:/home/wis2node/.config/sr3:ro
