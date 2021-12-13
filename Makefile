@@ -32,6 +32,9 @@ help:
 up:
 	docker-compose $(DOCKER_COMPOSE_ARGS) up -d
 
+login:
+	docker exec -it `docker ps -q --filter ancestor=wis2node_wis2node` /bin/bash
+
 logs:
 	docker-compose $(DOCKER_COMPOSE_ARGS) logs --follow
 
@@ -50,4 +53,4 @@ prune:
 flake8:
 	find . -type f -name "*.py" | xargs flake8
 
-.PHONY: help up down update prune flake8
+.PHONY: help up down login logs update prune flake8

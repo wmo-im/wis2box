@@ -5,10 +5,13 @@ services:
     container_name: nginx
     image: nginx:alpine
     restart: always
+    environment:
+      - METPX_SR3_PATH_PUBLIC=/data/wis2node/data/public
     depends_on:
       - pygeoapi
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../wis2node-data/data/public:/data/wis2node/data/public:ro
 
   wis2node-ui:
     container_name: wis2node-ui
@@ -24,28 +27,6 @@ services:
     volumes:
       - ./pygeoapi/pygeoapi-config.yml:/pygeoapi/local.config.yml:ro
 
-  geohealthcheck-web:
-    container_name: geohealthcheck_web
-    image: geopython/geohealthcheck:latest
-    restart: unless-stopped
-    environment:
-      - SCRIPT_NAME=/monitor
-    env_file:
-      - geohealthcheck/geohealthcheck.env
-    volumes:
-      - geohealthcheck_sqlitedb:/GeoHealthCheck/DB
-
-  geohealthcheck-runner:
-    container_name: geohealthcheck_runner
-    image: geopython/geohealthcheck:latest
-    restart: unless-stopped
-    env_file:
-      - geohealthcheck/geohealthcheck.env
-    entrypoint:
-      - /run-runner.sh
-    volumes:
-      - geohealthcheck_sqlitedb:/GeoHealthCheck/DB
-
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:3.9-management-alpine
@@ -53,23 +34,50 @@ services:
       - RABBITMQ_DEFAULT_USER=wis2node
       - RABBITMQ_DEFAULT_PASS=wis2node
 
-  metpx-sr3:
-    container_name: metpx
+  data-consumer:
+    container_name: data-consumer
     build: https://github.com/MetPX/sarracenia.git#v03_wip
     environment:
       - METPX_SR3_HOST=rabbitmq
       - METPX_SR3_BROKER_USERNAME=wis2node
       - METPX_SR3_BROKER_PASSWORD=wis2node
+      - METPX_SR3_EXCHANGE=xs_wis2node_acquisition
+      - METPX_SR3_PATH_INCOMING=/data/wis2node/data/incoming
       - METPX_SR3_PATH_PUBLIC=/data/wis2node/data/public
-      - METPX_SR3_BASEURL=http://wis2node-ui
+      - METPX_SR3_BASEURL=http://localhost
       - METPX_SR3_LOGLEVEL=DEBUG
     volumes:
-      - ./metpx-sr3/config:/home/sarra/.config/sr3:ro
-      - ../wis2node-data/cache:/home/sarra/.cache:rw
+      - ./data-consumer/config:/home/sarra/.config/sr3:ro
+      - ../wis2node-data/cache/sarra:/home/sarra/.cache:rw
       - ../wis2node-data:/data/wis2node:rw
     depends_on:
       - rabbitmq
     command: sh -c "sr3 start && sleep infinity"
 
-volumes:
-  geohealthcheck_sqlitedb:
+  wis2node:
+    container_name: wis2node
+    build: ..
+    environment:
+      - METPX_SR3_HOST=rabbitmq
+      - METPX_SR3_BROKER_USERNAME=wis2node
+      - METPX_SR3_BROKER_PASSWORD=wis2node
+      - METPX_SR3_EXCHANGE=xs_wis2node_acquisition
+      - METPX_SR3_PATH_INCOMING=/data/wis2node/data/incoming
+      - METPX_SR3_PATH_PUBLIC=/data/wis2node/data/public
+      - METPX_SR3_BASEURL=http://localhost
+      - METPX_SR3_LOGLEVEL=DEBUG
+      - WIS2NODE_DATADIR=/data/wis2node/data
+      - WIS2NODE_DATADIR_INCOMING=/data/wis2node/data/incoming
+      - WIS2NODE_DATADIR_OUTGOING=/data/wis2node/data/outgoing
+      - WIS2NODE_DATADIR_PUBLIC=/data/wis2node/data/public
+      - WIS2NODE_CATALOGUE_BACKEND=/data/wis2node/metadata/discovery/records.tinydb
+      - WIS2NODE_OSCAR_API_TOKEN=some_token
+      - WIS2NODE_URL=http://wis2node-ui/data
+      - WIS2NODE_OGC_API_URL=http://pygeoapi/pygeoapi
+    volumes:
+      - ./wis2node/config:/home/wis2node/.config/sr3:ro
+      - ../wis2node-data/cache/wis2node:/home/wis2node/.cache:rw
+      - ../wis2node-data:/data/wis2node:rw
+    depends_on:
+      - rabbitmq
+    command: sh -c "sr3 start && sleep infinity"
