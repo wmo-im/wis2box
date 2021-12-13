@@ -30,10 +30,16 @@ LOGGER = logging.getLogger(__name__)
 
 PROCESSING_PLUGINS = {}
 
-DATADIR = Path(os.environ.get('WIS2NODE_DATADIR', None))
-DATADIR_INCOMING = Path(os.environ.get('WIS2NODE_DATADIR_INCOMING', None))
-DATADIR_OUTGOING = Path(os.environ.get('WIS2NODE_DATADIR_OUTGOING', None))
-DATADIR_PUBLIC = Path(os.environ.get('WIS2NODE_DATADIR_PUBLIC', None))
+try:
+    DATADIR = Path(os.environ.get('WIS2NODE_DATADIR', None))
+    DATADIR_INCOMING = Path(os.environ.get('WIS2NODE_DATADIR_INCOMING', None))
+    DATADIR_OUTGOING = Path(os.environ.get('WIS2NODE_DATADIR_OUTGOING', None))
+    DATADIR_PUBLIC = Path(os.environ.get('WIS2NODE_DATADIR_PUBLIC', None))
+except TypeError:
+    msg = 'Configuration filepaths do not exist!'
+    LOGGER.error(msg)
+    raise EnvironmentError(msg)
+
 CATALOGUE_BACKEND = os.environ.get('WIS2NODE_CATALOGUE_BACKEND', None)
 OSCAR_API_TOKEN = os.environ.get('WIS2NODE_OSCAR_API_TOKEN', None)
 OGC_API_URL = os.environ.get('WIS2NODE_OGC_API_URL', None)
@@ -77,6 +83,7 @@ def create(ctx, verbosity):
     DATADIR_OUTGOING.mkdir(parents=True, exist_ok=True)
     DATADIR_PUBLIC.mkdir(parents=True, exist_ok=True)
     (DATADIR / 'cache').mkdir(parents=True, exist_ok=True)
+    (DATADIR / 'config').mkdir(parents=True, exist_ok=True)
     (DATADIR / 'metadata' / 'discovery').mkdir(parents=True, exist_ok=True)
     (DATADIR / 'metadata' / 'station').mkdir(parents=True, exist_ok=True)
 
