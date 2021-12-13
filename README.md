@@ -17,7 +17,6 @@ python3 -m venv wis2node
 cd wis2node
 git clone https://github.com/wmo-im/wis2node.git
 cd wis2node
-python3 setup.py install
 
 # setup local environment variables
 cp wis2node.env dev.env
@@ -27,7 +26,34 @@ vi dev.env
 . dev.env
 ```
 
+## Deploying with Docker Compose
+
+```bash
+# build local images
+make build
+
+# start system
+make up
+
+# login to main wis2node container
+make login
+
+# view logs
+make logs
+
+# stop system
+make stop
+
+# update images
+make update
+
+# redeploy containers
+make up
+```
+
 ## Running
+
+- Note: run `make login` first to access the container
 
 From command line:
 ```bash
@@ -60,28 +86,6 @@ wis2node metadata discovery unpublish some_identifier
 
 # process incoming data (manually/no PubSub)
 wis2node data observations process /path/to/file.csv --discovery-metadata /path/to/dm.yml --station-metadata /path/to/sm.json --mappings /path/to/mappings.json
-```
-
-## Deploying with Docker Compose
-
-```bash
-# build local image
-make build
-
-# start system
-make up
-
-# view logs
-make logs
-
-# stop system
-make stop
-
-# update images
-make update
-
-# redeploy containers
-make up
 ```
 
 ## Development workflows
