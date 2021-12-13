@@ -36,13 +36,14 @@ logs:
 	docker-compose $(DOCKER_COMPOSE_ARGS) logs --follow
 
 down:
-	docker-compose $(DOCKER_COMPOSE_ARGS) down
+	docker-compose $(DOCKER_COMPOSE_ARGS) down --remove-orphans
 
 update:
 	docker-compose $(DOCKER_COMPOSE_ARGS) pull
 
 prune:
-	docker container prune
+	docker container prune -f
+	docker volume prune -f
 	docker rmi $(docker images --filter "dangling=true" -q --no-trunc) || true
 	docker rm $(docker ps -a -q) || true
 
