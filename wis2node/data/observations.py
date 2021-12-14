@@ -20,15 +20,12 @@
 ###############################################################################
 
 import click
-from datetime import datetime
 import json
 import logging
 from pathlib import Path
 
+from csv2bufr import transform as transform_csv
 import yaml
-
-from csv2bufr import bufr2geojson
-from csv2bufr import transform as transform_csv2bufr
 
 from wis2node import cli_helpers
 from wis2node.data.base import AbstractData
@@ -61,28 +58,28 @@ class ObservationData(AbstractData):
 
     def transform(self) -> bool:
         LOGGER.debug('Processing data')
-        LOGGER.debug('Generating BUFR4')
-        self.output_data = transform_csv2bufr(self.input_data,
-                                              self.mappings['bufr4'],
-                                              self.station_metadata)
+        LOGGER.debug('Generating BUFR4 and GeoJSON')
+        self.output_data = transform_csv(self.input_data,
+                                         self.station_metadata,
+                                         self.mappings['bufr4'],
+                                         self.mappings['geojson'])
 
         LOGGER.debug('Generating GeoJSON')
         for key, value in self.output_data.items():
-            geojson = bufr2geojson(key, value['bufr4'],
-                                   self.mappings['geojson'])
             LOGGER.debug('Setting obs date for filepath creation')
-            self.data_date = datetime.fromisoformat(
-                geojson['properties']['phenomenonTime'])
+            self.data_date = value['_meta']['data_date']
 
-            self.output_data[key]['_meta'] = {
-                'relative_filepath': self.get_local_filepath()
-            }
-            self.output_data[key]['geojson'] = json.dumps(geojson)
+            self.output_data[key]['bufr4'] = value['bufr4']
+            self.output_data[key]['_meta']['relative_filepath'] = self.get_local_filepath()  # noqa
+            self.output_data[key]['geojson'] = value['geojson']
 
         return True
 
     def get_local_filepath(self):
-        return (Path(self.data_date.strftime('%Y-%m-%d')) /
+        # FIXME: fix csv2bufr data_date property to be native datetime object
+        # to be strftime'd here
+        yyyymmdd = self.data_date.split('T')[0]
+        return (Path(yyyymmdd) /
                 'wis' /
                 self.data_category /
                 self.country_code /
