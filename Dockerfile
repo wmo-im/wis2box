@@ -23,19 +23,26 @@ FROM ubuntu:focal
 
 MAINTAINER "tomkralidis@gmail.com"
 
-ENV ECCODES_VER=2.23.0
-ENV ECCODES_DIR=/opt/eccodes
-
+# FIXME: install newer version of eccodes
 RUN apt-get update -y && \
     DEBIAN_FRONTEND="noninteractive" TZ="Europe/Bern" apt-get install -y bash git python3-pip python3-dev build-essential curl cmake gfortran libffi-dev libeccodes0 python3-eccodes && \
     echo "Acquire::Check-Valid-Until \"false\";\nAcquire::Check-Date \"false\";" | cat > /etc/apt/apt.conf.d/10no--check-valid-until
 
-WORKDIR /tmp/eccodes
+WORKDIR /tmp
 
+# FIXME: install csv2bufr from stable release
+# FIXME: install pygeometa from stable release
 RUN git clone https://github.com/wmo-im/csv2bufr.git -b dev && \
     cd csv2bufr && \
     python3 setup.py install && \
+    cd .. && \
+    git clone https://github.com/geopython/pygeometa.git && \
+    cd pygeometa && \
+    python3 setup.py install && \
+    cd / && \
+    rm -fr /tmp/pygeometa /tmp/csv2bufr && \
     useradd -ms /bin/bash wis2node
+
 
 # TODO BEGIN: install sarra via debian/pip when stable
 RUN apt-get install -y python3-cryptography libssl-dev
