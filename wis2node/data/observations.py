@@ -76,9 +76,7 @@ class ObservationData(AbstractData):
         return True
 
     def get_local_filepath(self):
-        # FIXME: fix csv2bufr data_date property to be native datetime object
-        # to be strftime'd here
-        yyyymmdd = self.data_date.split('T')[0]
+        yyyymmdd = self.data_date.strftime('%Y-%m-%d')
         return (Path(yyyymmdd) /
                 'wis' /
                 self.data_category /
