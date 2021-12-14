@@ -1,0 +1,83 @@
+{
+    "$id": "csv2bufr.wis2.0.node.wis",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "inputDelayedDescriptorReplicationFactor": {
+            "type": "array",
+            "items": {"type": "integer"}
+        },
+        "unexpandedDescriptors": {
+            "type": "array",
+            "items": {"type": "integer"}
+        },
+        "header":{
+            "type": "array",
+            "items": {"$ref": "#/$defs/bufr_element"},
+            "description": "Contents of header sections of BUFR message"
+        },
+        "data": {
+            "type": "array",
+            "items": {"$ref": "#/$defs/bufr_element"},
+            "description": "mapping from CSV file (or metadata json file) to BUFR"
+        }
+    },
+    "required" : ["inputDelayedDescriptorReplicationFactor","header","data"],
+    "$defs":{
+        "bufr_element": {
+            "type": "object",
+            "properties": {
+                "eccodes_key": {
+                    "type": "string",
+                    "descripition": "eccodes key used to set the value in the BUFR data"
+                },
+                "value": {
+                    "type": [
+                        "boolean", "object", "array", "number", "string", "integer"
+                    ],
+                    "description": "fixed value to use for all data using this mapping"
+                },
+                "csv_column": {
+                    "type": "string",
+                    "description": "column from the CSV file to map to the BUFR element indicated by eccodes_key"
+                },
+                "jsonpath": {
+                    "type": "string",
+                    "description": "json path to the element in the JSON metadata file"
+                },
+                "valid_min": {
+                    "type": "number",
+                    "description": "Minimum valid value for parameter if set"
+                },
+                "valid_max": {
+                    "type": "number",
+                    "description": "Maximum value for for the parameter if set"
+                },
+                "scale": {
+                    "type": "number",
+                    "description": "Value used to scale the data by before encoding using the same conventions as in BUFR"
+                },
+                "offset": {
+                    "type": "number",
+                    "description": "Value added to the data before encoding to BUFR following the same conventions as BUFR"
+                }
+            },
+            "required": ["eccodes_key"],
+            "allOf": [
+                {
+                    "oneOf": [
+                        {"required": ["value"]},
+                        {"required": ["csv_column"]},
+                        {"required": ["jsonpath"]}
+                    ]
+                },
+                {
+                    "dependentRequired": {"scale": ["offset"]}
+                },
+                {
+                    "dependentRequired": {"offset": ["scale"]}
+                }
+            ]
+        }
+    }
+}
