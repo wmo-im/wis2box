@@ -33,8 +33,9 @@ jobs:
         POSTGRES_PASSWORD: password
         POSTGRES_DB: test
       run: |
-        docker build -t db .
-        docker run db -d -p 5432:5432 -e POSTGRES_USER -e POSTGRES_PASSWORD --e POSTGRES_DB
+        docker run --rm  -d -p 5432:5432 \
+          -e POSTGRES_USER -e POSTGRES_PASSWORD --e POSTGRES_DB 
+          $(docker build -t db -q .)
     - name: run Wis2node
       run: |
         make up
