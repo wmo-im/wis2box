@@ -25,35 +25,24 @@ MAINTAINER "tomkralidis@gmail.com"
 
 ENV TZ="Etc/UTC" \
     DEBIAN_FRONTEND="noninteractive" \
-    BUILD_PACKAGES="build-essential cmake gfortran python3-wheel" \
-    ECCODES_VER="2.23.0" \
-    ECCODES_DIR="/opt/eccodes" \
-    PATH="$PATH;/opt/eccodes/bin"
+    BUILD_PACKAGES="build-essential cmake gfortran python3-wheel"
 
-COPY . /wis2node
+COPY . /app
 
-# FIXME: eccodes: install latest stable from packages
+# FIXME: install newer version of eccodes
 # FIXME: csv2bufr: remove and install from requirements.txt once we have a stable release
 # FIXME: pygeometa: remove and install from requirements.txt once we have a stable release
 # FIXME: sarracenia: remove install from requirements.txt once we have a stable release
+# TODO: remove build packages for a smaller image
 RUN apt-get update -y \
     && apt-get install -y ${BUILD_PACKAGES} \
-    && apt-get install -y bash git python3-pip python3-dev python3-setuptools curl libffi-dev python3-cryptography libssl-dev \
-    # install eccodes
-    && mkdir -p /tmp/eccodes \
-    && cd /tmp/eccodes \
-    && curl https://confluence.ecmwf.int/download/attachments/45757960/eccodes-${ECCODES_VER}-Source.tar.gz --output eccodes-${ECCODES_VER}-Source.tar.gz \
-    && tar xzf eccodes-${ECCODES_VER}-Source.tar.gz \
-    && mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX=${ECCODES_DIR} ../eccodes-${ECCODES_VER}-Source && make && ctest && make install \
-    && cd / \
-    && rm -rf /tmp/eccodes \
+    && apt-get install -y bash git python3-pip python3-dev curl libffi-dev libeccodes0 python3-eccodes python3-cryptography libssl-dev \
     # install wis2node dependencies
-    && pip3 install eccodes \
     && pip3 install https://github.com/wmo-im/csv2bufr/archive/dev.zip \
     && pip3 install https://github.com/geopython/pygeometa/archive/master.zip \
     && pip3 install https://github.com/metpx/sarracenia/archive/v03_wip.zip \
     # install wis2node
-    && cd /wis2node \
+    && cd /app \
     && python3 setup.py install \
     # cleanup
     && apt-get remove --purge -y ${BUILD_PACKAGES} \
