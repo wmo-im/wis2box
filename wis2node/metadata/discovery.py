@@ -91,7 +91,7 @@ def discovery():
 def publish(ctx, filepath, verbosity):
     """Inserts or updates discovery metadata to catalogue"""
 
-    click.echo('Publishing discovery metadata from {filepath}')
+    click.echo(f'Publishing discovery metadata from {filepath}')
     try:
         dm = DiscoveryMetadata()
         record = dm.parse_record(filepath.read())
