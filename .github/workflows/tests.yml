@@ -25,6 +25,21 @@ jobs:
     - name: setup test data ⚙️
       run: |
         echo "Setting up test data"
+        wis2node metadata station generate-collection
+        cd tests
+        python3 load_obs_data.py data/observations/
+    - name: Install and run PostgreSQL/PostGIS 📦
+      env:
+        POSTGRES_USER: root
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: test
+      run: |
+        docker build -t db .
+        docker run db -it -d -p 5432:5432 --env POSTGRES_USER=root --env POSTGRES_PASSWORD=root --env POSTGRES_DB=test
+    - name: run Wis2node
+      run: |
+        make up
+        docker ps
     - name: run unit tests ⚙️
       run: |
         pytest tests/unit
