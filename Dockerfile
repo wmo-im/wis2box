@@ -36,7 +36,7 @@ COPY . /app
 # TODO: remove build packages for a smaller image
 RUN apt-get update -y \
     && apt-get install -y ${BUILD_PACKAGES} \
-    && apt-get install -y bash git python3-pip python3-dev curl libffi-dev libeccodes0 python3-eccodes python3-cryptography libssl-dev \
+    && apt-get install -y bash vim git python3-pip python3-dev curl libffi-dev libeccodes0 python3-eccodes python3-cryptography libssl-dev \
     # install wis2node dependencies
     && pip3 install https://github.com/wmo-im/csv2bufr/archive/dev.zip \
     && pip3 install https://github.com/geopython/pygeometa/archive/master.zip \
