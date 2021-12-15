@@ -25,7 +25,6 @@ jobs:
     - name: setup test data ⚙️
       run: |
         echo "Setting up test data"
-        wis2node metadata station generate-collection
         cd tests
         python3 load_obs_data.py data/observations/
     - name: Install and run PostgreSQL/PostGIS 📦
