@@ -23,37 +23,34 @@ FROM ubuntu:focal
 
 MAINTAINER "tomkralidis@gmail.com"
 
-ENV ECCODES_VER=2.23.0
-ENV ECCODES_DIR=/opt/eccodes
+ENV TZ="Etc/UTC" \
+    DEBIAN_FRONTEND="noninteractive" \
+    BUILD_PACKAGES="build-essential cmake gfortran python3-wheel"
 
-RUN apt-get update -y && \
-    DEBIAN_FRONTEND="noninteractive" TZ="Europe/Bern" apt-get install -y bash git python3-pip python3-dev build-essential curl cmake gfortran libffi-dev libeccodes0 python3-eccodes && \
-    echo "Acquire::Check-Valid-Until \"false\";\nAcquire::Check-Date \"false\";" | cat > /etc/apt/apt.conf.d/10no--check-valid-until
-
-WORKDIR /tmp/eccodes
-
-RUN git clone https://github.com/wmo-im/csv2bufr.git -b dev && \
-    cd csv2bufr && \
-    python3 setup.py install && \
-    useradd -ms /bin/bash wis2node
-
-# TODO BEGIN: install sarra via debian/pip when stable
-RUN apt-get install -y python3-cryptography libssl-dev
-
-ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
-
-WORKDIR /tmp/sarracenia
-
-RUN pip install cryptography==3.4.6 wheel && \
-    git clone https://github.com/MetPX/sarracenia.git -b v03_wip && \
-    cd sarracenia && \
-    python3 setup.py install
-# TODO END
-
-WORKDIR /app
 COPY . /app
 
-RUN python3 setup.py install
+# FIXME: install newer version of eccodes
+# FIXME: csv2bufr: remove and install from requirements.txt once we have a stable release
+# FIXME: pygeometa: remove and install from requirements.txt once we have a stable release
+# FIXME: sarracenia: remove install from requirements.txt once we have a stable release
+# TODO: remove build packages for a smaller image
+RUN apt-get update -y \
+    && apt-get install -y ${BUILD_PACKAGES} \
+    && apt-get install -y bash vim git python3-pip python3-dev curl libffi-dev libeccodes0 python3-eccodes python3-cryptography libssl-dev \
+    # install wis2node dependencies
+    && pip3 install https://github.com/wmo-im/csv2bufr/archive/dev.zip \
+    && pip3 install https://github.com/geopython/pygeometa/archive/master.zip \
+    && pip3 install https://github.com/metpx/sarracenia/archive/v03_wip.zip \
+    # install wis2node
+    && cd /app \
+    && python3 setup.py install \
+    # cleanup
+    && apt-get remove --purge -y ${BUILD_PACKAGES} \
+    && apt autoremove -y  \
+    && apt-get -q clean \
+    && rm -rf /var/lib/apt/lists/* \
+    # add wis2node user
+    && useradd -ms /bin/bash wis2node
 
 USER wis2node
 WORKDIR /home/wis2node

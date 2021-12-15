@@ -1,5 +1,5 @@
 pygeometa
 pyoscar
 PyYAML
-s3fs
+metpx-sr3
 tinydb
