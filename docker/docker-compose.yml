@@ -29,6 +29,9 @@ services:
 
   mosquitto:
     image: eclipse-mosquitto
+    environment:
+      - METPX_SR3_BROKER_USERNAME=wis2node
+      - METPX_SR3_BROKER_PASSWORD=wis2node
     volumes:
       - ../wis2node-data/mosquitto:/mosquitto/:rw
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
