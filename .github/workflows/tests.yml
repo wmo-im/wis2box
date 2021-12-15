@@ -22,20 +22,18 @@ jobs:
         pip3 install -r requirements.txt
         pip3 install -r requirements-dev.txt
         python3 setup.py install
-    - name: setup test data ⚙️
-      run: |
-        echo "Setting up test data"
-        cd tests
-        python3 load_obs_data.py data/observations/
-    - name: Install and run PostgreSQL/PostGIS 📦
+    - name: setup test data ⚙️ PostgreSQL/PostGIS 📦
       env:
         POSTGRES_USER: root
         POSTGRES_PASSWORD: password
         POSTGRES_DB: test
       run: |
-        docker run --rm  -d -p 5432:5432 \
+        echo "Setting up test data"
+        cd tests
+        python3 load_obs_data.py data/observations/
+        docker run -it --rm -d $(docker build -t db -q .) \
+          -p 5432:5432 \
           -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB 
-          $(docker build -t db -q .)
     - name: run Wis2node
       run: |
         make up
