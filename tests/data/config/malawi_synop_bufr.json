@@ -1,6 +1,5 @@
 {
     "inputDelayedDescriptorReplicationFactor": [0,0],
-    "unexpandedDescriptors": [301150,307080],
     "header":[
         {"eccodes_key": "edition", "value": 4},
         {"eccodes_key": "masterTableNumber", "value": 0},
@@ -9,7 +8,7 @@
         {"eccodes_key": "updateSequenceNumber", "value": 0},
         {"eccodes_key": "dataCategory", "value": 0},
         {"eccodes_key": "internationalDataSubCategory", "value": 6},
-        {"eccodes_key": "masterTablesVersionNumber", "value": 36},
+        {"eccodes_key": "masterTablesVersionNumber", "value": 30},
         {"eccodes_key": "numberOfSubsets", "value": 1},
         {"eccodes_key": "observedData", "value": 1},
         {"eccodes_key": "compressedData", "value": 0},
