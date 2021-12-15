@@ -27,18 +27,22 @@ services:
     volumes:
       - ./pygeoapi/pygeoapi-config.yml:/pygeoapi/local.config.yml:ro
 
-  rabbitmq:
-    container_name: rabbitmq
-    image: rabbitmq:3.9-management-alpine
+  mosquitto:
+    image: eclipse-mosquitto
     environment:
-      - RABBITMQ_DEFAULT_USER=wis2node
-      - RABBITMQ_DEFAULT_PASS=wis2node
+      - METPX_SR3_BROKER_USERNAME=wis2node
+      - METPX_SR3_BROKER_PASSWORD=wis2node
+    volumes:
+      - ../wis2node-data/mosquitto:/mosquitto/:rw
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto/entrypoint.sh:/entrypoint.sh
+    entrypoint: /bin/sh /entrypoint.sh
 
   data-consumer:
     container_name: data-consumer
     build: https://github.com/MetPX/sarracenia.git#v03_wip
     environment:
-      - METPX_SR3_HOST=rabbitmq
+      - METPX_SR3_HOST=mosquitto
       - METPX_SR3_BROKER_USERNAME=wis2node
       - METPX_SR3_BROKER_PASSWORD=wis2node
       - METPX_SR3_EXCHANGE=xs_wis2node_acquisition
@@ -51,14 +55,14 @@ services:
       - ../wis2node-data/cache/sarra:/home/sarra/.cache:rw
       - ../wis2node-data:/data/wis2node:rw
     depends_on:
-      - rabbitmq
+      - mosquitto
     command: sh -c "sr3 start && sleep infinity"
 
   wis2node:
     container_name: wis2node
     build: ..
     environment:
-      - METPX_SR3_HOST=rabbitmq
+      - METPX_SR3_HOST=mosquitto
       - METPX_SR3_BROKER_USERNAME=wis2node
       - METPX_SR3_BROKER_PASSWORD=wis2node
       - METPX_SR3_EXCHANGE=xs_wis2node_acquisition
@@ -79,5 +83,5 @@ services:
       - ../wis2node-data/cache/wis2node:/home/wis2node/.cache:rw
       - ../wis2node-data:/data/wis2node:rw
     depends_on:
-      - rabbitmq
+      - mosquitto
     command: sh -c "sr3 start && sleep infinity"

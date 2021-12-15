@@ -23,17 +23,27 @@ DOCKER_COMPOSE_ARGS=-f docker/docker-compose.yml -f docker/docker-compose.overri
 
 help:
 	@echo
+	@echo " - build: build all services"
 	@echo " - up: start system"
+	@echo " - login: login to the wis2node container"
+	@echo " - login-root: login to the wis2node container as root"
 	@echo " - down: stop system"
+	@echo " - pull: update Docker images"
 	@echo " - prune: cleanup dangling containers and images"
 	@echo " - flake8: run PEP8 checks against local Python code"
 	@echo
-    
+
+build:
+	docker-compose $(DOCKER_COMPOSE_ARGS) build
+
 up:
 	docker-compose $(DOCKER_COMPOSE_ARGS) up -d
 
 login:
 	docker exec -it `docker ps -q --filter ancestor=wis2node_wis2node` /bin/bash
+
+login-root:
+	docker exec -u -0 -it `docker ps -q --filter ancestor=wis2node_wis2node` /bin/bash
 
 logs:
 	docker-compose $(DOCKER_COMPOSE_ARGS) logs --follow
@@ -41,7 +51,7 @@ logs:
 down:
 	docker-compose $(DOCKER_COMPOSE_ARGS) down --remove-orphans
 
-update:
+pull:
 	docker-compose $(DOCKER_COMPOSE_ARGS) pull
 
 prune:
@@ -53,4 +63,4 @@ prune:
 flake8:
 	find . -type f -name "*.py" | xargs flake8
 
-.PHONY: help up down login logs update prune flake8
+.PHONY: help build up login login-root logs down pull prune flake8
