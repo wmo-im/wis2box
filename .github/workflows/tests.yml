@@ -33,8 +33,22 @@ jobs:
         python3 load_obs_data.py data/observations/
         docker run -it --rm -d --name db $(docker build -t db -q .) \
           -p 5432:5432 \
-          -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB --env IMAGE_VARIANT="slim"
-    - name: run Wis2node
+          -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB --env IMAGE_VARIANT=slim
+    - name: Build and Initialize Wis2node
+      run: |
+        make up
+    - name: setup wis2node ⚙️
+      run: |
+        docker ps
+        make login
+        wis2node metadata station generate-collection
+        wis2node data observations process \
+          --discovery-metadata tests/data/metadata/discovery/surface-weather-observations.yml \
+          --station-metadata tests/data/metadata/station/0-454-2-AWSNAMITAMBO.json \
+          --mappings tests/data/config/malawi_synop_bufr.json \
+          --geojson_mappings tests/data/config/malawi_synop_json.geojson tests/data/observations/Namitambo_SYNOP.csv
+        exit
+    - name: Run wis2node
       run: |
         make up
         docker ps
