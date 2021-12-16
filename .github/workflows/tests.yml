@@ -34,9 +34,10 @@ jobs:
         docker compose up -d
     - name: Build and Initialize Wis2node
       run: |
-        make up
+        make build
     - name: setup wis2node ⚙️
       run: |
+        make up
         docker exec -d `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
           wis2node metadata station generate-collection"
         docker exec -d `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
