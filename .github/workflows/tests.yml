@@ -17,6 +17,12 @@ jobs:
       name: Setup Python ${{ matrix.python-version }}
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Configure sysctl limits
+      run: |
+        sudo swapoff -a
+        sudo sysctl -w vm.swappiness=1
+        sudo sysctl -w fs.file-max=262144
+        sudo sysctl -w vm.max_map_count=262144
     - name: Install requirements 📦
       run: |
         pip3 install -r requirements.txt
@@ -39,19 +45,16 @@ jobs:
       run: |
         make up
         docker exec wis2node sh -c "\
-          wis2node metadata station generate-collection"
-        docker exec wis2node sh -c "\
-          wis2node metadata discovery publish \
-            /app/tests/data/metadata/discovery/surface-weather-observations.yml"
-    - name: setup bufr data ⚙️
-      run: |
-        docker exec -d `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
-          wis2node data observations process \
-            --discovery-metadata /app/tests/data/metadata/discovery/surface-weather-observations.yml \
-            --station-metadata /app/tests/data/metadata/station/0-454-2-AWSNAMITAMBO.json \
-            --mappings /app/tests/data/config/malawi_synop_bufr.json \
-            --geojson_mappings /app/tests/data/config/malawi_synop_json.geojson \
-            /app/tests/data/observations/Namitambo_SYNOP.csv"
+          wis2node metadata station generate-collection \
+          && docker exec wis2node sh -c \
+            wis2node metadata discovery publish \
+              /app/tests/data/metadata/discovery/surface-weather-observations.yml \
+          && wis2node data observations process \
+              --discovery-metadata /app/tests/data/metadata/discovery/surface-weather-observations.yml \
+              --station-metadata /app/tests/data/metadata/station/0-454-2-AWSNAMITAMBO.json \
+              --mappings /app/tests/data/config/malawi_synop_bufr.json \
+              --geojson_mappings /app/tests/data/config/malawi_synop_json.geojson \
+              /app/tests/data/observations/Namitambo_SYNOP.csv"
     - name: Run wis2node
       run: |
         make up
