@@ -20,9 +20,10 @@ jobs:
     - name: Configure sysctl limits
       run: |
         sudo swapoff -a
-        sudo sysctl -w vm.swappiness=1
+        sudo sysctl -w vm.swappiness=100
         sudo sysctl -w fs.file-max=262144
         sudo sysctl -w vm.max_map_count=262144
+        sudo swapon -a
     - name: Install requirements 📦
       run: |
         pip3 install -r requirements.txt
@@ -41,9 +42,10 @@ jobs:
     - name: Build and Initialize Wis2node
       run: |
         make build
+        make up
     - name: setup wis2node ⚙️
       run: |
-        make up
+        docker ps
         docker exec wis2node sh -c "\
           wis2node metadata station generate-collection \
           && docker exec wis2node sh -c \
