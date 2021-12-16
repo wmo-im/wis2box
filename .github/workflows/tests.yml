@@ -17,13 +17,6 @@ jobs:
       name: Setup Python ${{ matrix.python-version }}
       with:
         python-version: ${{ matrix.python-version }}
-    - name: configure sysctl limits
-      run: |
-        sudo swapoff -a
-        sudo sysctl -w vm.swappiness=100
-        sudo sysctl -w fs.file-max=262144
-        sudo sysctl -w vm.max_map_count=262144
-        sudo swapon -a
     - name: setup test data ⚙️ PostgreSQL/PostGIS 📦
       env:
         POSTGRES_USER: root
