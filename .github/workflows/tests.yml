@@ -33,7 +33,7 @@ jobs:
         python3 load_obs_data.py data/observations/
         docker run -it --rm -d --name db $(docker build -t db -q .) \
           -p 5432:5432 \
-          -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB 
+          -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB --env IMAGE_VARIANT="slim"
     - name: run Wis2node
       run: |
         make up
