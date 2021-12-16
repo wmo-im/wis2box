@@ -31,9 +31,7 @@ jobs:
         echo "Setting up test data"
         cd tests
         python3 load_obs_data.py data/observations/
-        docker run -it --rm -d --name db $(docker build -t db -q .) \
-          -p 5432:5432 \
-          -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB --env IMAGE_VARIANT=slim
+        docker compose up -d
     - name: Build and Initialize Wis2node
       run: |
         make up
@@ -48,6 +46,9 @@ jobs:
           --mappings tests/data/config/malawi_synop_bufr.json \
           --geojson_mappings tests/data/config/malawi_synop_json.geojson tests/data/observations/Namitambo_SYNOP.csv
         exit
+    - name: setup wis2node
+      run: |
+        docker exec -it `docker ps -q --filter ancestor=wis2node_wis2node` /bin/bash
     - name: Run wis2node
       run: |
         make up

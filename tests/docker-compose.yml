@@ -1,4 +1,3 @@
-#!/bin/bash
 ###############################################################################
 #
 # Licensed to the Apache Software Foundation (ASF) under one
@@ -19,21 +18,18 @@
 # under the License.
 #
 ###############################################################################
-echo "START /build.sh"
+version: "3"
 
-set +e
-echo "Begining build"
-
-ogr2ogr \
-	-f PostgreSQL \
-	PG:"host='${POSTGRES_HOST}' \
-	    user='${POSTGRES_USER}' \
-		password='${POSTGRES_PASSWORD}' \
-		dbname='${POSTGRES_DB}'" \
-	/data/observations.csv \
-    -oo X_POSSIBLE_NAMES=X \
-    -oo Y_POSSIBLE_NAMES=Y \
-    -oo Z_POSSIBLE_NAMES=Z \
-    -a_srs 'EPSG:4326'
-
-echo "Done"
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports: 
+      - 5432:5432
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: test
+      IMAGE_VARIANT: slim

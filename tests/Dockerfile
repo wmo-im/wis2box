@@ -19,7 +19,7 @@
 #
 ###############################################################################
 
-FROM kartoza/postgis:10.0-2.4
+FROM kartoza/postgis:latest
 
 # Add data directory
 RUN mkdir /data/
