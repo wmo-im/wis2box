@@ -65,32 +65,32 @@ metadata:
         role: pointOfContact
 
 resources:
-    # discovery-metadata:
-    #     type: collection
-    #     title:
-    #         en: Discovery metadata
-    #     description:
-    #         en: Discovery metadata
-    #     keywords:
-    #         en:
-    #             - wmo
-    #             - wis 2.0
-    #     links:
-    #         - type: text/html
-    #           rel: canonical
-    #           title: information
-    #           href: https://example.org
-    #     extents:
-    #         spatial:
-    #             bbox: [-180,-90,180,90]
-    #             crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
-    #     providers:
-    #         - type: record
-    #           name: TinyDBCatalogue
-    #           data: ${WIS2NODE_DATADIR}/metadata/discovery/records.tinydb
-    #           id_field: identifier
-    #           time_field: recordCreated
-    #           title_field: title
+    discovery-metadata:
+        type: collection
+        title:
+            en: Discovery metadata
+        description:
+            en: Discovery metadata
+        keywords:
+            en:
+                - wmo
+                - wis 2.0
+        links:
+            - type: text/html
+              rel: canonical
+              title: information
+              href: https://example.org
+        extents:
+            spatial:
+                bbox: [-180,-90,180,90]
+                crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
+        providers:
+            - type: record
+              name: TinyDBCatalogue
+              data: ${WIS2NODE_DATADIR}/metadata/discovery/records.tinydb
+              id_field: identifier
+              time_field: recordCreated
+              title_field: title
 
     stations:
         type: collection
