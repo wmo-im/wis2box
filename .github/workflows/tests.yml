@@ -36,6 +36,12 @@ jobs:
       run: |
         free -m
         docker ps
+    - name: check wis2node version
+      run: |
+        free -m
+        docker exec -i wis2node sh -c "\
+          wis2node --version \
+        && exit"
     - name: generate wis2node collection
       run: |
         free -m
