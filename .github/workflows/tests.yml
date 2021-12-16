@@ -24,11 +24,6 @@ jobs:
         sudo sysctl -w fs.file-max=262144
         sudo sysctl -w vm.max_map_count=262144
         sudo swapon -a
-    - name: Install requirements 📦
-      run: |
-        pip3 install -r requirements.txt
-        pip3 install -r requirements-dev.txt
-        python3 setup.py install
     - name: setup test data ⚙️ PostgreSQL/PostGIS 📦
       env:
         POSTGRES_USER: root
