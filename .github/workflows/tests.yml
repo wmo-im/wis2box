@@ -36,6 +36,12 @@ jobs:
       run: |
         free -m
         docker ps
+    - name: generate wis2node collection
+      run: |
+        free -m
+        docker exec -i wis2node sh -c "\
+          wis2node metadata station generate-collection \
+        && exit"
     - name: publish wis2node discovery metadata
       run: |
         free -m
