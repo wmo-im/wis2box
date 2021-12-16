@@ -38,11 +38,13 @@ jobs:
     - name: setup wis2node ⚙️
       run: |
         make up
-        docker exec -d `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
+        docker exec wis2node sh -c "\
           wis2node metadata station generate-collection"
-        docker exec -d `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
+        docker exec wis2node sh -c "\
           wis2node metadata discovery publish \
             /app/tests/data/metadata/discovery/surface-weather-observations.yml"
+    - name: setup bufr data ⚙️
+      run: |
         docker exec -d `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
           wis2node data observations process \
             --discovery-metadata /app/tests/data/metadata/discovery/surface-weather-observations.yml \

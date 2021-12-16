@@ -34,10 +34,10 @@ help:
 	@echo
 
 build:
-	docker-compose $(DOCKER_COMPOSE_ARGS) build
+	docker compose $(DOCKER_COMPOSE_ARGS) build
 
 up:
-	docker-compose $(DOCKER_COMPOSE_ARGS) up -d
+	docker compose $(DOCKER_COMPOSE_ARGS) up -d
 
 login:
 	docker exec -it `docker ps -q --filter ancestor=wis2node_wis2node` /bin/bash
@@ -46,13 +46,13 @@ login-root:
 	docker exec -u -0 -it `docker ps -q --filter ancestor=wis2node_wis2node` /bin/bash
 
 logs:
-	docker-compose $(DOCKER_COMPOSE_ARGS) logs --follow
+	docker compose $(DOCKER_COMPOSE_ARGS) logs --follow
 
 down:
-	docker-compose $(DOCKER_COMPOSE_ARGS) down --remove-orphans
+	docker compose $(DOCKER_COMPOSE_ARGS) down --remove-orphans
 
 pull:
-	docker-compose $(DOCKER_COMPOSE_ARGS) pull
+	docker compose $(DOCKER_COMPOSE_ARGS) pull
 
 prune:
 	docker container prune -f
