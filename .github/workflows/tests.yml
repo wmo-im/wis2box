@@ -38,7 +38,7 @@ jobs:
     - name: setup wis2node ⚙️
       run: |
         docker ps
-        docker exec -it `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
+        docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
           wis2node metadata station generate-collection \
           && wis2node metadata discovery publish \
               /app/tests/data/metadata/discovery/surface-weather-observations.yml \
@@ -48,9 +48,6 @@ jobs:
             --mappings /app/tests/data/config/malawi_synop_bufr.json \
             --geojson_mappings /app/tests/data/config/malawi_synop_json.geojson \
             /app/tests/data/observations/Namitambo_SYNOP.csv"
-    - name: setup wis2node
-      run: |
-        docker exec -it `docker ps -q --filter ancestor=wis2node_wis2node` /bin/bash
     - name: Run wis2node
       run: |
         make up
