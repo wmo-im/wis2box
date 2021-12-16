@@ -15,7 +15,7 @@ services:
 
   wis2node-ui:
     container_name: wis2node-ui
-    build: webbben/wis2node-ui
+    image: webbben/wis2node-ui
 
   pygeoapi:
     container_name: pygeoapi
@@ -40,7 +40,7 @@ services:
 
   data-consumer:
     container_name: data-consumer
-    build: https://github.com/MetPX/sarracenia.git#v03_wip
+    build: webbben/sarracenia
     environment:
       - METPX_SR3_HOST=mosquitto
       - METPX_SR3_BROKER_USERNAME=wis2node
