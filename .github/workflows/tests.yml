@@ -29,34 +29,28 @@ jobs:
         docker compose up -d
     - name: build Wis2node ⚙️
       run: |
-        free -m
         make build
         make up  
     - name: verify wis2node is running
       run: |
-        free -m
         docker ps
     - name: check wis2node version
       run: |
-        free -m
         docker exec -i wis2node sh -c "\
           wis2node --version \
         && exit"
     - name: generate wis2node collection
       run: |
-        free -m
         docker exec -i wis2node sh -c "\
           wis2node metadata station generate-collection \
         && exit"
     - name: publish wis2node discovery metadata
       run: |
-        free -m
         docker exec -i wis2node sh -c "\
           wis2node metadata discovery publish \
             /app/tests/data/metadata/discovery/surface-weather-observations.yml"
     - name: publish wis2node observations
       run: |
-        free -m
         docker exec -i wis2node sh -c "\
           wis2node data observations process \
             --discovery-metadata /app/tests/data/metadata/discovery/surface-weather-observations.yml \
