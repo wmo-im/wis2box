@@ -21,34 +21,19 @@ jobs:
       run: |
         make build
         make up  
-    - name: verify wis2node is running
-      run: |
-        docker ps
-        docker exec -d `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "ls"
-    - name: check wis2node version
-      run: |
-        docker exec -d `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
-          wis2node --version
-          && exit 0"
     - name: generate wis2node collection
       run: |
-        docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
+        docker exec -d `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
           wis2node metadata station generate-collection \
-        && exit"
-    - name: publish wis2node discovery metadata
-      run: |
-        docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
-          wis2node metadata discovery publish \
-            /app/tests/data/metadata/discovery/surface-weather-observations.yml"
-    - name: publish wis2node observations
-      run: |
-        docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
-          wis2node data observations process \
+          && wis2node metadata discovery publish \
+            /app/tests/data/metadata/discovery/surface-weather-observations.yml \
+          && wis2node data observations process \
             --discovery-metadata /app/tests/data/metadata/discovery/surface-weather-observations.yml \
             --station-metadata /app/tests/data/metadata/station/0-454-2-AWSNAMITAMBO.json \
             --mappings /app/tests/data/config/malawi_synop_bufr.json \
             --geojson_mappings /app/tests/data/config/malawi_synop_json.geojson \
-            /app/tests/data/observations/Namitambo_SYNOP.csv"
+            /app/tests/data/observations/Namitambo_SYNOP.csv \
+          && exit 0"
     - name: setup test data ⚙️ PostgreSQL/PostGIS 📦
       env:
         POSTGRES_USER: root
