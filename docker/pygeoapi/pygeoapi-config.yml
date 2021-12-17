@@ -141,7 +141,7 @@ resources:
             - type: feature
               name: PostgreSQL
               data:
-                host: host.docker.internal
+                host: localhost
                 dbname: test
                 user: root
                 password: password
