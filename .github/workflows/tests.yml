@@ -54,9 +54,6 @@ jobs:
         sleep 10
         make up
         docker ps -a
-        docker exec -d `docker ps -q --filter ancestor=wis2node_pygeoapi` sh -c "\
-          cat/tmp/pygeoapi.log \
-          && exit 0"
     - name: run unit tests ⚙️
       run: |
         pytest tests/unit
