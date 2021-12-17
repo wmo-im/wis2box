@@ -35,11 +35,16 @@ jobs:
       run: |
         docker ps
         docker ps -q --filter ancestor=wis2node_wis2node
-    - name: check wis2node version
+    - name: test wis2node
       run: |
-        docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
+        docker images
+        free -m
+        docker ps -a
+  - name: check wis2node version
+      run: |
+        docker exec -u -0 `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
           wis2node --version \
-        && exit"
+          && exit"
     - name: generate wis2node collection
       run: |
         docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
