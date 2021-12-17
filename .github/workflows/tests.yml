@@ -40,7 +40,7 @@ jobs:
         docker images
         free -m
         docker ps -a
-  - name: check wis2node version
+    - name: check wis2node version
       run: |
         docker exec -u -0 `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
           wis2node --version \
