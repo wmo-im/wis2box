@@ -23,7 +23,7 @@ server:
 
 logging:
     level: ERROR
-    #logfile: /tmp/pygeoapi.log
+    logfile: /tmp/pygeoapi.log
 
 metadata:
     identification:
