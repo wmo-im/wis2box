@@ -37,7 +37,7 @@ jobs:
         docker ps -q --filter ancestor=wis2node_wis2node
     - name: check wis2node version
       run: |
-        docker exec -i `docker ps -q --filter ancestor=wis2node_wis2node` bash -ic \
+        docker exec `docker ps -q --filter ancestor=wis2node_wis2node` bash -c \
           "wis2node --version ; (exit \$?)"
     - name: generate wis2node collection
       run: |
