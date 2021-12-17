@@ -46,8 +46,9 @@ jobs:
         docker compose up -d
     - name: run wis2node
       run: |
+        sleep 10
         make up
-        docker ps
+        docker ps -a
     - name: run unit tests ⚙️
       run: |
         pytest tests/unit
