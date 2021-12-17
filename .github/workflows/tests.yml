@@ -22,6 +22,16 @@ jobs:
         pip3 install -r requirements.txt
         pip3 install -r requirements-dev.txt
         python3 setup.py install
+    - name: setup test data ⚙️ PostgreSQL/PostGIS 📦
+      env:
+        POSTGRES_USER: root
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: test
+      run: |
+        echo "Setting up test data"
+        cd tests
+        python3 load_obs_data.py data/observations/
+        docker compose up -d
     - name: build Wis2node ⚙️
       run: |
         make build
@@ -39,16 +49,6 @@ jobs:
             --geojson_mappings /app/tests/data/config/malawi_synop_json.geojson \
             /app/tests/data/observations/Namitambo_SYNOP.csv \
           && exit 0"
-    - name: setup test data ⚙️ PostgreSQL/PostGIS 📦
-      env:
-        POSTGRES_USER: root
-        POSTGRES_PASSWORD: password
-        POSTGRES_DB: test
-      run: |
-        echo "Setting up test data"
-        cd tests
-        python3 load_obs_data.py data/observations/
-        docker compose up -d
     - name: run wis2node
       run: |
         sleep 10
