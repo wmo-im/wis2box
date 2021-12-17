@@ -17,16 +17,6 @@ jobs:
       name: Setup Python ${{ matrix.python-version }}
       with:
         python-version: ${{ matrix.python-version }}
-    - name: setup test data ⚙️ PostgreSQL/PostGIS 📦
-      env:
-        POSTGRES_USER: root
-        POSTGRES_PASSWORD: password
-        POSTGRES_DB: test
-      run: |
-        echo "Setting up test data"
-        cd tests
-        python3 load_obs_data.py data/observations/
-        docker compose up -d
     - name: build Wis2node ⚙️
       run: |
         make build
@@ -34,12 +24,12 @@ jobs:
     - name: verify wis2node is running
       run: |
         docker ps
-        docker exec wis2node sh -c "ls"
+        docker exec -d `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "ls"
     - name: check wis2node version
       run: |
-        docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
+        docker exec -d `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
           wis2node --version
-          && echo 0"
+          && exit 0"
     - name: generate wis2node collection
       run: |
         docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
@@ -59,6 +49,16 @@ jobs:
             --mappings /app/tests/data/config/malawi_synop_bufr.json \
             --geojson_mappings /app/tests/data/config/malawi_synop_json.geojson \
             /app/tests/data/observations/Namitambo_SYNOP.csv"
+    - name: setup test data ⚙️ PostgreSQL/PostGIS 📦
+      env:
+        POSTGRES_USER: root
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: test
+      run: |
+        echo "Setting up test data"
+        cd tests
+        python3 load_obs_data.py data/observations/
+        docker compose up -d
     - name: run wis2node
       run: |
         make up
