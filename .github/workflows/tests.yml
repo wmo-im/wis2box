@@ -34,6 +34,7 @@ jobs:
     - name: verify wis2node is running
       run: |
         docker ps
+        docker exec wis2node-ui sh -c "ls"
     - name: check wis2node version
       run: |
         docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
