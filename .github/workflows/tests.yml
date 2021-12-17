@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.7, 3.8]
     env:
       FOO: bar
 
@@ -25,6 +25,16 @@ jobs:
     - name: setup test data ⚙️
       run: |
         echo "Setting up test data"
+    - name: build and start wis2node
+      run: |
+        free -m
+        make build
+        make up
+    - name: run wis2node test
+      run: |
+        docker images
+        free -m
+        wis2node --version
     - name: run unit tests ⚙️
       run: |
         pytest tests/unit
