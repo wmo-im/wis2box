@@ -20,39 +20,22 @@
 ###############################################################################
 
 import logging
-from typing import Union
+from pathlib import Path
 
-from pygeometa.core import read_mcf
+from sarracenia.flowcb import FlowCB
 
 LOGGER = logging.getLogger(__name__)
 
 
-class BaseMetadata:
-    """base metadata"""
+class Event(FlowCB):
+    def __init__(self, options):
+        self.options = options
 
-    def __init__(self):
-        pass
+    def after_accept(self, worklist):
+        for incoming_message in worklist.incoming:
+            filepath = (Path(incoming_message['baseUrl']) /
+                        incoming_message['relPath'])
+            LOGGER.debug(f'Incoming filepath: {filepath}')
 
-    def generate(self, mcf: dict, schema: str = None) -> Union[dict, str]:
-        """
-        Generate metadata in a given schema
-
-        :param mcf: `dict` of MCF file
-        :param schema: `str` of metadata schema to generate
-
-        :returns: `dict` or `str` of metadata representation
-        """
-
-        raise NotImplementedError()
-
-    def parse_record(self, metadata_record: bytes) -> dict:
-        """
-        Parses MCF metadata into dict
-
-        :param metadata_record: string of metadata
-
-        :return: `dict` of MCF
-        """
-
-        LOGGER.debug('reading MCF')
-        return read_mcf(metadata_record)
+            LOGGER.debug(f'Publishing {filepath}')
+            # TODO: publish

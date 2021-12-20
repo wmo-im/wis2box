@@ -19,9 +19,95 @@
 #
 ###############################################################################
 
+import json
+import logging
+from typing import Any, Tuple
+
 import click
 
-from wis2node.data.observations import observations
+from wis2node import cli_helpers
+from wis2node.env import DATADIR_DATA_MAPPINGS
+from wis2node.handler import Handler
+from wis2node.plugin import load_plugin
+from wis2node.topic_hierarchy import TopicHierarchy
+from wis2node.util import json_serial
+
+LOGGER = logging.getLogger(__name__)
+
+
+def validate_and_load(topic_hierarchy: str,
+                      fuzzy: bool = False) -> Tuple[TopicHierarchy, Any]:
+    """
+    Validate topic hierarchy and load data defs
+
+    :param topic_hierarchy: `str` of topic hierarchy path
+    :param fuzzy: `bool` of whether to do fuzzy matching of topic hierarchy
+                  (e.g. "*foo.bar.baz*).
+                  Defaults to `False` (i.e. "foo.bar.baz")
+
+    :returns: tuple of `wis2node.topic_hierarchy.TopicHierarchy and
+              plugin object
+    """
+
+    LOGGER.debug(f'Validating topic hierarchy: {topic_hierarchy}')
+
+    th = TopicHierarchy(topic_hierarchy)
+
+    if not th.is_valid():
+        msg = 'Invalid topic hierarchy'
+        LOGGER.error(msg)
+        raise ValueError(msg)
+    if th.dotpath not in DATADIR_DATA_MAPPINGS['data'].keys():
+        msg = 'Topic hierarchy not in data mappings'
+        LOGGER.error(msg)
+        raise ValueError(msg)
+
+    LOGGER.debug('Loading plugin')
+
+    defs = {
+        'topic_hierarchy': topic_hierarchy,
+        'codepath': DATADIR_DATA_MAPPINGS['data'][th.dotpath]
+    }
+    plugin = load_plugin('data', defs)
+
+    LOGGER.debug('Setting up directories')
+
+    return th, plugin
+
+
+def setup_dirs(topic_hierarchy: str) -> dict:
+    """
+    Setup data directories
+
+    :param topic_hierarchy: `str` of topic hierarchy path
+
+    :returns: `dict` of directories created
+    """
+
+    _, plugin = validate_and_load(topic_hierarchy)
+
+    LOGGER.debug('Setting up directories')
+    plugin.setup_dirs()
+
+    return plugin.directories
+
+
+def show_info(topic_hierarchy: str) -> dict:
+    """
+    Display data properties
+
+    :param topic_hierarchy: `str` of topic hierarchy path
+
+    :returns: `None`
+    """
+
+    th, plugin = validate_and_load(topic_hierarchy)
+
+    LOGGER.debug('Getting directories')
+    return {
+        'topic_hierarchy': th.dotpath,
+        'directories': plugin.directories
+     }
 
 
 @click.group()
@@ -30,4 +116,57 @@ def data():
     pass
 
 
-data.add_command(observations)
+@click.command()
+@click.pass_context
+@cli_helpers.OPTION_TOPIC_HIERARCHY
+@cli_helpers.OPTION_VERBOSITY
+def info(ctx, topic_hierarchy, verbosity):
+    """Display data properties"""
+
+    result = show_info(topic_hierarchy)
+    click.echo(json.dumps(result, default=json_serial, indent=4))
+
+
+@click.command()
+@click.pass_context
+@cli_helpers.OPTION_TOPIC_HIERARCHY
+@cli_helpers.OPTION_VERBOSITY
+def setup(ctx, topic_hierarchy, verbosity):
+    """Setup data directories"""
+
+    result = setup_dirs(topic_hierarchy)
+    click.echo('Directories created:')
+    click.echo(json.dumps(result, default=json_serial, indent=4))
+
+
+@click.command()
+@click.pass_context
+@cli_helpers.OPTION_TOPIC_HIERARCHY
+@cli_helpers.OPTION_PATH
+@click.option('--recursive', '-r', is_flag=True, default=False,
+              help='Process directory recursively')
+@cli_helpers.OPTION_VERBOSITY
+def ingest(ctx, topic_hierarchy, path, recursive, verbosity):
+    """Ingest data file or directory"""
+
+    th, plugin = validate_and_load(topic_hierarchy)
+
+    if path.is_dir():
+        if recursive:
+            pattern = '**/*'
+        else:
+            pattern = '*'
+        files_to_process = [f for f in path.glob(pattern) if f.is_file()]
+    else:
+        files_to_process = [path]
+
+    for file_to_process in files_to_process:
+        click.echo(f'Processing {file_to_process}')
+        handler = Handler(file_to_process, th.dotpath)
+        _ = handler.handle()
+    click.echo("Done")
+
+
+data.add_command(info)
+data.add_command(ingest)
+data.add_command(setup)
