@@ -8,22 +8,28 @@ services:
     environment:
       - METPX_SR3_PATH_PUBLIC=/data/wis2node/data/public
     depends_on:
-      - pygeoapi
+      - wis2node-ui
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ${WIS2NODE_DATADIR}/data/public:/data/wis2node/data/public:ro
 
   wis2node-ui:
     container_name: wis2node-ui
-    image: webbben/wis2node-ui
+    build: https://github.com/wmo-im/wis2node-ui.git#main
+    # image: webbben/wis2node-ui
+    depends_on:
+      - pygeoapi
 
   pygeoapi:
     container_name: pygeoapi
     image: geopython/pygeoapi:latest
     environment:
       - SCRIPT_NAME=/pygeoapi
-      - PYGEOAPI_SERVER_URL=${WIS2NODE_OGC_API_URL}
-      - WIS2NODE_DATADIR=/data/wis2node/data
+      - PYGEOAPI_SERVER_URL=${WIS2NODE_API_URL}
+      - WIS2NODE_DATADIR=/data/wis2node
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
     volumes:
       - ./pygeoapi/pygeoapi-config.yml:/pygeoapi/local.config.yml:ro
 
@@ -36,8 +42,6 @@ services:
       - discovery.seed_hosts=elasticsearch-01
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - http.cors.enabled=true
-      - http.cors.allow-origin=*
     # ulimits:
     #   nofile:
     #     soft: 524288
@@ -45,9 +49,14 @@ services:
     #   memlock:
     #     soft: -1
     #     hard: -1
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:9200"]
+      interval: 5s
+      retries: 10
 
   mosquitto:
     image: eclipse-mosquitto
+    container_name: mosquitto
     environment:
       - METPX_SR3_BROKER_USERNAME=${METPX_SR3_BROKER_USERNAME}
       - METPX_SR3_BROKER_PASSWORD=${METPX_SR3_BROKER_PASSWORD}
@@ -59,7 +68,9 @@ services:
 
   data-consumer:
     container_name: data-consumer
-    image: webbben/sarracenia
+    build: https://github.com/MetPX/sarracenia.git#v03_wip
+    # image: webbben/sarracenia
+    #user: sarra:sarra
     environment:
       - METPX_SR3_HOST=${METPX_SR3_HOST}
       - METPX_SR3_BROKER_USERNAME=${METPX_SR3_BROKER_USERNAME}
@@ -67,19 +78,20 @@ services:
       - METPX_SR3_EXCHANGE=${METPX_SR3_EXCHANGE}
       - METPX_SR3_PATH_INCOMING=/data/wis2node/data/incoming
       - METPX_SR3_PATH_PUBLIC=/data/wis2node/data/public
-      - METPX_SR3_BASEURL=${WIS2NODE_OGC_URL}
+      - METPX_SR3_BASEURL=${WIS2NODE_URL}
       - METPX_SR3_LOGLEVEL=DEBUG
     volumes:
       - ./data-consumer/config:/root/.config/sr3:ro
-      - ${WIS2NODE_DATADIR}/cache/sarra:/root/.cache:rw
+      - ${WIS2NODE_DATADIR}/cache/home/sarra:/root/.cache:rw
       - ${WIS2NODE_DATADIR}:/data/wis2node:rw
     depends_on:
       - mosquitto
-    command: sh -c "sr3 start && sleep infinity"
+    command: sh -c "whoami && sr3 start && sleep infinity"
 
   wis2node:
     container_name: wis2node
     build: ..
+    #user: wis2node:wis2node
     environment:
       - METPX_SR3_HOST=${METPX_SR3_HOST}
       - METPX_SR3_BROKER_USERNAME=${METPX_SR3_BROKER_USERNAME}
@@ -87,20 +99,21 @@ services:
       - METPX_SR3_EXCHANGE=${METPX_SR3_EXCHANGE}
       - METPX_SR3_PATH_INCOMING=/data/wis2node/data/incoming
       - METPX_SR3_PATH_PUBLIC=/data/wis2node/data/public
-      - METPX_SR3_BASEURL=${WIS2NODE_OGC_URL}
+      - METPX_SR3_BASEURL=${WIS2NODE_URL}
       - METPX_SR3_LOGLEVEL=DEBUG
-
+      #- WIS2NODE_DATA_MAPPINGS=/data/wis2node/data-mappings.yml
       - WIS2NODE_DATADIR=/data/wis2node/data
+      - WIS2NODE_DATADIR_CONFIG=/data/wis2node/data/config
       - WIS2NODE_DATADIR_INCOMING=/data/wis2node/data/incoming
       - WIS2NODE_DATADIR_OUTGOING=/data/wis2node/data/outgoing
       - WIS2NODE_DATADIR_PUBLIC=/data/wis2node/data/public
       - WIS2NODE_CATALOGUE_BACKEND=/data/wis2node/data/metadata/discovery/records.tinydb
       - WIS2NODE_OSCAR_API_TOKEN=${WIS2NODE_OSCAR_API_TOKEN}
-      - WIS2NODE_URL=${WIS2NODE_OGC_URL}
-      - WIS2NODE_OGC_API_URL=${WIS2NODE_OGC_API_URL}
+      - WIS2NODE_API_URL=${WIS2NODE_API_URL}
     volumes:
-      - ./wis2node/config:/home/wis2node/.config/sr3:ro
-      - ${WIS2NODE_DATADIR}/cache/wis2node:/home/wis2node/.cache:rw
+      - ./wis2node/data-mappings.yml:/data/wis2node/data-mappings.yml:ro
+      - ./wis2node/config:/root/.config/sr3:ro
+      - ${WIS2NODE_DATADIR}/cache/wis2node:/root/.cache:rw
       - ${WIS2NODE_DATADIR}:/data/wis2node:rw
     depends_on:
       - mosquitto

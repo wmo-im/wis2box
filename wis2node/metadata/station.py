@@ -29,13 +29,13 @@ from pygeometa.schemas.wmo_wigos import WMOWIGOSOutputSchema
 
 from wis2node import cli_helpers
 from wis2node.env import DATADIR
-from wis2node.metadata.base import MetadataBase
+from wis2node.metadata.base import BaseMetadata
 from wis2node.metadata.oscar import get_station_report, upload_station_metadata
 
 LOGGER = logging.getLogger(__name__)
 
 
-class StationMetadata(MetadataBase):
+class StationMetadata(BaseMetadata):
     def __init__(self):
         super().__init__()
 
@@ -106,9 +106,10 @@ def gen_station_collection() -> None:
 @click.pass_context
 @cli_helpers.OPTION_VERBOSITY
 @cli_helpers.ARGUMENT_FILEPATH
-def sync(ctx, filepath, verbosity):
-    """Syncs local station metadata in with WMO OSCAR/Surface"""
+def cache(ctx, filepath, verbosity):
+    """Caches local station metadata in with WMO OSCAR/Surface"""
 
+    click.echo(f'Caching OSCAR/Surface metadata from in {filepath.name}')
     reader = csv.DictReader(filepath)
 
     for row in reader:
@@ -148,6 +149,7 @@ def generate_collection(ctx, verbosity):
 def publish(ctx, filepath, verbosity):
     """Inserts or updates station metadata to OSCAR/Surface"""
 
+    click.echo(f'Publishing {filepath.name} to OSCAR/Surface')
     try:
         record = StationMetadata()
         station_metadata = record.parse_record(filepath.read())
@@ -160,4 +162,4 @@ def publish(ctx, filepath, verbosity):
 
 station.add_command(generate_collection)
 station.add_command(publish)
-station.add_command(sync)
+station.add_command(cache)

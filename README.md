@@ -54,15 +54,37 @@ make up
 - Note: run `make login` first to access the container
 
 From command line:
+
 ```bash
 # fetch version
 wis2node --version
 
-# create text file of stations (1 WSI per line)
-vi stations.txt
+# create environment
+wis2node environment create
+
+# show environment
+wis2node environment show
+
+# create dataset topic hierarchy directories
+wis2node data setup --topic-hierarchy foo.bar.baz
+
+# display dataset topic hierarchy and directories
+wis2node data info --topic-hierarchy foo.bar.baz
+
+# process incoming data (manually/no PubSub)
+wis2node data process /path/to/file.csv
+
+# create discovery metadata control file (MCF)
+# pygeometa MCF reference: https://geopython.github.io/pygeometa/reference/mcf
+vi $WIS2NODE_DATADIR/data/config/foo/bar/baz/discovery-metadata.yml
+
+# create CSV of stations
+# format:
+# station_name,wigos_station_identifier
+vi /path/to/station_list.csv
 
 # cache station metadata from OSCAR/Surface from a CSV of station name/WSI records
-wis2node metadata station sync /path/to/station_list.csv
+wis2node metadata station cache /path/to/station_list.csv
 
 # publish station metadata to WMO OSCAR/Surface
 wis2node metadata station publish $WIS2NODE_DATADIR/metadata/station/1.yml
@@ -72,18 +94,11 @@ wis2node metadata station publish $WIS2NODE_DATADIR/metadata/station/3.yml
 # generate local station collection GeoJSON for pygeoapi publication
 wis2node metadata station generate-collection
 
-# create discovery metadata control file (MCF)
-# pygeometa MCF reference: https://geopython.github.io/pygeometa/reference/mcf
-vi $WIS2NODE_DATADIR/metadata/discovery/surface-weather-observations.yml
-
-# publish discovery metadata to local catalogue
-wis2node metadata discovery publish $WIS2NODE_DATADIR/metadata/discovery/surface-weather-observations.yml
+# publish dataset discovery metadata to local catalogue
+wis2node metadata discovery publish foo/bar/baz
 
 # unpublish discovery metadata to local catalogue
-wis2node metadata discovery unpublish some_identifier
-
-# process incoming data (manually/no PubSub)
-wis2node data observations process /path/to/file.csv --discovery-metadata /path/to/dm.yml --station-metadata /path/to/sm.json --mappings /path/to/mappings.json
+wis2node metadata discovery unpublish foo/bar/baz
 ```
 
 ## Development workflows
@@ -103,6 +118,7 @@ make flake8
 ```bash
 # via setuptools
 python3 setup.py test
+
 # directly via pytest
 pytest
 ```

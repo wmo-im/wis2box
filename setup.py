@@ -91,6 +91,7 @@ setup(
     url='https://github.com/wmo-im/wis2node',
     install_requires=read('requirements.txt').splitlines(),
     packages=find_packages(),
+    include_package_data=True,
     entry_points={
         'console_scripts': [
             'wis2node=wis2node:cli'

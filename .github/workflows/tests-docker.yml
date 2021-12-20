@@ -21,7 +21,7 @@ jobs:
         pip3 install -r requirements.txt
         pip3 install -r requirements-dev.txt
         python3 setup.py install
-    - name: build Wis2node ⚙️
+    - name: build wis2node ⚙️
       run: |
         cp tests/test.env dev.env
         make build
@@ -29,16 +29,14 @@ jobs:
     - name: generate wis2node collection
       run: |
         docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c " \
-          wis2node metadata station sync /data/wis2node/data/metadata/station/station_list.csv \
+          wis2node environment create \
+          && wis2node environment show \
+          && wis2node data setup --topic-hierarchy observations-surface-land.mw.FWCL.landFixed \
+          && wis2node data info --topic-hierarchy observations-surface-land.mw.FWCL.landFixed \
+          && wis2node metadata station cache /data/wis2node/data/metadata/station/station_list.csv \
           && wis2node metadata station generate-collection \
-          && wis2node metadata discovery publish \
-            /data/wis2node/data/metadata/discovery/surface-weather-observations.yml \
-          && wis2node data observations process \
-            /data/wis2node/data/observations/WIGOS_0-454-2-AWSNAMITAMBO_2021-11-18T0955.csv \
-            --discovery-metadata /data/wis2node/data/metadata/discovery/surface-weather-observations.yml \
-            --station-metadata /data/wis2node/data/metadata/station/0-454-2-AWSNAMITAMBO.json \
-            --mappings /data/wis2node/data/config/malawi_synop_bufr.json \
-            --geojson_mappings /data/wis2node/data/config/malawi_synop_json.geojson"
+          && wis2node metadata discovery publish /data/wis2node/data/metadata/discovery/surface-weather-observations.yml \
+          && wis2node data ingest -th observations-surface-land.mw.FWCL.landFixed -p /data/wis2node/data/observations/0-454-2-AWSNAMITAMBO-20210707.csv"
     - name: setup test data ⚙️
       env:
         POSTGRES_USER: root
