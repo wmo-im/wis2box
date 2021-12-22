@@ -51,8 +51,8 @@ services:
       - METPX_SR3_BASEURL=http://localhost
       - METPX_SR3_LOGLEVEL=DEBUG
     volumes:
-      - ./data-consumer/config:/home/sarra/.config/sr3:ro
-      - ../wis2node-data/cache/sarra:/home/sarra/.cache:rw
+      - ./data-consumer/config:/root/.config/sr3:ro
+      - ../wis2node-data/cache/sarra:/root/.cache:rw
       - ../wis2node-data:/data/wis2node:rw
     depends_on:
       - mosquitto
