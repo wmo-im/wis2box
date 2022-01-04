@@ -33,9 +33,10 @@ jobs:
         echo "Setting up test data"
         cd tests
         python3 load_obs_data.py data/observations/
-        docker compose up -d
+        docker-compose up -d
     - name: build Wis2node ⚙️
       run: |
+        sudo -s
         make build
         make up  
     - name: generate wis2node collection
