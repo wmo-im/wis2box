@@ -26,8 +26,13 @@ import sys
 
 station2geom = {}
 
+def station_to_geom(station_id: str = None) -> dict:
+    """
+    Uses Station ID to fetch station geometry.
 
-def station_to_geom(station_id=''):
+    :param station_id: string, station identifier.
+    :returns: dict, XYZ station geometry
+    """
     if station2geom == {}:
         with open('data/metadata/station/stations.geojson') as file:
             fc = json.loads(file.read())
@@ -39,12 +44,12 @@ def station_to_geom(station_id=''):
         return station2geom[station_id]
 
 
-def walk_path(path):
+def walk_path(path: str) -> list:
     """
     Walks os directory path collecting all CSV files.
 
     :param path: required, string. os directory.
-    :return: list. List of csv paths.
+    :returns: list. List of csv filepaths.
     """
     file_list = []
     for root, _, files in os.walk(path, topdown=False):
@@ -75,19 +80,21 @@ def handle_csv(file):
     Parses and shortens CSV file.
 
     :param file: required, string or list of strings.
+    :returns: list. Parsed csv as python list.
     """
+
     if isinstance(file, list) and len(file) > 0:
         return _handle_csvs(file)
     else:
         return parse_csv(file)
 
 
-def parse_csv(filename, ret_csv=[]):
+def parse_csv(filename, ret_csv: list = []) -> list:
     """
-    Parse CSV file into csv.
+    Parse CSV file into CSV with valid geometry.
 
     :param filename: required, string. URL to be shortened.
-    :return: list. Parsed csv.
+    :returns: list. Parsed csv as python list.
     """
 
     with open(filename, mode='r') as fp:
@@ -101,7 +108,7 @@ def parse_csv(filename, ret_csv=[]):
             station_id = line[headers.index('Station_ID')].strip().upper()
             parsed_line = []
             for h in ret_csv[0]:
-                if h == 'X' or h == 'Y' or h == 'Z':
+                if h in ['X', 'Y', 'Z']:
                     parsed_line.append(station_to_geom(station_id)[h])
                 elif h in headers:
                     parsed_line.append(line[headers.index(h)].strip())
@@ -113,7 +120,14 @@ def parse_csv(filename, ret_csv=[]):
     return ret_csv
 
 
-def write_csv(filename, content):
+def write_csv(filename: str, content: list) -> None:
+    """
+    Write python list to CSV.
+
+    :param filename: required, string. Name of csv to write to.
+    :param content: required, list. Python List of CSV content to be written.
+    """
+
     print(f'Writing to: {filename}')
     with open(filename, 'w', newline='') as csvfile:
         csv.writer(csvfile).writerows(content)
