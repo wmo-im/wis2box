@@ -1,4 +1,4 @@
-name: tests ⚙️
+name: test docker deployment ⚙️
 
 on: [ push, pull_request ]
 
@@ -51,7 +51,6 @@ jobs:
           && exit 0"
     - name: run wis2node
       run: |
-        sleep 10
         make up
         docker ps -a
     - name: run unit tests ⚙️
