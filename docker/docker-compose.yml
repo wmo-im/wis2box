@@ -20,7 +20,6 @@ services:
   pygeoapi:
     container_name: pygeoapi
     image: geopython/pygeoapi:latest
-    restart: always
     environment:
       - SCRIPT_NAME=/pygeoapi
       - PYGEOAPI_SERVER_URL=http://localhost/pygeoapi
