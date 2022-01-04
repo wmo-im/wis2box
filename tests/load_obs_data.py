@@ -19,10 +19,10 @@
 #
 ###############################################################################
 
-import sys
-import os
 import csv
 import json
+import os
+import sys
 
 station2geom = {}
 
