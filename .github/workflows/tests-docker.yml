@@ -8,7 +8,6 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: [3.6, 3.7, 3.8]
     runs-on: ${{ matrix.os }}
     env:
       FOO: bar
@@ -16,9 +15,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
-      name: Setup Python ${{ matrix.python-version }}
+      name: Setup Python 3.8
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.8
     - name: Install requirements 📦
       run: |
         pip3 install -r requirements.txt
