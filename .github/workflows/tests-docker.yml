@@ -40,7 +40,6 @@ jobs:
         make up  
     - name: generate wis2node collection
       run: |
-        docker exec -d `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
           wis2node metadata station generate-collection \
           && wis2node metadata discovery publish \
             /app/tests/data/metadata/discovery/surface-weather-observations.yml \
