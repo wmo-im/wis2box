@@ -61,21 +61,7 @@ def walk_path(path: str) -> list:
     return file_list
 
 
-def _handle_csvs(files, csv_out=[]):
-    """
-    Splits list of csv files into individual csv files.
-
-    :param files: required, string. URL to be shortened.
-    """
-    for f in files:
-        print(f'Reading file: {os.path.basename(f)}\r', end='')
-        csv_out = parse_csv(f, csv_out)
-
-    print('\r\r')
-    return csv_out
-
-
-def handle_csv(file):
+def handle_csv(file: str) -> list:
     """
     Parses and shortens CSV file.
 
@@ -84,7 +70,11 @@ def handle_csv(file):
     """
 
     if isinstance(file, list) and len(file) > 0:
-        return _handle_csvs(file)
+        csv_out = []
+        for f in file:
+            print(f'Reading file: {os.path.basename(f)}\r', end='')
+            csv_out = parse_csv(f, csv_out)
+        return csv_out
     else:
         return parse_csv(file)
 
