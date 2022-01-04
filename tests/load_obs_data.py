@@ -26,6 +26,7 @@ import sys
 
 station2geom = {}
 
+
 def station_to_geom(station_id: str = None) -> dict:
     """
     Uses Station ID to fetch station geometry.
