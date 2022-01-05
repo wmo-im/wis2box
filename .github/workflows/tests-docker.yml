@@ -16,7 +16,7 @@ jobs:
       name: Setup Python 3.8
       with:
         python-version: 3.8
-    - uses: ScribeMD/rootless-docker@0
+    - uses: ScribeMD/rootless-docker@0.1.1
       name: Use Docker in rootless mode.
     - name: Install requirements 📦
       run: |
