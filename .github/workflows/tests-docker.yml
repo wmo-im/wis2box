@@ -16,6 +16,8 @@ jobs:
       name: Setup Python 3.8
       with:
         python-version: 3.8
+    - uses: ScribeMD/rootless-docker@0
+      name: Use Docker in rootless mode.
     - name: Install requirements 📦
       run: |
         pip3 install -r requirements.txt
@@ -33,7 +35,6 @@ jobs:
         docker-compose up -d
     - name: build Wis2node ⚙️
       run: |
-        sudo -s
         make build
         make up  
     - name: generate wis2node collection
@@ -52,6 +53,7 @@ jobs:
     - name: run wis2node
       run: |
         make up
+        sleep 10
         docker ps -a
     - name: run unit tests ⚙️
       run: |
