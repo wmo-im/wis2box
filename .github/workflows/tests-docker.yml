@@ -39,17 +39,17 @@ jobs:
         make up  
     - name: generate wis2node collection
       run: |
-        docker exec -u -0 -d `docker ps -q --filter ancestor=wis2node_wis2node` sh -c "\
-          wis2node metadata station generate-collection \
+        docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c " \
+          wis2node metadata station sync /data/wis2node/data/metadata/station/station_list.csv \
+          && wis2node metadata station generate-collection \
           && wis2node metadata discovery publish \
-            /app/tests/data/metadata/discovery/surface-weather-observations.yml \
+            /data/wis2node/data/metadata/discovery/surface-weather-observations.yml \
           && wis2node data observations process \
-            --discovery-metadata /app/tests/data/metadata/discovery/surface-weather-observations.yml \
-            --station-metadata /app/tests/data/metadata/station/0-454-2-AWSNAMITAMBO.json \
-            --mappings /app/tests/data/config/malawi_synop_bufr.json \
-            --geojson_mappings /app/tests/data/config/malawi_synop_json.geojson \
-            /app/tests/data/observations/Namitambo_SYNOP.csv \
-          && exit 0"
+            /data/wis2node/data/observations/Namitambo_SYNOP.csv \
+            --discovery-metadata /data/wis2node/data/metadata/discovery/surface-weather-observations.yml \
+            --station-metadata /data/wis2node/data/metadata/station/0-454-2-AWSNAMITAMBO.json \
+            --mappings /data/wis2node/data/config/malawi_synop_bufr.json \
+            --geojson_mappings /data/wis2node/data/config/malawi_synop_json.geojson"
     - name: run wis2node
       run: |
         make up
