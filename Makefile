@@ -19,7 +19,11 @@
 #
 ###############################################################################
 
-DOCKER_COMPOSE_ARGS=-f docker/docker-compose.yml -f docker/docker-compose.override.yml -p wis2node
+DOCKER_COMPOSE_ARGS= \
+	-f docker/docker-compose.yml \
+	-f docker/docker-compose.override.yml \
+	--env-file $(PWD)/dev.env \
+	-p wis2node
 
 help:
 	@echo

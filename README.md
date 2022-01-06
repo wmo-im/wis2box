@@ -22,8 +22,6 @@ cd wis2node
 cp wis2node.env dev.env
 # edit/adjust accordingly
 vi dev.env
-# source
-. dev.env
 ```
 
 ## Deploying with Docker Compose

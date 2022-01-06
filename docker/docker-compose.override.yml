@@ -16,7 +16,7 @@ services:
       - SCRIPT_NAME=/pygeoapi
       - PYGEOAPI_SERVER_URL=http://localhost:8999/pygeoapi
     volumes:
-      - ../wis2node-data:/data/wis2node:rw
+      - ${WIS2NODE_DATADIR}:/data/wis2node:rw
 
   mosquitto:
     ports:
