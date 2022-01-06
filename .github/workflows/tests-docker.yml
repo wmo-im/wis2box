@@ -35,6 +35,7 @@ jobs:
         docker-compose up -d
     - name: build Wis2node ⚙️
       run: |
+        cp wis2node.env dev.env
         make build
         make up  
     - name: generate wis2node collection
