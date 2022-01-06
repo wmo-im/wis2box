@@ -75,6 +75,7 @@ def handle_csv(file: str) -> list:
         for f in file:
             print(f'Reading file: {os.path.basename(f)}\r', end='')
             csv_out = parse_csv(f, csv_out)
+        print('')
         return csv_out
     else:
         return parse_csv(file)
@@ -91,7 +92,14 @@ def parse_csv(filename, ret_csv: list = []) -> list:
     with open(filename, mode='r') as fp:
 
         csv_reader = csv.reader(fp)
-        headers = [h.strip() for h in next(csv_reader)]
+        number_header_rows = 4
+        names_on_row = 2
+        headers = None
+        for i in range(number_header_rows):
+            _ = next(csv_reader)
+            if i+1 == names_on_row:
+                headers = _
+
         headers.extend(['X', 'Y', 'Z'])
         if len(ret_csv) == 0:
             ret_csv.append(headers)
