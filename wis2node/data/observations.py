@@ -59,19 +59,16 @@ class ObservationData(AbstractData):
     def transform(self) -> bool:
         LOGGER.debug('Processing data')
         LOGGER.debug('Generating BUFR4 and GeoJSON')
-        self.output_data = transform_csv(self.input_data,
-                                         self.station_metadata,
-                                         self.mappings['bufr4'],
-                                         self.mappings['geojson'])
-
-        LOGGER.debug('Generating GeoJSON')
-        for key, value in self.output_data.items():
-            LOGGER.debug('Setting obs date for filepath creation')
+        _ = transform_csv(self.input_data,
+                          self.station_metadata,
+                          self.mappings['bufr4'],
+                          self.mappings['geojson'])
+        for value in _:
+            key = value["_meta"]["identifier"]
             self.data_date = value['_meta']['data_date']
 
-            self.output_data[key]['bufr4'] = value['bufr4']
+            self.output_data[key] = value
             self.output_data[key]['_meta']['relative_filepath'] = self.get_local_filepath()  # noqa
-            self.output_data[key]['geojson'] = value['geojson']
 
         return True
 

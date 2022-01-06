@@ -1,0 +1,75 @@
+name: test docker deployment ⚙️
+
+on: [ push, pull_request ]
+
+jobs:
+  main:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    env:
+      FOO: bar
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      name: Setup Python 3.8
+      with:
+        python-version: 3.8
+    - uses: ScribeMD/rootless-docker@0.1.1
+      name: Use Docker in rootless mode.
+    - name: Install requirements 📦
+      run: |
+        pip3 install -r requirements.txt
+        pip3 install -r requirements-dev.txt
+        python3 setup.py install
+    - name: setup test data ⚙️ PostgreSQL/PostGIS 📦
+      env:
+        POSTGRES_USER: root
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: test
+      run: |
+        echo "Setting up test data"
+        cd tests
+        python3 load_obs_data.py data/observations/
+        docker run -d \
+          --name=postgis \
+          -e POSTGRES_USER=${POSTGRES_USER} \
+          -e POSTGRES_PASS=${POSTGRES_PASSWORD} \
+          -e POSTGRES_DBNAME=${POSTGRES_DB} \
+          -e ALLOW_IP_RANGE=0.0.0.0/0 \
+          -p 0.0.0.0:5432:5432 \
+          -v `pwd`:/docker-entrypoint-initdb.d \
+          kartoza/postgis:latest
+    - name: build Wis2node ⚙️
+      run: |
+        cp tests/test.env dev.env
+        make build
+        make up  
+    - name: generate wis2node collection
+      run: |
+        docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c " \
+          wis2node metadata station sync /data/wis2node/data/metadata/station/station_list.csv \
+          && wis2node metadata station generate-collection \
+          && wis2node metadata discovery publish \
+            /data/wis2node/data/metadata/discovery/surface-weather-observations.yml \
+          && wis2node data observations process \
+            /data/wis2node/data/observations/Namitambo_SYNOP.csv \
+            --discovery-metadata /data/wis2node/data/metadata/discovery/surface-weather-observations.yml \
+            --station-metadata /data/wis2node/data/metadata/station/0-454-2-AWSNAMITAMBO.json \
+            --mappings /data/wis2node/data/config/malawi_synop_bufr.json \
+            --geojson_mappings /data/wis2node/data/config/malawi_synop_json.geojson"
+    - name: run wis2node
+      run: |
+        make up
+        sleep 10
+        docker ps -a
+    - name: run unit tests ⚙️
+      run: |
+        pytest tests/unit
+    - name: run integration tests ⚙️
+      run: |
+        pytest tests/integration
+    - name: run flake8 ⚙️
+      run: |
+        find . -type f -name "*.py" | xargs flake8
