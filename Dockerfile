@@ -52,5 +52,4 @@ RUN apt-get update -y \
     # add wis2node user
     && useradd -ms /bin/bash wis2node
 
-USER wis2node
 WORKDIR /home/wis2node
