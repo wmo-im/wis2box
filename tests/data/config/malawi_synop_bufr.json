@@ -1,5 +1,7 @@
 {
     "inputDelayedDescriptorReplicationFactor": [0,0],
+    "number_header_rows": 4,
+    "names_on_row": 2,
     "header":[
         {"eccodes_key": "edition", "value": 4},
         {"eccodes_key": "masterTableNumber", "value": 0},
