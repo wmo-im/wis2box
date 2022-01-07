@@ -40,6 +40,9 @@ help:
 build:
 	docker-compose $(DOCKER_COMPOSE_ARGS) build
 
+config:
+	docker-compose $(DOCKER_COMPOSE_ARGS) config
+
 up:
 	docker-compose $(DOCKER_COMPOSE_ARGS) up -d
 
