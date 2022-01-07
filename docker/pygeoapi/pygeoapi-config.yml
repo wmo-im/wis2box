@@ -141,7 +141,7 @@ resources:
             - type: feature
               name: Elasticsearch
               data: http://elasticsearch:9200/observations
-              id_field: geonameid
+              id_field: ogc_fid
 
     data:
         type: stac-collection

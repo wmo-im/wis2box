@@ -51,12 +51,14 @@ jobs:
           -v `pwd`:/home \
           osgeo/gdal:alpine-small-latest \
             ogr2ogr \
+              -lco INDEX_NAME=observations \
+              -lco GEOM_MAPPING_TYPE=GEO_POINT \
               -f "ElasticSearch" http://elasticsearch:9200 \
               /home/observations.csv \
               -oo X_POSSIBLE_NAMES=X \
               -oo Y_POSSIBLE_NAMES=Y \
               -oo Z_POSSIBLE_NAMES=Z \
-              -a_srs 'EPSG:4326'
+              -a_srs "http://spatialreference.org/ref/epsg/4326/"
     - name: generate wis2node collection
       run: |
         docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c " \
