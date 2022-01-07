@@ -169,4 +169,5 @@ resources:
               name: FileSystem
               data: ${WIS2NODE_DATADIR}/data
               file_types:
+                  - .bufr
                   - .bufr4
