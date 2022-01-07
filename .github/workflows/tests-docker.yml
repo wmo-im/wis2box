@@ -16,8 +16,6 @@ jobs:
       name: Setup Python 3.8
       with:
         python-version: 3.8
-    - uses: ScribeMD/rootless-docker@0.1.1
-      name: Use Docker in rootless mode.
     - name: Install requirements 📦
       run: |
         pip3 install -r requirements.txt
@@ -28,7 +26,20 @@ jobs:
         cp tests/test.env dev.env
         make build
         make up 
-    - name: setup test data ⚙️ PostgreSQL/PostGIS 📦
+    - name: generate wis2node collection
+      run: |
+        docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c " \
+          wis2node metadata station sync /data/wis2node/data/metadata/station/station_list.csv \
+          && wis2node metadata station generate-collection \
+          && wis2node metadata discovery publish \
+            /data/wis2node/data/metadata/discovery/surface-weather-observations.yml \
+          && wis2node data observations process \
+            /data/wis2node/data/observations/Namitambo_SYNOP.csv \
+            --discovery-metadata /data/wis2node/data/metadata/discovery/surface-weather-observations.yml \
+            --station-metadata /data/wis2node/data/metadata/station/0-454-2-AWSNAMITAMBO.json \
+            --mappings /data/wis2node/data/config/malawi_synop_bufr.json \
+            --geojson_mappings /data/wis2node/data/config/malawi_synop_json.geojson"
+    - name: setup test data ⚙️
       env:
         POSTGRES_USER: root
         POSTGRES_PASSWORD: password
@@ -59,19 +70,6 @@ jobs:
               -oo Y_POSSIBLE_NAMES=Y \
               -oo Z_POSSIBLE_NAMES=Z \
               -a_srs "http://spatialreference.org/ref/epsg/4326/"
-    - name: generate wis2node collection
-      run: |
-        docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c " \
-          wis2node metadata station sync /data/wis2node/data/metadata/station/station_list.csv \
-          && wis2node metadata station generate-collection \
-          && wis2node metadata discovery publish \
-            /data/wis2node/data/metadata/discovery/surface-weather-observations.yml \
-          && wis2node data observations process \
-            /data/wis2node/data/observations/Namitambo_SYNOP.csv \
-            --discovery-metadata /data/wis2node/data/metadata/discovery/surface-weather-observations.yml \
-            --station-metadata /data/wis2node/data/metadata/station/0-454-2-AWSNAMITAMBO.json \
-            --mappings /data/wis2node/data/config/malawi_synop_bufr.json \
-            --geojson_mappings /data/wis2node/data/config/malawi_synop_json.geojson"
     - name: run wis2node
       run: |
         make up
