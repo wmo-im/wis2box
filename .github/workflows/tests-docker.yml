@@ -27,7 +27,7 @@ jobs:
       run: |
         cp tests/test.env dev.env
         make build
-        sudo make up 
+        make up 
     - name: setup test data ⚙️ PostgreSQL/PostGIS 📦
       env:
         POSTGRES_USER: root
