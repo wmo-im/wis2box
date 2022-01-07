@@ -37,15 +37,15 @@ jobs:
         echo "Setting up test data"
         cd tests
         python3 load_obs_data.py data/observations/
-        docker run -d \
-          --name=postgis \
-          -e POSTGRES_USER=${POSTGRES_USER} \
-          -e POSTGRES_PASS=${POSTGRES_PASSWORD} \
-          -e POSTGRES_DBNAME=${POSTGRES_DB} \
-          -e ALLOW_IP_RANGE=0.0.0.0/0 \
-          -p 0.0.0.0:5432:5432 \
-          -v `pwd`:/docker-entrypoint-initdb.d \
-          kartoza/postgis:latest
+        # docker run -d \
+        #   --name=postgis \
+        #   -e POSTGRES_USER=${POSTGRES_USER} \
+        #   -e POSTGRES_PASS=${POSTGRES_PASSWORD} \
+        #   -e POSTGRES_DBNAME=${POSTGRES_DB} \
+        #   -e ALLOW_IP_RANGE=0.0.0.0/0 \
+        #   -p 0.0.0.0:5432:5432 \
+        #   -v `pwd`:/docker-entrypoint-initdb.d \
+        #   kartoza/postgis:latest
         docker run --rm \
           --net wis2node_default \
           -v `pwd`:/home \
