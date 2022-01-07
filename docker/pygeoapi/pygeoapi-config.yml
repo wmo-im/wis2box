@@ -139,16 +139,9 @@ resources:
                 crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
         providers:
             - type: feature
-              name: PostgreSQL
-              data:
-                host: localhost
-                dbname: test
-                user: root
-                password: password
-                search_path: [public]
-              geom_field: wkb_geometry
+              name: Elasticsearch
+              data: http://elasticsearch:9200/observations
               id_field: ogc_fid
-              table: observations
 
     data:
         type: stac-collection
@@ -176,4 +169,4 @@ resources:
               name: FileSystem
               data: ${WIS2NODE_DATADIR}/data
               file_types:
-                  - .bufr
+                  - .bufr4

@@ -18,6 +18,10 @@ services:
     volumes:
       - ${WIS2NODE_DATADIR}:/data/wis2node:rw
 
+  elasticsearch:
+    ports:
+      - 9200:9200
+
   mosquitto:
     ports:
       - 1883:1883
