@@ -23,6 +23,11 @@ jobs:
         pip3 install -r requirements.txt
         pip3 install -r requirements-dev.txt
         python3 setup.py install
+    - name: build Wis2node ⚙️
+      run: |
+        cp tests/test.env dev.env
+        make build
+        make up 
     - name: setup test data ⚙️ PostgreSQL/PostGIS 📦
       env:
         POSTGRES_USER: root
@@ -41,11 +46,17 @@ jobs:
           -p 0.0.0.0:5432:5432 \
           -v `pwd`:/docker-entrypoint-initdb.d \
           kartoza/postgis:latest
-    - name: build Wis2node ⚙️
-      run: |
-        cp tests/test.env dev.env
-        make build
-        make up  
+        docker run --rm \
+          --net wis2node_default \
+          -v `pwd`:/home \
+          osgeo/gdal:alpine-small-latest \
+            ogr2ogr \
+              -f "ElasticSearch" http://elasticsearch:9200 \
+              /home/observations.csv \
+              -oo X_POSSIBLE_NAMES=X \
+              -oo Y_POSSIBLE_NAMES=Y \
+              -oo Z_POSSIBLE_NAMES=Z \
+              -a_srs 'EPSG:4326'
     - name: generate wis2node collection
       run: |
         docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c " \
