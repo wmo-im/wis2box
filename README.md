@@ -27,31 +27,43 @@ vi dev.env
 ## Deploying with Docker Compose
 
 ```bash
+# wi2node-ctl options
+python3 wis2node-ctl.py
+
+# view docker config
+python3 wis2node-ctl.py config
+
 # build local images
-make build
+python3 wis2node-ctl.py build
 
 # start system
-make up
+python3 wis2node-ctl.py start
 
 # login to main wis2node container
-make login
+python3 wis2node-ctl.py login
+
+# restart containers
+python3 wis2node-ctl.py restart
+
+# view upstatus
+python3 wis2node-ctl.py status -a
 
 # view logs
-make logs
+python3 wis2node-ctl.py  logs
 
 # stop system
-make stop
+python3 wis2node-ctl.py  stop
 
 # update images
-make update
+python3 wis2node-ctl.py  update
 
 # redeploy containers
-make up
+python3 wis2node-ctl.py  up
 ```
 
 ## Running
 
-- Note: run `make login` first to access the container
+- Note: run `python3 wis2node-ctl.py login` first to access the container
 
 From command line:
 
@@ -107,10 +119,10 @@ wis2node metadata discovery unpublish foo/bar/baz
 
 ```bash
 # clean up dangling containers and images
-make prune
+python3 wis2node-ctl.py prune
 
 # run a flake8 check on all Python code
-make flake8
+python3 wis2node-ctl.py lint
 ```
 
 ### Running tests
