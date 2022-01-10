@@ -15,8 +15,7 @@ services:
 
   wis2node-ui:
     container_name: wis2node-ui
-    build: https://github.com/wmo-im/wis2node-ui.git#main
-    # image: webbben/wis2node-ui
+    image: ghcr.io/wmo-im/wis2node-ui:latest
     depends_on:
       - pygeoapi
 
