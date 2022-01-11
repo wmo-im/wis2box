@@ -11,7 +11,7 @@ services:
       - wis2node-ui
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ${WIS2NODE_DATADIR_PUBLIC}:/data/wis2node/data/public:ro
+      - ${WIS2NODE_DATADIR}/data/public:/data/wis2node/data/public:ro
 
   wis2node-ui:
     container_name: wis2node-ui
@@ -31,9 +31,7 @@ services:
         condition: service_healthy
     volumes:
       - ./pygeoapi/pygeoapi-config.yml:/pygeoapi/local.config.yml:ro
-      - type: bind
-        source: ${WIS2NODE_DATADIR_CONFIG}
-        target: /data/wis2node/data/config
+      - ${WIS2NODE_DATADIR}:/data/wis2node:rw
 
   elasticsearch:
     container_name: elasticsearch
@@ -112,12 +110,11 @@ services:
       - WIS2NODE_OSCAR_API_TOKEN=${WIS2NODE_OSCAR_API_TOKEN}
       - WIS2NODE_API_URL=${WIS2NODE_API_URL}
     volumes:
+      - ./wis2node/data-mappings.yml:/data/wis2node/data-mappings.yml:ro
       - ./wis2node/config:/root/.config/sr3:ro
-      - ${WIS2NODE_DATADIR}:/data/wis2node:rw
       - ${WIS2NODE_DATADIR}/cache/wis2node:/root/.cache:rw
-      - type: bind
-        source: ${WIS2NODE_DATADIR_CONFIG}
-        target: /data/wis2node/data/config
+      - ${WIS2NODE_DATADIR}:/data/wis2node:rw
+      - ${WIS2NODE_DATADIR_CONFIG}:/data/wis2node/data/config:rw
       - ${WIS2NODE_DATADIR_INCOMING}:/data/wis2node/data/incoming:rw
       - ${WIS2NODE_DATADIR_OUTGOING}:/data/wis2node/data/outgoing:rw
       - ${WIS2NODE_DATADIR_PUBLIC}:/data/wis2node/data/public:rw
