@@ -31,7 +31,9 @@ services:
         condition: service_healthy
     volumes:
       - ./pygeoapi/pygeoapi-config.yml:/pygeoapi/local.config.yml:ro
-      - ${WIS2NODE_DATADIR}:/data/wis2node:rw
+      - type: bind
+        source: ${WIS2NODE_DATADIR_CONFIG}
+        target: /data/wis2node/data/config
 
   elasticsearch:
     container_name: elasticsearch
@@ -113,7 +115,9 @@ services:
       - ./wis2node/config:/root/.config/sr3:ro
       - ${WIS2NODE_DATADIR}:/data/wis2node:rw
       - ${WIS2NODE_DATADIR}/cache/wis2node:/root/.cache:rw
-      - ${WIS2NODE_DATADIR_CONFIG}:/data/wis2node/data/config:rw
+      - type: bind
+        source: ${WIS2NODE_DATADIR_CONFIG}
+        target: /data/wis2node/data/config
       - ${WIS2NODE_DATADIR_INCOMING}:/data/wis2node/data/incoming:rw
       - ${WIS2NODE_DATADIR_OUTGOING}:/data/wis2node/data/outgoing:rw
       - ${WIS2NODE_DATADIR_PUBLIC}:/data/wis2node/data/public:rw
