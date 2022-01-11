@@ -22,10 +22,12 @@ jobs:
         pip3 install -r requirements-dev.txt
         python3 setup.py install
     - name: wis2node configuration
-      run: make config
-    - name: build wis2node ⚙️
       run: |
         cp tests/test.env dev.env
+        echo dev.env
+        make config
+    - name: build wis2node ⚙️
+      run: |
         make build
         make up 
     - name: generate wis2node collection
