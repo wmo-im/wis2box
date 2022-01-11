@@ -21,6 +21,8 @@ jobs:
         pip3 install -r requirements.txt
         pip3 install -r requirements-dev.txt
         python3 setup.py install
+    - name: wis2node configuration
+      run: make config
     - name: build wis2node ⚙️
       run: |
         cp tests/test.env dev.env

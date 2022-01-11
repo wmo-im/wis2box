@@ -114,10 +114,26 @@ services:
       - ./wis2node/config:/root/.config/sr3:ro
       - ${WIS2NODE_DATADIR}/cache/wis2node:/root/.cache:rw
       - ${WIS2NODE_DATADIR}:/data/wis2node:rw
-      - ${WIS2NODE_DATADIR_CONFIG}:/data/wis2node/data/config:rw
-      - ${WIS2NODE_DATADIR_INCOMING}:/data/wis2node/data/incoming:rw
-      - ${WIS2NODE_DATADIR_OUTGOING}:/data/wis2node/data/outgoing:rw
-      - ${WIS2NODE_DATADIR_PUBLIC}:/data/wis2node/data/public:rw
+      - type: bind
+        source: ${WIS2NODE_DATADIR_CONFIG}
+        target: /data/wis2node/data/config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: ${WIS2NODE_DATADIR_INCOMING}
+        target: /data/wis2node/data/incoming
+        bind:
+          create_host_path: true
+      - type: bind
+        source: ${WIS2NODE_DATADIR_OUTGOING}
+        target: /data/wis2node/data/outgoing
+        bind:
+          create_host_path: true
+      - type: bind
+        source: ${WIS2NODE_DATADIR_PUBLIC}
+        target: /data/wis2node/data/public
+        bind:
+          create_host_path: true
     depends_on:
       - mosquitto
     command: sh -c "sr3 start && sleep infinity"
