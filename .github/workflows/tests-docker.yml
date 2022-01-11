@@ -34,7 +34,7 @@ jobs:
           && wis2node metadata discovery publish \
             /data/wis2node/data/metadata/discovery/surface-weather-observations.yml \
           && wis2node data observations process \
-            /data/wis2node/data/observations/Namitambo_SYNOP.csv \
+            /data/wis2node/tests/data/observations/WIGOS_0-454-2-AWSNAMITAMBO_2021-11-18T0955.csv \
             --discovery-metadata /data/wis2node/data/metadata/discovery/surface-weather-observations.yml \
             --station-metadata /data/wis2node/data/metadata/station/0-454-2-AWSNAMITAMBO.json \
             --mappings /data/wis2node/data/config/malawi_synop_bufr.json \
