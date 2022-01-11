@@ -12,11 +12,6 @@ services:
   pygeoapi:
     ports:
       - 5000:80
-    environment:
-      - SCRIPT_NAME=/pygeoapi
-      - PYGEOAPI_SERVER_URL=http://localhost:8999/pygeoapi
-    volumes:
-      - ${WIS2NODE_DATADIR}:/data/wis2node:rw
 
   elasticsearch:
     ports:

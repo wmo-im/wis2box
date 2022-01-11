@@ -28,14 +28,14 @@ from pygeometa.helpers import json_serial
 from pygeometa.schemas.ogcapi_records import OGCAPIRecordOutputSchema
 
 from wis2node import cli_helpers
-from wis2node.env import OGC_API_URL
+from wis2node.env import API_URL
 from wis2node.catalogue import delete_metadata, upsert_metadata
-from wis2node.metadata.base import MetadataBase
+from wis2node.metadata.base import BaseMetadata
 
 LOGGER = logging.getLogger(__name__)
 
 
-class DiscoveryMetadata(MetadataBase):
+class DiscoveryMetadata(BaseMetadata):
     def __init__(self):
         super().__init__()
 
@@ -54,7 +54,7 @@ class DiscoveryMetadata(MetadataBase):
 
         LOGGER.debug('Adding distribution links')
         oafeat_link = {
-            'url': f"{OGC_API_URL}/collections/{identifier}",
+            'url': f"{API_URL}/collections/{identifier}",
             'type': 'OAFeat',
             'name': identifier,
             'description': identifier,
@@ -91,7 +91,7 @@ def discovery():
 def publish(ctx, filepath, verbosity):
     """Inserts or updates discovery metadata to catalogue"""
 
-    click.echo(f'Publishing discovery metadata from {filepath}')
+    click.echo(f'Publishing discovery metadata from {filepath.name}')
     try:
         dm = DiscoveryMetadata()
         record = dm.parse_record(filepath.read())

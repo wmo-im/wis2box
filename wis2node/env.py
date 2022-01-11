@@ -25,44 +25,66 @@ import os
 from pathlib import Path
 
 from wis2node import cli_helpers
+from wis2node.util import yaml_load
 
 LOGGER = logging.getLogger(__name__)
 
 PROCESSING_PLUGINS = {}
 
+with (Path(__file__).parent / 'resources' / 'data-mappings.yml').open() as fh:
+    DATADIR_DATA_MAPPINGS = yaml_load(fh)
+
+
 try:
-    DATADIR = Path(os.environ.get('WIS2NODE_DATADIR', None))
-    DATADIR_INCOMING = Path(os.environ.get('WIS2NODE_DATADIR_INCOMING', None))
-    DATADIR_OUTGOING = Path(os.environ.get('WIS2NODE_DATADIR_OUTGOING', None))
-    DATADIR_PUBLIC = Path(os.environ.get('WIS2NODE_DATADIR_PUBLIC', None))
+    DATADIR = Path(os.environ.get('WIS2NODE_DATADIR'))
+    DATADIR_CONFIG = Path(os.environ.get('WIS2NODE_DATADIR_CONFIG'))
+    DATADIR_INCOMING = Path(os.environ.get('WIS2NODE_DATADIR_INCOMING'))
+    DATADIR_OUTGOING = Path(os.environ.get('WIS2NODE_DATADIR_OUTGOING'))
+    DATADIR_PUBLIC = Path(os.environ.get('WIS2NODE_DATADIR_PUBLIC'))
 except TypeError:
     msg = 'Configuration filepaths do not exist!'
     LOGGER.error(msg)
     raise EnvironmentError(msg)
 
-CATALOGUE_BACKEND = os.environ.get('WIS2NODE_CATALOGUE_BACKEND', None)
-OSCAR_API_TOKEN = os.environ.get('WIS2NODE_OSCAR_API_TOKEN', None)
-OGC_API_URL = os.environ.get('WIS2NODE_OGC_API_URL', None)
+CATALOGUE_BACKEND = os.environ.get('WIS2NODE_CATALOGUE_BACKEND')
+OSCAR_API_TOKEN = os.environ.get('WIS2NODE_OSCAR_API_TOKEN')
+API_URL = os.environ.get('WIS2NODE_API_URL')
+API_BACKEND_HOST = os.environ.get('WIS2NODE_API_BACKEND_HOST')
+
+try:
+    API_BACKEND_PORT = int(os.environ.get('WIS2NODE_API_BACKEND_PORT'))
+except TypeError:
+    API_BACKEND_PORT = None
+
+API_BACKEND_USERNAME = os.environ.get('WIS2NODE_API_BACKEND_USERNAME')
+API_BACKEND_PASSWORD = os.environ.get('WIS2NODE_API_BACKEND_PASSWORD')
+
+if 'WIS2NODE_DATADIR_DATA_MAPPINGS' in os.environ:
+    LOGGER.debug('Overriding WIS2NODE_DATADIR_DATA_MAPPINGS')
+    try:
+        with open(os.environ.get('WIS2NODE_DATADIR_DATA_MAPPINGS')) as fh:
+            DATADIR_DATA_MAPPINGS = yaml_load(fh)
+            assert DATADIR_DATA_MAPPINGS is not None
+    except Exception as err:
+        DATADIR_DATA_MAPPINGS = None
+        msg = f'Missing data mappings: {err}'
+        LOGGER.error(msg)
+        raise EnvironmentError(msg)
+
 
 if None in [
     DATADIR,
+    DATADIR_CONFIG,
     DATADIR_INCOMING,
     DATADIR_OUTGOING,
     DATADIR_PUBLIC,
     CATALOGUE_BACKEND,
     OSCAR_API_TOKEN,
-    OGC_API_URL
+    API_URL
 ]:
     msg = 'Environment variables not set!'
     LOGGER.error(msg)
     raise EnvironmentError(msg)
-
-
-LOGGER.debug('Loading processing plugins')
-
-for key, value in os.environ.items():
-    if key.startswith('WIS2NODE_PROCESSING_PLUGIN'):
-        PROCESSING_PLUGINS[key] = value
 
 
 @click.group()
@@ -79,6 +101,7 @@ def create(ctx, verbosity):
 
     click.echo(f'Creating baseline directory structure in {DATADIR}')
     DATADIR.mkdir(parents=True, exist_ok=True)
+    DATADIR_CONFIG.mkdir(parents=True, exist_ok=True)
     DATADIR_INCOMING.mkdir(parents=True, exist_ok=True)
     DATADIR_OUTGOING.mkdir(parents=True, exist_ok=True)
     DATADIR_PUBLIC.mkdir(parents=True, exist_ok=True)
@@ -88,4 +111,16 @@ def create(ctx, verbosity):
     (DATADIR / 'metadata' / 'station').mkdir(parents=True, exist_ok=True)
 
 
+@click.command()
+@click.pass_context
+@cli_helpers.OPTION_VERBOSITY
+def show(ctx, verbosity):
+    """Displays wis2node environment variables"""
+
+    for key, value in os.environ.items():
+        if key.startswith('WIS2NODE'):
+            click.echo(f'{key} => {value}')
+
+
 environment.add_command(create)
+environment.add_command(show)

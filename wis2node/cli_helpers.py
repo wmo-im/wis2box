@@ -20,24 +20,20 @@
 ###############################################################################
 
 import logging
+from pathlib import Path
 import sys
 
 import click
 
 ARGUMENT_FILEPATH = click.argument('filepath', type=click.File())
 
-OPTION_DISCOVERY_METADATA = click.option(
-    '--discovery-metadata', 'discovery_metadata', required=True,
-    type=click.File(), help='Discovery metadata MCF file')
+OPTION_PATH = click.option('--path', '-p', required=True,
+                           help='Path to file or directory',
+                           type=click.Path(file_okay=True, dir_okay=True,
+                                           path_type=Path))
 
-OPTION_STATION_METADATA = click.option(
-    '--station-metadata', 'station_metadata', required=True,
-    type=click.File(),
-    help='WIGOS Station Identifier JSON file (from OSCAR/Surface')
-
-OPTION_MAPPINGS = click.option(
-    '--mappings', required=True, type=click.File(),
-    help='Mapping configuration file')
+OPTION_TOPIC_HIERARCHY = click.option(
+    '--topic-hierarchy', '-th', required=True, help='Topic hierarchy')
 
 
 def OPTION_VERBOSITY(f):

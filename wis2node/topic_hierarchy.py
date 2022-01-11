@@ -20,39 +20,30 @@
 ###############################################################################
 
 import logging
-from typing import Union
-
-from pygeometa.core import read_mcf
 
 LOGGER = logging.getLogger(__name__)
 
 
-class BaseMetadata:
-    """base metadata"""
+class TopicHierarchy:
+    def __init__(self, path: str) -> None:
+        self.dotpath = None
+        self.dirpath = None
 
-    def __init__(self):
-        pass
+        if '/' in path:
+            LOGGER.debug('Transforming from directory to dotted path')
+            self.dirpath = path
+            self.dotpath = path.replace('/', '.')
+        elif '.' in path:
+            LOGGER.debug('Transforming from dotted to directory path')
+            self.dotpath = path
+            self.dirpath = path.replace('.', '/')
 
-    def generate(self, mcf: dict, schema: str = None) -> Union[dict, str]:
+    def is_valid(self) -> bool:
         """
-        Generate metadata in a given schema
+        Determines whether a topic hierarchy is valid
 
-        :param mcf: `dict` of MCF file
-        :param schema: `str` of metadata schema to generate
-
-        :returns: `dict` or `str` of metadata representation
-        """
-
-        raise NotImplementedError()
-
-    def parse_record(self, metadata_record: bytes) -> dict:
-        """
-        Parses MCF metadata into dict
-
-        :param metadata_record: string of metadata
-
-        :return: `dict` of MCF
+        :returns: `bool` of whether the topic hierarchy is validjo
         """
 
-        LOGGER.debug('reading MCF')
-        return read_mcf(metadata_record)
+        # TODO: implement when WCMP 2.0 codelists are implemented
+        return True

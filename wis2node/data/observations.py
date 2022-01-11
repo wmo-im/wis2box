@@ -19,124 +19,100 @@
 #
 ###############################################################################
 
-import click
 import json
 import logging
 from pathlib import Path
+import re
 
-from csv2bufr import transform as transform_csv
-import yaml
+from csv2bufr import MAPPINGS, transform as transform_csv
 
-from wis2node import cli_helpers
-from wis2node.data.base import AbstractData
+from wis2node.data.base import BaseAbstractData
+from wis2node.env import DATADIR
 
 LOGGER = logging.getLogger(__name__)
 
 
-class ObservationData(AbstractData):
+class ObservationData(BaseAbstractData):
     """Observation data"""
-    def __init__(self, input_data: str, mappings: dict,
-                 discovery_metadata: dict, station_metadata: dict = {}):
+    def __init__(self, topic_hierarchy: str) -> None:
         """
         Abstract data initializer
 
-        :param input_data: `str` of data payload
-        :param discovery_metadata: `dict` of discovery metadata MCF
-        :param station_metadata: `dict` of station metadata
+        :param topic_hierarchy: `wis2node.topic_hierarchy.TopicHierarchy`
+                                object
+
+        :returns: `None`
         """
 
-        super().__init__(input_data, discovery_metadata)
+        super().__init__(topic_hierarchy)
 
-        self.data_date = None
-        self.mappings = mappings
-        self.station_metadata = station_metadata
+        self.mappings = {}
+        self.output_data = {}
 
-        self.data_category = discovery_metadata['wis2node']['data_category']
-        self.country_code = discovery_metadata['wis2node']['country_code']
-        self.originating_centre = discovery_metadata['wis2node']['originating_centre']  # noqa
-        self.station_type = discovery_metadata['wis2node']['station_type']
+        mapping_bufr4 = Path(MAPPINGS) / 'malawi_synop_bufr.json'
+        mapping_geojson = Path(MAPPINGS) / 'malawi_synop_json.geojson'
 
-    def transform(self) -> bool:
+        with mapping_bufr4.open() as fh1, mapping_geojson.open() as fh2:
+            self.mappings['bufr4'] = json.load(fh1)
+            self.mappings['geojson'] = json.load(fh2)
+
+        self.station_metadata = None
+
+    def transform(self, input_data: Path) -> bool:
         LOGGER.debug('Processing data')
-        LOGGER.debug('Generating BUFR4 and GeoJSON')
-        _ = transform_csv(self.input_data,
-                          self.station_metadata,
-                          self.mappings['bufr4'],
-                          self.mappings['geojson'])
-        for value in _:
-            key = value["_meta"]["identifier"]
-            self.data_date = value['_meta']['data_date']
 
-            self.output_data[key] = value
-            self.output_data[key]['_meta']['relative_filepath'] = self.get_local_filepath()  # noqa
+        LOGGER.debug('Extracting WSI from filename')
+        try:
+            wsi = re.match(r'(\d-\d+-\d+-\w+).*', input_data.name).group(1)
+        except AttributeError:
+            msg = f'Invalid filename format: {input_data}'
+            LOGGER.error(msg)
+            raise ValueError(msg)
+
+        sm = DATADIR / 'metadata' / 'station' / f'{wsi}.json'
+        with sm.open() as fh1:
+            self.station_metadata = json.load(fh1)
+
+        LOGGER.debug('Generating BUFR4 and GeoJSON')
+        with input_data.open() as fh1:
+            results = transform_csv(fh1.read(),
+                                    self.station_metadata,
+                                    self.mappings['bufr4'],
+                                    self.mappings['geojson'])
+
+        LOGGER.debug('Generating GeoJSON')
+        for item in results:
+            LOGGER.debug('Setting obs date for filepath creation')
+
+            identifier = item['_meta']['identifier']
+            data_date = item['_meta']['data_date']
+
+            self.output_data[identifier] = item
+            self.output_data[identifier]['_meta']['relative_filepath'] = \
+                self.get_local_filepath(data_date)
 
         return True
 
-    def get_local_filepath(self):
-        yyyymmdd = self.data_date.strftime('%Y-%m-%d')
-        return (Path(yyyymmdd) /
-                'wis' /
-                self.data_category /
-                self.country_code /
-                self.originating_centre /
-                self.station_type)
+    def get_local_filepath(self, date_):
+        yyyymmdd = date_.strftime('%Y-%m-%d')
+
+        return (Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath)
 
 
-def process_data(data: str, mappings: dict, discovery_metadata: dict,
-                 station_metadata: dict) -> bool:
+def process_data(data: str, discovery_metadata: dict) -> bool:
     """
     Data processing workflow for observations
 
     :param data: `str` of data to be processed
-    :param mappings: `dict` of mappings
     :param discovery_metadata: `dict` of discovery metadata MCF
-    :param station_metadata: `dict` of station metadata
 
     :returns: `bool` of processing result
     """
 
-    d = ObservationData(data, mappings, discovery_metadata, station_metadata)
+    d = ObservationData(discovery_metadata)
     LOGGER.info('Transforming data')
-    d.transform()
+    d.transform(data)
     LOGGER.info('Publishing data')
     d.publish()
 
     return True
-
-
-@click.command()
-@click.pass_context
-@cli_helpers.ARGUMENT_FILEPATH
-@cli_helpers.OPTION_DISCOVERY_METADATA
-@cli_helpers.OPTION_STATION_METADATA
-@cli_helpers.OPTION_MAPPINGS
-@cli_helpers.OPTION_VERBOSITY
-@click.option('--geojson_mappings', type=click.File())
-def process(ctx, filepath, discovery_metadata, station_metadata, mappings,
-            geojson_mappings, verbosity):
-    """Process observations"""
-
-    click.echo(f'Processing {filepath}')
-
-    mappings_ = {
-        'bufr4': json.load(mappings),
-        'geojson': json.load(geojson_mappings),
-    }
-
-    try:
-        _ = process_data(filepath.read(), mappings_,
-                         yaml.load(discovery_metadata, Loader=yaml.SafeLoader),
-                         json.load(station_metadata))
-    except Exception as err:
-        raise click.ClickException(err)
-
-    click.echo("Done")
-
-
-@click.group()
-def observations():
-    """Observation data manageement"""
-    pass
-
-
-observations.add_command(process)
