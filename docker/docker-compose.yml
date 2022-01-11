@@ -31,6 +31,7 @@ services:
         condition: service_healthy
     volumes:
       - ./pygeoapi/pygeoapi-config.yml:/pygeoapi/local.config.yml:ro
+      - ${WIS2NODE_DATADIR}:/data/wis2node:rw
 
   elasticsearch:
     container_name: elasticsearch
@@ -100,19 +101,22 @@ services:
       - METPX_SR3_BASEURL=${WIS2NODE_URL}
       - METPX_SR3_LOGLEVEL=DEBUG
       #- WIS2NODE_DATA_MAPPINGS=/data/wis2node/data-mappings.yml
-      - WIS2NODE_DATADIR=/data/wis2node/data
+      - WIS2NODE_DATADIR=/data/wis2node
       - WIS2NODE_DATADIR_CONFIG=/data/wis2node/data/config
       - WIS2NODE_DATADIR_INCOMING=/data/wis2node/data/incoming
       - WIS2NODE_DATADIR_OUTGOING=/data/wis2node/data/outgoing
       - WIS2NODE_DATADIR_PUBLIC=/data/wis2node/data/public
-      - WIS2NODE_CATALOGUE_BACKEND=/data/wis2node/data/metadata/discovery/records.tinydb
+      - WIS2NODE_CATALOGUE_BACKEND=/data/wis2node/metadata/discovery/records.tinydb
       - WIS2NODE_OSCAR_API_TOKEN=${WIS2NODE_OSCAR_API_TOKEN}
       - WIS2NODE_API_URL=${WIS2NODE_API_URL}
     volumes:
-      - ./wis2node/data-mappings.yml:/data/wis2node/data-mappings.yml:ro
       - ./wis2node/config:/root/.config/sr3:ro
-      - ${WIS2NODE_DATADIR}/cache/wis2node:/root/.cache:rw
       - ${WIS2NODE_DATADIR}:/data/wis2node:rw
+      - ${WIS2NODE_DATADIR}/cache/wis2node:/root/.cache:rw
+      - ${WIS2NODE_DATADIR_CONFIG}:/data/wis2node/data/config:rw
+      - ${WIS2NODE_DATADIR_INCOMING}:/data/wis2node/data/incoming:rw
+      - ${WIS2NODE_DATADIR_OUTGOING}:/data/wis2node/data/outgoing:rw
+      - ${WIS2NODE_DATADIR_PUBLIC}:/data/wis2node/data/public:rw
     depends_on:
       - mosquitto
     command: sh -c "sr3 start && sleep infinity"
