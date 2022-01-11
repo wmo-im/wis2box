@@ -67,8 +67,7 @@ services:
 
   data-consumer:
     container_name: data-consumer
-    build: https://github.com/MetPX/sarracenia.git#v03_wip
-    # image: webbben/sarracenia
+    image: ghcr.io/metpx/sarracenia:latest
     #user: sarra:sarra
     environment:
       - METPX_SR3_HOST=${METPX_SR3_HOST}
