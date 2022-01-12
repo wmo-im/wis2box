@@ -18,18 +18,18 @@ jobs:
         python-version: 3.8
     - name: Install requirements 📦
       run: |
-        pip3 install -r requirements.txt
         pip3 install -r requirements-dev.txt
         python3 setup.py install
     - name: wis2node configuration
       run: |
         cp tests/test.env dev.env
         echo dev.env
-        make config
+        python3 wis2node-ctl.py config
     - name: build wis2node ⚙️
       run: |
-        make build
-        make up 
+        python3 wis2node-ctl.py build
+        python3 wis2node-ctl.py start
+        python3 wis2node-ctl.py status
     - name: generate wis2node collection
       run: |
         docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c " \
@@ -50,15 +50,6 @@ jobs:
         echo "Setting up test data"
         cd tests
         python3 load_obs_data.py data/observations/
-        # docker run -d \
-        #   --name=postgis \
-        #   -e POSTGRES_USER=${POSTGRES_USER} \
-        #   -e POSTGRES_PASS=${POSTGRES_PASSWORD} \
-        #   -e POSTGRES_DBNAME=${POSTGRES_DB} \
-        #   -e ALLOW_IP_RANGE=0.0.0.0/0 \
-        #   -p 0.0.0.0:5432:5432 \
-        #   -v `pwd`:/docker-entrypoint-initdb.d \
-        #   kartoza/postgis:latest
         docker run --rm \
           --net wis2node_default \
           -v `pwd`:/home \
@@ -74,9 +65,9 @@ jobs:
               -a_srs "http://spatialreference.org/ref/epsg/4326/"
     - name: run wis2node
       run: |
-        make up
+        python3 wis2node-ctl.py restart
         sleep 10
-        docker ps -a
+        python3 wis2node-ctl.py status -a
     - name: run unit tests ⚙️
       run: |
         pytest tests/unit
