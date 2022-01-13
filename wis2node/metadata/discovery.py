@@ -75,6 +75,16 @@ class DiscoveryMetadata(BaseMetadata):
 
         record['properties']['_metadata-anytext'] = ' '.join(anytext_bag)
 
+        LOGGER.debug('Adding canonical link')
+        canonical_link = {
+            'url': f"{API_URL}/collections/discovery-metadata/{identifier}",
+            'type': 'OARec',
+            'name': identifier,
+            'description': identifier,
+            'function': 'canonical'
+        }
+        record['links'].append(canonical_link)
+
         return json.dumps(record, default=json_serial, indent=4)
 
 
