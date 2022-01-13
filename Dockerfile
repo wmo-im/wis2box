@@ -23,6 +23,7 @@ FROM ubuntu:focal
 
 MAINTAINER "tomkralidis@gmail.com"
 
+ARG WIS2NODE_PIP3_EXTRA_PACKAGES
 ENV TZ="Etc/UTC" \
     DEBIAN_FRONTEND="noninteractive" \
     BUILD_PACKAGES="build-essential cmake gfortran python3-wheel"
@@ -41,6 +42,7 @@ RUN apt-get update -y \
     && pip3 install https://github.com/wmo-im/csv2bufr/archive/dev.zip \
     && pip3 install https://github.com/geopython/pygeometa/archive/master.zip \
     && pip3 install https://github.com/metpx/sarracenia/archive/v03_wip.zip \
+    && pip3 install $WIS2NODE_PIP3_EXTRA_PACKAGES \
     # install wis2node
     && cd /app \
     && python3 setup.py install \

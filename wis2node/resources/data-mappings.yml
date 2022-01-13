@@ -1,3 +1,6 @@
 
 data:
     observations-surface-land.mw.FWCL.landFixed: wis2node.data.observations.ObservationData
+
+api_backend:
+    observations-surface-land.mw.FWCL.landFixed: wis2node.api.backend.elastic.ElasticBackend

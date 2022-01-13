@@ -38,6 +38,8 @@ class TopicHierarchy:
             self.dotpath = path
             self.dirpath = path.replace('.', '/')
 
+        self.collection_name = self.dotpath.lower()
+
     def is_valid(self) -> bool:
         """
         Determines whether a topic hierarchy is valid

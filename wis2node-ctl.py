@@ -90,7 +90,8 @@ def make(command: str, *args) -> None:
     if command == "config":
         subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} config'))
     elif command == "build":
-        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} build'))
+        cmd = "" if args[-1] == command else args[-1]
+        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} build {cmd}')) # noqa
     elif command == "start":
         subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} up -d'))
     elif command == "login":

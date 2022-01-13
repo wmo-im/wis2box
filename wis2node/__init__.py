@@ -26,6 +26,7 @@ import click
 from wis2node.data import data
 from wis2node.env import environment
 from wis2node.metadata import metadata
+from wis2node.api import api
 
 
 @click.group()
@@ -38,3 +39,4 @@ def cli():
 cli.add_command(environment)
 cli.add_command(data)
 cli.add_command(metadata)
+cli.add_command(api)

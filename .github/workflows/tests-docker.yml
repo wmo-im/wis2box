@@ -40,32 +40,12 @@ jobs:
           && wis2node metadata station cache /data/wis2node/data/metadata/station/station_list.csv \
           && wis2node metadata station generate-collection \
           && wis2node metadata discovery publish /data/wis2node/data/metadata/discovery/surface-weather-observations.yml \
-          && wis2node data ingest -th observations-surface-land.mw.FWCL.landFixed -p /data/wis2node/data/observations/0-454-2-AWSNAMITAMBO-20210707.csv"
-    - name: setup test data ⚙️
-      env:
-        POSTGRES_USER: root
-        POSTGRES_PASSWORD: password
-        POSTGRES_DB: test
-      run: |
-        echo "Setting up test data"
-        cd tests
-        python3 load_obs_data.py data/observations/
-        docker run --rm \
-          --net wis2node_default \
-          -v `pwd`:/home \
-          osgeo/gdal:alpine-small-latest \
-            ogr2ogr \
-              -lco INDEX_NAME=observations \
-              -lco GEOM_MAPPING_TYPE=GEO_POINT \
-              -f "ElasticSearch" http://elasticsearch:9200 \
-              /home/observations.csv \
-              -oo X_POSSIBLE_NAMES=X \
-              -oo Y_POSSIBLE_NAMES=Y \
-              -oo Z_POSSIBLE_NAMES=Z \
-              -a_srs "http://spatialreference.org/ref/epsg/4326/"
+          && wis2node data ingest -th observations-surface-land.mw.FWCL.landFixed -p /data/wis2node/data/observations/0-454-2-AWSNAMITAMBO-20210707.csv \
+          && wis2node api add-collection /data/wis2node/data/metadata/discovery/surface-weather-observations.yml --topic-hierarchy observations-surface-land.mw.FWCL.landFixed \
+          && wis2node api add-collections-items --topic-hierarchy observations-surface-land.mw.FWCL.landFixed"
     - name: run wis2node
       run: |
-        python3 wis2node-ctl.py restart
+        python3 wis2node-ctl.py restart pygeoapi
         sleep 10
         python3 wis2node-ctl.py status -a
     - name: run unit tests ⚙️

@@ -57,10 +57,7 @@ class ElasticBackend(BaseBackend):
 
         self.type = 'Elasticsearch'
 
-        url_settings = {
-            'host': self.host,
-            'port': self.port
-        }
+        url_settings = f'{self.host}:{self.port}'
 
         if self.port == 443:
             url_settings['scheme'] = 'https'
@@ -74,13 +71,13 @@ class ElasticBackend(BaseBackend):
             self.conn = Elasticsearch(
                 [url_settings], http_auth=(self.username, self.password))
 
-    def add_collection(self, collection_id: str) -> None:
+    def add_collection(self, collection_id: str) -> dict:
         """
         Add a collection
 
-        :param collection_id: name of collection
+        :param collection_id: `str` name of collection
 
-        :returns: `None`
+        :returns: `dict` API provider configuration
         """
 
         if self.conn.indices.exists(collection_id):
@@ -89,6 +86,13 @@ class ElasticBackend(BaseBackend):
             raise RuntimeError(msg)
 
         self.conn.indices.create(index=collection_id, body=SETTINGS)
+
+        return {
+            'type': 'feature',
+            'name': 'Elasticsearch',
+            'data': f'{self.host}:{self.port}/{collection_id}',
+            'id_field': 'id'
+        }
 
     def delete_collection(self, collection_id: str) -> None:
         """
@@ -106,8 +110,6 @@ class ElasticBackend(BaseBackend):
 
         self.conn.indices.delete(index=collection_id)
 
-        raise NotImplementedError()
-
     def upsert_collection_items(self, collection_id: str, items: list) -> str:
         """
         Add or update a collection item
@@ -124,6 +126,7 @@ class ElasticBackend(BaseBackend):
             """
 
             for feature in features:
+                feature["properties"]["id"] = feature["id"]
                 yield {
                     "_index": collection_id,
                     "_id": feature['id'],
