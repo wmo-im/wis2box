@@ -60,14 +60,6 @@ class DiscoveryMetadata(BaseMetadata):
             'description': identifier,
             'function': 'collection'
         }
-        canonical_link = {
-            'url': f"{API_URL}/collections/discovery-metadata/{identifier}",
-            'type': 'OARec',
-            'name': identifier,
-            'description': identifier,
-            'function': 'canonical'
-        }
-
         md['distribution'] = {'oafeat': oafeat_link}
 
         LOGGER.debug('Generating OARec discovery metadata')
