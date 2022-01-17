@@ -26,7 +26,7 @@ import logging
 import os
 from pathlib import Path
 import re
-from typing import Union, Iterator
+from typing import Iterator, Union
 import yaml
 
 LOGGER = logging.getLogger(__name__)
