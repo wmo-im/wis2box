@@ -115,6 +115,8 @@ services:
       - WIS2NODE_OSCAR_API_TOKEN=${WIS2NODE_OSCAR_API_TOKEN}
       - WIS2NODE_API_URL=${WIS2NODE_API_URL}
       - WIS2NODE_API_CONFIG=/data/wis2node/pygeoapi-config.yml
+      - WIS2NODE_LOGLEVEL=${WIS2NODE_LOGGING_LOGLEVEL}
+      - WIS2NODE_LOGFILE=${WIS2NODE_LOGGING_LOGFILE}
     volumes:
       - ./wis2node/data-mappings.yml:/data/wis2node/data-mappings.yml:ro
       - ./wis2node/config:/root/.config/sr3:ro

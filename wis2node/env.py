@@ -26,6 +26,7 @@ from pathlib import Path
 
 from wis2node import cli_helpers
 from wis2node.util import yaml_load
+from wis2node.log import setup_logger
 
 LOGGER = logging.getLogger(__name__)
 
@@ -59,6 +60,9 @@ except TypeError:
 
 API_BACKEND_USERNAME = os.environ.get('WIS2NODE_API_BACKEND_USERNAME')
 API_BACKEND_PASSWORD = os.environ.get('WIS2NODE_API_BACKEND_PASSWORD')
+
+LOGLEVEL = os.environ.get('WIS2NODE_LOGLEVEL', 'ERROR')
+LOGFILE = os.environ.get('WIS2NODE_LOGFILE', 'stdout')
 
 if 'WIS2NODE_DATADIR_DATA_MAPPINGS' in os.environ:
     LOGGER.debug('Overriding WIS2NODE_DATADIR_DATA_MAPPINGS')
@@ -99,6 +103,9 @@ def environment():
 @cli_helpers.OPTION_VERBOSITY
 def create(ctx, verbosity):
     """Creates baseline data/metadata directory structure"""
+
+    click.echo(f'Setting up {LOGLEVEL} Logging at {LOGFILE}')
+    setup_logger(LOGLEVEL, LOGFILE)
 
     click.echo(f'Creating baseline directory structure in {DATADIR}')
     DATADIR.mkdir(parents=True, exist_ok=True)
