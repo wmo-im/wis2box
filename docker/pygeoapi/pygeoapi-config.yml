@@ -2,7 +2,7 @@ server:
     bind:
         host: 0.0.0.0
         port: 80
-    url: ${PYGEOAPI_SERVER_URL}
+    url: ${WIS2NODE_API_URL}
     mimetype: application/json; charset=UTF-8
     encoding: utf-8
     languages:
@@ -117,31 +117,6 @@ resources:
               data: ${WIS2NODE_DATADIR}/metadata/station/stations.geojson
               id_field: wigos_id
               title_field: name
-
-    observations:
-        type: collection
-        title:
-            en: Observations
-        description:
-            en: Observations
-        keywords:
-            en:
-                - wmo
-                - wis 2.0
-        links:
-            - type: text/html
-              rel: canonical
-              title: information
-              href: https://oscar.wmo.int/surface
-        extents:
-            spatial:
-                bbox: [-180,-90,180,90]
-                crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
-        providers:
-            - type: feature
-              name: Elasticsearch
-              data: http://elasticsearch:9200/observations
-              id_field: ogc_fid
 
     data:
         type: stac-collection

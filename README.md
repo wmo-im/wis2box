@@ -111,6 +111,15 @@ wis2node metadata discovery publish foo/bar/baz
 
 # unpublish discovery metadata to local catalogue
 wis2node metadata discovery unpublish foo/bar/baz
+
+# add collection to wis2node backend and api config from mcf
+wis2node api add-collection $WIS2NODE_DATADIR/data/config/foo/bar/baz/discovery-metadata.yml --topic-hierarchy foo.bar.baz
+
+# add processed GeoJSON in public folder to wis2node backend
+wis2node api add-collection-items --topic-hierarchy foo.bar.baz
+
+# delete collection from wis2node backend and api config
+wis2node api delete-collection --topic-hierarchy foo.bar.baz
 ```
 
 ## Development workflows

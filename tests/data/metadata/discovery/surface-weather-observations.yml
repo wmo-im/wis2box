@@ -1,6 +1,6 @@
 wis2node:
     retention: P30D
-    topic_hierarchy: observationsSurfaceLand.mw.FWCL.landFixed
+    topic_hierarchy: observations-surface-land.mw.FWCL.landFixed
     data_category: observationsSurfaceLand
     country_code: mw
     originator: FWCL
@@ -10,7 +10,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: observationsSurfaceLand.mw.FWCL.landFixed.hourly
+    identifier: observations-surface-land.mw.FWCL.landFixed
     language: en
     language_alternate: fr
     charset: utf8

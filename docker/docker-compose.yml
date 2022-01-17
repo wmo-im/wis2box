@@ -24,7 +24,7 @@ services:
     image: geopython/pygeoapi:latest
     environment:
       - SCRIPT_NAME=/pygeoapi
-      - PYGEOAPI_SERVER_URL=${WIS2NODE_API_URL}
+      - WIS2NODE_API_URL=${WIS2NODE_API_URL}
       - WIS2NODE_DATADIR=/data/wis2node
     depends_on:
       elasticsearch:
@@ -89,7 +89,10 @@ services:
 
   wis2node:
     container_name: wis2node
-    build: ..
+    build: 
+      context: ..
+      args:
+        WIS2NODE_PIP3_EXTRA_PACKAGES: ${WIS2NODE_PIP3_EXTRA_PACKAGES}
     #user: wis2node:wis2node
     environment:
       - METPX_SR3_HOST=${METPX_SR3_HOST}
@@ -101,6 +104,8 @@ services:
       - METPX_SR3_BASEURL=${WIS2NODE_URL}
       - METPX_SR3_LOGLEVEL=DEBUG
       #- WIS2NODE_DATA_MAPPINGS=/data/wis2node/data-mappings.yml
+      - WIS2NODE_API_BACKEND_HOST=${WIS2NODE_API_BACKEND_HOST}
+      - WIS2NODE_API_BACKEND_PORT=${WIS2NODE_API_BACKEND_PORT}
       - WIS2NODE_DATADIR=/data/wis2node
       - WIS2NODE_DATADIR_CONFIG=/data/wis2node/data/config
       - WIS2NODE_DATADIR_INCOMING=/data/wis2node/data/incoming
@@ -109,11 +114,13 @@ services:
       - WIS2NODE_CATALOGUE_BACKEND=/data/wis2node/metadata/discovery/records.tinydb
       - WIS2NODE_OSCAR_API_TOKEN=${WIS2NODE_OSCAR_API_TOKEN}
       - WIS2NODE_API_URL=${WIS2NODE_API_URL}
+      - WIS2NODE_API_CONFIG=/data/wis2node/pygeoapi-config.yml
     volumes:
       - ./wis2node/data-mappings.yml:/data/wis2node/data-mappings.yml:ro
       - ./wis2node/config:/root/.config/sr3:ro
       - ${WIS2NODE_DATADIR}/cache/wis2node:/root/.cache:rw
       - ${WIS2NODE_DATADIR}:/data/wis2node:rw
+      - ./pygeoapi/pygeoapi-config.yml:/data/wis2node/pygeoapi-config.yml:rw
       # - type: bind
       #   source: ${WIS2NODE_DATADIR_CONFIG}
       #   target: /data/wis2node/data/config

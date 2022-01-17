@@ -23,11 +23,17 @@ FROM ubuntu:focal
 
 MAINTAINER "tomkralidis@gmail.com"
 
+ARG WIS2NODE_PIP3_EXTRA_PACKAGES
 ENV TZ="Etc/UTC" \
     DEBIAN_FRONTEND="noninteractive" \
     BUILD_PACKAGES="build-essential cmake gfortran python3-wheel"
 
 COPY . /app
+
+RUN if [ "$WIS2NODE_PIP3_EXTRA_PACKAGES" = "None" ]; \
+    then export WIS2NODE_PIP3_EXTRA_PACKAGES=echo; \
+    else export WIS2NODE_PIP3_EXTRA_PACKAGES=pip3 install ${WIS2NODE_PIP3_EXTRA_PACKAGES}; \
+    fi
 
 # FIXME: install newer version of eccodes
 # FIXME: csv2bufr: remove and install from requirements.txt once we have a stable release
@@ -44,6 +50,8 @@ RUN apt-get update -y \
     # install wis2node
     && cd /app \
     && python3 setup.py install \
+    # install wis2node plugins, if defined
+    && $PIP_PLUGIN_PACKAGES \
     # cleanup
     && apt-get remove --purge -y ${BUILD_PACKAGES} \
     && apt autoremove -y  \
