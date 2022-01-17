@@ -26,7 +26,7 @@ import logging
 import os
 from pathlib import Path
 import re
-from typing import Union
+from typing import Union, Iterator
 import yaml
 
 LOGGER = logging.getLogger(__name__)
@@ -86,7 +86,7 @@ def json_serial(obj: object) -> Union[bytes, str, float]:
     raise TypeError(msg)
 
 
-def walk_path(path: str, regex: str) -> list:
+def walk_path(path: str, regex: str) -> Iterator[str]:
     """
     Walks os directory path collecting all CSV files.
 
@@ -133,7 +133,7 @@ def yaml_load(fh) -> dict:
     return yaml.load(fh, Loader=EnvVarLoader)
 
 
-def yaml_write(fh: str, content: dict) -> None:
+def yaml_dump(fh: str, content: dict) -> None:
     """
     Writes serialized YAML to file
 
@@ -142,4 +142,4 @@ def yaml_write(fh: str, content: dict) -> None:
 
     :returns: `None`
     """
-    return yaml.safe_dump(content, fh, sort_keys=False, indent=2)
+    return yaml.safe_dump(content, fh, sort_keys=False, indent=4)

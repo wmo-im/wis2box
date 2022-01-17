@@ -30,6 +30,11 @@ ENV TZ="Etc/UTC" \
 
 COPY . /app
 
+RUN if [ "$WIS2NODE_PIP3_EXTRA_PACKAGES" = "None" ]; \
+    then export WIS2NODE_PIP3_EXTRA_PACKAGES=echo; \
+    else export WIS2NODE_PIP3_EXTRA_PACKAGES=pip3 install ${WIS2NODE_PIP3_EXTRA_PACKAGES}; \
+    fi
+
 # FIXME: install newer version of eccodes
 # FIXME: csv2bufr: remove and install from requirements.txt once we have a stable release
 # FIXME: pygeometa: remove and install from requirements.txt once we have a stable release
@@ -42,10 +47,11 @@ RUN apt-get update -y \
     && pip3 install https://github.com/wmo-im/csv2bufr/archive/dev.zip \
     && pip3 install https://github.com/geopython/pygeometa/archive/master.zip \
     && pip3 install https://github.com/metpx/sarracenia/archive/v03_wip.zip \
-    && pip3 install $WIS2NODE_PIP3_EXTRA_PACKAGES \
     # install wis2node
     && cd /app \
     && python3 setup.py install \
+    # install wis2node plugins, if defined
+    && $PIP_PLUGIN_PACKAGES \
     # cleanup
     && apt-get remove --purge -y ${BUILD_PACKAGES} \
     && apt autoremove -y  \

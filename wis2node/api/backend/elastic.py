@@ -62,7 +62,7 @@ class ElasticBackend(BaseBackend):
         if self.port == 443:
             url_settings['scheme'] = 'https'
 
-        LOGGER.debug('URL settings: {}'.format(url_settings))
+        LOGGER.debug(f'URL settings: {url_settings}')
 
         if None in [self.username, self.password]:
             self.conn = Elasticsearch([url_settings])
@@ -70,6 +70,17 @@ class ElasticBackend(BaseBackend):
             LOGGER.debug(f'Connecting using username {self.username}')
             self.conn = Elasticsearch(
                 [url_settings], http_auth=(self.username, self.password))
+
+    @staticmethod
+    def es_id(collection_id: str) -> str:
+        """
+        Make collection_id ES friendly
+
+        :param collection_id: `str` name of collection
+
+        :returns: `str` ES index name
+        """
+        return collection_id.lower()
 
     def add_collection(self, collection_id: str) -> dict:
         """
@@ -80,17 +91,18 @@ class ElasticBackend(BaseBackend):
         :returns: `dict` API provider configuration
         """
 
-        if self.conn.indices.exists(collection_id):
-            msg = f'index {collection_id} exists'
+        es_index = self.es_id(collection_id)
+        if self.conn.indices.exists(es_index):
+            msg = f'index {es_index} exists'
             LOGGER.error(msg)
             raise RuntimeError(msg)
 
-        self.conn.indices.create(index=collection_id, body=SETTINGS)
+        self.conn.indices.create(index=es_index, body=SETTINGS)
 
         return {
             'type': 'feature',
             'name': 'Elasticsearch',
-            'data': f'{self.host}:{self.port}/{collection_id}',
+            'data': f'{self.host}:{self.port}/{es_index}',
             'id_field': 'id'
         }
 
@@ -103,12 +115,13 @@ class ElasticBackend(BaseBackend):
         :returns: `None`
         """
 
-        if not self.conn.indices.exists(collection_id):
-            msg = f'index {collection_id} does not exist'
+        es_index = self.es_id(collection_id)
+        if not self.conn.indices.exists(es_index):
+            msg = f'index {es_index} does not exist'
             LOGGER.error(msg)
             raise RuntimeError(msg)
 
-        self.conn.indices.delete(index=collection_id)
+        self.conn.indices.delete(index=es_index)
 
     def upsert_collection_items(self, collection_id: str, items: list) -> str:
         """
@@ -120,6 +133,8 @@ class ElasticBackend(BaseBackend):
         :returns: `str` identifier of added item
         """
 
+        es_index = self.es_id(collection_id)
+
         def gendata(features):
             """
             Generator function to yield features
@@ -128,7 +143,7 @@ class ElasticBackend(BaseBackend):
             for feature in features:
                 feature["properties"]["id"] = feature["id"]
                 yield {
-                    "_index": collection_id,
+                    "_index": es_index,
                     "_id": feature['id'],
                     "_source": feature
                 }

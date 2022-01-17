@@ -33,7 +33,7 @@ from wis2node.env import (
 from wis2node.plugin import load_plugin
 from wis2node.topic_hierarchy import TopicHierarchy
 from wis2node.metadata.discovery import DiscoveryMetadata
-from wis2node.util import walk_path, yaml_load, yaml_write
+from wis2node.util import walk_path, yaml_load, yaml_dump
 
 LOGGER = logging.getLogger(__name__)
 
@@ -105,7 +105,7 @@ def generate_collection_metadata(mcf: dict) -> dict:
         'description': parsed['properties']['description'],
         'keywords': record['identification']['keywords'],
         'extents': parsed['properties']['extent'],
-        'links': parsed['links'] + parsed['associations'],
+        'links': parsed['associations'],
         'providers': []
     }
 
@@ -123,18 +123,18 @@ def load_collection_items(topic_hierarchy: str) -> None:
 
     regex = f'.*{th.dirpath}.*.geojson$'
 
-    LOGGER.debug('Loading files matching: {}'.format(regex))
+    LOGGER.debug(f'Loading files matching: {regex}')
 
-    for file in walk_path(DATADIR_PUBLIC, regex):
-
-        with open(file) as fh:
+    for file_ in walk_path(DATADIR_PUBLIC, regex):
+        LOGGER.debug(f'Loading file {file_}')
+        with open(file_) as fh:
             geojson = json.load(fh)
-            backend.upsert_collection_items(th.collection_name, [geojson, ])
+            backend.upsert_collection_items(th.dotpath, [geojson])
 
 
 @click.group()
 def api():
-    """api management"""
+    """API management"""
     pass
 
 
@@ -143,9 +143,9 @@ def api():
 @cli_helpers.OPTION_TOPIC_HIERARCHY
 @cli_helpers.OPTION_VERBOSITY
 def add_collections_items(ctx, topic_hierarchy, verbosity):
-    """Add collection items to api backend"""
+    """Add collection items to API backend"""
 
-    click.echo(f'Adding geojson files for collection: {topic_hierarchy}')
+    click.echo(f'Adding GeoJSON files for collection: {topic_hierarchy}')
 
     load_collection_items(topic_hierarchy)
 
@@ -158,24 +158,24 @@ def add_collections_items(ctx, topic_hierarchy, verbosity):
 @cli_helpers.OPTION_TOPIC_HIERARCHY
 @cli_helpers.OPTION_VERBOSITY
 def add_collection(ctx, filepath, topic_hierarchy, verbosity):
-    """Add collection index to api backend"""
+    """Add collection index to API backend"""
 
     th, backend = load_backend(topic_hierarchy)
     click.echo('Generating collection metadata')
     collection = generate_collection_metadata(filepath.read())
 
     click.echo(f'Adding collection: {topic_hierarchy}')
-    provider_def = backend.add_collection(th.collection_name)
+    provider_def = backend.add_collection(th.dotpath)
     collection['providers'].append(provider_def)
 
     click.echo('Adding to pygeoapi configuration')
     with open(API_CONFIG) as fh:
         config = yaml_load(fh)
 
-    config['resources'][th.collection_name] = collection
+    config['resources'][th.dotpath] = collection
 
     with open(API_CONFIG, "w") as fh:
-        yaml_write(fh, config)
+        yaml_dump(fh, config)
 
     click.echo("Done")
 
@@ -191,16 +191,16 @@ def delete_collection(ctx, topic_hierarchy, verbosity):
 
     th, backend = load_backend(topic_hierarchy)
 
-    backend.delete_collection(th.collection_name)
+    backend.delete_collection(th.dotpath)
 
     click.echo('Removing from API configuration')
     with open(API_CONFIG) as fh:
         config = yaml_load(fh)
 
-    config['resources'].pop(th.collection_name)
+    config['resources'].pop(th.dotpath)
 
     with open(API_CONFIG) as fh:
-        yaml_write(fh, config)
+        yaml_dump(fh, config)
 
     click.echo('Done')
 
