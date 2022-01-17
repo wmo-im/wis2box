@@ -31,8 +31,8 @@ def setup_logger(loglevel: str = 'ERROR', logfile: str = 'stdout') -> None:
     """
     Setup logger
 
-    :param loglevel: `str`, Logging level
-    :param logfile: `str`, Logging output file
+    :param loglevel: `str`, logging level
+    :param logfile: `str`, logging output file
 
     :returns: `None` (creates logging instance)
     """
