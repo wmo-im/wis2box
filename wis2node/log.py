@@ -27,11 +27,14 @@ import sys
 LOGGER = logging.getLogger(__name__)
 
 
-def setup_logger(loglevel, logfile=None):
+def setup_logger(loglevel: str = 'ERROR', logfile: str = 'stdout') -> None:
     """
-    Setup configuration
-    :param logging_config: logging specific configuration
-    :returns: void (creates logging instance)
+    Setup logger
+
+    :param loglevel: `str`, Logging level
+    :param logfile: `str`, Logging output file
+
+    :returns: `None` (creates logging instance)
     """
 
     log_format = \

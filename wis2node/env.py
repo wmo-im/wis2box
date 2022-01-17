@@ -104,7 +104,7 @@ def environment():
 def create(ctx, verbosity):
     """Creates baseline data/metadata directory structure"""
 
-    click.echo(f'Setting up {LOGLEVEL} Logging at {LOGFILE}')
+    click.echo(f'Setting up {LOGLEVEL} logging at {LOGFILE}')
     setup_logger(LOGLEVEL, LOGFILE)
 
     click.echo(f'Creating baseline directory structure in {DATADIR}')
