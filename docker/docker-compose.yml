@@ -38,7 +38,7 @@ services:
     build:
       context: ./elasticsearch
     volumes:
-      - wis2node-data:/data/wis2node:rw
+      - es-data:/usr/share/elasticsearch/data:rw
     # ulimits:
     #   nofile:
     #     soft: 524288
@@ -46,6 +46,8 @@ services:
     #   memlock:
     #     soft: -1
     #     hard: -1
+    depends_on:
+      - wis2node
     healthcheck:
       test: ["CMD", "curl", "http://localhost:9200"]
       interval: 5s
@@ -127,3 +129,5 @@ services:
       - mosquitto
 volumes:
   wis2node-data:
+    driver: local
+  es-data:
