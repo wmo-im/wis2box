@@ -1,6 +1,7 @@
 FROM ghcr.io/metpx/sarracenia:latest
 
-RUN ln -s /data/wis2node/cache/home/sarra /root/.cache
+RUN mkdir -p /data/wis2node/cache/home/sarra
+RUN ln -s /root/.cache /data/wis2node/cache/home/sarra
 
 COPY ./config /root/.config/sr3
 
