@@ -34,16 +34,11 @@ services:
 
   elasticsearch:
     container_name: elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
-    environment:
-      - discovery.type=single-node
-      - node.name=elasticsearch-01
-      - discovery.seed_hosts=elasticsearch-01
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      # - xpack.security.enabled=true  # TODO: setup credentials
-
-
+    # image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
+    build:
+      context: ./elasticsearch
+    volumes:
+      - wis2node-data:/data/wis2node:rw
     # ulimits:
     #   nofile:
     #     soft: 524288
