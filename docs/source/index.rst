@@ -4,7 +4,7 @@ wis2node |release| documentation
 ====================================
 
 :Author: World Meteorological Organization (WMO)
-:Contact: TBD
+:Contact: https://github.com/wmo-im/wis2node
 :Release: |release|
 :Date: |today|
 
@@ -15,12 +15,16 @@ wis2node |release| documentation
 
 
    overview
+   wis2
+   how-wis2node-works
    installation
    configuration
    administration
-   running
-   publishing
+   data-publishing
+   data-access
+   services
    development
+   support
    license
 
 

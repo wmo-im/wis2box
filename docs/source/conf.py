@@ -35,17 +35,12 @@
 import os
 import re
 
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
-
-
 # -- Project information -----------------------------------------------------
 
 project = 'wis2node'
-copyright = '2021, World Meteorological Organization (WMO)'
-license = u'This work is licensed under a Creative Commons Attribution 4.0 International License'  # noqa
 author = 'World Meteorological Organization (WMO)'
-copyright = u'2021, ' + author + ' ' + license
+license = 'This work is licensed under a Creative Commons Attribution 4.0 International License'  # noqa
+copyright = '2021-2022, ' + author + '<br/>' + license
 
 # The full version, including alpha/beta/rc tags
 
@@ -86,7 +81,7 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+#html_theme = 'alabaster'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

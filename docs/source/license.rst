@@ -1,5 +1,3 @@
-.. _license:
-
 License
 =======
 
