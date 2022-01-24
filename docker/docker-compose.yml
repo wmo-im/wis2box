@@ -111,6 +111,7 @@ services:
       - WIS2NODE_DATADIR_INCOMING=/data/wis2node/data/incoming
       - WIS2NODE_DATADIR_OUTGOING=/data/wis2node/data/outgoing
       - WIS2NODE_DATADIR_PUBLIC=/data/wis2node/data/public
+      - WIS2NODE_DATADIR_RETENTION_DAYS=${WIS2NODE_DATADIR_RETENTION_DAYS}
       - WIS2NODE_CATALOGUE_BACKEND=/data/wis2node/metadata/discovery/records.tinydb
       - WIS2NODE_OSCAR_API_TOKEN=${WIS2NODE_OSCAR_API_TOKEN}
       - WIS2NODE_API_URL=${WIS2NODE_API_URL}
@@ -120,6 +121,7 @@ services:
     volumes:
       - ./wis2node/data-mappings.yml:/data/wis2node/data-mappings.yml:ro
       - ./wis2node/config:/root/.config/sr3:ro
+      - ./wis2node/wis2node.cron:/etc/cron.d/wis2node:ro
       - ${WIS2NODE_DATADIR}/cache/wis2node:/root/.cache:rw
       - ${WIS2NODE_DATADIR}:/data/wis2node:rw
       - ./pygeoapi/pygeoapi-config.yml:/data/wis2node/pygeoapi-config.yml:rw
