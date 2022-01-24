@@ -122,6 +122,7 @@ class BaseAbstractData:
 
         return True
 
+    # TODO: fix annotation/types
     def files(self) -> bool:
         LOGGER.debug('Listing processed files')
         for key, value in self.output_data.items():
