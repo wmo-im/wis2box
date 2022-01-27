@@ -118,7 +118,6 @@ services:
       - WIS2NODE_LOGLEVEL=${WIS2NODE_LOGGING_LOGLEVEL}
       - WIS2NODE_LOGFILE=${WIS2NODE_LOGGING_LOGFILE}
     volumes:
-      - ./wis2node/data-mappings.yml:/data/wis2node/data-mappings.yml:ro
       - ./wis2node/config:/root/.config/sr3:ro
       - ${WIS2NODE_DATADIR}/cache/wis2node:/root/.cache:rw
       - ${WIS2NODE_DATADIR}:/data/wis2node:rw
