@@ -21,58 +21,15 @@
 
 import json
 import logging
-from typing import Any, Tuple
 
 import click
 
 from wis2node import cli_helpers
-from wis2node.env import DATADIR_DATA_MAPPINGS
 from wis2node.handler import Handler
-from wis2node.plugin import load_plugin
-from wis2node.topic_hierarchy import TopicHierarchy
+from wis2node.topic_hierarchy import validate_and_load
 from wis2node.util import json_serial
 
 LOGGER = logging.getLogger(__name__)
-
-
-def validate_and_load(topic_hierarchy: str,
-                      fuzzy: bool = False) -> Tuple[TopicHierarchy, Any]:
-    """
-    Validate topic hierarchy and load data defs
-
-    :param topic_hierarchy: `str` of topic hierarchy path
-    :param fuzzy: `bool` of whether to do fuzzy matching of topic hierarchy
-                  (e.g. "*foo.bar.baz*).
-                  Defaults to `False` (i.e. "foo.bar.baz")
-
-    :returns: tuple of `wis2node.topic_hierarchy.TopicHierarchy and
-              plugin object
-    """
-
-    LOGGER.debug(f'Validating topic hierarchy: {topic_hierarchy}')
-
-    th = TopicHierarchy(topic_hierarchy)
-
-    if not th.is_valid():
-        msg = 'Invalid topic hierarchy'
-        LOGGER.error(msg)
-        raise ValueError(msg)
-    if th.dotpath not in DATADIR_DATA_MAPPINGS['data'].keys():
-        msg = 'Topic hierarchy not in data mappings'
-        LOGGER.error(msg)
-        raise ValueError(msg)
-
-    LOGGER.debug('Loading plugin')
-
-    defs = {
-        'topic_hierarchy': topic_hierarchy,
-        'codepath': DATADIR_DATA_MAPPINGS['data'][th.dotpath]
-    }
-    plugin = load_plugin('data', defs)
-
-    LOGGER.debug('Setting up directories')
-
-    return th, plugin
 
 
 def setup_dirs(topic_hierarchy: str) -> dict:
@@ -149,8 +106,6 @@ def setup(ctx, topic_hierarchy, verbosity):
 def ingest(ctx, topic_hierarchy, path, recursive, verbosity):
     """Ingest data file or directory"""
 
-    th, plugin = validate_and_load(topic_hierarchy)
-
     if path.is_dir():
         if recursive:
             pattern = '**/*'
@@ -162,7 +117,7 @@ def ingest(ctx, topic_hierarchy, path, recursive, verbosity):
 
     for file_to_process in files_to_process:
         click.echo(f'Processing {file_to_process}')
-        handler = Handler(file_to_process, th.dotpath)
+        handler = Handler(file_to_process, topic_hierarchy)
         _ = handler.handle()
     click.echo("Done")
 

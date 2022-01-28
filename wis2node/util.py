@@ -120,7 +120,7 @@ def yaml_load(fh) -> dict:
     def path_constructor(loader, node):
         env_var = path_matcher.match(node.value).group(1)
         if env_var not in os.environ:
-            msg = 'Undefined environment variable {} in config'.format(env_var)
+            msg = f'Undefined environment variable {env_var} in config'
             raise EnvironmentError(msg)
         return get_typed_value(os.path.expandvars(node.value))
 

@@ -32,8 +32,8 @@ OPTION_PATH = click.option('--path', '-p', required=True,
                            type=click.Path(file_okay=True, dir_okay=True,
                                            path_type=Path))
 
-OPTION_TOPIC_HIERARCHY = click.option(
-    '--topic-hierarchy', '-th', required=True, help='Topic hierarchy')
+OPTION_TOPIC_HIERARCHY = click.option('--topic-hierarchy', '-th',
+                                      help='Topic hierarchy')
 
 
 def OPTION_VERBOSITY(f):
