@@ -83,8 +83,12 @@ wis2node data setup --topic-hierarchy foo.bar.baz
 # display dataset topic hierarchy and directories
 wis2node data info --topic-hierarchy foo.bar.baz
 
-# process incoming data (manually/no PubSub)
-wis2node data process /path/to/file.csv
+# process incoming data with topic hierarchy
+wis2node data ingest --topic-hierarchy foo.bar.baz /path/to/file.csv
+
+# process incoming data (manually/no PubSub); topic hierarchy is inferred
+# from fuzzy filepath equivalent
+wis2node data ingest /path/to/foo/bar/baz/data/file.csv
 
 # create discovery metadata control file (MCF)
 # pygeometa MCF reference: https://geopython.github.io/pygeometa/reference/mcf

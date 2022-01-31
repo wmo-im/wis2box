@@ -19,49 +19,33 @@
 #
 ###############################################################################
 
-from fnmatch import fnmatch
 import logging
+from pathlib import Path
 
-from wis2node.env import DATADIR_DATA_MAPPINGS
-from wis2node.plugin import load_plugin
-from wis2node.topic_hierarchy import TopicHierarchy
+from wis2node.topic_hierarchy import validate_and_load
 
 LOGGER = logging.getLogger(__name__)
 
 
 class Handler:
-    def __init__(self, filepath: str, dotpath: str = None):
+    def __init__(self, filepath: Path, topic_hierarchy: str = None):
         self.filepath = filepath
-        self.dotpath = dotpath
+        self.topic_hierarchy = topic_hierarchy
         self.plugin = None
 
-        if self.dotpath is not None:
-            LOGGER.debug('Topic hierarchy override')
-            if self.dotpath not in DATADIR_DATA_MAPPINGS['data'].keys():
-                msg = 'No handler found'
-                LOGGER.error(msg)
-                raise ValueError(msg)
-            else:
-                defs = {
-                    'topic_hierarchy': self.dotpath,
-                    'codepath': DATADIR_DATA_MAPPINGS['data'][self.dotpath]
-                }
-                self.plugin = load_plugin('data', defs)
-            return
+        if self.topic_hierarchy is not None:
+            th = topic_hierarchy
+            fuzzy = False
+        else:
+            th = self.filepath
+            fuzzy = True
 
-        LOGGER.debug('Searching filename against data mappings')
-        th = TopicHierarchy(self.dotpath)
-        for key, value in DATADIR_DATA_MAPPINGS['data'].items():
-            pattern = f'*{th.dirpath}*'
-            LOGGER.debug(f'filepath: {self.filepath}\npattern: {pattern}')
-            if fnmatch(self.filepath, pattern):
-                LOGGER.debug(f'Matched {self.filepath} to {pattern}')
-                self.plugin = load_plugin('data', key, value)
-                break
-            else:
-                msg = 'No handler found'
-                LOGGER.error(msg)
-                raise ValueError(msg)
+        try:
+            _, self.plugin = validate_and_load(th, fuzzy=fuzzy)
+        except Exception as err:
+            msg = f'Topic Hierarchy validation error: {err}'
+            LOGGER.error(msg)
+            raise ValueError(msg)
 
     def handle(self) -> bool:
         self.plugin.transform(self.filepath)
