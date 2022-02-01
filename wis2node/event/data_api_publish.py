@@ -23,6 +23,9 @@ import logging
 from pathlib import Path
 
 from sarracenia.flowcb import FlowCB
+from wis2node.api.backend import load_backend
+
+from wis2node.handler import Handler
 
 LOGGER = logging.getLogger(__name__)
 
@@ -37,5 +40,13 @@ class Event(FlowCB):
                         incoming_message['relPath'])
             LOGGER.debug(f'Incoming filepath: {filepath}')
 
-            LOGGER.debug(f'Publishing {filepath}')
             # TODO: publish
+            try:
+                LOGGER.debug(f'Publishing {filepath}')
+                backend = load_backend()
+                handler = Handler(filepath)
+                handler.publish(backend)
+                
+            except ValueError as err:
+                msg = f'handle() error: {err}'
+                LOGGER.error(msg)
