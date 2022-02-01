@@ -31,9 +31,13 @@ from wis2node.log import setup_logger
 LOGGER = logging.getLogger(__name__)
 
 PROCESSING_PLUGINS = {}
+BACKEND_PLUGINS = {
+    'Elasticsearch': 'wis2node.api.backend.elastic.ElasticBackend'
+}
 
 with (Path(__file__).parent / 'resources' / 'data-mappings.yml').open() as fh:
     DATADIR_DATA_MAPPINGS = yaml_load(fh)
+    DATADIR_DATA_MAPPINGS['api_backend'] = BACKEND_PLUGINS
 
 
 try:
@@ -60,6 +64,7 @@ except TypeError:
 
 API_BACKEND_USERNAME = os.environ.get('WIS2NODE_API_BACKEND_USERNAME')
 API_BACKEND_PASSWORD = os.environ.get('WIS2NODE_API_BACKEND_PASSWORD')
+API_BACKEND = os.environ.get('WIS2NODE_BACKEND')
 
 LOGLEVEL = os.environ.get('WIS2NODE_LOGLEVEL', 'ERROR')
 LOGFILE = os.environ.get('WIS2NODE_LOGFILE', 'stdout')

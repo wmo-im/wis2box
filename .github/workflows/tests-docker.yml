@@ -42,7 +42,7 @@ jobs:
           && wis2node metadata discovery publish /data/wis2node/data/metadata/discovery/surface-weather-observations.yml \
           && wis2node data ingest -th observations-surface-land.mw.FWCL.landFixed -p /data/wis2node/data/observations/0-454-2-AWSNAMITAMBO-20210707.csv \
           && wis2node api add-collection /data/wis2node/data/metadata/discovery/surface-weather-observations.yml --topic-hierarchy observations-surface-land.mw.FWCL.landFixed \
-          && wis2node api add-collections-items --topic-hierarchy observations-surface-land.mw.FWCL.landFixed"
+          && wis2node api add-collections-items -r -p /data/wis2node/data/public"
     - name: run wis2node
       run: |
         python3 wis2node-ctl.py restart pygeoapi
