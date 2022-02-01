@@ -19,6 +19,7 @@
 #
 ###############################################################################
 
+import json
 import logging
 from pathlib import Path
 
@@ -49,4 +50,12 @@ class Handler:
     def handle(self) -> bool:
         self.plugin.transform(self.filepath)
         self.plugin.publish()
+        return True
+
+    def publish(self, backend) -> bool:
+        index_name = self.topic_hierarchy.dotpath
+
+        with self.filepath.open() as fh1:
+            geojson = json.load(fh1)
+            backend.upsert_collection_items(index_name, [geojson])
         return True

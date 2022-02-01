@@ -89,11 +89,7 @@ def add_collections_items(ctx, topic_hierarchy, path, recursive, verbosity):
         click.echo(f'Processing {file_to_process}')
 
         handler = Handler(file_to_process, topic_hierarchy)
-        index_name = handler.topic_hierarchy.dotpath
-
-        with file_to_process.open() as fh1:
-            geojson = json.load(fh1)
-            backend.upsert_collection_items(index_name, [geojson])
+        handler.publish(backend)
 
     click.echo('Done')
 
