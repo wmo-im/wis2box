@@ -108,6 +108,7 @@ def validate_and_load(topic_hierarchy: str,
                     'codepath': value
                 }
                 plugin = load_plugin('data', defs)
+                th = TopicHierarchy(key)
                 break
             else:
                 msg = 'No handler found'
