@@ -26,9 +26,9 @@ services:
       - SCRIPT_NAME=/pygeoapi
       - WIS2NODE_API_URL=${WIS2NODE_API_URL}
       - WIS2NODE_DATADIR=/data/wis2node
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
+    #depends_on:
+    #  elasticsearch:
+    #    condition: service_healthy
     volumes:
       - ./pygeoapi/pygeoapi-config.yml:/pygeoapi/local.config.yml:ro
       - ${WIS2NODE_DATADIR}:/data/wis2node:rw
