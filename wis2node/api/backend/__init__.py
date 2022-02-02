@@ -22,11 +22,10 @@
 import logging
 
 from wis2node.env import (
-    API_BACKEND, API_BACKEND_HOST, API_BACKEND_PORT,
-    API_BACKEND_USERNAME, API_BACKEND_PASSWORD,
-    DATADIR_DATA_MAPPINGS
+    API_BACKEND_TYPE, API_BACKEND_HOST, API_BACKEND_PORT,
+    API_BACKEND_USERNAME, API_BACKEND_PASSWORD
 )
-from wis2node.plugin import load_plugin
+from wis2node.plugin import load_plugin, PLUGINS
 
 LOGGER = logging.getLogger(__name__)
 
@@ -41,7 +40,7 @@ def load_backend():
 
     LOGGER.debug('Loading backend')
 
-    codepath = DATADIR_DATA_MAPPINGS['api_backend'][API_BACKEND]
+    codepath = PLUGINS['api_backend'][API_BACKEND_TYPE]
     defs = {
         'codepath': codepath,
         'host': API_BACKEND_HOST,

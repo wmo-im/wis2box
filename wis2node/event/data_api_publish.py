@@ -46,7 +46,7 @@ class Event(FlowCB):
                 backend = load_backend()
                 handler = Handler(filepath)
                 handler.publish(backend)
-                
+
             except ValueError as err:
                 msg = f'handle() error: {err}'
                 LOGGER.error(msg)

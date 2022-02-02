@@ -37,7 +37,7 @@ LOGGER = logging.getLogger(__name__)
 
 def generate_collection_metadata(mcf: dict) -> dict:
     """
-    Generate metadata for collection from metadata control file
+    Generate collection metadata from metadata control file
 
     :param mcf: `dict` of MCF file
 
@@ -77,16 +77,16 @@ def api():
 @click.option('--recursive', '-r', is_flag=True, default=False,
               help='Process directory recursively')
 @cli_helpers.OPTION_VERBOSITY
-def add_collections_items(ctx, topic_hierarchy, path, recursive, verbosity):
+def add_collection_items(ctx, topic_hierarchy, path, recursive, verbosity):
     """Add collection items to API backend"""
 
     click.echo('Loading Backend')
     backend = load_backend()
 
-    click.echo(f'Adding GeoJSON files for collection: {topic_hierarchy}')
+    click.echo(f'Adding GeoJSON files to collection: {topic_hierarchy}')
     for file_to_process in walk_path(path, '.*.geojson$', recursive):
 
-        click.echo(f'Processing {file_to_process}')
+        click.echo(f'Adding {file_to_process}')
 
         handler = Handler(file_to_process, topic_hierarchy)
         handler.publish(backend)
@@ -114,12 +114,12 @@ def add_collection(ctx, filepath, topic_hierarchy, verbosity):
     collection['providers'].append(provider_def)
 
     click.echo('Adding to pygeoapi configuration')
-    with open(API_CONFIG) as fh:
+    with API_CONFIG.open() as fh:
         config = yaml_load(fh)
 
     config['resources'][index_name] = collection
 
-    with open(API_CONFIG, "w") as fh:
+    with API_CONFIG.open("w") as fh:
         yaml_dump(fh, config)
 
     click.echo("Done")
@@ -141,17 +141,17 @@ def delete_collection(ctx, topic_hierarchy, verbosity):
     backend.delete_collection(index_name)
 
     click.echo('Removing from API configuration')
-    with open(API_CONFIG) as fh:
+    with API_CONFIG.open() as fh:
         config = yaml_load(fh)
 
     config['resources'].pop(index_name)
 
-    with open(API_CONFIG) as fh:
+    with API_CONFIG.open() as fh:
         yaml_dump(fh, config)
 
     click.echo('Done')
 
 
-api.add_command(add_collections_items)
+api.add_command(add_collection_items)
 api.add_command(add_collection)
 api.add_command(delete_collection)

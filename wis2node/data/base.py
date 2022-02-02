@@ -143,7 +143,7 @@ class BaseAbstractData:
             'config': DATADIR_CONFIG / dirpath,
             'incoming': DATADIR_INCOMING / dirpath,
             'outgoing': DATADIR_OUTGOING / dirpath,
-            'public': DATADIR_PUBLIC / dirpath
+            # 'public': DATADIR_PUBLIC / dirpath
         }
 
     @property

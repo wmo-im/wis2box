@@ -30,15 +30,8 @@ from wis2node.log import setup_logger
 
 LOGGER = logging.getLogger(__name__)
 
-PROCESSING_PLUGINS = {}
-BACKEND_PLUGINS = {
-    'Elasticsearch': 'wis2node.api.backend.elastic.ElasticBackend'
-}
-
 with (Path(__file__).parent / 'resources' / 'data-mappings.yml').open() as fh:
     DATADIR_DATA_MAPPINGS = yaml_load(fh)
-    DATADIR_DATA_MAPPINGS['api_backend'] = BACKEND_PLUGINS
-
 
 try:
     DATADIR = Path(os.environ.get('WIS2NODE_DATADIR'))
@@ -46,7 +39,8 @@ try:
     DATADIR_INCOMING = Path(os.environ.get('WIS2NODE_DATADIR_INCOMING'))
     DATADIR_OUTGOING = Path(os.environ.get('WIS2NODE_DATADIR_OUTGOING'))
     DATADIR_PUBLIC = Path(os.environ.get('WIS2NODE_DATADIR_PUBLIC'))
-except TypeError:
+    API_CONFIG = Path(os.environ.get('WIS2NODE_API_CONFIG'))
+except (OSError, TypeError):
     msg = 'Configuration filepaths do not exist!'
     LOGGER.error(msg)
     raise EnvironmentError(msg)
@@ -54,8 +48,8 @@ except TypeError:
 CATALOGUE_BACKEND = os.environ.get('WIS2NODE_CATALOGUE_BACKEND')
 OSCAR_API_TOKEN = os.environ.get('WIS2NODE_OSCAR_API_TOKEN')
 API_URL = os.environ.get('WIS2NODE_API_URL')
+MQP_URL = os.environ.get('WIS2NODE_MQP_URL')
 API_BACKEND_HOST = os.environ.get('WIS2NODE_API_BACKEND_HOST')
-API_CONFIG = os.environ.get('WIS2NODE_API_CONFIG')
 
 try:
     API_BACKEND_PORT = int(os.environ.get('WIS2NODE_API_BACKEND_PORT'))
@@ -64,7 +58,7 @@ except TypeError:
 
 API_BACKEND_USERNAME = os.environ.get('WIS2NODE_API_BACKEND_USERNAME')
 API_BACKEND_PASSWORD = os.environ.get('WIS2NODE_API_BACKEND_PASSWORD')
-API_BACKEND = os.environ.get('WIS2NODE_BACKEND')
+API_BACKEND_TYPE = os.environ.get('WIS2NODE_API_BACKEND_TYPE')
 
 LOGLEVEL = os.environ.get('WIS2NODE_LOGLEVEL', 'ERROR')
 LOGFILE = os.environ.get('WIS2NODE_LOGFILE', 'stdout')
@@ -90,7 +84,8 @@ if None in [
     DATADIR_PUBLIC,
     CATALOGUE_BACKEND,
     OSCAR_API_TOKEN,
-    API_URL
+    API_URL,
+    MQP_URL
 ]:
     msg = 'Environment variables not set!'
     LOGGER.error(msg)

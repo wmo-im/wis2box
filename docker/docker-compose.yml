@@ -41,6 +41,9 @@ services:
       - discovery.seed_hosts=elasticsearch-01
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      # - xpack.security.enabled=true  # TODO: setup credentials
+
+
     # ulimits:
     #   nofile:
     #     soft: 524288
@@ -105,7 +108,7 @@ services:
       #- WIS2NODE_DATA_MAPPINGS=/data/wis2node/data-mappings.yml
       - WIS2NODE_API_BACKEND_HOST=${WIS2NODE_API_BACKEND_HOST}
       - WIS2NODE_API_BACKEND_PORT=${WIS2NODE_API_BACKEND_PORT}
-      - WIS2NODE_BACKEND=${WIS2NODE_API_BACKEND}
+      - WIS2NODE_BACKEND_TYPE=${WIS2NODE_API_BACKEND_TYPE}
       - WIS2NODE_DATADIR=/data/wis2node
       - WIS2NODE_DATADIR_CONFIG=/data/wis2node/data/config
       - WIS2NODE_DATADIR_INCOMING=/data/wis2node/data/incoming

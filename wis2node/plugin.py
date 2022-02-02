@@ -28,6 +28,12 @@ from wis2node.env import DATADIR_DATA_MAPPINGS
 
 LOGGER = logging.getLogger(__name__)
 
+PLUGINS = {
+    'api_backend': {
+        'Elasticsearch': 'wis2node.api.backend.elastic.ElasticBackend'
+    }
+}
+
 
 class PluginTypes(Enum):
     API_BACKEND = 'api_backend'
@@ -47,8 +53,18 @@ def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
 
     codepath = defs.get('codepath')
 
+    if plugin_type == 'api_backend':
+        plugin_mappings = PLUGINS
+    else:
+        plugin_mappings = DATADIR_DATA_MAPPINGS
+
+    if '.' not in codepath:
+        msg = f'Plugin {codepath} not found'
+        LOGGER.exception(msg)
+        raise InvalidPluginError(msg)
+
     if ('.' not in codepath or codepath not in
-            DATADIR_DATA_MAPPINGS[plugin_type].values()):
+            plugin_mappings[plugin_type].values()):
         msg = f'Plugin {codepath} not found'
         LOGGER.exception(msg)
         raise InvalidPluginError(msg)
