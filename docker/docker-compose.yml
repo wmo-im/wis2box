@@ -21,7 +21,9 @@ services:
 
   pygeoapi:
     container_name: pygeoapi
-    image: geopython/pygeoapi:latest
+    # image: geopython/pygeoapi:latest
+    build:
+      context: ./pygeoapi
     environment:
       - SCRIPT_NAME=/pygeoapi
       - WIS2NODE_API_URL=${WIS2NODE_API_URL}
