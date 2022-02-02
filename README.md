@@ -84,11 +84,11 @@ wis2node data setup --topic-hierarchy foo.bar.baz
 wis2node data info --topic-hierarchy foo.bar.baz
 
 # process incoming data with topic hierarchy
-wis2node data ingest --topic-hierarchy foo.bar.baz /path/to/file.csv
+wis2node data ingest --topic-hierarchy foo.bar.baz -p /path/to/file.csv
 
 # process incoming data (manually/no PubSub); topic hierarchy is inferred
 # from fuzzy filepath equivalent
-wis2node data ingest /path/to/foo/bar/baz/data/file.csv
+wis2node data ingest -p /path/to/foo/bar/baz/data/file.csv
 
 # create discovery metadata control file (MCF)
 # pygeometa MCF reference: https://geopython.github.io/pygeometa/reference/mcf
@@ -116,13 +116,13 @@ wis2node metadata discovery publish foo/bar/baz
 # unpublish discovery metadata to local catalogue
 wis2node metadata discovery unpublish foo/bar/baz
 
-# add collection to wis2node backend and api config from mcf
+# add collection to wis2node API backend and api config from mcf
 wis2node api add-collection $WIS2NODE_DATADIR/data/config/foo/bar/baz/discovery-metadata.yml --topic-hierarchy foo.bar.baz
 
-# add processed GeoJSON in public folder to wis2node backend
+# add processed GeoJSON in public folder to wis2node API backend
 wis2node api add-collection-items --topic-hierarchy foo.bar.baz
 
-# delete collection from wis2node backend and api config
+# delete collection from wis2node API backend and config
 wis2node api delete-collection --topic-hierarchy foo.bar.baz
 ```
 
