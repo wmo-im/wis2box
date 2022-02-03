@@ -49,6 +49,7 @@ CATALOGUE_BACKEND = os.environ.get('WIS2NODE_CATALOGUE_BACKEND')
 OSCAR_API_TOKEN = os.environ.get('WIS2NODE_OSCAR_API_TOKEN')
 API_URL = os.environ.get('WIS2NODE_API_URL')
 MQP_URL = os.environ.get('WIS2NODE_MQP_URL')
+URL = os.environ.get('WIS2NODE_URL')
 API_BACKEND_HOST = os.environ.get('WIS2NODE_API_BACKEND_HOST')
 
 try:
@@ -85,7 +86,8 @@ if None in [
     CATALOGUE_BACKEND,
     OSCAR_API_TOKEN,
     API_URL,
-    MQP_URL
+    MQP_URL,
+    URL
 ]:
     msg = 'Environment variables not set!'
     LOGGER.error(msg)
