@@ -13,11 +13,11 @@ wis2node |release| documentation
    :caption: Table of contents:
    :name: toc
 
-
    overview
    wis2
    how-wis2node-works
    installation
+   quickstart
    configuration
    administration
    data-publishing
@@ -26,7 +26,6 @@ wis2node |release| documentation
    development
    support
    license
-
 
 Indices and tables
 ==================
