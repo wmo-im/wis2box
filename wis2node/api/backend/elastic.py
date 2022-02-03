@@ -59,9 +59,6 @@ class ElasticBackend(BaseBackend):
 
         url_settings = f'{self.host}:{self.port}'
 
-        if self.port == 443:
-            url_settings['scheme'] = 'https'
-
         LOGGER.debug(f'URL settings: {url_settings}')
 
         if None in [self.username, self.password]:
@@ -99,10 +96,11 @@ class ElasticBackend(BaseBackend):
 
         self.conn.indices.create(index=es_index, body=SETTINGS)
 
+        scheme = 'https' if self.port == 443 else 'http'
         return {
             'type': 'feature',
             'name': 'Elasticsearch',
-            'data': f'{self.host}:{self.port}/{es_index}',
+            'data': f'{scheme}://{self.host}:{self.port}/{es_index}',
             'id_field': 'id'
         }
 

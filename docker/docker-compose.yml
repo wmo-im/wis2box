@@ -21,9 +21,9 @@ services:
 
   pygeoapi:
     container_name: pygeoapi
-    image: geopython/pygeoapi:latest
-    # build:
-    #   context: ./pygeoapi
+    # image: geopython/pygeoapi:latest
+    build:
+      context: ./pygeoapi
     environment:
       - SCRIPT_NAME=/pygeoapi
       - WIS2NODE_API_URL=${WIS2NODE_API_URL}
@@ -44,8 +44,8 @@ services:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       # - xpack.security.enabled=true  # TODO: setup credentials
-
-
+    volumes:
+      - es-data:/usr/share/elasticsearch/data:rw
     # ulimits:
     #   nofile:
     #     soft: 524288
@@ -125,7 +125,7 @@ services:
     volumes:
       - wis2node-data:/data/wis2node:rw
       - ./wis2node/config:/root/.config/sr3:ro
-      - ./pygeoapi/pygeoapi-config.yml:/pygeoapi/local.config.yml:rw
+      - ./pygeoapi/pygeoapi-config.yml:/data/wis2node/pygeoapi-config.yml:rw
       - ${WIS2NODE_DATADIR}/data:/data/wis2node/data:rw
       - ${WIS2NODE_DATADIR_CONFIG}:/data/wis2node/data/config:rw
       - ${WIS2NODE_DATADIR_INCOMING}:/data/wis2node/data/incoming:rw

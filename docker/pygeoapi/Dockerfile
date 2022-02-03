@@ -24,4 +24,5 @@ FROM geopython/pygeoapi:latest
 COPY ./wait-for-elasticsearch.sh /wait-for-elasticsearch.sh
 COPY ./es-entrypoint.sh /es-entrypoint.sh
 
+RUN chmod +x /es-entrypoint.sh
 ENTRYPOINT [ "/es-entrypoint.sh" ]
