@@ -21,9 +21,7 @@ services:
 
   pygeoapi:
     container_name: pygeoapi
-    # image: geopython/pygeoapi:latest
-    build:
-      context: ./pygeoapi
+    image: geopython/pygeoapi:latest
     environment:
       - SCRIPT_NAME=/pygeoapi
       - WIS2NODE_API_URL=${WIS2NODE_API_URL}
@@ -86,6 +84,7 @@ services:
       - METPX_SR3_LOGLEVEL=DEBUG
     volumes:
       - wis2node-data:/data/wis2node:rw
+      - ${WIS2NODE_DATADIR_INCOMING}:/data/wis2node/data/incoming:rw
     depends_on:
       - mosquitto
 
@@ -135,5 +134,4 @@ services:
       - mosquitto
 volumes:
   wis2node-data:
-    driver: local
   es-data:
