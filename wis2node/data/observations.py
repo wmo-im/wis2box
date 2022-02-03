@@ -63,7 +63,8 @@ class ObservationData(BaseAbstractData):
 
         LOGGER.debug('Extracting WSI from filename')
         try:
-            wsi = re.match(r'(\d-\d+-\d+-\w+).*', input_data.name).group(1)
+            regex = r'WIGOS_(\d-\d+-\d+-\w+)_.*'
+            wsi = re.match(regex, input_data.name).group(1)
         except AttributeError:
             msg = f'Invalid filename format: {input_data}'
             LOGGER.error(msg)
