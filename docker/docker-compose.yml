@@ -119,7 +119,6 @@ services:
       - WIS2NODE_LOGFILE=${WIS2NODE_LOGGING_LOGFILE}
     volumes:
       - wis2node-data:/data/wis2node:rw
-      - ./wis2node/data-mappings.yml:/data/wis2node/data-mappings.yml:ro
       - ./wis2node/config:/root/.config/sr3:ro
       - ./pygeoapi/pygeoapi-config.yml:/pygeoapi/local.config.yml:rw
       - ${WIS2NODE_DATADIR}/data:/data/wis2node/data:rw

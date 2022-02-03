@@ -62,5 +62,4 @@ RUN apt-get update -y \
 
 WORKDIR /home/wis2node
 
-CMD wis2node environment create \
-    && sh -c "sr3 start && sleep infinity"
+CMD sh -c "sr3 start && wis2node environment create && sleep infinity"
