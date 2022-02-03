@@ -21,9 +21,9 @@ services:
 
   pygeoapi:
     container_name: pygeoapi
-    # image: geopython/pygeoapi:latest
-    build:
-      context: ./pygeoapi
+    image: geopython/pygeoapi:latest
+    # build:
+    #   context: ./pygeoapi
     environment:
       - SCRIPT_NAME=/pygeoapi
       - WIS2NODE_API_URL=${WIS2NODE_API_URL}
@@ -36,9 +36,9 @@ services:
 
   elasticsearch:
     container_name: elasticsearch
-    # image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
-    build:
-      context: ./elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
+    # build:
+    #   context: ./elasticsearch
     volumes:
       - es-data:/usr/share/elasticsearch/data:rw
     # ulimits:
