@@ -21,69 +21,23 @@
 
 import json
 import logging
-from typing import Any, Tuple
 
 import click
 
 from wis2node import cli_helpers
-from wis2node.env import (
-    DATADIR_DATA_MAPPINGS, DATADIR_PUBLIC, API_CONFIG, API_BACKEND_HOST,
-    API_BACKEND_PORT, API_BACKEND_USERNAME, API_BACKEND_PASSWORD
-)
-from wis2node.plugin import load_plugin
-from wis2node.topic_hierarchy import TopicHierarchy
+from wis2node.env import API_CONFIG
+from wis2node.handler import Handler
+from wis2node.api.backend import load_backend
 from wis2node.metadata.discovery import DiscoveryMetadata
+from wis2node.topic_hierarchy import validate_and_load
 from wis2node.util import walk_path, yaml_load, yaml_dump
 
 LOGGER = logging.getLogger(__name__)
 
 
-def load_backend(topic_hierarchy: str,
-                 fuzzy: bool = False) -> Tuple[TopicHierarchy, Any]:
-    """
-    Validate topic hierarchy and load data defs
-
-    :param topic_hierarchy: `str` of topic hierarchy path
-    :param fuzzy: `bool` of whether to do fuzzy matching of topic hierarchy
-                  (e.g. "*foo.bar.baz*).
-                  Defaults to `False` (i.e. "foo.bar.baz")
-
-    :returns: tuple of `wis2node.topic_hierarchy.TopicHierarchy and
-              plugin object
-    """
-
-    LOGGER.debug(f'Validating topic hierarchy: {topic_hierarchy}')
-
-    th = TopicHierarchy(topic_hierarchy)
-
-    if not th.is_valid():
-        msg = 'Invalid topic hierarchy'
-        LOGGER.error(msg)
-        raise ValueError(msg)
-    if th.dotpath not in DATADIR_DATA_MAPPINGS['api_backend'].keys():
-        msg = 'Topic hierarchy not in data mappings'
-        LOGGER.error(msg)
-        raise ValueError(msg)
-
-    LOGGER.debug('Loading plugin')
-
-    defs = {
-        'topic_hierarchy': topic_hierarchy,
-        'codepath': DATADIR_DATA_MAPPINGS['api_backend'][th.dotpath],
-        'host': API_BACKEND_HOST,
-        'port': API_BACKEND_PORT,
-        'username': API_BACKEND_USERNAME,
-        'password': API_BACKEND_PASSWORD
-    }
-
-    plugin = load_plugin('api_backend', defs)
-
-    return th, plugin
-
-
 def generate_collection_metadata(mcf: dict) -> dict:
     """
-    Generate metadata for collection from metadata control file
+    Generate collection metadata from metadata control file
 
     :param mcf: `dict` of MCF file
 
@@ -110,28 +64,6 @@ def generate_collection_metadata(mcf: dict) -> dict:
     }
 
 
-def load_collection_items(topic_hierarchy: str) -> None:
-    """
-    Load collection items into collection
-
-    :param topic_hierarchy: `str` of topic hierarchy path
-
-    :returns: None
-    """
-
-    th, backend = load_backend(topic_hierarchy)
-
-    regex = f'.*{th.dirpath}.*.geojson$'
-
-    LOGGER.debug(f'Loading files matching: {regex}')
-
-    for file_ in walk_path(DATADIR_PUBLIC, regex):
-        LOGGER.debug(f'Loading file {file_}')
-        with open(file_) as fh:
-            geojson = json.load(fh)
-            backend.upsert_collection_items(th.dotpath, [geojson])
-
-
 @click.group()
 def api():
     """API management"""
@@ -141,13 +73,23 @@ def api():
 @click.command()
 @click.pass_context
 @cli_helpers.OPTION_TOPIC_HIERARCHY
+@cli_helpers.OPTION_PATH
+@click.option('--recursive', '-r', is_flag=True, default=False,
+              help='Process directory recursively')
 @cli_helpers.OPTION_VERBOSITY
-def add_collections_items(ctx, topic_hierarchy, verbosity):
+def add_collection_items(ctx, topic_hierarchy, path, recursive, verbosity):
     """Add collection items to API backend"""
 
-    click.echo(f'Adding GeoJSON files for collection: {topic_hierarchy}')
+    click.echo('Loading Backend')
+    backend = load_backend()
 
-    load_collection_items(topic_hierarchy)
+    click.echo(f'Adding GeoJSON files to collection: {topic_hierarchy}')
+    for file_to_process in walk_path(path, '.*.geojson$', recursive):
+
+        click.echo(f'Adding {file_to_process}')
+
+        handler = Handler(file_to_process, topic_hierarchy)
+        handler.publish(backend)
 
     click.echo('Done')
 
@@ -160,21 +102,24 @@ def add_collections_items(ctx, topic_hierarchy, verbosity):
 def add_collection(ctx, filepath, topic_hierarchy, verbosity):
     """Add collection index to API backend"""
 
-    th, backend = load_backend(topic_hierarchy)
+    th, _ = validate_and_load(topic_hierarchy)
+    index_name = th.dotpath
+
     click.echo('Generating collection metadata')
     collection = generate_collection_metadata(filepath.read())
 
     click.echo(f'Adding collection: {topic_hierarchy}')
-    provider_def = backend.add_collection(th.dotpath)
+    backend = load_backend()
+    provider_def = backend.add_collection(index_name)
     collection['providers'].append(provider_def)
 
     click.echo('Adding to pygeoapi configuration')
-    with open(API_CONFIG) as fh:
+    with API_CONFIG.open() as fh:
         config = yaml_load(fh)
 
-    config['resources'][th.dotpath] = collection
+    config['resources'][index_name] = collection
 
-    with open(API_CONFIG, "w") as fh:
+    with API_CONFIG.open("w") as fh:
         yaml_dump(fh, config)
 
     click.echo("Done")
@@ -189,22 +134,24 @@ def delete_collection(ctx, topic_hierarchy, verbosity):
 
     click.echo(f'Deleting collection: {topic_hierarchy}')
 
-    th, backend = load_backend(topic_hierarchy)
+    th, _ = validate_and_load(topic_hierarchy)
+    index_name = th.dotpath
 
-    backend.delete_collection(th.dotpath)
+    backend = load_backend()
+    backend.delete_collection(index_name)
 
     click.echo('Removing from API configuration')
-    with open(API_CONFIG) as fh:
+    with API_CONFIG.open() as fh:
         config = yaml_load(fh)
 
-    config['resources'].pop(th.dotpath)
+    config['resources'].pop(index_name)
 
-    with open(API_CONFIG) as fh:
+    with API_CONFIG.open() as fh:
         yaml_dump(fh, config)
 
     click.echo('Done')
 
 
-api.add_command(add_collections_items)
+api.add_command(add_collection_items)
 api.add_command(add_collection)
 api.add_command(delete_collection)

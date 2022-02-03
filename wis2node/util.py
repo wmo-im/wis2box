@@ -86,9 +86,9 @@ def json_serial(obj: object) -> Union[bytes, str, float]:
     raise TypeError(msg)
 
 
-def walk_path(path: str, regex: str) -> Iterator[str]:
+def walk_path(path: Path, regex: str, recursive: bool) -> Iterator[Path]:
     """
-    Walks os directory path collecting all CSV files.
+    Walks os directory path collecting all files.
 
     :param path: required, string. os directory.
     :param regex: required, string. regex pattern to match files
@@ -97,11 +97,16 @@ def walk_path(path: str, regex: str) -> Iterator[str]:
     """
 
     reg = re.compile(regex)
-    for root, _, files in os.walk(path, topdown=False):
-        for name in files:
-            filepath = os.path.join(root, name)
-            if reg.match(filepath):
-                yield filepath
+    if path.is_dir():
+        if recursive:
+            pattern = '**/*'
+        else:
+            pattern = '*'
+        for f in path.glob(pattern):
+            if f.is_file() and reg.match(f.name):
+                yield f
+    else:
+        yield path
 
 
 def yaml_load(fh) -> dict:

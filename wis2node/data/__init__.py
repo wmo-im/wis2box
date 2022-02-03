@@ -27,7 +27,7 @@ import click
 from wis2node import cli_helpers
 from wis2node.handler import Handler
 from wis2node.topic_hierarchy import validate_and_load
-from wis2node.util import json_serial
+from wis2node.util import json_serial, walk_path
 
 LOGGER = logging.getLogger(__name__)
 
@@ -106,16 +106,7 @@ def setup(ctx, topic_hierarchy, verbosity):
 def ingest(ctx, topic_hierarchy, path, recursive, verbosity):
     """Ingest data file or directory"""
 
-    if path.is_dir():
-        if recursive:
-            pattern = '**/*'
-        else:
-            pattern = '*'
-        files_to_process = [f for f in path.glob(pattern) if f.is_file()]
-    else:
-        files_to_process = [path]
-
-    for file_to_process in files_to_process:
+    for file_to_process in walk_path(path, '.*', recursive):
         click.echo(f'Processing {file_to_process}')
         handler = Handler(file_to_process, topic_hierarchy)
         _ = handler.handle()

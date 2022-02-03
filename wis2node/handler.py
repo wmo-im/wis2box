@@ -19,6 +19,7 @@
 #
 ###############################################################################
 
+import json
 import logging
 from pathlib import Path
 
@@ -30,10 +31,9 @@ LOGGER = logging.getLogger(__name__)
 class Handler:
     def __init__(self, filepath: Path, topic_hierarchy: str = None):
         self.filepath = filepath
-        self.topic_hierarchy = topic_hierarchy
         self.plugin = None
 
-        if self.topic_hierarchy is not None:
+        if topic_hierarchy is not None:
             th = topic_hierarchy
             fuzzy = False
         else:
@@ -41,7 +41,7 @@ class Handler:
             fuzzy = True
 
         try:
-            _, self.plugin = validate_and_load(th, fuzzy=fuzzy)
+            self.topic_hierarchy, self.plugin = validate_and_load(th, fuzzy=fuzzy) # noqa
         except Exception as err:
             msg = f'Topic Hierarchy validation error: {err}'
             LOGGER.error(msg)
@@ -50,4 +50,12 @@ class Handler:
     def handle(self) -> bool:
         self.plugin.transform(self.filepath)
         self.plugin.publish()
+        return True
+
+    def publish(self, backend) -> bool:
+        index_name = self.topic_hierarchy.dotpath
+
+        with self.filepath.open() as fh1:
+            geojson = json.load(fh1)
+            backend.upsert_collection_items(index_name, [geojson])
         return True

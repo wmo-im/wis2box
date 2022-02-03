@@ -28,7 +28,7 @@ from pygeometa.helpers import json_serial
 from pygeometa.schemas.ogcapi_records import OGCAPIRecordOutputSchema
 
 from wis2node import cli_helpers
-from wis2node.env import API_URL
+from wis2node.env import API_URL, MQP_URL
 from wis2node.catalogue import delete_metadata, upsert_metadata
 from wis2node.metadata.base import BaseMetadata
 
@@ -60,7 +60,19 @@ class DiscoveryMetadata(BaseMetadata):
             'description': identifier,
             'function': 'collection'
         }
-        md['distribution'] = {'oafeat': oafeat_link}
+
+        mqp_link = {
+            'url': MQP_URL,
+            'type': 'MQTT',
+            'name': identifier,
+            'description': identifier,
+            'function': 'collection'
+        }
+
+        md['distribution'] = {
+            'oafeat': oafeat_link,
+            'mqtt': mqp_link
+        }
 
         LOGGER.debug('Generating OARec discovery metadata')
         record = OGCAPIRecordOutputSchema().write(md, stringify=False)
