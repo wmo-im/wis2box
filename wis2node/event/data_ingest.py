@@ -39,8 +39,8 @@ class Event(FlowCB):
         new_incoming = []
         for incoming_message in worklist.incoming:
 
-            filepath = (Path(incoming_message['baseUrl']) /
-                        incoming_message['relPath'])
+            filepath = ( Path( '/' ) / incoming_message['relPath'])
+
             LOGGER.debug(f'Incoming filepath: {filepath}')
 
             try:
