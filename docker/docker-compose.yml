@@ -11,7 +11,7 @@ services:
       - wis2node-ui
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ${WIS2NODE_DATADIR}/data/public:/data/wis2node/data/public:ro
+      - wis2node-data:/data/wis2node:ro
 
   wis2node-ui:
     container_name: wis2node-ui
@@ -29,8 +29,8 @@ services:
     depends_on:
       - elasticsearch
     volumes:
+      - wis2node-data:/data/wis2node:rw
       - ./pygeoapi/pygeoapi-config.yml:/pygeoapi/local.config.yml:ro
-      - ${WIS2NODE_DATADIR}:/data/wis2node:rw
 
   elasticsearch:
     container_name: elasticsearch
@@ -42,8 +42,8 @@ services:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       # - xpack.security.enabled=true  # TODO: setup credentials
-
-
+    volumes:
+      - es-data:/usr/share/elasticsearch/data:rw
     # ulimits:
     #   nofile:
     #     soft: 524288
@@ -57,20 +57,21 @@ services:
       retries: 10
 
   mosquitto:
-    image: eclipse-mosquitto
     container_name: mosquitto
+    # image: eclipse-mosquitto
+    build:
+      context: ./mosquitto
     environment:
       - METPX_SR3_BROKER_USERNAME=${METPX_SR3_BROKER_USERNAME}
       - METPX_SR3_BROKER_PASSWORD=${METPX_SR3_BROKER_PASSWORD}
     volumes:
-      - ${WIS2NODE_DATADIR}/mosquitto:/mosquitto/:rw
-      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
-      - ./mosquitto/entrypoint.sh:/entrypoint.sh
-    entrypoint: /bin/sh /entrypoint.sh
+      - wis2node-data:/data/wis2node:rw
 
   data-consumer:
     container_name: data-consumer
-    image: ghcr.io/metpx/sarracenia:latest
+    # image: ghcr.io/metpx/sarracenia:latest
+    build:
+      context: ./data-consumer
     #user: sarra:sarra
     environment:
       - METPX_SR3_HOST=${METPX_SR3_HOST}
@@ -82,12 +83,10 @@ services:
       - WIS2NODE_URL=${WIS2NODE_URL}
       - METPX_SR3_LOGLEVEL=DEBUG
     volumes:
-      - ./data-consumer/config:/root/.config/sr3:ro
-      - ${WIS2NODE_DATADIR}/cache/home/sarra:/root/.cache:rw
-      - ${WIS2NODE_DATADIR}:/data/wis2node:rw
+      - wis2node-data:/data/wis2node:rw
+      - ${WIS2NODE_DATADIR_INCOMING}:/data/wis2node/data/incoming:rw
     depends_on:
       - mosquitto
-    command: sh -c "whoami && sr3 start && sleep infinity"
 
   wis2node:
     container_name: wis2node
@@ -123,30 +122,16 @@ services:
       - WIS2NODE_LOGLEVEL=${WIS2NODE_LOGGING_LOGLEVEL}
       - WIS2NODE_LOGFILE=${WIS2NODE_LOGGING_LOGFILE}
     volumes:
+      - wis2node-data:/data/wis2node:rw
       - ./wis2node/config:/root/.config/sr3:ro
-      - ${WIS2NODE_DATADIR}/cache/wis2node:/root/.cache:rw
-      - ${WIS2NODE_DATADIR}:/data/wis2node:rw
       - ./pygeoapi/pygeoapi-config.yml:/data/wis2node/pygeoapi-config.yml:rw
-      # - type: bind
-      #   source: ${WIS2NODE_DATADIR_CONFIG}
-      #   target: /data/wis2node/data/config
-      #   bind:
-      #     create_host_path: true
-      # - type: bind
-      #   source: ${WIS2NODE_DATADIR_INCOMING}
-      #   target: /data/wis2node/data/incoming
-      #   bind:
-      #     create_host_path: true
-      # - type: bind
-      #   source: ${WIS2NODE_DATADIR_OUTGOING}
-      #   target: /data/wis2node/data/outgoing
-      #   bind:
-      #     create_host_path: true
-      # - type: bind
-      #   source: ${WIS2NODE_DATADIR_PUBLIC}
-      #   target: /data/wis2node/data/public
-      #   bind:
-      #     create_host_path: true
+      - ${WIS2NODE_DATADIR}/data:/data/wis2node/data:rw
+      - ${WIS2NODE_DATADIR_CONFIG}:/data/wis2node/data/config:rw
+      - ${WIS2NODE_DATADIR_INCOMING}:/data/wis2node/data/incoming:rw
+      - ${WIS2NODE_DATADIR_OUTGOING}:/data/wis2node/data/outgoing:rw
+      - ${WIS2NODE_DATADIR_PUBLIC}:/data/wis2node/data/public:rw
     depends_on:
       - mosquitto
-    command: sh -c "sr3 start && sleep infinity"
+volumes:
+  wis2node-data:
+  es-data:
