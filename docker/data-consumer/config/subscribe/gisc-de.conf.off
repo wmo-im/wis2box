@@ -23,3 +23,5 @@ mirror
 directory ${METPX_SR3_PATH_PUBLIC}/${YYYYMMDD}T${HH}
 accept .*
 exchange wisof
+
+#only downloading so far... no posting... need a few more settings

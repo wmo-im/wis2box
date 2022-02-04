@@ -79,7 +79,7 @@ services:
       - METPX_SR3_EXCHANGE=${METPX_SR3_EXCHANGE}
       - METPX_SR3_PATH_INCOMING=/data/wis2node/data/incoming
       - METPX_SR3_PATH_PUBLIC=/data/wis2node/data/public
-      - METPX_SR3_BASEURL=${WIS2NODE_URL}
+      - WIS2NODE_URL=${WIS2NODE_URL}
       - METPX_SR3_LOGLEVEL=DEBUG
     volumes:
       - ./data-consumer/config:/root/.config/sr3:ro
