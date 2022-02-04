@@ -20,7 +20,7 @@ For the purposes of a quickstart, this deployment expects the test environment, 
 
 .. note::
 
-    For deployment of wis2node otherwise, edit the local environment variables according to your needs and see Deployment
+    For deployment of wis2node otherwise, see :ref:`configuration`
 
 Start wis2node with Docker Compose and login to the wis2node container
 
