@@ -21,10 +21,8 @@
 
 import click
 from copy import deepcopy
-import json
 import logging
 
-from pygeometa.helpers import json_serial
 from pygeometa.schemas.ogcapi_records import OGCAPIRecordOutputSchema
 
 from wis2node import cli_helpers
@@ -97,7 +95,7 @@ class DiscoveryMetadata(BaseMetadata):
         }
         record['links'].append(canonical_link)
 
-        return json.dumps(record, default=json_serial, indent=4)
+        return record
 
 
 @click.group()
@@ -117,6 +115,7 @@ def publish(ctx, filepath, verbosity):
     try:
         dm = DiscoveryMetadata()
         record = dm.parse_record(filepath.read())
+        record = dm.generate(record)
         backend = load_backend()
         backend.upsert_collection_items('discovery-metadata', [record])
     except Exception as err:
