@@ -28,8 +28,8 @@ from pygeometa.helpers import json_serial
 from pygeometa.schemas.ogcapi_records import OGCAPIRecordOutputSchema
 
 from wis2node import cli_helpers
+from wis2node.api.backend import load_backend
 from wis2node.env import API_URL, MQP_URL
-from wis2node.catalogue import delete_metadata, upsert_metadata
 from wis2node.metadata.base import BaseMetadata
 
 LOGGER = logging.getLogger(__name__)
@@ -117,7 +117,8 @@ def publish(ctx, filepath, verbosity):
     try:
         dm = DiscoveryMetadata()
         record = dm.parse_record(filepath.read())
-        upsert_metadata(dm.generate(record))
+        backend = load_backend()
+        backend.upsert_collection_items('discovery-metadata', [record])
     except Exception as err:
         raise click.ClickException(err)
 
@@ -132,7 +133,8 @@ def unpublish(ctx, identifier, verbosity):
     """Deletes a discovery metadata record from the catalogue"""
 
     click.echo('Unpublishing discovery metadata {identifier}')
-    delete_metadata(identifier)
+    backend = load_backend()
+    backend.delete_collection_item('discovery-metadata', identifier)
 
 
 discovery.add_command(publish)

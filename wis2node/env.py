@@ -45,7 +45,6 @@ except (OSError, TypeError):
     LOGGER.error(msg)
     raise EnvironmentError(msg)
 
-CATALOGUE_BACKEND = os.environ.get('WIS2NODE_CATALOGUE_BACKEND')
 OSCAR_API_TOKEN = os.environ.get('WIS2NODE_OSCAR_API_TOKEN')
 API_URL = os.environ.get('WIS2NODE_API_URL')
 MQP_URL = os.environ.get('WIS2NODE_MQP_URL')
@@ -83,7 +82,6 @@ if None in [
     DATADIR_INCOMING,
     DATADIR_OUTGOING,
     DATADIR_PUBLIC,
-    CATALOGUE_BACKEND,
     OSCAR_API_TOKEN,
     API_URL,
     MQP_URL,

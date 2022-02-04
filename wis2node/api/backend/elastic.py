@@ -123,7 +123,7 @@ class ElasticBackend(BaseBackend):
 
     def upsert_collection_items(self, collection_id: str, items: list) -> str:
         """
-        Add or update a collection item
+        Add or update collection items
 
         :param collection_id: name of collection
         :param items: list of GeoJSON item data `dict`'s

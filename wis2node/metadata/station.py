@@ -28,6 +28,7 @@ from pathlib import Path
 from pygeometa.schemas.wmo_wigos import WMOWIGOSOutputSchema
 
 from wis2node import cli_helpers
+from wis2node.api.backend import load_backend
 from wis2node.env import DATADIR
 from wis2node.metadata.base import BaseMetadata
 from wis2node.metadata.oscar import get_station_report, upload_station_metadata
@@ -58,19 +59,16 @@ def station():
     pass
 
 
-def gen_station_collection() -> None:
+def publish_station_collection() -> None:
     """
-    Generates station collection GeoJSON file in `$WIS2NODE_DATADIR`
+    Publishes station collection to API backend
 
     :returns: `None`
     """
 
-    oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
+    backend = load_backend()
 
-    feature_collection = {
-        'type': 'FeatureCollection',
-        'features': []
-    }
+    oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
     station_metadata_files = Path(DATADIR) / 'metadata' / 'station'
 
@@ -97,9 +95,11 @@ def gen_station_collection() -> None:
                     'status': 'operational'
                 }
             }
-            feature_collection['features'].append(feature)
 
-    return feature_collection
+        LOGGER.debug('Publishing to backend')
+        backend.upsert_collection_items('stations', [feature])
+
+    return
 
 
 @click.command()
@@ -129,16 +129,10 @@ def cache(ctx, filepath, verbosity):
 @click.command()
 @click.pass_context
 @cli_helpers.OPTION_VERBOSITY
-def generate_collection(ctx, verbosity):
-    """Generates collection of stations"""
+def publish_collection(ctx, verbosity):
+    """Publishes collection of stations to API backend"""
 
-    stations_geojson = gen_station_collection()
-
-    path = Path(DATADIR) / 'metadata' / 'station' / 'stations.geojson'
-
-    with path.open(mode='w') as fh:
-        json.dump(stations_geojson, fh)
-
+    publish_station_collection()
     click.echo('Done')
 
 
@@ -160,6 +154,6 @@ def publish(ctx, filepath, verbosity):
     click.echo('Done')
 
 
-station.add_command(generate_collection)
 station.add_command(publish)
+station.add_command(publish_collection)
 station.add_command(cache)

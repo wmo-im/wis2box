@@ -86,8 +86,8 @@ resources:
                 crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
         providers:
             - type: record
-              name: TinyDBCatalogue
-              data: ${WIS2NODE_DATADIR}/metadata/discovery/records.tinydb
+              name: ElasticsearchCatalogue
+              data: http://${WIS2NODE_API_BACKEND_HOST}:${WIS2NODE_API_BACKEND_PORT}/discovery-metadata
               id_field: identifier
               time_field: recordCreated
               title_field: title
@@ -113,8 +113,8 @@ resources:
                 crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
         providers:
             - type: feature
-              name: GeoJSON
-              data: ${WIS2NODE_DATADIR}/metadata/station/stations.geojson
+              name: Elasticsearch
+              data: http://${WIS2NODE_API_BACKEND_HOST}:${WIS2NODE_API_BACKEND_PORT}/stations
               id_field: wigos_id
               title_field: name
 

@@ -21,10 +21,14 @@ services:
 
   pygeoapi:
     container_name: pygeoapi
-    image: geopython/pygeoapi:latest
+    #image: geopython/pygeoapi:latest
+    build:
+      context: ./pygeoapi
     environment:
       - SCRIPT_NAME=/pygeoapi
       - WIS2NODE_API_URL=${WIS2NODE_API_URL}
+      - WIS2NODE_API_BACKEND_HOST=${WIS2NODE_API_BACKEND_HOST}
+      - WIS2NODE_API_BACKEND_PORT=${WIS2NODE_API_BACKEND_PORT}
       - WIS2NODE_DATADIR=/data/wis2node
     depends_on:
       - elasticsearch
@@ -113,7 +117,6 @@ services:
       - WIS2NODE_DATADIR_INCOMING=/data/wis2node/data/incoming
       - WIS2NODE_DATADIR_OUTGOING=/data/wis2node/data/outgoing
       - WIS2NODE_DATADIR_PUBLIC=/data/wis2node/data/public
-      - WIS2NODE_CATALOGUE_BACKEND=/data/wis2node/metadata/discovery/records.tinydb
       - WIS2NODE_OSCAR_API_TOKEN=${WIS2NODE_OSCAR_API_TOKEN}
       - WIS2NODE_API_URL=${WIS2NODE_API_URL}
       - WIS2NODE_MQP_URL=${WIS2NODE_MQP_URL}
