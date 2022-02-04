@@ -30,7 +30,6 @@ DOCKER_COMPOSE_ARGS = """
     -p wis2node
     """
 
-
 def usage() -> str:
     text = """
     Usage: {program} <command> <args>
@@ -91,29 +90,29 @@ def make(command: str, *args) -> None:
         subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} config'))
     elif command == "build":
         cmd = "" if args[-1] == command else args[-1]
-        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} build {cmd}')) # noqa
+        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} build {cmd}'))
     elif command == "start":
         subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} up -d'))
     elif command == "login":
-        subprocess.run(split('docker exec -it wis2node /bin/bash'))  # noqa
+        subprocess.run(split('docker exec -it wis2node /bin/bash'))
     elif command == "login-root":
-        subprocess.run(split('docker exec -u -0 -it wis2node /bin/bash'))  # noqa
+        subprocess.run(split('docker exec -u -0 -it wis2node /bin/bash'))
     elif command == "logs":
-        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} logs --follow'))  # noqa
+        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} logs --follow'))
     elif command == "stop":
-        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} down --remove-orphans')) # noqa
+        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} down --remove-orphans'))
     elif command == "update":
         subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} pull'))
     elif command == "prune":
         subprocess.run(split('docker container prune -f'))
         subprocess.run(split('docker volume prune -f'))
-        _ = subprocess.run(split('docker images --filter dangling=true -q --no-trunc'), stdout=subprocess.PIPE).stdout.decode('ascii') # noqa
-        subprocess.run(split(f'docker rmi {_}'))  # noqa
-        _ = subprocess.run(split('docker ps -a -q'), stdout=subprocess.PIPE).stdout.decode('ascii') # noqa
-        subprocess.run(split(f'docker rm {_}'))  # noqa
+        _ = subprocess.run(split('docker images --filter dangling=true -q --no-trunc'), stdout=subprocess.PIPE).stdout.decode('ascii')
+        subprocess.run(split(f'docker rmi {_}'))
+        _ = subprocess.run(split('docker ps -a -q'), stdout=subprocess.PIPE).stdout.decode('ascii')
+        subprocess.run(split(f'docker rm {_}'))
     elif command == "restart":
         container = "" if args[-1] == command else args[-1]
-        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} restart {container}')) # noqa
+        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} restart {container}'))
     elif command == "status":
         cmd = "" if args[-1] == command else args[-1]
         subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} ps {cmd}'))
