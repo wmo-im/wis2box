@@ -1,4 +1,4 @@
-.. _hot-wis2node-works:
+.. _how-wis2node-works:
 
 How wis2node works
 ==================

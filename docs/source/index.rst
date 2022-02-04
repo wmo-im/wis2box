@@ -23,6 +23,7 @@ wis2node |release| documentation
    data-publishing
    data-access
    services
+   extending-wis2node
    development
    support
    license
