@@ -21,6 +21,8 @@
 
 FROM geopython/pygeoapi:latest
 
+RUN apt-get update -y && apt-get install curl -y
+
 COPY ./wait-for-elasticsearch.sh /wait-for-elasticsearch.sh
 COPY ./es-entrypoint.sh /es-entrypoint.sh
 
