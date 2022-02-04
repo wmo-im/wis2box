@@ -19,7 +19,6 @@
 #
 ###############################################################################
 
-import json
 import logging
 
 import click
@@ -49,17 +48,16 @@ def generate_collection_metadata(mcf: dict) -> dict:
     dm = discovery.DiscoveryMetadata()
     record = dm.parse_record(mcf)
     generated = dm.generate(record)
-    parsed = json.loads(generated)
 
     LOGGER.debug('Creating collection configuration')
 
     return {
         'type': 'collection',
-        'title': parsed['properties']['title'],
-        'description': parsed['properties']['description'],
+        'title': generated['properties']['title'],
+        'description': generated['properties']['description'],
         'keywords': record['identification']['keywords'],
-        'extents': parsed['properties']['extent'],
-        'links': parsed['associations'],
+        'extents': generated['properties']['extent'],
+        'links': generated['associations'],
         'providers': []
     }
 

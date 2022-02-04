@@ -43,7 +43,7 @@ class DiscoveryMetadata(BaseMetadata):
 
         :param mcf: `dict` of MCF file
 
-        :returns: `str` of metadata representation
+        :returns: `dict` of metadata representation
         """
 
         md = deepcopy(mcf)
