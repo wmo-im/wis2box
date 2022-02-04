@@ -28,7 +28,7 @@ from wis2node import cli_helpers
 from wis2node.env import API_CONFIG
 from wis2node.handler import Handler
 from wis2node.api.backend import load_backend
-from wis2node.metadata.discovery import DiscoveryMetadata
+import wis2node.metadata.discovery as discovery
 from wis2node.topic_hierarchy import validate_and_load
 from wis2node.util import walk_path, yaml_load, yaml_dump
 
@@ -46,7 +46,7 @@ def generate_collection_metadata(mcf: dict) -> dict:
 
     LOGGER.debug('Parsing discovery metadata')
 
-    dm = DiscoveryMetadata()
+    dm = discovery.DiscoveryMetadata()
     record = dm.parse_record(mcf)
     generated = dm.generate(record)
     parsed = json.loads(generated)
