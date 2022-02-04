@@ -36,8 +36,7 @@ class Event(FlowCB):
 
     def after_accept(self, worklist):
         for incoming_message in worklist.incoming:
-            filepath = (Path(incoming_message['baseUrl']) /
-                        incoming_message['relPath'])
+            filepath = (Path('/') / incoming_message['relPath'])
             LOGGER.debug(f'Incoming filepath: {filepath}')
 
             # TODO: publish
