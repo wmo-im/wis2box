@@ -2,5 +2,4 @@ pygeometa
 pyoscar
 PyYAML
 metpx-sr3
-tinydb
 elasticsearch<8
