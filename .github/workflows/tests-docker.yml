@@ -38,7 +38,7 @@ jobs:
           && wis2node data setup --topic-hierarchy observations-surface-land.mw.FWCL.landFixed \
           && wis2node data info --topic-hierarchy observations-surface-land.mw.FWCL.landFixed \
           && wis2node metadata station cache /data/wis2node/data/metadata/station/station_list.csv \
-          && wis2node metadata station generate-collection \
+          && wis2node metadata station publish-collection \
           && wis2node metadata discovery publish /data/wis2node/data/metadata/discovery/surface-weather-observations.yml \
           && wis2node data ingest -th observations-surface-land.mw.FWCL.landFixed -p /data/wis2node/data/observations/WIGOS_0-454-2-AWSNAMITAMBO_20210707.csv \
           && wis2node api add-collection /data/wis2node/data/metadata/discovery/surface-weather-observations.yml --topic-hierarchy observations-surface-land.mw.FWCL.landFixed \
