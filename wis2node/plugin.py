@@ -31,12 +31,16 @@ LOGGER = logging.getLogger(__name__)
 PLUGINS = {
     'api_backend': {
         'Elasticsearch': 'wis2node.api.backend.elastic.ElasticBackend'
+    },
+    'api_config': {
+        'pygeoapi': 'wis2node.api.config.pygeoapi.PygeoapiConfig'
     }
 }
 
 
 class PluginTypes(Enum):
     API_BACKEND = 'api_backend'
+    API_CONFIG = 'api_config'
     DATA = 'data'
 
 
@@ -53,7 +57,7 @@ def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
 
     codepath = defs.get('codepath')
 
-    if plugin_type == 'api_backend':
+    if plugin_type in ['api_backend', 'api_config']:
         plugin_mappings = PLUGINS
     else:
         plugin_mappings = DATADIR_DATA_MAPPINGS
@@ -81,6 +85,9 @@ def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
         plugin = class_(defs.get('topic_hierarchy'))
     elif plugin_type == PluginTypes.API_BACKEND.value:
         plugin = class_(defs)
+    elif plugin_type == PluginTypes.API_CONFIG.value:
+        plugin = class_(defs)
+
     return plugin
 
 

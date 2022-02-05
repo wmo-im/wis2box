@@ -111,7 +111,7 @@ def add_collection(ctx, filepath, topic_hierarchy, verbosity):
     provider_def = backend.add_collection(index_name)
     collection['providers'].append(provider_def)
 
-    click.echo('Adding to pygeoapi configuration')
+    click.echo('Adding to API configuration')
     with API_CONFIG.open() as fh:
         config = yaml_load(fh)
 

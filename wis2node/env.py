@@ -46,6 +46,7 @@ except (OSError, TypeError):
     raise EnvironmentError(msg)
 
 OSCAR_API_TOKEN = os.environ.get('WIS2NODE_OSCAR_API_TOKEN')
+API_TYPE = os.environ.get('WIS2NODE_API_TYPE')
 API_URL = os.environ.get('WIS2NODE_API_URL')
 MQP_URL = os.environ.get('WIS2NODE_MQP_URL')
 URL = os.environ.get('WIS2NODE_URL')
@@ -83,6 +84,7 @@ if None in [
     DATADIR_OUTGOING,
     DATADIR_PUBLIC,
     OSCAR_API_TOKEN,
+    API_TYPE,
     API_URL,
     MQP_URL,
     URL

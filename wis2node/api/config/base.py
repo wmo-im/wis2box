@@ -20,33 +20,43 @@
 ###############################################################################
 
 import logging
-from typing import Any
-
-from wis2node.env import (
-    API_BACKEND_TYPE, API_BACKEND_HOST, API_BACKEND_PORT,
-    API_BACKEND_USERNAME, API_BACKEND_PASSWORD
-)
-from wis2node.plugin import load_plugin, PLUGINS
 
 LOGGER = logging.getLogger(__name__)
 
 
-def load_backend() -> Any:
-    """
-    Load wis2node backend
+class BaseConfig:
+    """Abstract API config"""
+    def __init__(self, defs: dict) -> None:
+        """
+        initializer
 
-    :returns: plugin object
-    """
+        :param defs: `dict` of connection parameters
+                     (config)
+        """
 
-    LOGGER.debug('Loading backend')
+        self.config = defs.get('config')
 
-    codepath = PLUGINS['api_backend'][API_BACKEND_TYPE]
-    defs = {
-        'codepath': codepath,
-        'host': API_BACKEND_HOST,
-        'port': API_BACKEND_PORT,
-        'username': API_BACKEND_USERNAME,
-        'password': API_BACKEND_PASSWORD
-    }
+    def add_collection(self, meta: dict) -> bool:
+        """
+        Add a collection
 
-    return load_plugin('api_backend', defs)
+        :param meta: `dict` of collection properties
+
+        :returns: `bool` of add collection result
+        """
+
+        raise NotImplementedError()
+
+    def delete_collection(self, name: str) -> bool:
+        """
+        Delete a collection
+
+        :param name: name of collection
+
+        :returns: `bool` of delete collection result
+        """
+
+        raise NotImplementedError()
+
+    def __repr__(self):
+        return f'<BaseConfig> ({self.config})'

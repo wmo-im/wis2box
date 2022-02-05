@@ -27,6 +27,7 @@ from pygeometa.schemas.ogcapi_records import OGCAPIRecordOutputSchema
 
 from wis2node import cli_helpers
 from wis2node.api.backend import load_backend
+from wis2node.api.config import load_config
 from wis2node.env import API_URL, MQP_URL
 from wis2node.metadata.base import BaseMetadata
 
@@ -98,6 +99,34 @@ class DiscoveryMetadata(BaseMetadata):
         return record
 
 
+def publish_collection() -> bool:
+    """
+    Publish discovery metadata collection
+
+    :returns: `bool` of publish result
+    """
+
+    LOGGER.debug('Adding to API configuration')
+
+    collection = {
+        'id': 'discovery-metadata',
+        'type': 'record',
+        'title': 'Discovery metadata',
+        'description': 'Discovery metadata',
+        'keywords': ['wmo', 'wis 2.0'],
+        'links': ['https://example.org'],
+        'bbox': [-180, -90, 180, 90],
+        'id_field': 'identifier',
+        'time_field': 'recordCreated',
+        'title_field': 'title',
+    }
+
+    api_config = load_config()
+    api_config.add_collection(collection)
+
+    return True
+
+
 @click.group()
 def discovery():
     """Discovery metadata management"""
@@ -118,6 +147,7 @@ def publish(ctx, filepath, verbosity):
         record = dm.generate(record)
         backend = load_backend()
         backend.upsert_collection_items('discovery-metadata', [record])
+        publish_collection()
     except Exception as err:
         raise click.ClickException(err)
 

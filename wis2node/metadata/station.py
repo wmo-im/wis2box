@@ -29,6 +29,7 @@ from pygeometa.schemas.wmo_wigos import WMOWIGOSOutputSchema
 
 from wis2node import cli_helpers
 from wis2node.api.backend import load_backend
+from wis2node.api.config import load_config
 from wis2node.env import DATADIR
 from wis2node.metadata.base import BaseMetadata
 from wis2node.metadata.oscar import get_station_report, upload_station_metadata
@@ -61,7 +62,7 @@ def station():
 
 def publish_station_collection() -> None:
     """
-    Publishes station collection to API backend
+    Publishes station collection to API config and backend
 
     :returns: `None`
     """
@@ -99,6 +100,21 @@ def publish_station_collection() -> None:
         LOGGER.debug('Publishing to backend')
         backend.upsert_collection_items('stations', [feature])
 
+    click.echo('Adding to API configuration')
+    collection = {
+        'id': 'stations',
+        'title': 'Stations',
+        'description': 'Stations',
+        'keywords': ['wmo', 'wis 2.0'],
+        'links': ['https://oscar.wmo.int/surface'],
+        'bbox': [-180, -90, 180, 90],
+        'id_field': 'wigos_id',
+        'title_field': 'wigos_id'
+    }
+
+    api_config = load_config()
+    api_config.add_collection(collection)
+
     return
 
 
@@ -130,7 +146,7 @@ def cache(ctx, filepath, verbosity):
 @click.pass_context
 @cli_helpers.OPTION_VERBOSITY
 def publish_collection(ctx, verbosity):
-    """Publishes collection of stations to API backend"""
+    """Publishes collection of stations to API config and backend"""
 
     publish_station_collection()
     click.echo('Done')
