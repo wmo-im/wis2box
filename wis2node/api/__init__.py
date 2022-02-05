@@ -19,7 +19,6 @@
 #
 ###############################################################################
 
-import json
 import logging
 
 import click
@@ -28,7 +27,7 @@ from wis2node import cli_helpers
 from wis2node.env import API_CONFIG
 from wis2node.handler import Handler
 from wis2node.api.backend import load_backend
-from wis2node.metadata.discovery import DiscoveryMetadata
+import wis2node.metadata.discovery as discovery
 from wis2node.topic_hierarchy import validate_and_load
 from wis2node.util import walk_path, yaml_load, yaml_dump
 
@@ -46,20 +45,19 @@ def generate_collection_metadata(mcf: dict) -> dict:
 
     LOGGER.debug('Parsing discovery metadata')
 
-    dm = DiscoveryMetadata()
+    dm = discovery.DiscoveryMetadata()
     record = dm.parse_record(mcf)
     generated = dm.generate(record)
-    parsed = json.loads(generated)
 
     LOGGER.debug('Creating collection configuration')
 
     return {
         'type': 'collection',
-        'title': parsed['properties']['title'],
-        'description': parsed['properties']['description'],
+        'title': generated['properties']['title'],
+        'description': generated['properties']['description'],
         'keywords': record['identification']['keywords'],
-        'extents': parsed['properties']['extent'],
-        'links': parsed['associations'],
+        'extents': generated['properties']['extent'],
+        'links': generated['associations'],
         'providers': []
     }
 
@@ -113,7 +111,7 @@ def add_collection(ctx, filepath, topic_hierarchy, verbosity):
     provider_def = backend.add_collection(index_name)
     collection['providers'].append(provider_def)
 
-    click.echo('Adding to pygeoapi configuration')
+    click.echo('Adding to API configuration')
     with API_CONFIG.open() as fh:
         config = yaml_load(fh)
 

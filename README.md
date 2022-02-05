@@ -108,7 +108,7 @@ wis2node metadata station publish $WIS2NODE_DATADIR/metadata/station/2.yml
 wis2node metadata station publish $WIS2NODE_DATADIR/metadata/station/3.yml
 
 # generate local station collection GeoJSON for pygeoapi publication
-wis2node metadata station generate-collection
+wis2node metadata station publish-collection
 
 # publish dataset discovery metadata to local catalogue
 wis2node metadata discovery publish foo/bar/baz

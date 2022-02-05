@@ -21,15 +21,14 @@
 
 import click
 from copy import deepcopy
-import json
 import logging
 
-from pygeometa.helpers import json_serial
 from pygeometa.schemas.ogcapi_records import OGCAPIRecordOutputSchema
 
 from wis2node import cli_helpers
+from wis2node.api.backend import load_backend
+from wis2node.api.config import load_config
 from wis2node.env import API_URL, MQP_URL
-from wis2node.catalogue import delete_metadata, upsert_metadata
 from wis2node.metadata.base import BaseMetadata
 
 LOGGER = logging.getLogger(__name__)
@@ -45,7 +44,7 @@ class DiscoveryMetadata(BaseMetadata):
 
         :param mcf: `dict` of MCF file
 
-        :returns: `str` of metadata representation
+        :returns: `dict` of metadata representation
         """
 
         md = deepcopy(mcf)
@@ -97,7 +96,35 @@ class DiscoveryMetadata(BaseMetadata):
         }
         record['links'].append(canonical_link)
 
-        return json.dumps(record, default=json_serial, indent=4)
+        return record
+
+
+def publish_collection() -> bool:
+    """
+    Publish discovery metadata collection
+
+    :returns: `bool` of publish result
+    """
+
+    LOGGER.debug('Adding to API configuration')
+
+    collection = {
+        'id': 'discovery-metadata',
+        'type': 'record',
+        'title': 'Discovery metadata',
+        'description': 'Discovery metadata',
+        'keywords': ['wmo', 'wis 2.0'],
+        'links': ['https://example.org'],
+        'bbox': [-180, -90, 180, 90],
+        'id_field': 'identifier',
+        'time_field': 'recordCreated',
+        'title_field': 'title',
+    }
+
+    api_config = load_config()
+    api_config.add_collection(collection)
+
+    return True
 
 
 @click.group()
@@ -117,7 +144,10 @@ def publish(ctx, filepath, verbosity):
     try:
         dm = DiscoveryMetadata()
         record = dm.parse_record(filepath.read())
-        upsert_metadata(dm.generate(record))
+        record = dm.generate(record)
+        backend = load_backend()
+        backend.upsert_collection_items('discovery-metadata', [record])
+        publish_collection()
     except Exception as err:
         raise click.ClickException(err)
 
@@ -132,7 +162,8 @@ def unpublish(ctx, identifier, verbosity):
     """Deletes a discovery metadata record from the catalogue"""
 
     click.echo('Unpublishing discovery metadata {identifier}')
-    delete_metadata(identifier)
+    backend = load_backend()
+    backend.delete_collection_item('discovery-metadata', identifier)
 
 
 discovery.add_command(publish)

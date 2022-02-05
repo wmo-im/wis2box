@@ -45,8 +45,8 @@ except (OSError, TypeError):
     LOGGER.error(msg)
     raise EnvironmentError(msg)
 
-CATALOGUE_BACKEND = os.environ.get('WIS2NODE_CATALOGUE_BACKEND')
 OSCAR_API_TOKEN = os.environ.get('WIS2NODE_OSCAR_API_TOKEN')
+API_TYPE = os.environ.get('WIS2NODE_API_TYPE')
 API_URL = os.environ.get('WIS2NODE_API_URL')
 MQP_URL = os.environ.get('WIS2NODE_MQP_URL')
 URL = os.environ.get('WIS2NODE_URL')
@@ -61,8 +61,8 @@ API_BACKEND_USERNAME = os.environ.get('WIS2NODE_API_BACKEND_USERNAME')
 API_BACKEND_PASSWORD = os.environ.get('WIS2NODE_API_BACKEND_PASSWORD')
 API_BACKEND_TYPE = os.environ.get('WIS2NODE_API_BACKEND_TYPE')
 
-LOGLEVEL = os.environ.get('WIS2NODE_LOGLEVEL', 'ERROR')
-LOGFILE = os.environ.get('WIS2NODE_LOGFILE', 'stdout')
+LOGLEVEL = os.environ.get('WIS2NODE_LOGGING_LOGLEVEL', 'ERROR')
+LOGFILE = os.environ.get('WIS2NODE_LOGGING_LOGFILE', 'stdout')
 
 if 'WIS2NODE_DATADIR_DATA_MAPPINGS' in os.environ:
     LOGGER.debug('Overriding WIS2NODE_DATADIR_DATA_MAPPINGS')
@@ -83,8 +83,8 @@ if None in [
     DATADIR_INCOMING,
     DATADIR_OUTGOING,
     DATADIR_PUBLIC,
-    CATALOGUE_BACKEND,
     OSCAR_API_TOKEN,
+    API_TYPE,
     API_URL,
     MQP_URL,
     URL

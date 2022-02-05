@@ -123,7 +123,7 @@ class ElasticBackend(BaseBackend):
 
     def upsert_collection_items(self, collection_id: str, items: list) -> str:
         """
-        Add or update a collection item
+        Add or update collection items
 
         :param collection_id: name of collection
         :param items: list of GeoJSON item data `dict`'s
@@ -132,6 +132,10 @@ class ElasticBackend(BaseBackend):
         """
 
         es_index = self.es_id(collection_id)
+
+        if not self.conn.indices.exists(es_index):
+            LOGGER.debug('Index {es_index} does not exist.  Creating')
+            self.add_collection(es_index)
 
         def gendata(features):
             """
