@@ -8,35 +8,38 @@ wis2node is built with the intention of easy installation across operating syste
 Requirements and dependencies
 -----------------------------
 
-wis2node runs on `Python 3 <https://www.python.org/downloads/>`_ and `Docker 1.13.0+ <https://docs.docker.com/get-docker/>`_.
+wis2node runs on `Python`_ 3 and `Docker`_ 1.13.
 
-Core dependencies are installed as containers in the docker compose deployment of wis2node. This is true for 
-the software wis2node itself, which runs as a container orchestrating the necessary components of a node in the WIS network.
+Core dependencies are installed as containers in the Docker Compose deployment of wis2node. This
+is true for the software wis2node itself, which runs as a container orchestrating the necessary
+components of a node in the WIS 2 network.
 
-After Python and Docker are installed, wis2node needs to be installed. 
-
-github
-------
-
-`wis2node github <https://github.com/wmo-im/wis2node>`_
-
-.. code-block::
-
-    git clone https://github.com/wmo-im/wis2node.git
-    cd wis2node
+Once Python and Docker are installed, wis2node needs to be installed. 
 
 ZIP Archive
 -----------
 
-`Download wis2node ZIP archive <https://github.com/wmo-im/wis2node/archive/refs/heads/main.zip>`_
+.. code-block:: bash
 
-.. code-block::
-
-    # curl or any other tool
+    # curl, wget or download from your web browser 
     curl https://github.com/wmo-im/wis2node/archive/refs/heads/main.zip
     cd wis2node-main
 
+GitHub
+------
+
+.. code-block:: bash
+
+    # clone wis2node GitHub repository
+    git clone https://github.com/wmo-im/wis2node.git
+    cd wis2node
+
+
 Summary
 -------
+
 Congratulations! Whichever of the abovementioned methods you chose, you have successfully installed wis2node
 onto your system.
+
+.. _`Python`: https://www.python.org/downloads
+.. _`Docker`: https://docs.docker.com/get-docker

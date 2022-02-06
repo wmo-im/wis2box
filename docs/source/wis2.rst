@@ -7,9 +7,9 @@ and data management functions and is owned and operated by WMO Members.
 WIS provides an integrated approach suitable for all WMO Programmes to meet the requirements for routine
 collection and automated dissemination of observed data and products, as well as data discovery, access,
 and retrieval services for weather, climate, water, and related data produced by centres and Member
-countries in the framework of any WMO Programme.  It is capable of exchanging large data volumes, such
+countries in the framework of any WMO Programme. It is capable of exchanging large data volumes, such
 as new ground and satellite-based systems, finer resolutions in numerical weather prediction, and
-hydrological models and their applications.  These data and products must be available to National
+hydrological models and their applications. These data and products must be available to National
 Hydrological and Meteorological Services (NHMS), but also national disaster authorities for more timely
 alerts where and when needed.
 

@@ -3,9 +3,9 @@
 Overview
 ========
 
-wis2node is a Python reference implementation of a WMO WIS 2.0 node.  The project provides a
+wis2node is a Python reference implementation of a WMO WIS 2.0 node. The project provides a
 plug and play toolset to ingest, process, and publish weather/climate/water data using
-standards-based appraoches in alignment with the `WIS 2.0 principles`_.  In addition, wis2node
+standards-based approaches in alignment with the `WIS 2.0 principles`_. In addition, wis2node
 also provides a access to all data in the WIS 2.0 infrastructure from other wis2nodes and
 global centres.
 
