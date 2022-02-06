@@ -107,12 +107,15 @@ class ElasticBackend(BaseBackend):
 
         if self.is_dataset(es_index):
             LOGGER.debug('dataset index detected')
+            LOGGER.debug('creating index template')
             settings['index_patterns'] = [f'{es_template}*']
             settings['order'] = 0
             settings['version'] = 1
             self.conn.indices.put_template(es_template, settings)
 
-        self.conn.indices.create(index=es_index, body=settings)
+        else:
+            LOGGER.debug('metadata index detected')
+            self.conn.indices.create(index=es_index, body=settings)
 
         scheme = 'https' if self.port == 443 else 'http'
         return {
