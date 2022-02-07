@@ -19,9 +19,11 @@
 #
 ###############################################################################
 
+from copy import deepcopy
 import logging
 
 from elasticsearch import Elasticsearch, helpers
+from isodate import parse_date
 
 from wis2node.api.backend.base import BaseBackend
 
@@ -89,12 +91,31 @@ class ElasticBackend(BaseBackend):
         """
 
         es_index = self.es_id(collection_id)
+        es_template = f'{es_index}.'
+
         if self.conn.indices.exists(es_index):
             msg = f'index {es_index} exists'
             LOGGER.error(msg)
             raise RuntimeError(msg)
 
-        self.conn.indices.create(index=es_index, body=SETTINGS)
+        if self.conn.indices.exists_template(es_template):
+            msg = f'template {es_template} exists'
+            LOGGER.error(msg)
+            raise RuntimeError(msg)
+
+        settings = deepcopy(SETTINGS)
+
+        if self.is_dataset(es_index):
+            LOGGER.debug('dataset index detected')
+            LOGGER.debug('creating index template')
+            settings['index_patterns'] = [f'{es_template}*']
+            settings['order'] = 0
+            settings['version'] = 1
+            self.conn.indices.put_template(es_template, settings)
+
+        else:
+            LOGGER.debug('metadata index detected')
+            self.conn.indices.create(index=es_index, body=settings)
 
         scheme = 'https' if self.port == 443 else 'http'
         return {
@@ -114,12 +135,17 @@ class ElasticBackend(BaseBackend):
         """
 
         es_index = self.es_id(collection_id)
+        es_template = f'{es_index}.'
+
         if not self.conn.indices.exists(es_index):
             msg = f'index {es_index} does not exist'
             LOGGER.error(msg)
             raise RuntimeError(msg)
 
         self.conn.indices.delete(index=es_index)
+
+        if self.conn.indices.exists_template(es_template):
+            self.conn.indices.delete_template(es_template)
 
     def upsert_collection_items(self, collection_id: str, items: list) -> str:
         """
@@ -133,7 +159,8 @@ class ElasticBackend(BaseBackend):
 
         es_index = self.es_id(collection_id)
 
-        if not self.conn.indices.exists(es_index):
+        if (not self.is_dataset(es_index) and
+                not self.conn.indices.exists(es_index)):
             LOGGER.debug('Index {es_index} does not exist.  Creating')
             self.add_collection(es_index)
 
@@ -143,11 +170,16 @@ class ElasticBackend(BaseBackend):
             """
 
             for feature in features:
-                feature["properties"]["id"] = feature["id"]
+                es_index2 = es_index
+                feature['properties']['id'] = feature['id']
+                if self.is_dataset(collection_id):
+                    LOGGER.debug('Determinining index date from OM GeoJSON')
+                    date_ = parse_date(feature['properties']['phenomenonTime'])
+                    es_index2 = f"{es_index}.{date_.strftime('%Y-%m-%d')}"
                 yield {
-                    "_index": es_index,
-                    "_id": feature['id'],
-                    "_source": feature
+                    '_index': es_index2,
+                    '_id': feature['id'],
+                    '_source': feature
                 }
 
         helpers.bulk(self.conn, gendata(items))
@@ -163,6 +195,18 @@ class ElasticBackend(BaseBackend):
         """
 
         raise NotImplementedError()
+
+    def is_dataset(self, collection_id):
+        """
+        Check whether the index is a dataset (and thus
+        needs daily index management)
+
+        :param collection_id: name of collection
+
+        :returns: `bool` of evaluation
+        """
+
+        return '.' in collection_id
 
     def __repr__(self):
         return f'<BaseBackend> (host={self.host}, port={self.port})'

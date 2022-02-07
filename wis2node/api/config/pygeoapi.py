@@ -77,7 +77,7 @@ class PygeoapiConfig(BaseConfig):
             'providers': [{
                 'type': type_,
                 'name': provider_name,
-                'data': f"http://{API_BACKEND_HOST}:{API_BACKEND_PORT}/{meta.get('id')}",  # noqa
+                'data': f"http://{API_BACKEND_HOST}:{API_BACKEND_PORT}/{meta.get('id')}.*",  # noqa
                 'id_field': meta.get('id_field'),
                 'time_field': meta.get('time_field'),
                 'title_field': meta.get('title_field')
