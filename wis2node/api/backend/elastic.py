@@ -20,10 +20,12 @@
 ###############################################################################
 
 from copy import deepcopy
+from datetime import datetime, timedelta
 import logging
 
-from elasticsearch import Elasticsearch, helpers
 from isodate import parse_date
+from elasticsearch import Elasticsearch, helpers
+from parse import parse
 
 from wis2node.api.backend.base import BaseBackend
 
@@ -208,5 +210,31 @@ class ElasticBackend(BaseBackend):
 
         return '.' in collection_id
 
+    def delete_collections_by_retention(self, days: int) -> bool:
+        """
+        Delete collections by retention date
+
+        :param days: `int` of number of days
+
+        :returns: `None`
+        """
+
+        indices = self.conn.indices.get('*').keys()
+
+        pattern = '{index_name}.{YYYY:d}-{MM:d}-{dd:d}'
+        today = datetime.utcnow()
+
+        for index in indices:
+            match = parse(pattern, index)
+            if match:
+                index_date = datetime(
+                    match.named['YYYY'], match.named['MM'], match.named['dd']
+                )
+                if index_date < (today - timedelta(days=days)):
+                    LOGGER.debug('Index {index} older than {days) days')
+                    self.delete_collection(index)
+
+        return
+
     def __repr__(self):
-        return f'<BaseBackend> (host={self.host}, port={self.port})'
+        return f'<ElasticBackend> (host={self.host}, port={self.port})'

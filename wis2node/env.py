@@ -57,6 +57,11 @@ try:
 except TypeError:
     API_BACKEND_PORT = None
 
+try:
+    DATA_RETENTION_DAYS = int(os.environ.get('WIS2NODE_DATA_RETENTION'))
+except TypeError:
+    DATA_RETENTION_DAYS = None
+
 API_BACKEND_USERNAME = os.environ.get('WIS2NODE_API_BACKEND_USERNAME')
 API_BACKEND_PASSWORD = os.environ.get('WIS2NODE_API_BACKEND_PASSWORD')
 API_BACKEND_TYPE = os.environ.get('WIS2NODE_API_BACKEND_TYPE')
@@ -78,6 +83,7 @@ if 'WIS2NODE_DATADIR_DATA_MAPPINGS' in os.environ:
 
 
 if None in [
+    DATA_RETENTION_DAYS,
     DATADIR,
     DATADIR_CONFIG,
     DATADIR_INCOMING,

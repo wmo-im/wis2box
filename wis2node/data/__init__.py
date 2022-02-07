@@ -25,6 +25,7 @@ import logging
 import click
 
 from wis2node import cli_helpers
+from wis2node.env import DATA_RETENTION_DAYS
 from wis2node.handler import Handler
 from wis2node.topic_hierarchy import validate_and_load
 from wis2node.util import json_serial, walk_path
@@ -71,6 +72,21 @@ def show_info(topic_hierarchy: str) -> dict:
 def data():
     """data functions"""
     pass
+
+
+@click.command()
+@click.pass_context
+@click.option('--days', '-d', help='Number of days of data to keep')
+@cli_helpers.OPTION_VERBOSITY
+def clean(ctx, days, verbosity):
+    """Clean data directories and API indexes"""
+
+    if None in [days, DATA_RETENTION_DAYS]:
+        raise click.ClickException('missing number of days')
+
+    days_ = days or DATA_RETENTION_DAYS
+
+    click.echo(f'Deleting data older than {days_} day(s)')
 
 
 @click.command()

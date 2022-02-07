@@ -1,4 +1,5 @@
 isodate
+parse
 pygeometa
 pyoscar
 PyYAML

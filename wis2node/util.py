@@ -148,3 +148,11 @@ def yaml_dump(fh: str, content: dict) -> None:
     :returns: `None`
     """
     return yaml.safe_dump(content, fh, sort_keys=False, indent=4)
+
+def older_than(datedays: int) -> bool:
+    """
+    Calculates wh
+    """
+ 35 OPTION_TOPIC_HIERARCHY = click.option('--topic-hierarchy', '-th',
+ 36                                       help='Topic hierarchy')
+                if index_date < (today - timedelta(days=days)):

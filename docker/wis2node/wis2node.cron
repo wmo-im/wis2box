@@ -1,7 +1,7 @@
 ### Clean out files 
-# 0 * * * * /usr/bin/find $WIS2NODE_DATADIR_INCOMING -type f -mtime +$WIS2NODE_DATADIR_RETENTION_DAYS -exec rm {} \; > /dev/null 2>&1
-0 * * * * /usr/bin/find $WIS2NODE_DATADIR_OUTGOING -type f -mtime +$WIS2NODE_DATADIR_RETENTION_DAYS -exec rm {} \; > /dev/null 2>&1
-0 * * * * /usr/bin/find $WIS2NODE_DATADIR_PUBLIC -type f -mtime +$WIS2NODE_DATADIR_RETENTION_DAYS -exec rm {} \; > /dev/null 2>&1
+# 0 * * * * /usr/bin/find $WIS2NODE_DATADIR_INCOMING -type f -mtime +$WIS2NODE_DATA_RETENTION_DAYS -exec rm {} \; > /dev/null 2>&1
+0 * * * * /usr/bin/find $WIS2NODE_DATADIR_OUTGOING -type f -mtime +$WIS2NODE_DATA_RETENTION_DAYS -exec rm {} \; > /dev/null 2>&1
+0 * * * * /usr/bin/find $WIS2NODE_DATADIR_PUBLIC -type f -mtime +$WIS2NODE_DATA_RETENTION_DAYS -exec rm {} \; > /dev/null 2>&1
 
 ### Clean out empty directories
 # 0 * * * * /usr/bin/find $WIS2NODE_DATADIR_INCOMING -type d -empty -delete > /dev/null 2>&1
