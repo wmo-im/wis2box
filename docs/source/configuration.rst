@@ -4,11 +4,11 @@ Configuration
 =============
 
 Once you have installed wis2node, it is time to setup the configuration. wis2node runtime configuration is defined
-in the `Env <https://en.wikipedia.org/wiki/Env>`_ format in environment file named ``dev.env``.
+in the `Env`_ format in environment file named ``dev.env``.
 
 .. note::
 
-   A reference configuration can always be found in the wis2node `GitHub <https://github.com/wmo-im/wis2node/blob/main/wis2node.env>`_
+   A reference configuration can always be found in the wis2node `GitHub`_
    repository. The :ref:`quickstart` uses a variant of ``wis2node.env`` with mappings to the test data.
 
 wis2node environment variables can be thought about in the following core sections:
@@ -27,16 +27,21 @@ Reference
 
 The `wis2node directories` section provides control of directories on the host machine bound into the docker volume and wis2node. The default relationship
 below resembles the directory structure within the wis2node volume. Should the directory structure outside the docker volume not resemble the wis2node data directory, 
-subdirectories can be mapped from the host system into the wis2node volume
+subdirectories can be mapped from the host system into the wis2node volume.
+
+.. note::
+
+    Make sure to use absolute paths instead of relative paths. `${PWD}` provides that functionality in wis2node.env for linux/unix
+    based distributions. For users running on windows, replace `${PWD}` with the value of the `cd` command from the console.
 
 .. code-block:: 
 
     WIS2NODE_DATADIR=${PWD}/wis2node-data # host directory for wis2node volume
 
     WIS2NODE_DATADIR_CONFIG=$WIS2NODE_DATADIR/data/config # Config folder mapping to wis2node volume
-    WIS2NODE_DATADIR_INCOMING=$WIS2NODE_DATADIR/data/incoming # Incoming folder mapping to wis2node volume
-    WIS2NODE_DATADIR_OUTGOING=$WIS2NODE_DATADIR/data/outgoing # Outgoing folder mapping to wis2node volume
-    WIS2NODE_DATADIR_PUBLIC=$WIS2NODE_DATADIR/data/public # Public folder mapping  to wis2node volume
+    WIS2NODE_DATADIR_INCOMING=${WIS2NODE_DATADIR}/data/incoming # Incoming folder mapping to wis2node volume
+    WIS2NODE_DATADIR_OUTGOING=${WIS2NODE_DATADIR}/data/outgoing # Outgoing folder mapping to wis2node volume
+    WIS2NODE_DATADIR_PUBLIC=${WIS2NODE_DATADIR}/data/public # Public folder mapping  to wis2node volume
 
 ``wis2node configuration``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -75,3 +80,6 @@ Summary
 -------
 
 At this point, you have the configuration ready to start wis2node.
+
+.. _`Env`: https://en.wikipedia.org/wiki/Env
+.. _`Github`: https://github.com/wmo-im/wis2node/blob/main/wis2node.env

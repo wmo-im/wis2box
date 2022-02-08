@@ -39,7 +39,8 @@ Summary
 -------
 
 Congratulations! Whichever of the abovementioned methods you chose, you have successfully installed wis2node
-onto your system.
+onto your system. From here, you can get started with test data by following the :ref:`quickstart`, or continue on to 
+:ref:`configuration`.
 
 .. _`Python`: https://www.python.org/downloads
 .. _`Docker`: https://docs.docker.com/get-docker
