@@ -47,7 +47,7 @@ def generate_collection_metadata(mcf: dict) -> dict:
 
     print("TEST", discovery2)
     print("TEST", type(discovery2))
-    
+
     dm = discovery2.DiscoveryMetadata()
     record = dm.parse_record(mcf)
     generated = dm.generate(record)
