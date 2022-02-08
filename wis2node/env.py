@@ -35,40 +35,29 @@ with (Path(__file__).parent / 'resources' / 'data-mappings.yml').open() as fh:
 
 try:
     DATADIR = Path(os.environ.get('WIS2NODE_DATADIR'))
-    DATADIR_CONFIG = Path(os.environ.get('WIS2NODE_DATADIR_CONFIG'))
-    DATADIR_INCOMING = Path(os.environ.get('WIS2NODE_DATADIR_INCOMING'))
-    DATADIR_PUBLIC = Path(os.environ.get('WIS2NODE_DATADIR_PUBLIC'))
+    DATADIR_CONFIG = DATADIR / 'data' / 'config'
+    DATADIR_INCOMING = DATADIR / 'data' / 'incoming'
+    DATADIR_PUBLIC = DATADIR / 'data' / 'public'
+    DATADIR_ARCHIVE = DATADIR / 'data' / 'archive'
     API_CONFIG = Path(os.environ.get('WIS2NODE_API_CONFIG'))
 except (OSError, TypeError):
     msg = 'Configuration filepaths do not exist!'
     LOGGER.error(msg)
     raise EnvironmentError(msg)
 
-try:
-    DATADIR_ARCHIVE = Path(os.environ.get('WIS2NODE_DATADIR_ARCHIVE'))
-except (OSError, TypeError):
-    DATADIR_ARCHIVE = None
-
-OSCAR_API_TOKEN = os.environ.get('WIS2NODE_OSCAR_API_TOKEN')
 API_TYPE = os.environ.get('WIS2NODE_API_TYPE')
 API_URL = os.environ.get('WIS2NODE_API_URL')
+API_BACKEND_TYPE = os.environ.get('WIS2NODE_API_BACKEND_TYPE')
+API_BACKEND_URL = os.environ.get('WIS2NODE_API_BACKEND_URL')
 MQP_URL = os.environ.get('WIS2NODE_MQP_URL')
+OSCAR_API_TOKEN = os.environ.get('WIS2NODE_OSCAR_API_TOKEN')
 URL = os.environ.get('WIS2NODE_URL')
-API_BACKEND_HOST = os.environ.get('WIS2NODE_API_BACKEND_HOST')
-
-try:
-    API_BACKEND_PORT = int(os.environ.get('WIS2NODE_API_BACKEND_PORT'))
-except TypeError:
-    API_BACKEND_PORT = None
 
 try:
     DATA_RETENTION_DAYS = int(os.environ.get('WIS2NODE_DATA_RETENTION_DAYS'))
 except TypeError:
     DATA_RETENTION_DAYS = None
 
-API_BACKEND_USERNAME = os.environ.get('WIS2NODE_API_BACKEND_USERNAME')
-API_BACKEND_PASSWORD = os.environ.get('WIS2NODE_API_BACKEND_PASSWORD')
-API_BACKEND_TYPE = os.environ.get('WIS2NODE_API_BACKEND_TYPE')
 
 LOGLEVEL = os.environ.get('WIS2NODE_LOGGING_LOGLEVEL', 'ERROR')
 LOGFILE = os.environ.get('WIS2NODE_LOGGING_LOGFILE', 'stdout')

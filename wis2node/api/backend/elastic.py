@@ -53,24 +53,14 @@ class ElasticBackend(BaseBackend):
         """
         initializer
 
-        :param defs: `dict` of connection parameters
-                     (host, port, username, password)
+        :param defs: `dict` of connection parameters (RFC 1738 URL)
         """
 
         super().__init__(defs)
 
         self.type = 'Elasticsearch'
 
-        url_settings = f'{self.host}:{self.port}'
-
-        LOGGER.debug(f'URL settings: {url_settings}')
-
-        if None in [self.username, self.password]:
-            self.conn = Elasticsearch([url_settings])
-        else:
-            LOGGER.debug(f'Connecting using username {self.username}')
-            self.conn = Elasticsearch(
-                [url_settings], http_auth=(self.username, self.password))
+        self.conn = Elasticsearch([defs.get('url')])
 
     @staticmethod
     def es_id(collection_id: str) -> str:

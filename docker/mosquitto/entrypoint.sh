@@ -1,5 +1,6 @@
 #!/bin/sh
 
-mosquitto_passwd -b -c /mosquitto/config/password.txt $METPX_SR3_BROKER_USERNAME $METPX_SR3_BROKER_PASSWORD
+# FIXME: derive credentials from env
+mosquitto_passwd -b -c /mosquitto/config/password.txt wis2node wis2node
 
 /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf

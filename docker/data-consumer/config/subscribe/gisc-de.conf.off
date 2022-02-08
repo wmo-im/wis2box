@@ -20,7 +20,7 @@ reject .*/webcam/.*
 
 strip 1 
 mirror
-directory ${WIS2NODE_DATADIR}/public/${YYYYMMDD}T${HH}
+directory ${WIS2NODE_DATADIR}/data/public/${YYYYMMDD}T${HH}
 accept .*
 exchange wisof
 
