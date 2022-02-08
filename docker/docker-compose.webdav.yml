@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  webdav:
+    image: bytemark/webdav
+    container_name: wis2box-webdav-incoming
+    environment:
+      AUTH_TYPE: Digest
+      USERNAME: ${WEBDAV_USERNAME}
+      PASSWORD: ${WEBDAV_PWD}
+    ports:
+      - 80:80
+    volumes:  
+      - ${WIS2NODE_DATADIR_INCOMING}:/var/lib/dav/data/incoming
+      - ${WIS2NODE_DATADIR_PUBLIC}:/var/lib/dav/data/public
