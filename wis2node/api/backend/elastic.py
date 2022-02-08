@@ -222,7 +222,7 @@ class ElasticBackend(BaseBackend):
 
         return
 
-    def _is_dataset(self, collection_id):
+    def _is_dataset(self, collection_id) -> bool:
         """
         Check whether the index is a dataset (and thus
         needs daily index management)
