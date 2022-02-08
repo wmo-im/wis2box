@@ -22,7 +22,7 @@
 import click
 import logging
 
-from wis2node.metadata.discovery import discovery
+from wis2node.metadata.discovery import discovery2
 from wis2node.metadata.station import station
 
 LOGGER = logging.getLogger(__name__)
@@ -34,5 +34,5 @@ def metadata():
     pass
 
 
-metadata.add_command(discovery)
+metadata.add_command(discovery2)
 metadata.add_command(station)
