@@ -127,8 +127,8 @@ def publish_collection() -> bool:
     return True
 
 
-@click.group()
-def discovery():
+@click.group('discovery')
+def discovery_metadata():
     """Discovery metadata management"""
     pass
 
@@ -166,5 +166,5 @@ def unpublish(ctx, identifier, verbosity):
     backend.delete_collection_item('discovery-metadata', identifier)
 
 
-discovery.add_command(publish)
-discovery.add_command(unpublish)
+discovery_metadata.add_command(publish)
+discovery_metadata.add_command(unpublish)

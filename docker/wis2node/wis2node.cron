@@ -1,0 +1,5 @@
+# Clean out files older than WIS2NODE_DATA_RETENTION_DAYS daily at 0Z
+0 * * * * wis2node data clean --days=$WIS2NODE_DATA_RETENTION_DAYS
+
+# Archive data daily at 1Z
+1 * * * * wis2node data clean --days=$WIS2NODE_DATA_RETENTION_DAYS

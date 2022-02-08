@@ -85,5 +85,16 @@ class BaseBackend:
 
         raise NotImplementedError()
 
+    def delete_collections_by_retention(self, days: int) -> None:
+        """
+        Delete collections by retention date
+
+        :param days: `int` of number of days
+
+        :returns: `None`
+        """
+
+        raise NotImplementedError()
+
     def __repr__(self):
         return f'<BaseBackend> (host={self.host}, port={self.port})'

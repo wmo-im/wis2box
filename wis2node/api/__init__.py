@@ -27,7 +27,7 @@ from wis2node import cli_helpers
 from wis2node.env import API_CONFIG
 from wis2node.handler import Handler
 from wis2node.api.backend import load_backend
-import wis2node.metadata.discovery as discovery
+import wis2node.metadata.discovery as discovery_
 from wis2node.topic_hierarchy import validate_and_load
 from wis2node.util import walk_path, yaml_load, yaml_dump
 
@@ -45,7 +45,7 @@ def generate_collection_metadata(mcf: dict) -> dict:
 
     LOGGER.debug('Parsing discovery metadata')
 
-    dm = discovery.DiscoveryMetadata()
+    dm = discovery_.DiscoveryMetadata()
     record = dm.parse_record(mcf)
     generated = dm.generate(record)
 
@@ -83,9 +83,7 @@ def add_collection_items(ctx, topic_hierarchy, path, recursive, verbosity):
 
     click.echo(f'Adding GeoJSON files to collection: {topic_hierarchy}')
     for file_to_process in walk_path(path, '.*.geojson$', recursive):
-
         click.echo(f'Adding {file_to_process}')
-
         handler = Handler(file_to_process, topic_hierarchy)
         handler.publish(backend)
 

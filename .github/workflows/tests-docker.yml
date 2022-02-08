@@ -7,8 +7,6 @@ jobs:
     strategy:
       fail-fast: false
     runs-on: ubuntu-latest
-    env:
-      FOO: bar
 
     steps:
     - uses: actions/checkout@v2
@@ -32,7 +30,7 @@ jobs:
         python3 wis2node-ctl.py status
     - name: generate wis2node collection
       run: |
-        docker exec `docker ps -q --filter ancestor=wis2node_wis2node` sh -c " \
+        docker exec `docker ps -q --filter ancestor=wis2node_project_wis2node` sh -c " \
           wis2node environment create \
           && wis2node environment show \
           && wis2node data setup --topic-hierarchy observations-surface-land.mw.FWCL.landFixed \

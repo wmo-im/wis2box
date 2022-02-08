@@ -20,8 +20,9 @@
 ###############################################################################
 
 from base64 import b64encode
-from datetime import date, datetime, time
+from datetime import date, datetime, time, timedelta
 from decimal import Decimal
+import isodate
 import logging
 import os
 from pathlib import Path
@@ -148,3 +149,23 @@ def yaml_dump(fh: str, content: dict) -> None:
     :returns: `None`
     """
     return yaml.safe_dump(content, fh, sort_keys=False, indent=4)
+
+
+def older_than(datetime_: str, days: int) -> bool:
+    """
+    Calculates whether a given datetime is older than n days
+
+    :param datetime_: `str` of datetime
+    :param days: `int` of number of days
+
+    :returns: `bool` of whether datetime_ is older than n days
+    """
+
+    today = datetime.utcnow().date()
+
+    LOGGER.debug(f'Datetime string {datetime_}')
+    dt = isodate.parse_date(datetime_)
+
+    delta = today - timedelta(days=days)
+
+    return dt < delta

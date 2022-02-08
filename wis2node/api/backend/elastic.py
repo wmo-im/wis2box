@@ -23,9 +23,11 @@ from copy import deepcopy
 import logging
 
 from elasticsearch import Elasticsearch, helpers
+from parse import parse
 from isodate import parse_date
 
 from wis2node.api.backend.base import BaseBackend
+from wis2node.util import older_than
 
 LOGGER = logging.getLogger(__name__)
 
@@ -105,7 +107,7 @@ class ElasticBackend(BaseBackend):
 
         settings = deepcopy(SETTINGS)
 
-        if self.is_dataset(es_index):
+        if self._is_dataset(es_index):
             LOGGER.debug('dataset index detected')
             LOGGER.debug('creating index template')
             settings['index_patterns'] = [f'{es_template}*']
@@ -159,7 +161,7 @@ class ElasticBackend(BaseBackend):
 
         es_index = self.es_id(collection_id)
 
-        if (not self.is_dataset(es_index) and
+        if (not self._is_dataset(es_index) and
                 not self.conn.indices.exists(es_index)):
             LOGGER.debug('Index {es_index} does not exist.  Creating')
             self.add_collection(es_index)
@@ -172,7 +174,7 @@ class ElasticBackend(BaseBackend):
             for feature in features:
                 es_index2 = es_index
                 feature['properties']['id'] = feature['id']
-                if self.is_dataset(collection_id):
+                if self._is_dataset(collection_id):
                     LOGGER.debug('Determinining index date from OM GeoJSON')
                     date_ = parse_date(feature['properties']['phenomenonTime'])
                     es_index2 = f"{es_index}.{date_.strftime('%Y-%m-%d')}"
@@ -196,7 +198,31 @@ class ElasticBackend(BaseBackend):
 
         raise NotImplementedError()
 
-    def is_dataset(self, collection_id):
+    def delete_collections_by_retention(self, days: int) -> bool:
+        """
+        Delete collections by retention date
+
+        :param days: `int` of number of days
+
+        :returns: `None`
+        """
+
+        indices = self.conn.indices.get('*').keys()
+
+        pattern = '{index_name}.{Y:d}-{M:d}-{d:d}'
+
+        for index in indices:
+            match = parse(pattern, index)
+            if match:
+                idx = f"{match.named['Y']}-{match.named['M']}-{match.named['d']}"  # noqa
+                if older_than(idx, days):
+                    LOGGER.debug(f'Index {index} older than {days} days')
+                    LOGGER.debug('Deleting')
+                    self.delete_collection(index)
+
+        return
+
+    def _is_dataset(self, collection_id) -> bool:
         """
         Check whether the index is a dataset (and thus
         needs daily index management)
@@ -209,4 +235,4 @@ class ElasticBackend(BaseBackend):
         return '.' in collection_id
 
     def __repr__(self):
-        return f'<BaseBackend> (host={self.host}, port={self.port})'
+        return f'<ElasticBackend> (host={self.host}, port={self.port})'
