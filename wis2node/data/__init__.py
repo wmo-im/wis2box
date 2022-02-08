@@ -19,6 +19,7 @@
 #
 ###############################################################################
 
+from datetime import datetime
 import json
 import logging
 from pathlib import Path
@@ -28,12 +29,33 @@ import click
 
 from wis2node import cli_helpers
 from wis2node.api.backend import load_backend
-from wis2node.env import DATADIR_PUBLIC, DATA_RETENTION_DAYS
+from wis2node.env import (DATADIR_ARCHIVE, DATADIR_INCOMING, DATADIR_PUBLIC,
+                          DATA_RETENTION_DAYS)
 from wis2node.handler import Handler
 from wis2node.topic_hierarchy import validate_and_load
 from wis2node.util import json_serial, older_than, walk_path
 
 LOGGER = logging.getLogger(__name__)
+
+
+def archive_data(source_directory: Path, target_directory: Path) -> None:
+    """
+    Move data into archive directory based on today's date (YYYY-MM-DD)
+
+    :param source_directory: `Path` of directory to archive
+    :param target_directory: base `Path` of archive directory
+
+    :returns: `None`
+    """
+
+    today_dir = DATADIR_ARCHIVE / datetime.now().date().strftime('%Y-%m-%d')
+    LOGGER.debug(f'Archive directory {today_dir}')
+
+    for file_or_dir in source_directory.glob('*'):
+        LOGGER.debug(f'Moving {file_or_dir} to {today_dir}')
+        shutil.move(file_or_dir, today_dir / file_or_dir.name)
+
+    return
 
 
 def clean_data(directory: Path, days: int) -> None:
@@ -105,6 +127,16 @@ def data():
 
 @click.command()
 @click.pass_context
+@cli_helpers.OPTION_VERBOSITY
+def archive(ctx, verbosity):
+    """Move data from incoming to Archive directory"""
+
+    click.echo(f'Archiving data from {DATADIR_INCOMING} to {DATADIR_ARCHIVE}')
+    archive_data(DATADIR_INCOMING, DATADIR_ARCHIVE)
+
+
+@click.command()
+@click.pass_context
 @click.option('--days', '-d', help='Number of days of data to keep')
 @cli_helpers.OPTION_VERBOSITY
 def clean(ctx, days, verbosity):
@@ -162,6 +194,7 @@ def ingest(ctx, topic_hierarchy, path, recursive, verbosity):
     click.echo("Done")
 
 
+data.add_command(archive)
 data.add_command(clean)
 data.add_command(info)
 data.add_command(ingest)

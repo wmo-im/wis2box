@@ -44,6 +44,12 @@ except (OSError, TypeError):
     LOGGER.error(msg)
     raise EnvironmentError(msg)
 
+try:
+    DATADIR_ARCHIVE = Path(os.environ.get('WIS2NODE_DATADIR_ARCHIVE'))
+except (OSError, TypeError):
+    print("JJJJ")
+    DATADIR_ARCHIVE = None
+
 OSCAR_API_TOKEN = os.environ.get('WIS2NODE_OSCAR_API_TOKEN')
 API_TYPE = os.environ.get('WIS2NODE_API_TYPE')
 API_URL = os.environ.get('WIS2NODE_API_URL')
