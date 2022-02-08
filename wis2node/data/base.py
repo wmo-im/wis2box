@@ -22,8 +22,7 @@
 import logging
 from typing import Union
 
-from wis2node.env import (DATADIR_CONFIG, DATADIR_INCOMING, DATADIR_OUTGOING,
-                          DATADIR_PUBLIC)
+from wis2node.env import DATADIR_CONFIG, DATADIR_INCOMING, DATADIR_PUBLIC
 from wis2node.topic_hierarchy import TopicHierarchy
 
 LOGGER = logging.getLogger(__name__)
@@ -142,15 +141,8 @@ class BaseAbstractData:
         return {
             'config': DATADIR_CONFIG / dirpath,
             'incoming': DATADIR_INCOMING / dirpath,
-            'outgoing': DATADIR_OUTGOING / dirpath,
             # 'public': DATADIR_PUBLIC / dirpath
         }
-
-    @property
-    def outgoing_filepath(self):
-        """Outgoing filepath"""
-
-        return DATADIR_OUTGOING / self.filename
 
     def get_public_filepath(self):
         """Public filepath"""

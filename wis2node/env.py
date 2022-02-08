@@ -37,7 +37,6 @@ try:
     DATADIR = Path(os.environ.get('WIS2NODE_DATADIR'))
     DATADIR_CONFIG = Path(os.environ.get('WIS2NODE_DATADIR_CONFIG'))
     DATADIR_INCOMING = Path(os.environ.get('WIS2NODE_DATADIR_INCOMING'))
-    DATADIR_OUTGOING = Path(os.environ.get('WIS2NODE_DATADIR_OUTGOING'))
     DATADIR_PUBLIC = Path(os.environ.get('WIS2NODE_DATADIR_PUBLIC'))
     API_CONFIG = Path(os.environ.get('WIS2NODE_API_CONFIG'))
 except (OSError, TypeError):
@@ -56,6 +55,11 @@ try:
     API_BACKEND_PORT = int(os.environ.get('WIS2NODE_API_BACKEND_PORT'))
 except TypeError:
     API_BACKEND_PORT = None
+
+try:
+    DATA_RETENTION_DAYS = int(os.environ.get('WIS2NODE_DATA_RETENTION_DAYS'))
+except TypeError:
+    DATA_RETENTION_DAYS = None
 
 API_BACKEND_USERNAME = os.environ.get('WIS2NODE_API_BACKEND_USERNAME')
 API_BACKEND_PASSWORD = os.environ.get('WIS2NODE_API_BACKEND_PASSWORD')
@@ -81,7 +85,6 @@ if None in [
     DATADIR,
     DATADIR_CONFIG,
     DATADIR_INCOMING,
-    DATADIR_OUTGOING,
     DATADIR_PUBLIC,
     OSCAR_API_TOKEN,
     API_TYPE,
@@ -113,7 +116,6 @@ def create(ctx, verbosity):
     DATADIR.mkdir(parents=True, exist_ok=True)
     DATADIR_CONFIG.mkdir(parents=True, exist_ok=True)
     DATADIR_INCOMING.mkdir(parents=True, exist_ok=True)
-    DATADIR_OUTGOING.mkdir(parents=True, exist_ok=True)
     DATADIR_PUBLIC.mkdir(parents=True, exist_ok=True)
     (DATADIR / 'cache').mkdir(parents=True, exist_ok=True)
     (DATADIR / 'config').mkdir(parents=True, exist_ok=True)

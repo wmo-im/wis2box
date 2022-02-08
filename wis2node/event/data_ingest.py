@@ -49,7 +49,7 @@ class Event(FlowCB):
                 if handler.handle():
                     LOGGER.debug('Data processed')
                     for filepath_out in handler.plugin.files():
-                        LOGGER.debug(f'Outgoing filepath: {filepath_out}')
+                        LOGGER.debug(f'Public filepath: {filepath_out}')
                         message = Message.fromFileData(
                             filepath_out,
                             self.options,

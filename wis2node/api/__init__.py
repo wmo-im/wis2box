@@ -83,9 +83,7 @@ def add_collection_items(ctx, topic_hierarchy, path, recursive, verbosity):
 
     click.echo(f'Adding GeoJSON files to collection: {topic_hierarchy}')
     for file_to_process in walk_path(path, '.*.geojson$', recursive):
-
         click.echo(f'Adding {file_to_process}')
-
         handler = Handler(file_to_process, topic_hierarchy)
         handler.publish(backend)
 

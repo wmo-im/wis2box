@@ -71,6 +71,11 @@ class ObservationData(BaseAbstractData):
             raise ValueError(msg)
 
         sm = DATADIR / 'metadata' / 'station' / f'{wsi}.json'
+        if not sm.exists():
+            msg = f'Missing station metadata file {sm}'
+            LOGGER.error(msg)
+            raise FileNotFoundError(msg)
+
         with sm.open() as fh1:
             self.station_metadata = json.load(fh1)
 
