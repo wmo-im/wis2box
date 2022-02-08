@@ -47,7 +47,6 @@ except (OSError, TypeError):
 try:
     DATADIR_ARCHIVE = Path(os.environ.get('WIS2NODE_DATADIR_ARCHIVE'))
 except (OSError, TypeError):
-    print("JJJJ")
     DATADIR_ARCHIVE = None
 
 OSCAR_API_TOKEN = os.environ.get('WIS2NODE_OSCAR_API_TOKEN')

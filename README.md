@@ -127,6 +127,9 @@ wis2node api delete-collection --topic-hierarchy foo.bar.baz
 
 # clean data
 wis2node data clean --days 30
+
+# archive data
+wis2node data archive
 ```
 
 ## Development workflows
