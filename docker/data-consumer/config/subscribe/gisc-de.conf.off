@@ -20,7 +20,7 @@ reject .*/webcam/.*
 
 strip 1 
 mirror
-directory ${METPX_SR3_PATH_PUBLIC}/${YYYYMMDD}T${HH}
+directory ${WIS2NODE_DATADIR}/public/${YYYYMMDD}T${HH}
 accept .*
 exchange wisof
 
