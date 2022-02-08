@@ -117,6 +117,7 @@ services:
       - WIS2NODE_DATADIR_CONFIG=/data/wis2node/data/config
       - WIS2NODE_DATADIR_INCOMING=/data/wis2node/data/incoming
       - WIS2NODE_DATADIR_PUBLIC=/data/wis2node/data/public
+      - WIS2NODE_DATADIR_ARCHIVE=/data/wis2node/data/archive
       - WIS2NODE_OSCAR_API_TOKEN=${WIS2NODE_OSCAR_API_TOKEN}
       - WIS2NODE_API_TYPE=${WIS2NODE_API_TYPE}
       - WIS2NODE_API_URL=${WIS2NODE_API_URL}
@@ -134,6 +135,7 @@ services:
       - ${WIS2NODE_DATADIR_CONFIG}:/data/wis2node/data/config:rw
       - ${WIS2NODE_DATADIR_INCOMING}:/data/wis2node/data/incoming:rw
       - ${WIS2NODE_DATADIR_PUBLIC}:/data/wis2node/data/public:rw
+      - ${WIS2NODE_DATADIR_ARCHIVE}:/data/wis2node/data/archive:rw
     depends_on:
       - mosquitto
 volumes:

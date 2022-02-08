@@ -48,6 +48,11 @@ def archive_data(source_directory: Path, target_directory: Path) -> None:
     :returns: `None`
     """
 
+    if not target_directory.exists():
+        msg = f'Directory {target_directory} does not exist'
+        LOGGER.error(msg)
+        raise FileNotFoundError(msg)
+
     today_dir = DATADIR_ARCHIVE / datetime.now().date().strftime('%Y-%m-%d')
     LOGGER.debug(f'Archive directory {today_dir}')
 
