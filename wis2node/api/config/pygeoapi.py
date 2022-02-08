@@ -22,8 +22,7 @@
 import logging
 
 from wis2node.api.config.base import BaseConfig
-from wis2node.env import (API_BACKEND_TYPE, API_BACKEND_HOST,
-                          API_BACKEND_PORT, API_CONFIG)
+from wis2node.env import API_BACKEND_TYPE, API_BACKEND_URL, API_CONFIG
 from wis2node.util import yaml_dump, yaml_load
 
 LOGGER = logging.getLogger(__name__)
@@ -77,7 +76,7 @@ class PygeoapiConfig(BaseConfig):
             'providers': [{
                 'type': type_,
                 'name': provider_name,
-                'data': f"http://{API_BACKEND_HOST}:{API_BACKEND_PORT}/{meta.get('id')}.*",  # noqa
+                'data': f"{API_BACKEND_URL}/{meta.get('id')}.*",  # noqa
                 'id_field': meta.get('id_field'),
                 'time_field': meta.get('time_field'),
                 'title_field': meta.get('title_field')

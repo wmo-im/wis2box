@@ -41,6 +41,8 @@ try:
     DATADIR_ARCHIVE = DATADIR / 'data' / 'archive'
     API_CONFIG = Path(os.environ.get('WIS2NODE_API_CONFIG'))
 except (OSError, TypeError):
+    import traceback
+    print(traceback.format_exc())
     msg = 'Configuration filepaths do not exist!'
     LOGGER.error(msg)
     raise EnvironmentError(msg)
