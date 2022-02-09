@@ -3,71 +3,81 @@
 Configuration
 =============
 
-Once you have installed wis2node, it is time to setup the configuration. wis2node runtime configuration is defined
+Once you have installed wis2box, it is time to setup the configuration. wis2box runtime configuration is defined
 in the `Env`_ format in environment file named ``dev.env``.
 
 .. note::
 
-   A reference configuration can always be found in the wis2node `GitHub`_
-   repository. The :ref:`quickstart` uses a variant of ``wis2node.env`` with mappings to the test data.
+   A reference configuration can always be found in the wis2box `GitHub`_
+   repository. The :ref:`quickstart` uses a variant of ``wis2box.env`` with mappings to the test data.
 
-wis2node environment variables can be thought about in the following core sections:
+wis2box environment variables can be thought about in the following core sections:
 
-- ``wis2node directories``: directories to mount in the wis2node docker volume
-- ``wis2node configuration``: configuration options for wis2node
-- ``pub/sub configuration``: MetPX Sarracenia options
+- ``wis2box directories``: directory configuaration for wis2box
+- ``wis2box api``: api configuration for wis2box
+- ``wis2box logging``: logging configuaration for wis2box
+- ``wis2box configuration``: miscellaneous configuration for wis2box
+- ``MQP``: MetPX Sarracenia options
 
-Configuration directives and reference are described below via annotated examples.
+Configuration directives and reference are described below via annotated examples. This should reflect any changes made to 
+``docker-compose.yml`` and ``docker-compose.override.yml``.
 
 Reference
 ---------
 
-``wis2node directories``
-^^^^^^^^^^^^^^^^^^^^^^^^
+``wis2box directories``
+^^^^^^^^^^^^^^^^^^^^^^^
 
-The `wis2node directories` section provides control of directories on the host machine bound into the docker volume and wis2node. The default relationship
-below resembles the directory structure within the wis2node volume. Should the directory structure outside the docker volume not resemble the wis2node data directory, 
-subdirectories can be mapped from the host system into the wis2node volume.
+The `wis2box directories` section provides control of directories on the host machine bound into the docker volume and wis2box. The default relationship
+below resembles the directory structure within the wis2box volume.
 
 .. note::
 
-    Make sure to use absolute paths instead of relative paths. `${PWD}` provides that functionality in wis2node.env for linux/unix
-    based distributions. For users running on windows, replace `${PWD}` with the value of the `cd` command from the console.
+    Make sure to use absolute paths instead of relative paths. ``${PWD}`` provides that functionality in wis2box.env for linux/unix
+    based distributions. For users running on windows, replace ``${PWD}`` with the value of the ``cd`` command from the console.
 
 .. code-block:: 
 
-    WIS2NODE_DATADIR=${PWD}/wis2node-data # host directory for wis2node volume
+    WIS2BOX_DATADIR=${PWD}/wis2box-data # host directory for wis2box volume
+    WIS2BOX_DATA_RETENTION_DAYS=7 # wis2box data retention time
 
-    WIS2NODE_DATADIR_CONFIG=$WIS2NODE_DATADIR/data/config # Config folder mapping to wis2node volume
-    WIS2NODE_DATADIR_INCOMING=${WIS2NODE_DATADIR}/data/incoming # Incoming folder mapping to wis2node volume
-    WIS2NODE_DATADIR_OUTGOING=${WIS2NODE_DATADIR}/data/outgoing # Outgoing folder mapping to wis2node volume
-    WIS2NODE_DATADIR_PUBLIC=${WIS2NODE_DATADIR}/data/public # Public folder mapping  to wis2node volume
+``wis2box api``
+^^^^^^^^^^^^^^^
 
-``wis2node configuration``
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+The `wis2box api` section provides control of the Open API for wis2box and the data backend. 
 
-The `wis2node configuration` section provides control of configuration options for the deployment of wis2node. This should reflect any changes made to 
-`docker-compose.yml` and `docker-compose.override.yml`. 
+.. code-block::
+
+    WIS2BOX_API_TYPE=pygeoapi # Open API backend
+    WIS2BOX_API_URL=http://localhost:8999/pygeoapi # Open API URL
+    WIS2BOX_API_CONFIG=${PWD}/docker/pygoeoapi/pygeoapi-config.yml # Open API configuration file
+    WIS2BOX_API_BACKEND_TYPE=Elasticsearch # Open API backend provider
+    WIS2BOX_API_BACKEND_URL=http://elasticsearch:9200 # Open API backend URL
+
+``wis2box logging``
+^^^^^^^^^^^^^^^^^^^
+
+The `wis2box logging` section provides control over wis2box logging.
+
+.. code-block::
+
+    WIS2BOX_LOGGING_LOGLEVEL=ERROR
+    WIS2BOX_LOGGING_LOGFILE=stdout
+
+``wis2box configuration``
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The `wis2box configuration` section provides control of configuration options for the deployment of wis2box.  
 
 .. code-block:: 
 
     WIS2NODE_OSCAR_API_TOKEN=some_token 
     WIS2NODE_URL=http://localhost:8999/ # wis2node url
-    WIS2NODE_MQP_URL=http://localhost:1883 # wis2node pub/sub url
-    WIS2NODE_API_URL=http://localhost:8999/pygeoapi # wis2node open api url
-    WIS2NODE_API_CONFIG=${PWD}/docker/pygeoapi/pygeoapi-config.yml # wis2node open api configuration
-    WIS2NODE_API_BACKEND_TYPE=Elasticsearch # wis2node api backend
-    WIS2NODE_API_BACKEND_HOST=elasticsearch # wis2node api backend hostname
-    WIS2NODE_API_BACKEND_PORT=9200 # wis2node api backend port
-    WIS2NODE_API_BACKEND_USERNAME=wis2node # wis2node api backend username
-    WIS2NODE_API_BACKEND_PASSWORD=wis2node # wis2node api backend password
-    WIS2NODE_LOGGING_LOGLEVEL=ERROR # wis2node logging level
-    WIS2NODE_LOGGING_LOGFILE=stdout # wisn2ode logging location
 
-``pub/sub configuration``
-^^^^^^^^^^^^^^^^^^^^^^^^^
+``MQP``
+^^^^^^^
 
-The `pub/sub configuration` section provides control of MetPX Sarracenia configuration options.
+The ``pub/sub configuration`` section provides control of MetPX Sarracenia configuration options.
 
 .. code-block::
 
