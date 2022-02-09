@@ -6,7 +6,7 @@ services:
     image: nginx:alpine
     restart: always
     env_file:
-      - default.env
+      - docker.env
     depends_on:
       - wis2node-ui
     volumes:
@@ -25,7 +25,7 @@ services:
     build:
       context: ./pygeoapi
     env_file:
-      - default.env
+      - docker.env
     environment:
       - SCRIPT_NAME=/pygeoapi
     depends_on:
@@ -64,7 +64,7 @@ services:
     build:
       context: ./mosquitto
     env_file:
-      - default.env
+      - docker.env
     volumes:
       - wis2node-data:/data/wis2node:rw
 
@@ -75,7 +75,7 @@ services:
       context: ./data-consumer
     #user: sarra:sarra
     env_file:
-      - default.env
+      - docker.env
     volumes:
       - wis2node-data:/data/wis2node:rw
       - ${WIS2NODE_DATADIR}/data/incoming:/data/wis2node/data/incoming:rw
@@ -90,7 +90,7 @@ services:
         WIS2NODE_PIP3_EXTRA_PACKAGES: ${WIS2NODE_PIP3_EXTRA_PACKAGES}
     #user: wis2node:wis2node
     env_file:
-      - default.env
+      - docker.env
     volumes:
       - wis2node-data:/data/wis2node:rw
       - ./wis2node/config:/root/.config/sr3:ro
