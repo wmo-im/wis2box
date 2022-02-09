@@ -23,6 +23,7 @@ import click
 import logging
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 from wis2node import cli_helpers
 from wis2node.util import yaml_load
@@ -51,9 +52,12 @@ API_TYPE = os.environ.get('WIS2NODE_API_TYPE')
 API_URL = os.environ.get('WIS2NODE_API_URL')
 API_BACKEND_TYPE = os.environ.get('WIS2NODE_API_BACKEND_TYPE')
 API_BACKEND_URL = os.environ.get('WIS2NODE_API_BACKEND_URL').rstrip('/')
-MQP_URL = os.environ.get('WIS2NODE_MQP_URL')
 OSCAR_API_TOKEN = os.environ.get('WIS2NODE_OSCAR_API_TOKEN')
 URL = os.environ.get('WIS2NODE_URL')
+
+BROKER = os.environ.get('WIS2NODE_BROKER')
+broker_url = urlparse(BROKER)
+MQP_URL = f'{broker_url.scheme}://{broker_url.hostname}/'
 
 try:
     DATA_RETENTION_DAYS = int(os.environ.get('WIS2NODE_DATA_RETENTION_DAYS'))

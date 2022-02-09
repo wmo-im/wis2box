@@ -26,7 +26,6 @@ import sys
 DOCKER_COMPOSE_ARGS = """
     -f docker/docker-compose.yml
     -f docker/docker-compose.override.yml
-    --env-file dev.env
     -p wis2node_project
     """
 
