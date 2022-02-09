@@ -57,7 +57,12 @@ URL = os.environ.get('WIS2NODE_URL')
 
 BROKER = os.environ.get('WIS2NODE_BROKER')
 broker_url = urlparse(BROKER)
-MQP_URL = f'{broker_url.scheme}://{broker_url.hostname}/'
+if broker_url.port is not None:
+    broker_url_port = f':{broker_url.port}'
+else:
+    broker_url_port = ''
+
+MQP_URL = f'{broker_url.scheme}://{broker_url.hostname}{broker_url_port}/'
 
 try:
     DATA_RETENTION_DAYS = int(os.environ.get('WIS2NODE_DATA_RETENTION_DAYS'))
