@@ -50,7 +50,7 @@ except (OSError, TypeError):
 API_TYPE = os.environ.get('WIS2NODE_API_TYPE')
 API_URL = os.environ.get('WIS2NODE_API_URL')
 API_BACKEND_TYPE = os.environ.get('WIS2NODE_API_BACKEND_TYPE')
-API_BACKEND_URL = os.environ.get('WIS2NODE_API_BACKEND_URL')
+API_BACKEND_URL = os.environ.get('WIS2NODE_API_BACKEND_URL').rstrip('/')
 MQP_URL = os.environ.get('WIS2NODE_MQP_URL')
 OSCAR_API_TOKEN = os.environ.get('WIS2NODE_OSCAR_API_TOKEN')
 URL = os.environ.get('WIS2NODE_URL')

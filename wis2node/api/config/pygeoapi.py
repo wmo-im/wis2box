@@ -53,8 +53,10 @@ class PygeoapiConfig(BaseConfig):
 
         if type_ == 'feature':
             provider_name = API_BACKEND_TYPE
+            resource_id = f"{meta.get('id')}.*"
         elif type_ == 'record':
             provider_name = f'{API_BACKEND_TYPE}Catalogue'
+            resource_id = meta.get('id')
 
         collection = {
             'type': 'collection',
@@ -76,7 +78,7 @@ class PygeoapiConfig(BaseConfig):
             'providers': [{
                 'type': type_,
                 'name': provider_name,
-                'data': f"{API_BACKEND_URL}/{meta.get('id')}.*",  # noqa
+                'data': f"{API_BACKEND_URL}/{resource_id}",  # noqa
                 'id_field': meta.get('id_field'),
                 'time_field': meta.get('time_field'),
                 'title_field': meta.get('title_field')
