@@ -59,8 +59,9 @@ class ElasticBackend(BaseBackend):
         super().__init__(defs)
 
         self.type = 'Elasticsearch'
+        self.url = defs.get('url').rstrip('/')
 
-        self.conn = Elasticsearch([defs.get('url')])
+        self.conn = Elasticsearch([self.url])
 
     @staticmethod
     def es_id(collection_id: str) -> str:
@@ -109,11 +110,10 @@ class ElasticBackend(BaseBackend):
             LOGGER.debug('metadata index detected')
             self.conn.indices.create(index=es_index, body=settings)
 
-        scheme = 'https' if self.port == 443 else 'http'
         return {
             'type': 'feature',
             'name': 'Elasticsearch',
-            'data': f'{scheme}://{self.host}:{self.port}/{es_index}',
+            'data': f'{self.url}/{es_index}',
             'id_field': 'id'
         }
 
@@ -225,4 +225,4 @@ class ElasticBackend(BaseBackend):
         return '.' in collection_id
 
     def __repr__(self):
-        return f'<ElasticBackend> (host={self.host}, port={self.port})'
+        return f'<ElasticBackend> (url={self.url})'
