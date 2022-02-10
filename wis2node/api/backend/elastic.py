@@ -113,7 +113,7 @@ class ElasticBackend(BaseBackend):
         return {
             'type': 'feature',
             'name': 'Elasticsearch',
-            'data': f'{self.url}/{es_index}',
+            'data': f'{self.url}/{es_index}.*',
             'id_field': 'id'
         }
 

@@ -11,7 +11,7 @@ services:
 
   pygeoapi:
     ports:
-      - 5000:80
+      - 5001:80
 
   elasticsearch:
     ports:
