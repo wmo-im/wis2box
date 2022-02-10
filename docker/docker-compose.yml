@@ -5,13 +5,14 @@ services:
     container_name: nginx
     image: nginx:alpine
     restart: always
-    environment:
-      - METPX_SR3_PATH_PUBLIC=/data/wis2node/data/public
+    env_file:
+      - ../dev.env
+      - docker.env
     depends_on:
       - wis2node-ui
     volumes:
+      - ${WIS2NODE_DATADIR}/data:/data/wis2node/data:ro,z
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - wis2node-data:/data/wis2node:ro
 
   wis2node-ui:
     container_name: wis2node-ui
@@ -24,16 +25,15 @@ services:
     #image: geopython/pygeoapi:latest
     build:
       context: ./pygeoapi
+    env_file:
+      - ../dev.env
+      - docker.env
     environment:
       - SCRIPT_NAME=/pygeoapi
-      - WIS2NODE_API_URL=${WIS2NODE_API_URL}
-      - WIS2NODE_API_BACKEND_HOST=${WIS2NODE_API_BACKEND_HOST}
-      - WIS2NODE_API_BACKEND_PORT=${WIS2NODE_API_BACKEND_PORT}
-      - WIS2NODE_DATADIR=/data/wis2node
     depends_on:
       - elasticsearch
     volumes:
-      - wis2node-data:/data/wis2node:rw
+      - ${WIS2NODE_DATADIR}/data:/data/wis2node/data:ro,z
       - ./pygeoapi/pygeoapi-config.yml:/pygeoapi/local.config.yml:ro
 
   elasticsearch:
@@ -65,11 +65,11 @@ services:
     # image: eclipse-mosquitto
     build:
       context: ./mosquitto
-    environment:
-      - METPX_SR3_BROKER_USERNAME=${METPX_SR3_BROKER_USERNAME}
-      - METPX_SR3_BROKER_PASSWORD=${METPX_SR3_BROKER_PASSWORD}
+    env_file:
+      - ../dev.env
+      - docker.env
     volumes:
-      - wis2node-data:/data/wis2node:rw
+      - ${WIS2NODE_DATADIR}/data:/data/wis2node/data:rw,z
 
   data-consumer:
     container_name: data-consumer
@@ -77,18 +77,11 @@ services:
     build:
       context: ./data-consumer
     #user: sarra:sarra
-    environment:
-      - METPX_SR3_HOST=${METPX_SR3_HOST}
-      - METPX_SR3_BROKER_USERNAME=${METPX_SR3_BROKER_USERNAME}
-      - METPX_SR3_BROKER_PASSWORD=${METPX_SR3_BROKER_PASSWORD}
-      - METPX_SR3_EXCHANGE=${METPX_SR3_EXCHANGE}
-      - METPX_SR3_PATH_INCOMING=/data/wis2node/data/incoming
-      - METPX_SR3_PATH_PUBLIC=/data/wis2node/data/public
-      - WIS2NODE_URL=${WIS2NODE_URL}
-      - METPX_SR3_LOGLEVEL=DEBUG
+    env_file:
+      - ../dev.env
+      - docker.env
     volumes:
-      - wis2node-data:/data/wis2node:rw
-      - ${WIS2NODE_DATADIR_INCOMING}:/data/wis2node/data/incoming:rw
+      - ${WIS2NODE_DATADIR}/data:/data/wis2node/data:rw,z
     depends_on:
       - mosquitto
 
@@ -99,45 +92,15 @@ services:
       args:
         WIS2NODE_PIP3_EXTRA_PACKAGES: ${WIS2NODE_PIP3_EXTRA_PACKAGES}
     #user: wis2node:wis2node
-    environment:
-      - METPX_SR3_HOST=${METPX_SR3_HOST}
-      - METPX_SR3_BROKER_USERNAME=${METPX_SR3_BROKER_USERNAME}
-      - METPX_SR3_BROKER_PASSWORD=${METPX_SR3_BROKER_PASSWORD}
-      - METPX_SR3_EXCHANGE=${METPX_SR3_EXCHANGE}
-      - METPX_SR3_PATH_INCOMING=/data/wis2node/data/incoming
-      - METPX_SR3_PATH_PUBLIC=/data/wis2node/data/public
-      - METPX_SR3_BASEURL=${WIS2NODE_URL}
-      - METPX_SR3_LOGLEVEL=DEBUG
-      #- WIS2NODE_DATA_MAPPINGS=/data/wis2node/data-mappings.yml
-      - WIS2NODE_API_BACKEND_HOST=${WIS2NODE_API_BACKEND_HOST}
-      - WIS2NODE_API_BACKEND_PORT=${WIS2NODE_API_BACKEND_PORT}
-      - WIS2NODE_API_BACKEND_TYPE=${WIS2NODE_API_BACKEND_TYPE}
-      - WIS2NODE_DATA_RETENTION_DAYS=${WIS2NODE_DATA_RETENTION_DAYS}
-      - WIS2NODE_DATADIR=/data/wis2node
-      - WIS2NODE_DATADIR_CONFIG=/data/wis2node/data/config
-      - WIS2NODE_DATADIR_INCOMING=/data/wis2node/data/incoming
-      - WIS2NODE_DATADIR_PUBLIC=/data/wis2node/data/public
-      - WIS2NODE_DATADIR_ARCHIVE=/data/wis2node/data/archive
-      - WIS2NODE_OSCAR_API_TOKEN=${WIS2NODE_OSCAR_API_TOKEN}
-      - WIS2NODE_API_TYPE=${WIS2NODE_API_TYPE}
-      - WIS2NODE_API_URL=${WIS2NODE_API_URL}
-      - WIS2NODE_MQP_URL=${WIS2NODE_MQP_URL}
-      - WIS2NODE_URL=${WIS2NODE_URL}
-      - WIS2NODE_API_CONFIG=/data/wis2node/pygeoapi-config.yml
-      - WIS2NODE_LOGLEVEL=${WIS2NODE_LOGGING_LOGLEVEL}
-      - WIS2NODE_LOGFILE=${WIS2NODE_LOGGING_LOGFILE}
+    env_file:
+      - ../dev.env
+      - docker.env
     volumes:
-      - wis2node-data:/data/wis2node:rw
+      - ${WIS2NODE_DATADIR}/data:/data/wis2node/data:rw,z
       - ./wis2node/config:/root/.config/sr3:ro
       - ./wis2node/wis2node.cron:/etc/cron.d/wis2node:ro
-      - ./pygeoapi/pygeoapi-config.yml:/data/wis2node/pygeoapi-config.yml:rw
-      - ${WIS2NODE_DATADIR}/data:/data/wis2node/data:rw
-      - ${WIS2NODE_DATADIR_CONFIG}:/data/wis2node/data/config:rw
-      - ${WIS2NODE_DATADIR_INCOMING}:/data/wis2node/data/incoming:rw
-      - ${WIS2NODE_DATADIR_PUBLIC}:/data/wis2node/data/public:rw
-      - ${WIS2NODE_DATADIR_ARCHIVE}:/data/wis2node/data/archive:rw
+      - ./pygeoapi/pygeoapi-config.yml:/data/wis2node/pygeoapi-config.yml:rw,z
     depends_on:
       - mosquitto
 volumes:
-  wis2node-data:
   es-data:

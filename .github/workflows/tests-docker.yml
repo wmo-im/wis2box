@@ -44,7 +44,7 @@ jobs:
     - name: run wis2node
       run: |
         python3 wis2node-ctl.py restart pygeoapi
-        sleep 10
+        sleep 30
         python3 wis2node-ctl.py status -a
     - name: run unit tests ⚙️
       run: |

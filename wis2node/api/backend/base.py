@@ -31,9 +31,10 @@ class BaseBackend:
         initializer
 
         :param defs: `dict` of connection parameters
-                     (host, port, username, password)
+                     (url, host, port, username, password)
         """
 
+        self.url = defs.get('url')
         self.host = defs.get('host')
         self.port = defs.get('port')
         self.username = defs.get('username')
@@ -97,4 +98,4 @@ class BaseBackend:
         raise NotImplementedError()
 
     def __repr__(self):
-        return f'<BaseBackend> (host={self.host}, port={self.port})'
+        return f'<BaseBackend> (url={self.url})'
