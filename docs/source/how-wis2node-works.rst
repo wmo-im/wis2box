@@ -56,14 +56,22 @@ Container functionality can be described as follows:
 Technology
 ----------
 
+wis2node is built on free and open source (FOSS) technology.
+
 .. csv-table::
    :header: Container, Function, Technology, Standards
    :align: left
 
    Data Consumer,PubSub,`mosquitto`_, MQTT
-   Data Management,data processing/publishing,`pygeometa`_ `pyoscar`_,
+   Data Management,data processing and publishing,`pygeometa`_ `pyoscar`_,:abbr:`WCMP (WMO Core Metadata Profile)` :abbr:`WMDR (WIGOS Metadata Record)`
    API Application,data discovery and access,`pygeoapi`_ `Elasticsearch`_,OGC API
+   Web Application,data discovery and visualization,`Vue.js`_ `Leaflet`_,OGC API
 
+Docker
+^^^^^^
+
+wis2node is built as `Docker Compose`_ application, allowing for easy install and container
+management.
 
 
 
@@ -75,3 +83,6 @@ Technology
 .. _`pyoscar`: https://github.com/wmo-cop/pyoscar
 .. _`pygeoapi`: https://pygeoapi.io
 .. _`Elasticsearch`: https://www.elastic.co/elasticsearch
+.. _`Vue.js`: https://vuejs.org
+.. _`Leaflet`: https://leafletjs.com
+.. _`Docker Compose`: https://docs.docker.com/compose
