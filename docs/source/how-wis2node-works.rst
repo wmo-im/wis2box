@@ -3,7 +3,75 @@
 How wis2node works
 ==================
 
-wis2node is a Docker and Python-based platform with the capabilities 
+wis2node is a `Docker`_ and `Python`_-based platform with the capabilities 
 for centres to integrate their data holdings and publish them to 
 the WMO Information System with a plug and play capability supporting 
 data publishing, discovery and access.
+
+High level system context
+--------------------------
+
+The following diagram provides a high level overview of the main functions
+of wis2node:
+
+.. figure:: ../architecture/c4-system-context.png
+   :scale: 70%
+   :alt: how wis2node works: System context
+   :align: center
+
+Core wis2node functionality includes the ability to:
+
+* integrate your existing data processing pipeline
+* cache station metadata from the `OSCAR/Surface`_ station metadata management
+  tool
+* process and transform your weather/climate/water data into official WMO data formats
+* create and publish discovery metadata of your datasets
+* provide your data via OGC and PubSub standards mechanisms to your data, enabling
+  easy access for web applications, desktop GIS tools, mobile applications
+* connect your wis2node to the WIS 2.0 network
+* make your data and services available to market search engines
+* subscribe to and download weather/climate/water data from the WIS 2.0 network
+
+Container workflow
+------------------
+
+Let's dive a little deeper.  The following diagram provides a view of all
+wis2node containers:
+
+.. figure:: ../architecture/c4-container.png
+   :scale: 70%
+   :alt: how wis2node works: Containers
+   :align: center
+
+Container functionality can be described as follows:
+
+* **Data Consumer**: the data entry point of wis2node.  Data pipelines and
+  workflow begins here
+* **Data Management**: the epicentre of wis2node.  Provides core wis2node
+  administration and data/workflow/publising utilities
+* **Storage**: core data persistence
+* **API Application**: OGC APIs providing geospatial web services
+* **Web Application**: user interface
+
+Technology
+----------
+
+.. csv-table::
+   :header: Container, Function, Technology, Standards
+   :align: left
+
+   Data Consumer,PubSub,`mosquitto`_, MQTT
+   Data Management,data processing/publishing,`pygeometa`_ `pyoscar`_,
+   API Application,data discovery and access,`pygeoapi`_ `Elasticsearch`_,OGC API
+
+
+
+
+.. _`Docker`: https://www.docker.com
+.. _`Python`: https://python.org
+.. _`OSCAR/Surface`: https://oscar.wmo.int/surface
+.. _`mosquitto`: https://mosquitto.org
+.. _`pygeometa`: https://geopython.githubb.io/pygeometa
+.. _`pyoscar`: https://github.com/wmo-cop/pyoscar
+.. _`pygeoapi`: https://pygeoapi.io
+.. _`Elasticsearch`: https://www.elastic.co/elasticsearch
