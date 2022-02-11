@@ -106,7 +106,7 @@ A full configuration example can be found below:
 Docker Compose
 --------------
 
-The Docker Compose setup is driven from the resulting ``dev.env`` file created.  For advanced cases and/or power usersk
+The Docker Compose setup is driven from the resulting ``dev.env`` file created.  For advanced cases and/or power users,
 updates can also be made to ``docker-compose.yml`` or ``docker-compose.override.yml`` (for changes to ports).
 
 

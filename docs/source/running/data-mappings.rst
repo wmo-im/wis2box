@@ -3,7 +3,7 @@
 Data mappings
 =============
 
-Once a topic hierachy is define, it needs to be defined in the wis2box data mappings
+Once a topic hierachy is defined, it needs to be included in the wis2box data mappings
 configuration.  wis2box provides a default data mapping:
 
 .. literalinclude:: ../../../wis2node/resources/data-mappings.yml
