@@ -30,7 +30,7 @@ import click
 from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.env import (DATADIR_ARCHIVE, DATADIR_INCOMING, DATADIR_PUBLIC,
-                          DATA_RETENTION_DAYS)
+                         DATA_RETENTION_DAYS)
 from wis2box.handler import Handler
 from wis2box.topic_hierarchy import validate_and_load
 from wis2box.util import json_serial, older_than, walk_path
