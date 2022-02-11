@@ -1,4 +1,4 @@
-# wis2node Security Policy
+# wis2box Security Policy
 
 ## Reporting
 
@@ -7,7 +7,7 @@ to **tomkralidis nospam @ gmail.com** - (remove the blanks and 'nospam').
 
 ## Supported Versions
 
-wis2node developers will release patches for security vulnerabilities for the following versions:
+wis2box developers will release patches for security vulnerabilities for the following versions:
 
 | Version | Supported          |
 | ------- | ------------------ |

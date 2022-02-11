@@ -21,7 +21,7 @@ will generate local station collection GeoJSON for pygeoapi publication.
 
 .. code-block:: bash
 
-   wis2node metadata station publish-collection
+   wis2box metadata station publish-collection
 
 
 Discovery metadata API publishing
@@ -31,7 +31,7 @@ This step will publish dataset discovery metadata to the API.
 
 .. code-block:: bash
 
-   wis2node metadata discovery publish /path/to/discovery-metadata.yml
+   wis2box metadata discovery publish /path/to/discovery-metadata.yml
 
 
 Dataset collection API publishing
@@ -42,13 +42,13 @@ discovery metadata MCF created as described in the :ref:`discovery-metadata` sec
 
 .. code-block:: bash
 
-   wis2node api add-collection $WIS2NODE_DATADIR/data/config/foo/bar/baz/discovery-metadata.yml --topic-hierarchy foo.bar.baz
+   wis2box api add-collection $WIS2BOX_DATADIR/data/config/foo/bar/baz/discovery-metadata.yml --topic-hierarchy foo.bar.baz
 
 To delete the colection from the API backend and configuration:
 
 .. code-block:: bash
 
-   wis2node api delete-collection --topic-hierarchy foo.bar.baz
+   wis2box api delete-collection --topic-hierarchy foo.bar.baz
 
 
 Note that the data itself is being published to the API backend automatically given the event
@@ -56,7 +56,7 @@ driven workflow.  If manual ingest is needed, the following command can be run i
 
 .. code-block:: bash
 
-   wis2node api add-collection-items --topic-hierarchy foo.bar.baz
+   wis2box api add-collection-items --topic-hierarchy foo.bar.baz
 
 
 

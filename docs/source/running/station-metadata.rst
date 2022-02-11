@@ -17,9 +17,9 @@ Use this CSV to cache station metadata:
 
 .. code-block:: bash
 
-   wis2node metadata station cache /path/to/station_list.csv
+   wis2box metadata station cache /path/to/station_list.csv
 
-Resulting station metadata files (JSON) are stored in ``WIS2NODE_DATADIR/data/metadata/station`` and
+Resulting station metadata files (JSON) are stored in ``WIS2BOX_DATADIR/data/metadata/station`` and
 can be used by wis2box data processing pipelines.  These data are required before starting automated
 processing.
 

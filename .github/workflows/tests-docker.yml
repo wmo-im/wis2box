@@ -18,34 +18,34 @@ jobs:
       run: |
         pip3 install -r requirements-dev.txt
         python3 setup.py install
-    - name: wis2node configuration
+    - name: wis2box configuration
       run: |
         cp tests/test.env dev.env
         echo dev.env
-        python3 wis2node-ctl.py config
-    - name: build wis2node ⚙️
+        python3 wis2box-ctl.py config
+    - name: build wis2box ⚙️
       run: |
-        python3 wis2node-ctl.py build
-        python3 wis2node-ctl.py start
-        python3 wis2node-ctl.py status
-    - name: generate wis2node collection
+        python3 wis2box-ctl.py build
+        python3 wis2box-ctl.py start
+        python3 wis2box-ctl.py status
+    - name: generate wis2box collection
       run: |
-        docker exec `docker ps -q --filter ancestor=wis2node_project_wis2node` sh -c " \
-          wis2node environment create \
-          && wis2node environment show \
-          && wis2node data setup --topic-hierarchy observations-surface-land.mw.FWCL.landFixed \
-          && wis2node data info --topic-hierarchy observations-surface-land.mw.FWCL.landFixed \
-          && wis2node metadata station cache /data/wis2node/data/metadata/station/station_list.csv \
-          && wis2node metadata station publish-collection \
-          && wis2node metadata discovery publish /data/wis2node/data/metadata/discovery/surface-weather-observations.yml \
-          && wis2node data ingest -th observations-surface-land.mw.FWCL.landFixed -p /data/wis2node/data/observations/WIGOS_0-454-2-AWSNAMITAMBO_20210707.csv \
-          && wis2node api add-collection /data/wis2node/data/metadata/discovery/surface-weather-observations.yml --topic-hierarchy observations-surface-land.mw.FWCL.landFixed \
-          && wis2node api add-collection-items -r -p /data/wis2node/data/public"
-    - name: run wis2node
+        docker exec `docker ps -q --filter ancestor=wis2box_project_wis2box` sh -c " \
+          wis2box environment create \
+          && wis2box environment show \
+          && wis2box data setup --topic-hierarchy observations-surface-land.mw.FWCL.landFixed \
+          && wis2box data info --topic-hierarchy observations-surface-land.mw.FWCL.landFixed \
+          && wis2box metadata station cache /data/wis2box/data/metadata/station/station_list.csv \
+          && wis2box metadata station publish-collection \
+          && wis2box metadata discovery publish /data/wis2box/data/metadata/discovery/surface-weather-observations.yml \
+          && wis2box data ingest -th observations-surface-land.mw.FWCL.landFixed -p /data/wis2box/data/observations/WIGOS_0-454-2-AWSNAMITAMBO_20210707.csv \
+          && wis2box api add-collection /data/wis2box/data/metadata/discovery/surface-weather-observations.yml --topic-hierarchy observations-surface-land.mw.FWCL.landFixed \
+          && wis2box api add-collection-items -r -p /data/wis2box/data/public"
+    - name: run wis2box
       run: |
-        python3 wis2node-ctl.py restart pygeoapi
+        python3 wis2box-ctl.py restart pygeoapi
         sleep 30
-        python3 wis2node-ctl.py status -a
+        python3 wis2box-ctl.py status -a
     - name: run unit tests ⚙️
       run: |
         pytest tests/unit

@@ -12,5 +12,5 @@ services:
     ports:
       - 80:80
     volumes:  
-      - ${WIS2NODE_DATADIR}/data/incoming:/var/lib/dav/data/incoming
-      - ${WIS2NODE_DATADIR}/data/public:/var/lib/dav/data/public
+      - ${WIS2BOX_DATADIR}/data/incoming:/var/lib/dav/data/incoming
+      - ${WIS2BOX_DATADIR}/data/public:/var/lib/dav/data/public

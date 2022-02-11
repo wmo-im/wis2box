@@ -37,14 +37,14 @@ import re
 
 # -- Project information -----------------------------------------------------
 
-project = 'wis2node'
+project = 'wis2box'
 author = 'World Meteorological Organization (WMO)'
 license = 'This work is licensed under a Creative Commons Attribution 4.0 International License'  # noqa
 copyright = '2021-2022, ' + author + '<br/>' + license
 
 # The full version, including alpha/beta/rc tags
 
-file_ = '../wis2node/__init__.py'
+file_ = '../wis2box/__init__.py'
 filepath = os.path.join(os.path.abspath('..'), file_)
 
 with open(filepath) as fh:

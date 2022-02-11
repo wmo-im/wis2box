@@ -3,17 +3,17 @@
 Data access
 ===========
 
-Getting data from a different node
-----------------------------------
+Getting data from a different wis2box
+-------------------------------------
 
 ..
-    TODO: Getting data from a different node
+    TODO: Getting data from a different wis2box
 
 Pub/Sub
 -------
 
 ..
-    TODO: wis2box is a client and able to download data through pub/sub
+    TODO: wis2box is a client and able to download data through PubSub
 
 Summary
 -------

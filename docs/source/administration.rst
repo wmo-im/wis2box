@@ -4,26 +4,26 @@ Administration
 ==============
 
 wis2box is designed to be built as a network of virtual machines within a virtual network.  Once this
-is built, users login into the main wis2node machine to setup their workflow and configurations for
+is built, users login into the main wis2box machine to setup their workflow and configurations for
 data processing and publishing.
 
-The `wis2box-ctl.py` utility provides a number of tools for managing the wis2node containers.
+The `wis2box-ctl.py` utility provides a number of tools for managing the wis2box containers.
 
 The following steps provide an example of container management workflow.
 
 .. code-block:: bash
 
    # build all images
-   python3 wis2node-ctl.py build
+   python3 wis2box-ctl.py build
 
    # start system
-   python3 wis2node-ctl.py start
+   python3 wis2box-ctl.py start
 
    # stop system
-   python3 wis2node-ctl.py stop
+   python3 wis2box-ctl.py stop
 
    # view status of all deployed containers
-   python3 wis2node-ctl.py status
+   python3 wis2box-ctl.py status
   
 
 .. note::

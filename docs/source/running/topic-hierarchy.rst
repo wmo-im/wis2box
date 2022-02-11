@@ -26,7 +26,7 @@ To create a wis2box topic hierarchy:
 
 .. code-block:: bash
 
-   wis2node data setup --topic-hierarchy foo.bar.baz
+   wis2box data setup --topic-hierarchy foo.bar.baz
 
 
 This will create the topic hierarchy under the required wis2box directories in support
@@ -36,4 +36,4 @@ To view a given topic hierarchy setup:
 
 .. code-block:: bash
 
-   wis2node data info --topic-hierarchy foo.bar.baz
+   wis2box data info --topic-hierarchy foo.bar.baz
