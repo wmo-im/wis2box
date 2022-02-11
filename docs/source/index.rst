@@ -21,10 +21,11 @@ wis2node |release| documentation
    configuration
    administration
    running/index
-   data-access
    services
+   data-access
    extending-wis2node
    development
+   contributing
    support
    license
 

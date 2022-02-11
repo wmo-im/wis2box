@@ -13,7 +13,7 @@ line (with station name and WIGOS station identifier [WSI]) per station:
 
 .. literalinclude:: ../../../tests/data/metadata/station/station_list.csv
 
-Use this CSV to cache station metadata
+Use this CSV to cache station metadata:
 
 .. code-block:: bash
 
@@ -22,5 +22,10 @@ Use this CSV to cache station metadata
 Resulting station metadata files (JSON) are stored in ``WIS2NODE_DATADIR/data/metadata/station`` and
 can be used by wis2box data processing pipelines.  These data are required before starting automated
 processing.
+
+Summary
+-------
+
+At this point, you have cached the required station metadata for your given dataset(s).
 
 .. _`WMO OSCAR/Surface`: https://oscar.wmo.int/surface

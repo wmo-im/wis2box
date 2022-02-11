@@ -45,7 +45,7 @@ Features
 
 .. _`WIS 2.0 principles`: https://community.wmo.int/activity-areas/wis/wis2-implementation
 .. _`WMO`: https://public.wmo.int
-.. _`OGC API`: https://ogcapi.org
+.. _`OGC API`: https://ogcapi.ogc.org
 .. _`MQTT`: https://mqtt.org
 .. _`STAC`: https://stacspec.org
 .. _`BUFR`: https://en.wikipedia.org/wiki/BUFR

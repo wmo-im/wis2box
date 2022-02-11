@@ -101,3 +101,7 @@ html_sidebars = {
 }
 
 html_favicon = 'https://public.wmo.int/sites/all/themes/wmo/favicon.ico'
+
+linkcheck_ignore = [
+    r'http://localhost:\d+/'
+]

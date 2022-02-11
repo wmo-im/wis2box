@@ -78,7 +78,7 @@ wis2node is built on free and open source (FOSS) technology.
 
 .. _`Twelve-Factor App methodology`: https://12factor.net
 .. _`Docker`: https://www.docker.com
-.. _`Python`: https://python.org
+.. _`Python`: https://www.python.org
 .. _`OSCAR/Surface`: https://oscar.wmo.int/surface
 .. _`mosquitto`: https://mosquitto.org
 .. _`pygeometa`: https://geopython.githubb.io/pygeometa

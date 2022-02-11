@@ -24,18 +24,14 @@ leverages the `pygeometa`_ project's `metadata control file (MCF)`_ format. Belo
 
 .. note::
 
-   There are no conventions on the MCF filename.  It is up to the user to determine the best filename,
-   keeping in mind your wis2box system may manage and publish numerous datasets (and MCF files) over time.
-
-
-Once your MCF file is ready for publishing, publish it to the catalogue API using the following command:
-
-.. code-block:: bash
-
-    wis2box metadata discovery publish /path/to/discovery-metadata.yml
-
-
-
+   There are no conventions to the MCF filename.  The filename does not get used/exposed or published.
+   It is up to the user to determine the best filename, keeping in mind your wis2box system may manage
+   and publish numerous datasets (and MCF files) over time.
 
 .. _`pygeometa`: https://geopython.github.io/pygeometa
 .. _`metadata control file (MCF)`: https://geopython.github.io/pygeometa/reference/mcf
+
+Summary
+-------
+
+At this point, you have created discovery metadata for your given dataset(s).
