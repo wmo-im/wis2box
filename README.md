@@ -27,7 +27,7 @@ vi dev.env
 ## Deploying with Docker Compose
 
 ```bash
-# wi2node-ctl options
+# wis2box-ctl options
 python3 wis2box-ctl.py
 
 # view docker config
