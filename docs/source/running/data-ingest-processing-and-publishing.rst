@@ -1,7 +1,7 @@
-.. _data-publishing:
+.. _data-ingest-processing-and-publishing:
 
-Data publishing
-===============
+Data ingest, processing and publishing
+======================================
 
 Setup Data Processing
 ---------------------

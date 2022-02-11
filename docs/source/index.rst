@@ -9,18 +9,18 @@ wis2node |release| documentation
 :Date: |today|
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Table of contents:
    :name: toc
 
    overview
+   quickstart
    wis2
    how-wis2node-works
    installation
-   quickstart
    configuration
    administration
-   data-publishing
+   running/index
    data-access
    services
    extending-wis2node

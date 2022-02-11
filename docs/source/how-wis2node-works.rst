@@ -3,6 +3,8 @@
 How wis2node works
 ==================
 
+wis2node is implemented in the spirit of the `Twelve-Factor App methodology`_.
+
 wis2node is a `Docker`_ and `Python`_-based platform with the capabilities 
 for centres to integrate their data holdings and publish them to 
 the WMO Information System with a plug and play capability supporting 
@@ -31,6 +33,12 @@ Core wis2node functionality includes the ability to:
 * connect your wis2node to the WIS 2.0 network
 * make your data and services available to market search engines
 * subscribe to and download weather/climate/water data from the WIS 2.0 network
+
+Docker Compose
+--------------
+
+wis2node is built as `Docker Compose`_ application, allowing for easy install and container
+management.
 
 Container workflow
 ------------------
@@ -67,14 +75,8 @@ wis2node is built on free and open source (FOSS) technology.
    API Application,data discovery and access,`pygeoapi`_ `Elasticsearch`_,OGC API
    Web Application,data discovery and visualization,`Vue.js`_ `Leaflet`_,OGC API
 
-Docker
-^^^^^^
 
-wis2node is built as `Docker Compose`_ application, allowing for easy install and container
-management.
-
-
-
+.. _`Twelve-Factor App methodology`: https://12factor.net
 .. _`Docker`: https://www.docker.com
 .. _`Python`: https://python.org
 .. _`OSCAR/Surface`: https://oscar.wmo.int/surface
