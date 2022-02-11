@@ -81,7 +81,7 @@ wis2node is built on free and open source (FOSS) technology.
 .. _`Python`: https://www.python.org
 .. _`OSCAR/Surface`: https://oscar.wmo.int/surface
 .. _`mosquitto`: https://mosquitto.org
-.. _`pygeometa`: https://geopython.githubb.io/pygeometa
+.. _`pygeometa`: https://geopython.github.io/pygeometa
 .. _`pyoscar`: https://github.com/wmo-cop/pyoscar
 .. _`pygeoapi`: https://pygeoapi.io
 .. _`Elasticsearch`: https://www.elastic.co/elasticsearch
