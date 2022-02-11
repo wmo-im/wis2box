@@ -23,16 +23,16 @@ FROM ubuntu:focal
 
 MAINTAINER "tomkralidis@gmail.com"
 
-ARG WIS2NODE_PIP3_EXTRA_PACKAGES
+ARG WIS2BOX_PIP3_EXTRA_PACKAGES
 ENV TZ="Etc/UTC" \
     DEBIAN_FRONTEND="noninteractive" \
     BUILD_PACKAGES="build-essential cmake gfortran python3-wheel"
 
 COPY . /app
 
-RUN if [ "$WIS2NODE_PIP3_EXTRA_PACKAGES" = "None" ]; \
-    then export WIS2NODE_PIP3_EXTRA_PACKAGES=echo; \
-    else export WIS2NODE_PIP3_EXTRA_PACKAGES=pip3 install ${WIS2NODE_PIP3_EXTRA_PACKAGES}; \
+RUN if [ "$WIS2BOX_PIP3_EXTRA_PACKAGES" = "None" ]; \
+    then export WIS2BOX_PIP3_EXTRA_PACKAGES=echo; \
+    else export WIS2BOX_PIP3_EXTRA_PACKAGES=pip3 install ${WIS2BOX_PIP3_EXTRA_PACKAGES}; \
     fi
 
 # FIXME: install newer version of eccodes
@@ -43,23 +43,23 @@ RUN if [ "$WIS2NODE_PIP3_EXTRA_PACKAGES" = "None" ]; \
 RUN apt-get update -y \
     && apt-get install -y ${BUILD_PACKAGES} \
     && apt-get install -y bash vim git python3-pip python3-dev curl libffi-dev libeccodes0 python3-eccodes python3-cryptography libssl-dev \
-    # install wis2node dependencies
+    # install wis2box dependencies
     && pip3 install https://github.com/wmo-im/csv2bufr/archive/dev.zip \
     && pip3 install https://github.com/geopython/pygeometa/archive/master.zip \
     && pip3 install https://github.com/metpx/sarracenia/archive/v03_wip.zip \
-    # install wis2node
+    # install wis2box
     && cd /app \
     && python3 setup.py install \
-    # install wis2node plugins, if defined
+    # install wis2box plugins, if defined
     && $PIP_PLUGIN_PACKAGES \
     # cleanup
     && apt-get remove --purge -y ${BUILD_PACKAGES} \
     && apt autoremove -y  \
     && apt-get -q clean \
     && rm -rf /var/lib/apt/lists/* \
-    # add wis2node user
-    && useradd -ms /bin/bash wis2node
+    # add wis2box user
+    && useradd -ms /bin/bash wis2box
 
-WORKDIR /home/wis2node
+WORKDIR /home/wis2box
 
-CMD sh -c "wis2node environment create && sr3 start && sleep infinity"
+CMD sh -c "wis2box environment create && sr3 start && sleep infinity"

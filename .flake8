@@ -1,2 +1,2 @@
 [flake8]
-exclude = wis2node-ctl.py
+exclude = wis2box-ctl.py

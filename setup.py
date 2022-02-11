@@ -50,7 +50,7 @@ def read(filename, encoding='utf-8'):
 
 def get_package_version():
     """get version from top-level package init"""
-    version_file = read('wis2node/__init__.py')
+    version_file = read('wis2box/__init__.py')
     version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
                               version_file, re.M)
     if version_match:
@@ -76,7 +76,7 @@ if (os.path.exists('MANIFEST')):
 
 
 setup(
-    name='wis2node',
+    name='wis2box',
     version=get_package_version(),
     description=DESCRIPTION.strip(),
     long_description=read('README.md'),
@@ -88,13 +88,13 @@ setup(
     author_email='tomkralidis@gmail.com',
     maintainer='Tom Kralidis',
     maintainer_email='tomkralidis@gmail.com',
-    url='https://github.com/wmo-im/wis2node',
+    url='https://github.com/wmo-im/wis2box',
     install_requires=read('requirements.txt').splitlines(),
     packages=find_packages(),
     include_package_data=True,
     entry_points={
         'console_scripts': [
-            'wis2node=wis2node:cli'
+            'wis2box=wis2box:cli'
         ]
     },
     classifiers=[

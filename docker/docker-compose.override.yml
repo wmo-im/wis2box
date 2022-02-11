@@ -5,7 +5,7 @@ services:
     ports:
       - 8999:80
 
-  wis2node-ui:
+  wis2box-ui:
     ports:
       - 9999:80
 

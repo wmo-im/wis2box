@@ -22,13 +22,13 @@ Explicit topic hierarchy workflow
 .. code-block:: bash
    
    # process a single CSV file
-   wis2node data ingest --topic-hierarchy foo.bar.baz -p /path/to/file.csv
+   wis2box data ingest --topic-hierarchy foo.bar.baz -p /path/to/file.csv
 
    # process a directory of CSV files
-   wis2node data ingest --topic-hierarchy foo.bar.baz -p /path/to/dir
+   wis2box data ingest --topic-hierarchy foo.bar.baz -p /path/to/dir
 
    # process a directory of CSV files recursively
-   wis2node data ingest --topic-hierarchy foo.bar.baz -p /path/to/dir -r
+   wis2box data ingest --topic-hierarchy foo.bar.baz -p /path/to/dir -r
 
 
 Implicit topic hierarchy workflow
@@ -38,7 +38,7 @@ Implicit topic hierarchy workflow
 
    # process incoming data; topic hierarchy is inferred from fuzzy filepath equivalent
    # wis2box will detect 'foo/bar/baz' as topic hierarchy 'foo.bar.baz'
-   wis2node data ingest -p /path/to/foo/bar/baz/data/file.csv
+   wis2box data ingest -p /path/to/foo/bar/baz/data/file.csv
 
 
 Event driven ingest, processing and publishing

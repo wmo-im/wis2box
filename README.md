@@ -1,7 +1,7 @@
-# wis2node
+# wis2box
 
-[![Tests](https://github.com/wmo-im/wis2node/workflows/tests%20%E2%9A%99%EF%B8%8F/badge.svg)](https://github.com/wmo-im/wis2node/actions/workflows/tests.yml)
-[![Docs](https://github.com/wmo-im/wis2node/workflows/docs/badge.svg)](https://github.com/wmo-im/wis2node/actions/workflows/docs.yml)
+[![Tests](https://github.com/wmo-im/wis2box/workflows/tests%20%E2%9A%99%EF%B8%8F/badge.svg)](https://github.com/wmo-im/wis2box/actions/workflows/tests.yml)
+[![Docs](https://github.com/wmo-im/wis2box/workflows/docs/badge.svg)](https://github.com/wmo-im/wis2box/actions/workflows/docs.yml)
 
 ## WIS 2.0 in a box
 
@@ -13,13 +13,13 @@ and access.
 ## Installation
 
 ```bash
-python3 -m venv wis2node
-cd wis2node
-git clone https://github.com/wmo-im/wis2node.git
-cd wis2node
+python3 -m venv wis2box
+cd wis2box
+git clone https://github.com/wmo-im/wis2box.git
+cd wis2box
 
 # setup local environment variables
-cp wis2node.env dev.env
+cp wis2box.env dev.env
 # edit/adjust accordingly
 vi dev.env
 ```
@@ -28,71 +28,71 @@ vi dev.env
 
 ```bash
 # wi2node-ctl options
-python3 wis2node-ctl.py
+python3 wis2box-ctl.py
 
 # view docker config
-python3 wis2node-ctl.py config
+python3 wis2box-ctl.py config
 
 # build local images
-python3 wis2node-ctl.py build
+python3 wis2box-ctl.py build
 
 # start system
-python3 wis2node-ctl.py start
+python3 wis2box-ctl.py start
 
-# login to main wis2node container
-python3 wis2node-ctl.py login
+# login to main wis2box container
+python3 wis2box-ctl.py login
 
 # restart containers
-python3 wis2node-ctl.py restart
+python3 wis2box-ctl.py restart
 
 # view upstatus
-python3 wis2node-ctl.py status -a
+python3 wis2box-ctl.py status -a
 
 # view logs
-python3 wis2node-ctl.py  logs
+python3 wis2box-ctl.py  logs
 
 # stop system
-python3 wis2node-ctl.py  stop
+python3 wis2box-ctl.py  stop
 
 # update images
-python3 wis2node-ctl.py  update
+python3 wis2box-ctl.py  update
 
 # redeploy containers
-python3 wis2node-ctl.py  up
+python3 wis2box-ctl.py  up
 ```
 
 ## Running
 
-- Note: run `python3 wis2node-ctl.py login` first to access the container
+- Note: run `python3 wis2box-ctl.py login` first to access the container
 
 From command line:
 
 ```bash
 # fetch version
-wis2node --version
+wis2box --version
 
 # create environment
-wis2node environment create
+wis2box environment create
 
 # show environment
-wis2node environment show
+wis2box environment show
 
 # create dataset topic hierarchy directories
-wis2node data setup --topic-hierarchy foo.bar.baz
+wis2box data setup --topic-hierarchy foo.bar.baz
 
 # display dataset topic hierarchy and directories
-wis2node data info --topic-hierarchy foo.bar.baz
+wis2box data info --topic-hierarchy foo.bar.baz
 
 # process incoming data with topic hierarchy
-wis2node data ingest --topic-hierarchy foo.bar.baz -p /path/to/file.csv
+wis2box data ingest --topic-hierarchy foo.bar.baz -p /path/to/file.csv
 
 # process incoming data (manually/no PubSub); topic hierarchy is inferred
 # from fuzzy filepath equivalent
-wis2node data ingest -p /path/to/foo/bar/baz/data/file.csv
+wis2box data ingest -p /path/to/foo/bar/baz/data/file.csv
 
 # create discovery metadata control file (MCF)
 # pygeometa MCF reference: https://geopython.github.io/pygeometa/reference/mcf
-vi $WIS2NODE_DATADIR/data/config/foo/bar/baz/discovery-metadata.yml
+vi $WIS2BOX_DATADIR/data/config/foo/bar/baz/discovery-metadata.yml
 
 # create CSV of stations
 # format:
@@ -100,36 +100,36 @@ vi $WIS2NODE_DATADIR/data/config/foo/bar/baz/discovery-metadata.yml
 vi /path/to/station_list.csv
 
 # cache station metadata from OSCAR/Surface from a CSV of station name/WSI records
-wis2node metadata station cache /path/to/station_list.csv
+wis2box metadata station cache /path/to/station_list.csv
 
 # publish station metadata to WMO OSCAR/Surface
-wis2node metadata station publish $WIS2NODE_DATADIR/metadata/station/1.yml
-wis2node metadata station publish $WIS2NODE_DATADIR/metadata/station/2.yml
-wis2node metadata station publish $WIS2NODE_DATADIR/metadata/station/3.yml
+wis2box metadata station publish $WIS2BOX_DATADIR/metadata/station/1.yml
+wis2box metadata station publish $WIS2BOX_DATADIR/metadata/station/2.yml
+wis2box metadata station publish $WIS2BOX_DATADIR/metadata/station/3.yml
 
 # generate local station collection GeoJSON for pygeoapi publication
-wis2node metadata station publish-collection
+wis2box metadata station publish-collection
 
 # publish dataset discovery metadata to local catalogue
-wis2node metadata discovery publish foo/bar/baz
+wis2box metadata discovery publish foo/bar/baz
 
 # unpublish discovery metadata to local catalogue
-wis2node metadata discovery unpublish foo/bar/baz
+wis2box metadata discovery unpublish foo/bar/baz
 
-# add collection to wis2node API backend and api config from mcf
-wis2node api add-collection $WIS2NODE_DATADIR/data/config/foo/bar/baz/discovery-metadata.yml --topic-hierarchy foo.bar.baz
+# add collection to wis2box API backend and api config from mcf
+wis2box api add-collection $WIS2BOX_DATADIR/data/config/foo/bar/baz/discovery-metadata.yml --topic-hierarchy foo.bar.baz
 
-# add processed GeoJSON in public folder to wis2node API backend
-wis2node api add-collection-items --topic-hierarchy foo.bar.baz
+# add processed GeoJSON in public folder to wis2box API backend
+wis2box api add-collection-items --topic-hierarchy foo.bar.baz
 
-# delete collection from wis2node API backend and config
-wis2node api delete-collection --topic-hierarchy foo.bar.baz
+# delete collection from wis2box API backend and config
+wis2box api delete-collection --topic-hierarchy foo.bar.baz
 
 # clean data
-wis2node data clean --days 30
+wis2box data clean --days 30
 
 # archive data
-wis2node data archive
+wis2box data archive
 ```
 
 ## Development workflows
@@ -138,10 +138,10 @@ wis2node data archive
 
 ```bash
 # clean up dangling containers and images
-python3 wis2node-ctl.py prune
+python3 wis2box-ctl.py prune
 
 # run a flake8 check on all Python code
-python3 wis2node-ctl.py lint
+python3 wis2box-ctl.py lint
 ```
 
 ### Running tests
@@ -167,7 +167,7 @@ twine upload dist/*
 
 ## Issues
 
-Issues are managed at https://github.com/wmo-im/wis2node/issues
+Issues are managed at https://github.com/wmo-im/wis2box/issues
 
 ## Contact
 

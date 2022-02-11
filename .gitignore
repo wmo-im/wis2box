@@ -36,7 +36,7 @@ nosetests.xml
 .pydevproject
 
 # local
-wis2node-data
+wis2box-data
 .pytest_cache
 dev.env
 docker/.env

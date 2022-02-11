@@ -1,4 +1,4 @@
-wis2node:
+wis2box:
     retention: P30D
     topic_hierarchy: observations-surface-land.mw.FWCL.landFixed
     data_category: observationsSurfaceLand

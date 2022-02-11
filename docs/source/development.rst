@@ -27,5 +27,5 @@ Functional testing
 
 All commits and pull requests to wis2box trigger continuous integration (CI) testing on `GitHub Actions`_.
 
-.. _`GitHub Actions`: https://github.com/wmo-im/wis2node/blob/main/.github/workflows/tests-docker.yml
+.. _`GitHub Actions`: https://github.com/wmo-im/wis2box/blob/main/.github/workflows/tests-docker.yml
 .. _`Semantic Versioning Specification (SemVer) https://semver.org

@@ -16,5 +16,5 @@ any time with:
 
    wis2box environment show
 
-For the purposes of documentation, the value ``WIS2NODE_DATADIR`` represents the base
-directory for all data managed in wis2node.
+For the purposes of documentation, the value ``WIS2BOX_DATADIR`` represents the base
+directory for all data managed in wis2box.

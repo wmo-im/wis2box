@@ -3,13 +3,13 @@
 Configuration
 =============
 
-Once you have installed wis2box, it is time to setup the configuration.  wis2node setup is based on
+Once you have installed wis2box, it is time to setup the configuration.  wis2box setup is based on
 a simple configuration that can be adjusted depending the user's needs and deployment environment.
 
 Environment variables
 ---------------------
 
-wis2node configuration is driven primarily by a small set of environment variables. The runtime
+wis2box configuration is driven primarily by a small set of environment variables. The runtime
 configuration is defined in the `Env`_ format in a plain text file named ``dev.env``.
 
 .. note::
@@ -31,7 +31,7 @@ wis2box environment variables can be categorized via the following core sections
 
     Configuration directives and reference are described below via annotated examples.  Changes in configuration
     require a restart of wis2box to take effect. See the :ref:`administration` section for information on
-    managing wis2node.
+    managing wis2box.
 
 Data
 ^^^^
@@ -79,7 +79,7 @@ PubSub configuration provides connectivity information for the PubSub broker.
 
 .. code-block:: bash
 
-    WIS2NODE_BROKER=mqtt://wis2node:wis2node@mosquitto/  # RFC 1738 syntax of internal broker`endpoint
+    WIS2BOX_BROKER=mqtt://wis2box:wis2box@mosquitto/  # RFC 1738 syntax of internal broker`endpoint
 
 
 Other
@@ -89,8 +89,8 @@ Additional directives provide various configurationscontrol of configuration opt
 
 .. code-block:: bash
 
-    WIS2NODE_OSCAR_API_TOKEN=some_token  # OSCAR/Surface API token for OSCAR API interaction
-    WIS2NODE_URL=http://localhost:8999/  # public wis2node url
+    WIS2BOX_OSCAR_API_TOKEN=some_token  # OSCAR/Surface API token for OSCAR API interaction
+    WIS2BOX_URL=http://localhost:8999/  # public wis2box url
 
 
 .. note::
@@ -100,7 +100,7 @@ Additional directives provide various configurationscontrol of configuration opt
 
 A full configuration example can be found below:
 
-.. literalinclude:: ../../wis2node.env
+.. literalinclude:: ../../wis2box.env
    :language: bash
 
 Docker Compose
@@ -113,8 +113,8 @@ updates can also be made to ``docker-compose.yml`` or ``docker-compose.override.
 Summary
 -------
 
-At this point, you have defined the runtime configuration required to administer your wis2node installation.
+At this point, you have defined the runtime configuration required to administer your wis2box installation.
 
 
 .. _`Env`: https://en.wikipedia.org/wiki/Env
-.. _`Github`: https://github.com/wmo-im/wis2node/blob/main/wis2node.env
+.. _`Github`: https://github.com/wmo-im/wis2box/blob/main/wis2box.env
