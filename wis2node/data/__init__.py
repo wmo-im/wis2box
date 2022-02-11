@@ -126,7 +126,7 @@ def show_info(topic_hierarchy: str) -> dict:
 
 @click.group()
 def data():
-    """data functions"""
+    """Data workflow"""
     pass
 
 
