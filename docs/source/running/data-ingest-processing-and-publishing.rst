@@ -20,7 +20,7 @@ Explicit topic hierarchy workflow
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: bash
-   
+
    # process a single CSV file
    wis2box data ingest --topic-hierarchy foo.bar.baz -p /path/to/file.csv
 

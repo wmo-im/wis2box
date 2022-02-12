@@ -80,7 +80,7 @@ def walk_path(path: str) -> list:
 
 def make(command: str, *args) -> None:
     """
-    Serves as pseudo Makefile using python subprocesses.
+    Serves as pseudo Makefile using Python subprocesses.
 
     :param command: required, string. Make command.
 

@@ -80,7 +80,7 @@ def validate_and_load(topic_hierarchy: str,
         raise ValueError(msg)
 
     if not fuzzy:
-        if th.dotpath not in DATADIR_DATA_MAPPINGS['data'].keys():
+        if th.dotpath not in DATADIR_DATA_MAPPINGS['data']:
             msg = 'Topic hierarchy not in data mappings'
             LOGGER.error(msg)
             raise ValueError(msg)

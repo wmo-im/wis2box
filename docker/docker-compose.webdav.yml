@@ -11,6 +11,6 @@ services:
       PASSWORD: ${WEBDAV_PWD}
     ports:
       - 80:80
-    volumes:  
+    volumes:
       - ${WIS2BOX_DATADIR}/data/incoming:/var/lib/dav/data/incoming
       - ${WIS2BOX_DATADIR}/data/public:/var/lib/dav/data/public

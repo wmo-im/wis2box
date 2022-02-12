@@ -87,7 +87,7 @@ services:
 
   wis2box:
     container_name: wis2box
-    build: 
+    build:
       context: ..
       args:
         WIS2BOX_PIP3_EXTRA_PACKAGES: ${WIS2BOX_PIP3_EXTRA_PACKAGES}

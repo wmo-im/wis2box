@@ -85,7 +85,7 @@ PubSub configuration provides connectivity information for the PubSub broker.
 Other
 ^^^^^
 
-Additional directives provide various configurationscontrol of configuration options for the deployment of wis2box.  
+Additional directives provide various configurationscontrol of configuration options for the deployment of wis2box.
 
 .. code-block:: bash
 

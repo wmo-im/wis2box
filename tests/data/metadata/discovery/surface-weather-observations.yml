@@ -1,6 +1,6 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: observations-surface-land.mw.FWCL.landFixed
+    topic_hierarchy: data.core.observations-surface-land.mw.FWCL.landFixed
     data_category: observationsSurfaceLand
     country_code: mw
     originator: FWCL
@@ -10,7 +10,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: observations-surface-land.mw.FWCL.landFixed
+    identifier: data.core.observations-surface-land.mw.FWCL.landFixed
     language: en
     language_alternate: fr
     charset: utf8
@@ -34,7 +34,7 @@ identification:
     keywords:
         default:
             keywords:
-                en: 
+                en:
                     - surface weather
                     - temperature
                     - observations
@@ -56,7 +56,7 @@ identification:
                 name:
                     en: WMO Core Metadata profile topic hierarchy
                 url: https://github.com/wmo-im/wcmp2-codelists/blob/main/codelists/topic_hierarchy.csv
-        
+
     topiccategory:
         - climatologyMeteorologyAtmosphere
     extents:

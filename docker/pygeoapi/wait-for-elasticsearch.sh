@@ -38,7 +38,7 @@ response=$(curl $host)
 
 until [ "$response" = "200" ]  ; do
     response=$(curl --write-out %{http_code} --silent --output /dev/null "$host")
-    >&2 echo "Elasticsearch is up but unavailable - No Reponse - sleeping"
+    >&2 echo "Elasticsearch is up but unavailable - No Response - sleeping"
     sleep 10
 
 done

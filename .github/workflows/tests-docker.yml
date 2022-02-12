@@ -33,13 +33,13 @@ jobs:
         docker exec `docker ps -q --filter ancestor=wis2box_project_wis2box` sh -c " \
           wis2box environment create \
           && wis2box environment show \
-          && wis2box data setup --topic-hierarchy observations-surface-land.mw.FWCL.landFixed \
-          && wis2box data info --topic-hierarchy observations-surface-land.mw.FWCL.landFixed \
+          && wis2box data setup --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed \
+          && wis2box data info --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed \
           && wis2box metadata station cache /data/wis2box/data/metadata/station/station_list.csv \
           && wis2box metadata station publish-collection \
           && wis2box metadata discovery publish /data/wis2box/data/metadata/discovery/surface-weather-observations.yml \
-          && wis2box data ingest -th observations-surface-land.mw.FWCL.landFixed -p /data/wis2box/data/observations/WIGOS_0-454-2-AWSNAMITAMBO_20210707.csv \
-          && wis2box api add-collection /data/wis2box/data/metadata/discovery/surface-weather-observations.yml --topic-hierarchy observations-surface-land.mw.FWCL.landFixed \
+          && wis2box data ingest -th data.core.observations-surface-land.mw.FWCL.landFixed -p /data/wis2box/data/observations/WIGOS_0-454-2-AWSNAMITAMBO_20210707.csv \
+          && wis2box api add-collection /data/wis2box/data/metadata/discovery/surface-weather-observations.yml --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed \
           && wis2box api add-collection-items -r -p /data/wis2box/data/public"
     - name: run wis2box
       run: |

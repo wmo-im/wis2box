@@ -84,14 +84,14 @@ Your contribution will be under our [license](https://github.com/wmo-im/wis2box/
       branch, __base your branch off the ``main`` one__.
 
 * Note that depending on how long it takes for the dev team to merge your
-  patch, the copy of ``main`` you worked off of may get out of date! 
+  patch, the copy of ``main`` you worked off of may get out of date!
     * If you find yourself 'bumping' a pull request that's been sidelined for a
       while, __make sure you rebase or merge to latest ``main/``__ to ensure a
         speedier resolution.
 
 ### Code Formatting
 
-* __Please follow the coding conventions and style used in the wis2box repository.__ 
+* __Please follow the coding conventions and style used in the wis2box repository.__
 * wis2box endeavours to follow the
   [PEP-8](http://www.python.org/dev/peps/pep-0008/) guidelines.
 

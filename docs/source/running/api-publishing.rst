@@ -58,6 +58,14 @@ driven workflow.  If manual ingest is needed, the following command can be run i
 
    wis2box api add-collection-items --topic-hierarchy foo.bar.baz
 
+API container restart
+---------------------
+
+Any change to API configuration requires a restart of the API container, which can be run via the following:
+
+.. code-block:: bash
+
+   python3 wis2box-ctl.py restart wis2box
 
 
 .. _`OGC API`: https://ogcapi.ogc.org
