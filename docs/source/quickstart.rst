@@ -44,8 +44,8 @@ Setup observation data processing and API publication:
 
 .. code-block:: bash
 
-    wis2box data setup --topic-hierarchy observations-surface-land.mw.FWCL.landFixed
-    wis2box api add-collection /data/wis2box/data/metadata/discovery/surface-weather-observations.yml --topic-hierarchy observations-surface-land.mw.FWCL.landFixed
+    wis2box data setup --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed
+    wis2box api add-collection /data/wis2box/data/metadata/discovery/surface-weather-observations.yml --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed
 
 
 Publish station collection and discovery metadata to the API:
@@ -61,7 +61,7 @@ Process data via CLI:
 
 .. code-block:: bash
 
-    wis2box data ingest --topic-hierarchy observations-surface-land.mw.FWCL.landFixed --path /data/wis2box/data/observations/0-454-2-AWSNAMITAMBO-20210707.csv
+    wis2box data ingest --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed --path /data/wis2box/data/observations/0-454-2-AWSNAMITAMBO-20210707.csv
     wis2box api add-collection-items --recursive --path /data/wis2box/data/public
 
 
