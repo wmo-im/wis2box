@@ -109,6 +109,11 @@ setup(
         'Topic :: Scientific/Engineering :: GIS',
         'Topic :: Scientific/Engineering :: Information Analysis'
     ],
+    project_urls={
+        'Homepage': 'https://wmo-im.github.io/wis2box',
+        'Source Code': 'https://github.com/wmo-im/wis2box',
+        'Issue Tracker': 'https://github.com/wmo-im/wis2box/issues'
+    },
     cmdclass={'test': PyTest},
     test_suite='tests.run_tests'
 )

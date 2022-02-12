@@ -26,9 +26,9 @@ located in ``wis2box/data/base.py``.  Any wis2box plugin needs to inherit from
         """Observation data"""
         def __init__(self, topic_hierarchy: str) -> None:
             super().__init__(topic_hierarchy)
-    
+
         def transform(self, input_data: Path) -> bool:
-            # transform data 
+            # transform data
             # populate self.output_data with a dict as per:
             self.output_data [{
                 '_meta': {

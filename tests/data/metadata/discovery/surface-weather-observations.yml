@@ -34,7 +34,7 @@ identification:
     keywords:
         default:
             keywords:
-                en: 
+                en:
                     - surface weather
                     - temperature
                     - observations
@@ -56,7 +56,7 @@ identification:
                 name:
                     en: WMO Core Metadata profile topic hierarchy
                 url: https://github.com/wmo-im/wcmp2-codelists/blob/main/codelists/topic_hierarchy.csv
-        
+
     topiccategory:
         - climatologyMeteorologyAtmosphere
     extents:

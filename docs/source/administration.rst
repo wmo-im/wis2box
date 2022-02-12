@@ -7,7 +7,7 @@ wis2box is designed to be built as a network of virtual machines within a virtua
 is built, users login into the main wis2box machine to setup their workflow and configurations for
 data processing and publishing.
 
-The `wis2box-ctl.py` utility provides a number of tools for managing the wis2box containers.
+The ``wis2box-ctl.py`` utility provides a number of tools for managing the wis2box containers.
 
 The following steps provide an example of container management workflow.
 
@@ -24,7 +24,7 @@ The following steps provide an example of container management workflow.
 
    # view status of all deployed containers
    python3 wis2box-ctl.py status
-  
+
 
 .. note::
 

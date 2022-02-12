@@ -5,9 +5,9 @@ How wis2box works
 
 wis2box is implemented in the spirit of the `Twelve-Factor App methodology`_.
 
-wis2box is a `Docker`_ and `Python`_-based platform with the capabilities 
-for centres to integrate their data holdings and publish them to 
-the WMO Information System with a plug and play capability supporting 
+wis2box is a `Docker`_ and `Python`_-based platform with the capabilities
+for centres to integrate their data holdings and publish them to
+the WMO Information System with a plug and play capability supporting
 data publishing, discovery and access.
 
 High level system context

@@ -4,21 +4,21 @@
 #  Contact: Antje.Schremmer@dwd.de for credentials.
 #  to use with sarra, you need a line like so in credentials.conf:
 #    amqps://guest_canada:notReallyMyPassowrd@oflkd013.dwd.de login_method=PLAIN
-#  
+#
 #  The login_method=PLAIN specification is necessary because for some reason auto-negotiation fails.
 #  replace guest_canada in the credentials file and the broker below by the user name assigned.
-# 
+#
 broker amqps://guest_canada@oflkd013.dwd.de/
 
 acceptSizeWrong
-batch 1 
+batch 1
 #set sarracenia.moth.amqp.AMQP.logLevel debug
 #messageDebugDump
 
 reject .*/weather_reports/.*
 reject .*/webcam/.*
 
-strip 1 
+strip 1
 mirror
 directory ${WIS2BOX_DATADIR}/data/public/${YYYYMMDD}T${HH}
 accept .*
