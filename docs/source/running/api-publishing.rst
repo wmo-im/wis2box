@@ -61,7 +61,7 @@ driven workflow.  If manual ingest is needed, the following command can be run i
 API container restart
 ---------------------
 
-Any change to API configuration requires a restart of the API container, which can be fun via the following:
+Any change to API configuration requires a restart of the API container, which can be run via the following:
 
 .. code-block:: bash
 
