@@ -65,7 +65,7 @@ Any change to API configuration requires a restart of the API container, which c
 
 .. code-block:: bash
 
-   python wis2box-ctl.py restart wis2box
+   python3 wis2box-ctl.py restart wis2box
 
 
 .. _`OGC API`: https://ogcapi.ogc.org
