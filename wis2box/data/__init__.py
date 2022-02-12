@@ -166,6 +166,9 @@ def clean(ctx, days, verbosity):
 def info(ctx, topic_hierarchy, verbosity):
     """Display data properties"""
 
+    if topic_hierarchy is None:
+        raise click.ClickException('Missing -th/--topic-hierarchy')
+
     result = show_info(topic_hierarchy)
     click.echo(json.dumps(result, default=json_serial, indent=4))
 
@@ -176,6 +179,9 @@ def info(ctx, topic_hierarchy, verbosity):
 @cli_helpers.OPTION_VERBOSITY
 def setup(ctx, topic_hierarchy, verbosity):
     """Setup data directories"""
+
+    if topic_hierarchy is None:
+        raise click.ClickException('Missing -th/--topic-hierarchy')
 
     result = setup_dirs(topic_hierarchy)
     click.echo('Directories created:')
