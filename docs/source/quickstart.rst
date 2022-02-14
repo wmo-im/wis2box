@@ -18,6 +18,7 @@ is done by using the test environment file:
 
     cp tests/test.env dev.env
     vi dev.env
+    # ensure WIS2BOX_HOST_DATADIR is set to a local path on disk for persistent storage
 
 
 .. note::
@@ -45,16 +46,16 @@ Setup observation data processing and API publication:
 .. code-block:: bash
 
     wis2box data setup --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed
-    wis2box api add-collection /data/wis2box/data/metadata/discovery/surface-weather-observations.yml --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed
+    wis2box api add-collection /data/wis2box/metadata/discovery/surface-weather-observations.yml --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed
 
 
 Publish station collection and discovery metadata to the API:
 
 .. code-block:: bash
 
-    wis2box metadata station cache /data/wis2box/data/metadata/station/station_list.csv
+    wis2box metadata station cache /data/wis2box/metadata/station/station_list.csv
     wis2box metadata station publish-collection
-    wis2box metadata discovery publish /data/wis2box/data/metadata/discovery/surface-weather-observations.yml
+    wis2box metadata discovery publish /data/wis2box/metadata/discovery/surface-weather-observations.yml
 
 
 Process data via CLI:

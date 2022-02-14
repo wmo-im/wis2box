@@ -43,7 +43,7 @@ management.
 Container workflow
 ------------------
 
-Let's dive a little deeper.  The following diagram provides a view of all
+Let's dive a little deeper. The following diagram provides a view of all
 wis2box containers:
 
 .. figure:: ../architecture/c4-container.png
@@ -53,9 +53,9 @@ wis2box containers:
 
 Container functionality can be described as follows:
 
-* **Data Consumer**: the data entry point of wis2box.  Data pipelines and
+* **Data Consumer**: the data entry point of wis2box. Data pipelines and
   workflow begins here
-* **Data Management**: the epicentre of wis2box.  Provides core wis2box
+* **Data Management**: the epicentre of wis2box. Provides core wis2box
   administration and data/workflow/publising utilities
 * **Storage**: core data persistence
 * **API Application**: OGC APIs providing geospatial web services

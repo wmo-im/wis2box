@@ -5,12 +5,12 @@ Topic hierarchy
 
 .. note::
 
-   The WIS 2.0 topic hiearchies are currently in development.  wis2box implementation
+   The WIS 2.0 topic hiearchies are currently in development. wis2box implementation
    of the topic hiearchies will change, based on ratifications/updates of the topic
    hierarchies in WMO technical regulations and publications.
 
 wis2box implements the WIS 2.0 topic hierarchies, which are designed to efficiently
-categorize and classify data, by implementing directory hierarchies.  For example,
+categorize and classify data, by implementing directory hierarchies. For example,
 the below exemplifies a WIS 2.0 topic hierarchy as implemented in wis2box:
 
 .. csv-table::

@@ -3,7 +3,7 @@
 Station metadata
 ================
 
-wis2box is designed to support data ingest and processing of any kind.  For observations,
+wis2box is designed to support data ingest and processing of any kind. For observations,
 processing workflow typically requires station metadata to be present at runtime.
 
 wis2box provides the ability to cache station metadata from the `WMO OSCAR/Surface`_ system.
@@ -20,7 +20,7 @@ Use this CSV to cache station metadata:
    wis2box metadata station cache /path/to/station_list.csv
 
 Resulting station metadata files (JSON) are stored in ``WIS2BOX_DATADIR/data/metadata/station`` and
-can be used by wis2box data processing pipelines.  These data are required before starting automated
+can be used by wis2box data processing pipelines. These data are required before starting automated
 processing.
 
 Summary

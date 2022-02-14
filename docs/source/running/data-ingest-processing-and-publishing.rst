@@ -12,7 +12,7 @@ as well GeoJSON features.
 Interactive ingest, processing and publishing
 ---------------------------------------------
 
-The `wis2box` CLI provides a data subsystem to process data interactively.  CLI
+The `wis2box` CLI provides a data subsystem to process data interactively. CLI
 data ingest/processing/publishing can be run with explicit or implicit topic
 hierarchy routing (which needs to be tied to the pipeline via the :ref:`data-mappings`).
 
@@ -56,5 +56,5 @@ placed in the appropriate topic hierarchy directory.
 Summary
 -------
 
-Congratulations! At this point, you have successfully setup a wis2box data pipeline.  Data should be flowing through
+Congratulations! At this point, you have successfully setup a wis2box data pipeline. Data should be flowing through
 the system.

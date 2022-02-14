@@ -14,8 +14,8 @@ Building your own data plugin
 -----------------------------
 
 The heart of a wis2box data plugin is driven from the ``wis2box.data.base`` abstract base class (ABC)
-located in ``wis2box/data/base.py``.  Any wis2box plugin needs to inherit from
-``wis2box.data.base.BaseAbstractData``.  A minimal example can be found below:
+located in ``wis2box/data/base.py``. Any wis2box plugin needs to inherit from
+``wis2box.data.base.BaseAbstractData``. A minimal example can be found below:
 
 .. code-block:: python
 
@@ -41,7 +41,7 @@ located in ``wis2box/data/base.py``.  Any wis2box plugin needs to inherit from
             return True
 
 
-The key function that plugin needs to implement is the ``transform`` function.  This function
+The key function that plugin needs to implement is the ``transform`` function. This function
 should return a ``True`` or ``False`` of the result of the processing, as well as populate
 the ``output_data`` property.
 
@@ -49,7 +49,7 @@ The ``output_data`` property should provide a ``list`` of objects with the follo
 
 - ``_meta``: object with identifier and Python `datetime`_ objects based on the observed datetime of the data
 - ``<format-extension>``: 1..n properties for each format representation, with the key being the filename
-  extension.  The value of this property can be a string or bytes, depending on whether the underlying data
+  extension. The value of this property can be a string or bytes, depending on whether the underlying data
   is ASCII or binary, for example
 
 Example plugins
