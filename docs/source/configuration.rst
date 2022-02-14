@@ -10,7 +10,9 @@ Environment variables
 ---------------------
 
 wis2box configuration is driven primarily by a small set of environment variables. The runtime
-configuration is defined in the `Env`_ format in a plain text file named ``dev.env``.
+configuration is defined in the `Env`_ format in a plain text file named ``dev.env`` and ``default.env``.
+``dev.env`` is required to map the wis2box data directory from the host system to the containers as well as
+optional overides of environment variables set in ``default.env``.   
 
 .. note::
 
@@ -37,7 +39,7 @@ Data
 ^^^^
 
 The data configurations provide control of directories on the host machine bound into the Docker volume and
-wis2box. The default relationship below resembles the directory structure within the wis2box volume.
+wis2box.  The default relationship below resembles the directory structure within the wis2box volume.
 
 .. note::
 
@@ -45,7 +47,8 @@ wis2box. The default relationship below resembles the directory structure within
 
 .. code-block:: bash
 
-    WIS2BOX_DATADIR=${PWD}/wis2box-data  # host directory for wis2box volume
+    WIS2BOX_HOST_DATADIR=${PWD}/wis2box-data # wis2box host data directory
+    WIS2BOX_DATADIR=/data/wis2box  # wis2box data directory
     WIS2BOX_DATA_RETENTION_DAYS=7  # wis2box data retention time, in days.  Data older than this value is
                                    # is deleted on a daily basis
 
@@ -103,6 +106,9 @@ A full configuration example can be found below:
 .. literalinclude:: ../../wis2box.env
    :language: bash
 
+.. literalinclude:: ../../docker/default.env
+   :language: bash
+
 Docker Compose
 --------------
 
@@ -117,4 +123,4 @@ At this point, you have defined the runtime configuration required to administer
 
 
 .. _`Env`: https://en.wikipedia.org/wiki/Env
-.. _`Github`: https://github.com/wmo-im/wis2box/blob/main/wis2box.env
+.. _`Github`: https://github.com/wmo-im/wis2box/blob/main/docker/default.env

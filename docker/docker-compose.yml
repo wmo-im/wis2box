@@ -6,12 +6,12 @@ services:
     image: nginx:alpine
     restart: always
     env_file:
+      - default.env
       - ../dev.env
-      - docker.env
     depends_on:
       - wis2box-ui
     volumes:
-      - ${WIS2BOX_DATADIR}/data:/data/wis2box/data:ro,z
+      - ${WIS2BOX_HOST_DATADIR}/data/public:/data/wis2node/data/public:ro
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
 
   wis2box-ui:
@@ -26,14 +26,14 @@ services:
     build:
       context: ./pygeoapi
     env_file:
+      - default.env
       - ../dev.env
-      - docker.env
     environment:
       - SCRIPT_NAME=/pygeoapi
     depends_on:
       - elasticsearch
     volumes:
-      - ${WIS2BOX_DATADIR}/data:/data/wis2box/data:ro,z
+      - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:ro
       - ./pygeoapi/pygeoapi-config.yml:/pygeoapi/local.config.yml:ro
 
   elasticsearch:
@@ -66,10 +66,10 @@ services:
     build:
       context: ./mosquitto
     env_file:
+      - default.env
       - ../dev.env
-      - docker.env
     volumes:
-      - ${WIS2BOX_DATADIR}/data:/data/wis2box/data:rw,z
+      - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
 
   data-consumer:
     container_name: data-consumer
@@ -78,10 +78,10 @@ services:
       context: ./data-consumer
     #user: sarra:sarra
     env_file:
+      - default.env
       - ../dev.env
-      - docker.env
     volumes:
-      - ${WIS2BOX_DATADIR}/data:/data/wis2box/data:rw,z
+      - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
     depends_on:
       - mosquitto
 
@@ -89,17 +89,17 @@ services:
     container_name: wis2box
     build:
       context: ..
-      args:
-        WIS2BOX_PIP3_EXTRA_PACKAGES: ${WIS2BOX_PIP3_EXTRA_PACKAGES}
+      # args:
+      #   WIS2BOX_PIP3_EXTRA_PACKAGES: ${WIS2BOX_PIP3_EXTRA_PACKAGES}
     #user: wis2box:wis2box
     env_file:
+      - default.env
       - ../dev.env
-      - docker.env
     volumes:
-      - ${WIS2BOX_DATADIR}/data:/data/wis2box/data:rw,z
+      - ${WIS2BOX_HOST_DATADIR}/:/data/wis2box/:rw
       - ./wis2box/config:/root/.config/sr3:ro
       - ./wis2box/wis2box.cron:/etc/cron.d/wis2box:ro
-      - ./pygeoapi/pygeoapi-config.yml:/data/wis2box/pygeoapi-config.yml:rw,z
+      - ./pygeoapi/pygeoapi-config.yml:/data/wis2box/pygeoapi-config.yml:rw
     depends_on:
       - mosquitto
 volumes:
