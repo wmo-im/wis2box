@@ -90,8 +90,11 @@ class ObservationData(BaseAbstractData):
         for item in results:
             LOGGER.debug('Setting obs date for filepath creation')
 
-            identifier = item['_meta']['identifier']
+            wigos_id = item['_meta']['wigos_id']
             data_date = item['_meta']['data_date']
+            data_date_iso8601 = data_date.strftime('%Y%m%dT%H%M%S')
+
+            identifier = f'WIGOS_{wigos_id}_{data_date_iso8601}'
 
             self.output_data[identifier] = item
             self.output_data[identifier]['_meta']['relative_filepath'] = \
