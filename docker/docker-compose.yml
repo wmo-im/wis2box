@@ -11,7 +11,7 @@ services:
     depends_on:
       - wis2box-ui
     volumes:
-      - ${WIS2BOX_HOST_DATADIR}/data/public:/data/wis2node/data/public:ro
+      - ${WIS2BOX_HOST_DATADIR}/data/public:/data/wis2box/data/public:ro
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
 
   wis2box-ui:
