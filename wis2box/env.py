@@ -36,7 +36,6 @@ with (Path(__file__).parent / 'resources' / 'data-mappings.yml').open() as fh:
 
 try:
     DATADIR = Path(os.environ.get('WIS2BOX_DATADIR'))
-    DATADIR_CONFIG = DATADIR / 'data' / 'config'
     DATADIR_INCOMING = DATADIR / 'data' / 'incoming'
     DATADIR_PUBLIC = DATADIR / 'data' / 'public'
     DATADIR_ARCHIVE = DATADIR / 'data' / 'archive'
@@ -88,7 +87,6 @@ if 'WIS2BOX_DATADIR_DATA_MAPPINGS' in os.environ:
 
 if None in [
     DATADIR,
-    DATADIR_CONFIG,
     DATADIR_INCOMING,
     DATADIR_PUBLIC,
     OSCAR_API_TOKEN,
@@ -114,12 +112,11 @@ def environment():
 def create(ctx, verbosity):
     """Creates baseline data/metadata directory structure"""
 
-    click.echo(f'Setting up {LOGLEVEL} logging at {LOGFILE}')
+    click.echo(f'Setting up logging (loglevel={LOGLEVEL}, logfile={LOGFILE})')
     setup_logger(LOGLEVEL, LOGFILE)
 
     click.echo(f'Creating baseline directory structure in {DATADIR}')
     DATADIR.mkdir(parents=True, exist_ok=True)
-    DATADIR_CONFIG.mkdir(parents=True, exist_ok=True)
     DATADIR_INCOMING.mkdir(parents=True, exist_ok=True)
     DATADIR_PUBLIC.mkdir(parents=True, exist_ok=True)
     (DATADIR / 'cache').mkdir(parents=True, exist_ok=True)
