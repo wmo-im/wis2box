@@ -19,11 +19,10 @@
 #
 ###############################################################################
 
-FROM ghcr.io/metpx/sarracenia:latest
+FROM ghcr.io/metpx/sarracenia_x64:latest
 
-RUN mkdir -p /data/wis2box/cache/home/sarra
-RUN ln -s /root/.cache /data/wis2box/cache/home/sarra
+COPY ./config/default.conf ./config/admin.conf /root/.config/sr3/
+COPY ./config/watch/incoming.conf  /root/.config/sr3/watch/incoming.conf
+#COPY ./config /root/.config/sr3
 
-COPY ./config /root/.config/sr3
-
-CMD sh -c "whoami && sr3 start && sleep infinity"
+CMD sh -c "whoami && sr3 --logStdout start && sleep infinity"
