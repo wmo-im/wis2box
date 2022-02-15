@@ -73,7 +73,7 @@ services:
 
   data-consumer:
     container_name: data-consumer
-    # image: ghcr.io/metpx/sarracenia:latest
+    image: ghcr.io/metpx/sarracenia_x64:latest
     build:
       context: ./data-consumer
     #user: sarra:sarra

@@ -62,4 +62,4 @@ RUN apt-get update -y \
 
 WORKDIR /home/wis2box
 
-CMD sh -c "wis2box environment create && sr3 start && sleep infinity"
+CMD sh -c "wis2box environment create && sr3 --logStdout start && sleep infinity"
