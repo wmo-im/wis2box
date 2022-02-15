@@ -30,6 +30,7 @@ Start wis2box with Docker Compose and login to the wis2box container:
 .. code-block:: bash
 
     python3 wis2box-ctl.py start
+    python3 wis2box-ctl.py status --all # The --all flag shows all containers, even ones that are down.
     python3 wis2box-ctl.py login
 
 
@@ -46,24 +47,24 @@ Setup observation data processing and API publication:
 .. code-block:: bash
 
     wis2box data setup --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed
-    wis2box api add-collection /data/wis2box/metadata/discovery/surface-weather-observations.yml --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed
+    wis2box api add-collection $WIS2BOX_DATADIR/metadata/discovery/surface-weather-observations.yml --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed
 
 
 Publish station collection and discovery metadata to the API:
 
 .. code-block:: bash
 
-    wis2box metadata station cache /data/wis2box/metadata/station/station_list.csv
+    wis2box metadata station cache $WIS2BOX_DATADIR/metadata/station/station_list.csv
     wis2box metadata station publish-collection
-    wis2box metadata discovery publish /data/wis2box/metadata/discovery/surface-weather-observations.yml
+    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/surface-weather-observations.yml
 
 
 Process data via CLI:
 
 .. code-block:: bash
 
-    wis2box data ingest --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed --path /data/wis2box/data/observations/0-454-2-AWSNAMITAMBO-20210707.csv
-    wis2box api add-collection-items --recursive --path /data/wis2box/data/public
+    wis2box data ingest --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed --path $WIS2BOX_DATADIR/observations/0-454-2-AWSNAMITAMBO-20210707.csv
+    wis2box api add-collection-items --recursive --path $WIS2BOX_DATADIR/data/public
 
 
 Logout of wis2box container:

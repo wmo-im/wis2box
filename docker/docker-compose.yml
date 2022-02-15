@@ -96,7 +96,7 @@ services:
       - default.env
       - ../dev.env
     volumes:
-      - ${WIS2BOX_HOST_DATADIR}/:/data/wis2box/:rw
+      - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
       - ./wis2box/config:/root/.config/sr3:ro
       - ./wis2box/wis2box.cron:/etc/cron.d/wis2box:ro
       - ./pygeoapi/pygeoapi-config.yml:/data/wis2box/pygeoapi-config.yml:rw
