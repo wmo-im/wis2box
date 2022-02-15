@@ -21,7 +21,7 @@ jobs:
     - name: wis2box configuration
       run: |
         cp tests/test.env dev.env
-        echo dev.env
+        cat dev.env
         python3 wis2box-ctl.py config
     - name: build wis2box ⚙️
       run: |
