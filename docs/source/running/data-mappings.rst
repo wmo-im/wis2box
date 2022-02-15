@@ -4,7 +4,7 @@ Data mappings
 =============
 
 Once a topic hierarchy is defined, it needs to be included in the wis2box data mappings
-configuration.  wis2box provides a default data mapping:
+configuration. wis2box provides a default data mapping:
 
 .. literalinclude:: ../../../wis2box/resources/data-mappings.yml
    :language: yaml

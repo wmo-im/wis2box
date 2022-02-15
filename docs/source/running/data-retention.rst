@@ -5,7 +5,7 @@ Data retention
 ==============
 
 wis2box is configured to set data retention according to your requirements. Data retention is managed
-via the ``WIS2BOX_DATA_RETENTION_DAYS`` environment variable as part of configuring wis2box.  Data
+via the ``WIS2BOX_DATA_RETENTION_DAYS`` environment variable as part of configuring wis2box. Data
 retention includes cleaning of published data and archiving of incoming/raw data.
 
 Cleaning

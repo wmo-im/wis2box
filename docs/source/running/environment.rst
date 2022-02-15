@@ -9,7 +9,7 @@ wis2box requires the environment to be initialized before data processing or pub
 
    wis2box environment create
 
-This command will create all the directories required.  You can check the environment at
+This command will create all the directories required. You can check the environment at
 any time with:
 
 .. code-block:: bash

@@ -37,7 +37,7 @@ Features
     * `OGC API`_
     * `MQTT`_
     * `STAC`_
-* robust and extensible plugin framework.  Write your own data processing engines and integrate
+* robust and extensible plugin framework. Write your own data processing engines and integrate
   seamlessly into wis2box!
 * free and open source (FOSS)
 * containerized: use of Docker, enabling easy deployment

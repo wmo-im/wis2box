@@ -3,7 +3,7 @@
 Administration
 ==============
 
-wis2box is designed to be built as a network of virtual machines within a virtual network.  Once this
+wis2box is designed to be built as a network of virtual machines within a virtual network. Once this
 is built, users login into the main wis2box machine to setup their workflow and configurations for
 data processing and publishing.
 

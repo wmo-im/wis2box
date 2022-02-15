@@ -22,7 +22,7 @@
 import logging
 from typing import Union
 
-from wis2box.env import DATADIR_CONFIG, DATADIR_INCOMING, DATADIR_PUBLIC
+from wis2box.env import DATADIR_INCOMING, DATADIR_PUBLIC
 from wis2box.topic_hierarchy import TopicHierarchy
 
 LOGGER = logging.getLogger(__name__)
@@ -140,8 +140,7 @@ class BaseAbstractData:
         dirpath = self.topic_hierarchy.dirpath
 
         return {
-            'config': DATADIR_CONFIG / dirpath,
-            'incoming': DATADIR_INCOMING / dirpath,
+            'incoming': DATADIR_INCOMING / dirpath
             # 'public': DATADIR_PUBLIC / dirpath
         }
 
