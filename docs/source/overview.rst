@@ -24,8 +24,8 @@ Features
   to WMO data and metadata standards
 * event driven or interactive data ingest/process/publishing pipeline
 * visualization of stations/data on interactive maps
-* discovery metadata managment and publishing
-* download/access of data from WIS 2.0 network to yor local environment
+* discovery metadata management and publishing
+* download/access of data from WIS 2.0 network to your local environment
 * standards-based data services and access mechanisms:
 
   * Data
