@@ -93,8 +93,8 @@ class ElasticBackend(BaseBackend):
 
         if self.conn.indices.exists_template(es_template):
             msg = f'template {es_template} exists'
-            LOGGER.error(msg)
-            raise RuntimeError(msg)
+            LOGGER.warning(msg)
+            # raise RuntimeError(msg)
 
         settings = deepcopy(SETTINGS)
 

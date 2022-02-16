@@ -98,6 +98,9 @@ def add_collection_items(ctx, topic_hierarchy, path, recursive, verbosity):
 def add_collection(ctx, filepath, topic_hierarchy, verbosity):
     """Add collection index to API backend"""
 
+    if topic_hierarchy is None:
+        raise click.ClickException('Missing -th/--topic-hierarchy')
+
     th, _ = validate_and_load(topic_hierarchy)
     index_name = th.dotpath
 
@@ -127,6 +130,9 @@ def add_collection(ctx, filepath, topic_hierarchy, verbosity):
 @cli_helpers.OPTION_VERBOSITY
 def delete_collection(ctx, topic_hierarchy, verbosity):
     """Delete collection from api backend"""
+
+    if topic_hierarchy is None:
+        raise click.ClickException('Missing -th/--topic-hierarchy')
 
     click.echo(f'Deleting collection: {topic_hierarchy}')
 
