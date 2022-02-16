@@ -10,7 +10,7 @@ integrate their data holdings and publish them to the WMO Information System
 with a plug and play capability supporting data publishing, discovery
 and access.
 
-Please consult the [documentation](https://wmo-im.github.io/wmo-im/wis2box) for installing
+Please consult the [documentation](https://wmo-im.github.io/wis2box) for installing
 and running wis2box.
 
 ## Contact
