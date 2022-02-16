@@ -21,8 +21,6 @@
 
 FROM ghcr.io/metpx/sarracenia_x64:latest
 
-COPY ./config/default.conf ./config/admin.conf /root/.config/sr3/
-COPY ./config/watch/incoming.conf  /root/.config/sr3/watch/incoming.conf
-#COPY ./config /root/.config/sr3
+COPY ./config /root/.config/sr3
 
 CMD sh -c "whoami && sr3 --logStdout start && sleep infinity"
