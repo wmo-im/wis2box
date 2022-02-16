@@ -85,11 +85,11 @@ services:
     depends_on:
       - mosquitto
 
-  ca-consumer:
-    container_name: ca-consumer
+  ca-republisher:
+    container_name: ca-republisher
     image: ghcr.io/metpx/sarracenia_x64:latest
     build:
-      context: ./ca-consumer
+      context: ./ca-republisher
     #user: sarra:sarra
     env_file:
       - default.env
@@ -99,8 +99,8 @@ services:
     depends_on:
       - mosquitto
 
-  de-consumer:
-    container_name: de-consumer
+  de-republisher:
+    container_name: de-republisher
     image: ghcr.io/metpx/sarracenia_x64:latest
     build:
       context: ./watch-incoming
