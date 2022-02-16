@@ -20,7 +20,7 @@ located in ``wis2box/data/base.py``. Any wis2box plugin needs to inherit from
 .. code-block:: python
 
     from datetime import datetime
-    from wis2box.data.abse import BaseAbstractData
+    from wis2box.data.base import BaseAbstractData
 
     class MyCoolData(BaseAbstractData):
         """Observation data"""
@@ -52,9 +52,36 @@ The ``output_data`` property should provide a ``list`` of objects with the follo
   extension. The value of this property can be a string or bytes, depending on whether the underlying data
   is ASCII or binary, for example
 
+Packaging
+---------
+
+The next step is assembling your plugin using standard Python packaging. All plugin code and configuration files
+should be made part of the package so that it can operate independently when running in wis2box.  For distribution and
+installation, you have the following options:
+
+- publish to the `Python Package Index (PyPI)`_ and install in the wis2node container with ``pip3 install wis2box-mypackage``
+- ``git clone`` or download your package, and install via ``python3 setup.py install``
+
+See the `Python packaging tutorial`_ or `Cookiecutter PyPackage`_ for guidance and templates/examples.
+
+.. note::
+
+   It is recommended to name your wis2box packages with the convention ``wis2box-MYPLUGIN-NAME``.
+
+
+Integration
+-----------
+
+Once your package is installed on the wis2box container, the data mappings need to be updated to connect
+your plugin to a topic hierarchy.  See :ref:`data-mappings` for more information.
+
+
 Example plugins
 ---------------
 
 An example plugin for proof of concept can be found in https://github.com/wmo-cop/wis2box-malawi-observations
 
 .. _`datetime`: https://docs.python.org/3/library/datetime.html
+.. _`Python Package Index (PyPI)`: https://pypi.org
+.. _`Python packaging tutorial`: https://packaging.python.org/en/latest/tutorials/packaging-projects
+.. _`Cookiecutter PyPackage`: https://github.com/audreyfeldroy/cookiecutter-pypackage

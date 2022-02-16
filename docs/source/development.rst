@@ -30,8 +30,9 @@ wis2box follows the `Semantic Versioning Specification (SemVer)`_.
 Code Conventions
 -----------------
 
-Python code follows [PEP8](https://www.python.org/dev/peps/pep-0008) coding conventions.
+Python code follows `PEP8`_ coding conventions.
 
 
 .. _`GitHub Actions`: https://github.com/wmo-im/wis2box/blob/main/.github/workflows/tests-docker.yml
 .. _`Semantic Versioning Specification (SemVer)`: https://semver.org
+.. _`PEP8`: https://www.python.org/dev/peps/pep-0008
