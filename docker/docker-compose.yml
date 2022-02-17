@@ -103,7 +103,7 @@ services:
     container_name: de-republisher
     image: ghcr.io/metpx/sarracenia_x64:latest
     build:
-      context: ./watch-incoming
+      context: ./de-republisher
     #user: sarra:sarra
     env_file:
       - default.env
