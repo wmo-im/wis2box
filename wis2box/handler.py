@@ -48,8 +48,13 @@ class Handler:
             raise ValueError(msg)
 
     def handle(self) -> bool:
-        self.plugin.transform(self.filepath)
-        self.plugin.publish()
+        try:
+            self.plugin.transform(self.filepath)
+            self.plugin.publish()
+        except Exception as err:
+            msg = f'file {self.filepath} failed to transform/publish: {err}'
+            LOGGER.warning(msg)
+            return False
         return True
 
     def publish(self, backend) -> bool:
