@@ -22,7 +22,6 @@ services:
 
   pygeoapi:
     container_name: pygeoapi
-    #image: geopython/pygeoapi:latest
     build:
       context: ./pygeoapi
     env_file:
@@ -73,7 +72,6 @@ services:
 
   data-consumer:
     container_name: data-consumer
-    image: ghcr.io/metpx/sarracenia_x64:latest
     build:
       context: ./data-consumer
     env_file:
@@ -86,7 +84,6 @@ services:
 
   mqp-publisher:
     container_name: mqp-publisher
-    image: ghcr.io/metpx/sarracenia_x64:latest
     build:
       context: ./mqp-publisher
     env_file:
@@ -99,7 +96,6 @@ services:
 
   ca-republisher:
     container_name: ca-republisher
-    image: ghcr.io/metpx/sarracenia_x64:latest
     build:
       context: ./ca-republisher
     env_file:
@@ -112,7 +108,6 @@ services:
 
   de-republisher:
     container_name: de-republisher
-    image: ghcr.io/metpx/sarracenia_x64:latest
     build:
       context: ./de-republisher
     env_file:
