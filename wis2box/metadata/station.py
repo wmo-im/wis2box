@@ -130,11 +130,11 @@ def cache(ctx, filepath, verbosity):
 
     for row in reader:
         wsi = row['wigos_station_identifier']
-        click.echo(f"Caching station metadata for {row['wigos_station_identifier']}")  # noqa
+        click.echo(f"Caching station metadata for {wsi}")
         try:
             station_report = get_station_report(wsi)
         except RuntimeError:
-            click.echo('Station not found')
+            click.echo(f'Station not found: {wsi}')
 
         filename = f"{DATADIR}/metadata/station/{wsi}.json"
         LOGGER.debug(f'Writing file to {filename}')

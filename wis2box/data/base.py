@@ -109,16 +109,17 @@ class BaseAbstractData:
                 LOGGER.debug(f'Writing data to {filename}')
                 filename.parent.mkdir(parents=True, exist_ok=True)
 
-                if isinstance(value2, bytes):
-                    mode = 'wb'
-                if isinstance(value2, str):
-                    mode = 'w'
+                if value2 is None:
+                    msg = f'Empty data for {key2}; not publishing'
+                    LOGGER.warning(msg)
+                else:
+                    if isinstance(value2, bytes):
+                        mode = 'wb'
+                    if isinstance(value2, str):
+                        mode = 'w'
 
-                with filename.open(mode) as fh:
-                    fh.write(value2)
-
-                if key2 == 'geojson':
-                    LOGGER.debug('Publishing data to API')
+                    with filename.open(mode) as fh:
+                        fh.write(value2)
 
         return True
 
