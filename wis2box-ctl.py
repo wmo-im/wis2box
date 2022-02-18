@@ -160,7 +160,7 @@ def make(args) -> None:
         _ = run(args, split('docker ps -a -q'), asciiPipe=True)
         run(args, split(f'docker rm {_}'))
     elif args.command == "restart":
-        container = "" if not args.args else ' '.joins(args.args)
+        container = "" if not args.args else ' '.join(args.args)
         run(args,
             split(f'docker-compose {DOCKER_COMPOSE_ARGS} restart {container}'))
     elif args.command == "status":
