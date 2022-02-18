@@ -44,8 +44,16 @@ parser.add_argument(
     help='simulate execution by printing action rather than executing')
 
 commands = [
-    'config', 'build', 'start', 'stop', 'update', 'prune', 'restart', 'status',
-    'lint'
+    'build',
+    'config',
+    'lint',
+    'login',
+    'prune',
+    'restart',
+    'start',
+    'status',
+    'stop',
+    'update',
 ]
 
 parser.add_argument('command',
