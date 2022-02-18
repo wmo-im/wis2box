@@ -133,7 +133,7 @@ def make(args) -> None:
     if args.command == "config":
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} config'))
     elif args.command == "build":
-        cmd = "" if not args.args else args.args
+        cmd = "" if not args.args else ' '.join(args.args)
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} build {cmd}'))
     elif args.command == "start":
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} up -d'))
@@ -160,11 +160,11 @@ def make(args) -> None:
         _ = run(args, split('docker ps -a -q'), asciiPipe=True)
         run(args, split(f'docker rm {_}'))
     elif args.command == "restart":
-        container = "" if not args.args else args.args
+        container = "" if not args.args else ' '.joins(args.args)
         run(args,
             split(f'docker-compose {DOCKER_COMPOSE_ARGS} restart {container}'))
     elif args.command == "status":
-        cmd = "" if not args.args else args.args
+        cmd = "" if not args.args else ' '.join(args.args)
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} ps {cmd}'))
     elif args.command == "lint":
         files = walk_path(".")
