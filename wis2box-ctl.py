@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ###############################################################################
 #
 # Licensed to the Apache Software Foundation (ASF) under one
@@ -19,6 +20,7 @@
 #
 ###############################################################################
 
+import argparse
 import os
 import subprocess
 import sys
@@ -30,10 +32,16 @@ DOCKER_COMPOSE_ARGS = """
     -p wis2box_project
     """
 
-def usage() -> str:
-    text = """
-    Usage: {program} <command> <args>
+parser=argparse.ArgumentParser( \
+    description='manage a compposition of docker containers to implement a wis 2 box', \
+    formatter_class=argparse.RawTextHelpFormatter )
+#    formatter_class=argparse.ArgumentDefaultsHelpFormatter )
 
+parser.add_argument('--simulate', dest='simulate', action='store_true', help='simulate execution by printing action rather than executing')
+
+commands = [ 'config', 'build', 'start', 'stop', 'update', 'prune', 'restart', 'status', 'lint' ]
+
+parser.add_argument('command', choices=commands, help="""
     - config: validate and view Docker configuration
     - build: build all services
     - start: start system
@@ -45,9 +53,11 @@ def usage() -> str:
     - restart [container]: restart one or all containers
     - status [-a]: view status of wis2box containers
     - lint: run PEP8 checks against local Python code
-    """
+    """ )
 
-    return text.format(program=sys.argv[0])
+parser.add_argument('args', nargs=argparse.REMAINDER )
+
+args = parser.parse_args()
 
 
 def split(value: str) -> list:
@@ -77,8 +87,23 @@ def walk_path(path: str) -> list:
 
     return file_list
 
+def run(args,cmd, asciiPipe=False) -> str:
 
-def make(command: str, *args) -> None:
+    if args.simulate:
+        if asciiPipe: 
+           print( f"simulation: {' '.join(cmd)} >/tmp/temp_buffer$$.txt" )
+        else:
+           print( f"simulation: {' '.join(cmd)}" )
+        return '`cat /tmp/temp_buffer$$.txt`'
+    else:
+        if asciiPipe:
+            return subprocess.run(cmd, stdout=subprocess.PIPE).stdout.decode('ascii')
+        else:
+            subprocess.run(cmd)
+    return None
+
+
+def make(args) -> None:
     """
     Serves as pseudo Makefile using Python subprocesses.
 
@@ -86,39 +111,39 @@ def make(command: str, *args) -> None:
 
     :returns: None.
     """
-    if command == "config":
-        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} config'))
-    elif command == "build":
-        cmd = "" if args[-1] == command else args[-1]
-        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} build {cmd}'))
-    elif command == "start":
-        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} up -d'))
-    elif command == "login":
-        subprocess.run(split('docker exec -it wis2box /bin/bash'))
-    elif command == "login-root":
-        subprocess.run(split('docker exec -u -0 -it wis2box /bin/bash'))
-    elif command == "logs":
-        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} logs --follow'))
-    elif command == "stop":
-        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} down --remove-orphans'))
-    elif command == "update":
-        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} pull'))
-    elif command == "prune":
-        subprocess.run(split('docker container prune -f'))
-        subprocess.run(split('docker volume prune -f'))
-        _ = subprocess.run(split('docker images --filter dangling=true -q --no-trunc'), stdout=subprocess.PIPE).stdout.decode('ascii')
-        subprocess.run(split(f'docker rmi {_}'))
-        _ = subprocess.run(split('docker ps -a -q'), stdout=subprocess.PIPE).stdout.decode('ascii')
-        subprocess.run(split(f'docker rm {_}'))
-    elif command == "restart":
-        container = "" if args[-1] == command else args[-1]
-        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} restart {container}'))
-    elif command == "status":
-        cmd = "" if args[-1] == command else args[-1]
-        subprocess.run(split(f'docker-compose {DOCKER_COMPOSE_ARGS} ps {cmd}'))
-    elif command == "lint":
+    if args.command == "config":
+        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} config'))
+    elif args.command == "build":
+        cmd = "" if not args.args else args.args
+        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} build {cmd}'))
+    elif args.command == "start":
+        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} up -d'))
+    elif args.command == "login":
+        run(args, split('docker exec -it wis2box /bin/bash'))
+    elif args.command == "login-root":
+        run(args, split('docker exec -u -0 -it wis2box /bin/bash'))
+    elif args.command == "logs":
+        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} logs --follow'))
+    elif args.command == "stop":
+        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} down --remove-orphans'))
+    elif args.command == "update":
+        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} pull'))
+    elif args.command == "prune":
+        run(args, split('docker container prune -f'))
+        run(args, split('docker volume prune -f'))
+        _ = run(args, split('docker images --filter dangling=true -q --no-trunc'), asciiPipe=True )
+        run(args, split(f'docker rmi {_}'))
+        _ = run(args, split('docker ps -a -q'), asciiPipe=True )
+        run(args,split(f'docker rm {_}'))
+    elif args.command == "restart":
+        container = "" if not args.args else args.args
+        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} restart {container}'))
+    elif args.command == "status":
+        cmd = "" if not args.args else args.args
+        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} ps {cmd}'))
+    elif args.command == "lint":
         files = walk_path(".")
-        subprocess.run(('flake8', *files))
+        run(args, ('flake8', *files))
     else:
         print(usage())
 
@@ -128,4 +153,4 @@ if __name__ == "__main__":
         print(usage())
         sys.exit(1)
 
-    make(sys.argv[1], *sys.argv)
+    make(args)
