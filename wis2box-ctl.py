@@ -37,11 +37,20 @@ parser=argparse.ArgumentParser( \
     formatter_class=argparse.RawTextHelpFormatter )
 #    formatter_class=argparse.ArgumentDefaultsHelpFormatter )
 
-parser.add_argument('--simulate', dest='simulate', action='store_true', help='simulate execution by printing action rather than executing')
+parser.add_argument(
+    '--simulate',
+    dest='simulate',
+    action='store_true',
+    help='simulate execution by printing action rather than executing')
 
-commands = [ 'config', 'build', 'start', 'stop', 'update', 'prune', 'restart', 'status', 'lint' ]
+commands = [
+    'config', 'build', 'start', 'stop', 'update', 'prune', 'restart', 'status',
+    'lint'
+]
 
-parser.add_argument('command', choices=commands, help="""
+parser.add_argument('command',
+                    choices=commands,
+                    help="""
     - config: validate and view Docker configuration
     - build: build all services
     - start: start system
@@ -53,9 +62,9 @@ parser.add_argument('command', choices=commands, help="""
     - restart [container]: restart one or all containers
     - status [-a]: view status of wis2box containers
     - lint: run PEP8 checks against local Python code
-    """ )
+    """)
 
-parser.add_argument('args', nargs=argparse.REMAINDER )
+parser.add_argument('args', nargs=argparse.REMAINDER)
 
 args = parser.parse_args()
 
@@ -87,17 +96,19 @@ def walk_path(path: str) -> list:
 
     return file_list
 
-def run(args,cmd, asciiPipe=False) -> str:
+
+def run(args, cmd, asciiPipe=False) -> str:
 
     if args.simulate:
-        if asciiPipe: 
-           print( f"simulation: {' '.join(cmd)} >/tmp/temp_buffer$$.txt" )
+        if asciiPipe:
+            print(f"simulation: {' '.join(cmd)} >/tmp/temp_buffer$$.txt")
         else:
-           print( f"simulation: {' '.join(cmd)}" )
+            print(f"simulation: {' '.join(cmd)}")
         return '`cat /tmp/temp_buffer$$.txt`'
     else:
         if asciiPipe:
-            return subprocess.run(cmd, stdout=subprocess.PIPE).stdout.decode('ascii')
+            return subprocess.run(
+                cmd, stdout=subprocess.PIPE).stdout.decode('ascii')
         else:
             subprocess.run(cmd)
     return None
@@ -125,19 +136,25 @@ def make(args) -> None:
     elif args.command == "logs":
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} logs --follow'))
     elif args.command == "stop":
-        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} down --remove-orphans'))
+        run(
+            args,
+            split(
+                f'docker-compose {DOCKER_COMPOSE_ARGS} down --remove-orphans'))
     elif args.command == "update":
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} pull'))
     elif args.command == "prune":
         run(args, split('docker container prune -f'))
         run(args, split('docker volume prune -f'))
-        _ = run(args, split('docker images --filter dangling=true -q --no-trunc'), asciiPipe=True )
+        _ = run(args,
+                split('docker images --filter dangling=true -q --no-trunc'),
+                asciiPipe=True)
         run(args, split(f'docker rmi {_}'))
-        _ = run(args, split('docker ps -a -q'), asciiPipe=True )
-        run(args,split(f'docker rm {_}'))
+        _ = run(args, split('docker ps -a -q'), asciiPipe=True)
+        run(args, split(f'docker rm {_}'))
     elif args.command == "restart":
         container = "" if not args.args else args.args
-        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} restart {container}'))
+        run(args,
+            split(f'docker-compose {DOCKER_COMPOSE_ARGS} restart {container}'))
     elif args.command == "status":
         cmd = "" if not args.args else args.args
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} ps {cmd}'))
