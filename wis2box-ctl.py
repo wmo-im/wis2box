@@ -141,7 +141,8 @@ def make(args) -> None:
         cmd = "wis2box" if not args.args else ' '.join(args.args)
         run(args, split( f'docker exec -it {cmd} /bin/bash'))
     elif args.command == "login-root":
-        run(args, split('docker exec -u -0 -it wis2box /bin/bash'))
+        cmd = "wis2box" if not args.args else ' '.join(args.args)
+        run(args, split( f'docker exec -u -0 -it {cmd} /bin/bash'))
     elif args.command == "logs":
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} logs --follow'))
     elif args.command == "stop":
