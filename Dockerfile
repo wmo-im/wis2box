@@ -28,6 +28,8 @@ ENV TZ="Etc/UTC" \
     DEBIAN_FRONTEND="noninteractive" \
     BUILD_PACKAGES="build-essential cmake gfortran python3-wheel"
 
+COPY docker/wis2box/config /root/.config/sr3
+
 COPY . /app
 
 RUN if [ "$WIS2BOX_PIP3_EXTRA_PACKAGES" = "None" ]; \
