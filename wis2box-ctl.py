@@ -46,13 +46,16 @@ parser.add_argument(
 commands = [
     'build',
     'config',
+    'down',
     'lint',
+    'logs',
     'login',
     'prune',
     'restart',
     'start',
     'status',
     'stop',
+    'up',
     'update',
 ]
 
@@ -60,15 +63,15 @@ parser.add_argument('command',
                     choices=commands,
                     help="""
     - config: validate and view Docker configuration
-    - build: build all services
-    - start: start system
-    - login: login to the wis2box container
-    - login-root: login to the wis2box container as root
-    - stop: stop system
+    - build [containers]: build all services
+    - start [containers]: start system
+    - login [container]: login to the container (default: wis2box)
+    - login-root [container]: login to the container as root
+    - stop: stop [container] system
     - update: update Docker images
     - prune: cleanup dangling containers and images
-    - restart [container]: restart one or all containers
-    - status [-a]: view status of wis2box containers
+    - restart [containers]: restart one or all containers
+    - status [containers|-a]: view status of wis2box containers
     - lint: run PEP8 checks against local Python code
     """)
 
@@ -130,24 +133,36 @@ def make(args) -> None:
 
     :returns: None.
     """
+
+    # if you selected a bunch of them... default to none.. which is all of them.
+    containers = "" if not args.args else ' '.join(args.args)
+
+    # if there can be only one, default to wisbox
+    container = "wis2box" if not args.args else ' '.join(args.args)
+
     if args.command == "config":
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} config'))
     elif args.command == "build":
-        cmd = "" if not args.args else ' '.join(args.args)
-        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} build {cmd}'))
-    elif args.command == "start":
-        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} up -d'))
+        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} build {containers}'))
+    elif args.command in [ "up",  "start"]:
+        if containers:
+            run( args, split( f"docker start {containers}" ) )
+        else:
+            run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} up -d'))
     elif args.command == "login":
-        run(args, split('docker exec -it wis2box /bin/bash'))
+        run(args, split( f'docker exec -it {container} /bin/bash'))
     elif args.command == "login-root":
-        run(args, split('docker exec -u -0 -it wis2box /bin/bash'))
+        run(args, split(f'docker exec -u -0 -it {container} /bin/bash'))
     elif args.command == "logs":
-        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} logs --follow'))
-    elif args.command == "stop":
-        run(
-            args,
-            split(
-                f'docker-compose {DOCKER_COMPOSE_ARGS} down --remove-orphans'))
+        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} logs --follow {containers}'))
+    elif args.command in [ "stop" , "down"]:
+        if containers:
+            run( args, split( f"docker stop {containers}" ) )
+        else:
+            run(
+                args,
+                split(
+                    f'docker-compose {DOCKER_COMPOSE_ARGS} down --remove-orphans {containers}'))
     elif args.command == "update":
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} pull'))
     elif args.command == "prune":
@@ -160,12 +175,10 @@ def make(args) -> None:
         _ = run(args, split('docker ps -a -q'), asciiPipe=True)
         run(args, split(f'docker rm {_}'))
     elif args.command == "restart":
-        container = "" if not args.args else ' '.join(args.args)
         run(args,
-            split(f'docker-compose {DOCKER_COMPOSE_ARGS} restart {container}'))
+            split(f'docker-compose {DOCKER_COMPOSE_ARGS} restart {containers}'))
     elif args.command == "status":
-        cmd = "" if not args.args else ' '.join(args.args)
-        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} ps {cmd}'))
+        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} ps {containers}'))
     elif args.command == "lint":
         files = walk_path(".")
         run(args, ('flake8', *files))
