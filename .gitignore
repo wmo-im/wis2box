@@ -40,3 +40,5 @@ wis2box-data
 .pytest_cache
 dev.env
 docker/.env
+
+.ipynb_checkpoints

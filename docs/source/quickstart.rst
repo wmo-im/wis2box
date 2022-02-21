@@ -80,7 +80,6 @@ Restart wis2box:
     python3 wis2box-ctl.py start
 
 
-From here, you can run ``python3 wis2box-ctl.py`` to confirm that containers are running.
+From here, you can run ``python3 wis2box-ctl.py status`` to confirm that containers are running.
 
-In your web browser you should be able to open http://localhost:8999 as well as
-http://localhost:8999/pygeoapi/collections to further explore wis2box.
+To explore your wis2box installation and services, visit http://localhost:8999 in your web browser.

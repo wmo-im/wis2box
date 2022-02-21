@@ -66,7 +66,8 @@ See the `Python packaging tutorial`_ or `Cookiecutter PyPackage`_ for guidance a
 
 .. note::
 
-   It is recommended to name your wis2box packages with the convention ``wis2box-MYPLUGIN-NAME``.
+   It is recommended to name your wis2box packages with the convention ``wis2box-MYPLUGIN-NAME``, as well as
+   adding the keywords/topics ``wis2box`` and ``plugin`` to help discovery on platforms such as GitHub.
 
 
 Integration
@@ -76,12 +77,24 @@ Once your package is installed on the wis2box container, the data mappings need 
 your plugin to a topic hierarchy.  See :ref:`data-mappings` for more information.
 
 
-Example plugins
----------------
-
 An example plugin for proof of concept can be found in https://github.com/wmo-cop/wis2box-malawi-observations
+
+Example plugins
+----------------
+
+The following plugins provide useful examples of wis2box plugins implemented
+by downstream applications.
+
+.. csv-table::
+   :header: "Plugin(s)", "Organization/Project","Description"
+   :align: left
+
+   `wis2box-malawi-observations`_,WMO,plugin for Malawi surface observation data
+   `wis2box-pyopencdms-plugin`_,OpenCDMS,plugin for connecting the Open Climate Data Management System to wis2box
 
 .. _`datetime`: https://docs.python.org/3/library/datetime.html
 .. _`Python Package Index (PyPI)`: https://pypi.org
 .. _`Python packaging tutorial`: https://packaging.python.org/en/latest/tutorials/packaging-projects
 .. _`Cookiecutter PyPackage`: https://github.com/audreyfeldroy/cookiecutter-pypackage
+.. _`wis2box-malawi-observations`: https://github.com/wmo-cop/wis2box-malawi-observations
+.. _`wis2box-pyopencdms-plugin`: https://github.com/opencdms/wis2box-pyopencdms-plugin
