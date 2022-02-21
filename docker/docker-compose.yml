@@ -137,7 +137,11 @@ services:
 
   jupyter:
     container_name: jupyter
-    image: jupyter/datascience-notebook:latest
+    build:
+      context: ./jupyter
+    # image: jupyter/datascience-notebook:latest
+    environment:
+      - PASSwORD=wis2box
     volumes:
       -  ./jupyter:/home/jovyan/work/wis-jupyter/
       - ${WIS2BOX_HOST_DATADIR}:/home/jovyan/work/data/wis2box:rw
