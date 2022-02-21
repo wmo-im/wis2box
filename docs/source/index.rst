@@ -22,7 +22,7 @@ wis2box |release| documentation
    administration
    running/index
    services
-   data-access
+   data-access/index
    extending-wis2box
    development
    contributing

@@ -1,4 +1,6 @@
 flake8
+jupyter
+nbsphinx
 pytest
 sphinx
 twine
