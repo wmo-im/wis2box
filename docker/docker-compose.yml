@@ -134,6 +134,5 @@ services:
       - ./pygeoapi/pygeoapi-config.yml:/data/wis2box/pygeoapi-config.yml:rw
     depends_on:
       - mosquitto
-
 volumes:
   es-data:
