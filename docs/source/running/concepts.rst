@@ -6,7 +6,7 @@ Concepts
 Let's clarify a few concepts as part working with wis2box:
 
 
-- **topic hierarchy**: thesaurus defined by defined by WMO to categorize and classify
+- **topic hierarchy**: thesaurus defined by WMO to categorize and classify
   data, allowing for easy and efficient search
 - **discovery metadata**: description of a dataset to be included in the WIS 2.0 global catalogue
 - **catalogue**: a collection of discovery metadata records
