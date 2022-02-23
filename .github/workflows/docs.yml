@@ -18,6 +18,7 @@ jobs:
     needs: test
     if: github.ref == 'refs/heads/main'
     steps:
+    - uses: actions/checkout@v1
     - uses: ammaraskar/sphinx-action@master
       with:
         pre-build-command: "apt-get install -y pandoc && python -m pip install -r requirements-dev.txt"
