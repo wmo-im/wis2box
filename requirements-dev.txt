@@ -5,4 +5,4 @@ pytest
 sphinx
 twine
 wheel
-pandoc
+pypandoc
