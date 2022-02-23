@@ -20,7 +20,7 @@ jobs:
     steps:
     - uses: ammaraskar/sphinx-action@master
       with:
-        pre-build-command: "pip3 install -r requirements-dev.txt"
+        pre-build-command: "apt-get install -y pandoc && python -m pip install -r requirements-dev.txt"
         docs-folder: "docs/"
     - name: Commit documentation changes
       run: |
