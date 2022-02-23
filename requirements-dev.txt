@@ -1,8 +1,8 @@
 flake8
 jupyter
 nbsphinx
+pypandoc
 pytest
 sphinx
 twine
 wheel
-pypandoc
