@@ -56,7 +56,7 @@ Container functionality can be described as follows:
 * **Data Consumer**: the data entry point of wis2box. Data pipelines and
   workflow begins here
 * **Data Management**: the epicentre of wis2box. Provides core wis2box
-  administration and data/workflow/publising utilities
+  administration and data/workflow/publishing utilities
 * **Storage**: core data persistence
 * **API Application**: OGC APIs providing geospatial web services
 * **Web Application**: user interface
