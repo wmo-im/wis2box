@@ -8,7 +8,7 @@ wis2box is built for easy installation across various operating systems and envi
 Requirements and dependencies
 -----------------------------
 
-wis2box requires `Python`_ 3 and `Docker`_ 1.13.
+wis2box requires `Python`_ 3 and `Docker`_ 1.13+.
 
 Core dependencies are installed as containers in the Docker Compose deployment of wis2box. This
 is true for the software wis2box itself, which runs as a container orchestrating the necessary

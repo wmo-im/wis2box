@@ -1,19 +1,26 @@
 name: docs
 on:
   push:
-    branches:
-    - main
     paths:
     - 'docs/**'
 
 jobs:
-  docs:
+  test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
     - uses: ammaraskar/sphinx-action@master
       with:
-        pre-build-command: "apt-get update -y && apt-get install -y nbsphinx"
+        pre-build-command: "apt-get install -y pandoc && python -m pip install -r requirements-dev.txt"
+        docs-folder: "docs/"
+  docs:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - uses: ammaraskar/sphinx-action@master
+      with:
+        pre-build-command: "apt-get install -y pandoc && python -m pip install -r requirements-dev.txt"
         docs-folder: "docs/"
     - name: Commit documentation changes
       run: |
