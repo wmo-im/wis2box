@@ -36,3 +36,18 @@ Summary
     TODO: Summary
 
 
+Running These Examples
+----------------------
+
+To be able to run these examples, one needs to start up a jupyter notebook environment.
+Recpie would be somthing like::
+
+   git clone https://github.com/wmo-im/wis2box
+   cd docs/site/data-access
+   jupyter notebook --ip=0.0.0.0 --port=8040
+
+When jupyter starts up it may open a browser window for you. If not you would
+need to to point a browser at http://localhost:8040 to see the menu of notebooks
+available in this directory.
+
+
