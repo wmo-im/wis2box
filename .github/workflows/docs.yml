@@ -20,7 +20,7 @@ jobs:
         sudo update-locale
     - name: Install dependencies
       run: |
-        apt-get update -y && apt-get install -y pandoc
+        sudo apt-get update -y && sudo apt-get install -y pandoc
     - name: Setup python
       uses: actions/setup-python@v2
     - name: Checkout
