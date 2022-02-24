@@ -49,7 +49,7 @@ def sub_message_content(client, userdata, msg):
     global messageCount, messageCountMaximum
 
     m = json.loads(msg.payload.decode('utf-8'))
-    print(f"message {messageCount} received: {m}")
+    print(f"message {messageCount} topic: {msg.topic} received: {m}")
     print(f"message {messageCount} data: {getData(m)}")
     messageCount += 1
     if messageCount > messageCountMaximum:
