@@ -59,4 +59,5 @@ jobs:
     - name: build docs ⚙️
       uses: ammaraskar/sphinx-action@master
       with:
+        pre-build-command: "pip3 install nbsphinx"
         docs-folder: "docs/"
