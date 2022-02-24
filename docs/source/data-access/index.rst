@@ -21,13 +21,8 @@ API
    python-requests
    python-OWSLib
    R
+   python-mqp-subscribe
 
-
-Pub/Sub
--------
-
-..
-    TODO: wis2box is a client and able to download data through PubSub
 
 Summary
 -------
@@ -44,10 +39,10 @@ Recpie would be somthing like::
 
    git clone https://github.com/wmo-im/wis2box
    cd docs/site/data-access
-   jupyter notebook --ip=0.0.0.0 --port=8040
+   jupyter notebook --ip=0.0.0.0 --port=8888
 
 When jupyter starts up it may open a browser window for you. If not you would
-need to to point a browser at http://localhost:8040 to see the menu of notebooks
+need to to point a browser at http://localhost:8088 to see the menu of notebooks
 available in this directory.
 
 
