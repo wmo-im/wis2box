@@ -5,7 +5,7 @@ on:
       - main
     paths:
       - 'docs/**'
-  pull_reqeust:
+  pull_request:
     paths:
       - 'docs/**'
 
