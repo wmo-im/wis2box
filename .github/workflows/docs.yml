@@ -5,9 +5,6 @@ on:
       - main
     paths:
       - 'docs/**'
-  pull_request:
-    paths:
-      - 'docs/**'
 
 jobs:
   gh-pages:
@@ -20,7 +17,7 @@ jobs:
         sudo update-locale
     - name: Install dependencies
       run: |
-        apt-get update -y && apt-get install -y pandoc
+        sudo apt-get update -y && sudo apt-get install -y pandoc
     - name: Setup python
       uses: actions/setup-python@v2
     - name: Checkout
@@ -30,7 +27,7 @@ jobs:
     - name: Build and Commit
       uses: sphinx-notes/pages@v2
       with:
-        documentation_path: ./docs
+        documentation_path: ./docs/source
         requirements_path: ./requirements-dev.txt
     - name: Push changes
       uses: ad-m/github-push-action@master
