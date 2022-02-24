@@ -70,15 +70,16 @@ wis2box is built on free and open source (FOSS) technology.
    :header: Container, Function, Technology, Standards
    :align: left
 
-   Data Consumer,PubSub,`mosquitto`_, MQTT
+   Data Consumer,PubSub,`mosquitto`_, `MQTT`_
    Data Management,data processing and publishing,`pygeometa`_ `pyoscar`_,:abbr:`WCMP (WMO Core Metadata Profile)` :abbr:`WMDR (WIGOS Metadata Record)`
-   API Application,data discovery and access,`pygeoapi`_ `Elasticsearch`_,OGC API
-   Web Application,data discovery and visualization,`Vue.js`_ `Leaflet`_,OGC API
+   API Application,data discovery and access,`pygeoapi`_ `Elasticsearch`_,`OGC API`_
+   Web Application,data discovery and visualization,`Vue.js`_ `Leaflet`_,`OGC API`_
 
 
 .. _`Twelve-Factor App methodology`: https://12factor.net
 .. _`Docker`: https://www.docker.com
 .. _`Python`: https://www.python.org
+.. _`MQTT`: https://mqtt.org
 .. _`OSCAR/Surface`: https://oscar.wmo.int/surface
 .. _`mosquitto`: https://mosquitto.org
 .. _`pygeometa`: https://geopython.github.io/pygeometa
@@ -88,3 +89,4 @@ wis2box is built on free and open source (FOSS) technology.
 .. _`Vue.js`: https://vuejs.org
 .. _`Leaflet`: https://leafletjs.com
 .. _`Docker Compose`: https://docs.docker.com/compose
+.. _`OGC API`: https://ogcapi.ogc.org
