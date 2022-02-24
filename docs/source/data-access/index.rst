@@ -15,9 +15,9 @@ API
 .. toctree::
    :maxdepth: 2
 
-   python-requests
-   python-OWSLib
-   R
+   python-api-requests
+   python-api-OWSLib
+   R-api
 
 
 PubSub
