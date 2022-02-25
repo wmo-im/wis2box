@@ -28,6 +28,7 @@ jobs:
       run: |
         python3 wis2box-ctl.py build
         python3 wis2box-ctl.py start
+        sleep 5
         python3 wis2box-ctl.py status
     - name: generate wis2box collection
       run: |
