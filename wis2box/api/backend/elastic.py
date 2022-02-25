@@ -41,6 +41,18 @@ SETTINGS = {
         'properties': {
             'geometry': {
                 'type': 'geo_shape'
+            },
+            'properties': {
+                'properties': {
+                    'phenomenonTime': {
+                        'type': 'date',
+                        'fields': {
+                            'raw': {
+                                'type': 'keyword'
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -49,6 +61,7 @@ SETTINGS = {
 
 class ElasticBackend(BaseBackend):
     """Elasticsearch API backend"""
+
     def __init__(self, defs: dict) -> None:
         """
         initializer
@@ -114,7 +127,8 @@ class ElasticBackend(BaseBackend):
             'type': 'feature',
             'name': 'Elasticsearch',
             'data': f'{self.url}/{es_index}.*',
-            'id_field': 'id'
+            'id_field': 'id',
+            'time_field': 'phenomenonTime'
         }
 
     def delete_collection(self, collection_id: str) -> None:
