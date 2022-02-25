@@ -15,9 +15,9 @@ API
 .. toctree::
    :maxdepth: 2
 
-   python-requests
-   python-OWSLib
-   R
+   python-api-requests
+   python-api-OWSLib
+   R-api
 
 
 PubSub
@@ -36,6 +36,7 @@ To be able to run these examples, one needs to start up a Jupyter Notebook envir
 is an example of starting a Jupyter session:
 
 .. code-block:: bash
+
    git clone https://github.com/wmo-im/wis2box.git
    cd docs/source/data-access
    jupyter notebook --ip=0.0.0.0 --port=8888
