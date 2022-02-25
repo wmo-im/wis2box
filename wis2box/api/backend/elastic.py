@@ -50,8 +50,7 @@ SETTINGS = {
                             'raw': {
                                 'type': 'keyword'
                             }
-                        },
-                        'format': 'strict_date_hour_minute||strict_date_time'
+                        }
                     }
                 }
             }
@@ -128,7 +127,7 @@ class ElasticBackend(BaseBackend):
             'type': 'feature',
             'name': 'Elasticsearch',
             'data': f'{self.url}/{es_index}.*',
-            'id_field': 'id',
+            'id_field': 'identifier',
             'time_field': 'phenomenonTime'
         }
 
@@ -178,7 +177,6 @@ class ElasticBackend(BaseBackend):
 
             for feature in features:
                 es_index2 = es_index
-                feature['properties']['id'] = feature['id']
                 if self._is_dataset(collection_id):
                     LOGGER.debug('Determinining index date from OM GeoJSON')
                     date_ = parse_date(feature['properties']['phenomenonTime'])
