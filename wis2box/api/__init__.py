@@ -59,7 +59,7 @@ def generate_collection_metadata(mcf: dict) -> dict:
         'extents': {
             'spatial': generated['properties']['extent']['spatial']
         },
-        'links': generated['associations'],
+        'links': generated['properties']['associations'],
         'providers': []
     }
 
