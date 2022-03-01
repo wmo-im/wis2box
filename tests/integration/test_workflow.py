@@ -35,7 +35,7 @@ URL = 'http://localhost:8999'
 API_URL = f'{URL}/pygeoapi'
 
 
-def test_data_setup():
+def itest_data_setup():
     """Test data setup"""
 
     path = DATADIR / 'data/core/observations-surface-land/mw/FWCL/landFixed'  # noqa
