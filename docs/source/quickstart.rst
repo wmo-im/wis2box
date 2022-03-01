@@ -73,7 +73,7 @@ Logout of wis2box container:
 
     exit
 
-Restart the wis2box api container:
+Restart the wis2box API container:
 
 .. code-block:: bash
 
