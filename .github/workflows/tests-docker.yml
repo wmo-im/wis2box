@@ -52,7 +52,7 @@ jobs:
         python3 wis2box-ctl.py status -a
     - name: run integration tests ⚙️
       run: |
-        pytest tests/integration
+        pytest -s tests/integration
     - name: run flake8 ⚙️
       run: |
         find . -type f -name "*.py" | xargs flake8
