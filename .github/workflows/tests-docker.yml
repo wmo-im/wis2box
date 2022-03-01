@@ -30,7 +30,7 @@ jobs:
         python3 wis2box-ctl.py start
         sleep 5
         python3 wis2box-ctl.py status
-    - name: generate wis2box collection
+    - name: test ingest/process/publish workflow ⚙️
       run: |
         docker exec `docker ps -q --filter ancestor=wis2box_project_wis2box` sh -c " \
           wis2box environment create \

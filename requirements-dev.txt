@@ -1,9 +1,10 @@
 flake8
-paho-mqtt
 jupyter
 nbsphinx
+paho-mqtt
 pypandoc
 pytest
+requests
 sphinx
 twine
 wheel
