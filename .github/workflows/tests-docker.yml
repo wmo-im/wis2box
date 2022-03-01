@@ -11,26 +11,28 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
-      name: Setup Python 3.8
+      name: setup Python
       with:
         python-version: 3.8
-    - name: Install requirements 📦
+    - name: install requirements 📦
       run: |
-        #sudo apt-get update -y && sudo apt-get install -y pandoc
         pip3 install -r requirements-dev.txt
         python3 setup.py install
-    - name: wis2box configuration
+    - name: run unit tests ⚙️
+      run: |
+        pytest tests/unit
+    - name: setup wis2box configuration
       run: |
         cp tests/test.env dev.env
         cat dev.env
         python3 wis2box-ctl.py config
-    - name: build wis2box ⚙️
+    - name: build wis2box images and start containers ⚙️
       run: |
         python3 wis2box-ctl.py build
         python3 wis2box-ctl.py start
         sleep 5
         python3 wis2box-ctl.py status
-    - name: test ingest/process/publish workflow ⚙️
+    - name: test wis2box data ingest/process/publish workflow ⚙️
       run: |
         docker exec `docker ps -q --filter ancestor=wis2box_project_wis2box` sh -c " \
           wis2box environment create \
@@ -43,14 +45,11 @@ jobs:
           && wis2box data ingest --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed -p /data/wis2box/observations \
           && wis2box api add-collection --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed /data/wis2box/metadata/discovery/surface-weather-observations.yml \
           && wis2box api add-collection-items --recursive --path /data/wis2box/data/public"
-    - name: run wis2box
+    - name: restart wis2box API container 🏁
       run: |
         python3 wis2box-ctl.py restart pygeoapi
         sleep 30
         python3 wis2box-ctl.py status -a
-    - name: run unit tests ⚙️
-      run: |
-        pytest tests/unit
     - name: run integration tests ⚙️
       run: |
         pytest tests/integration
