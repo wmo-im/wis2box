@@ -39,6 +39,7 @@ def test_data_setup():
     """Test data setup"""
 
     path = DATADIR / 'incoming/data/core/observations-surface-land/mw/FWCL/landFixed'  # noqa
+    print(list(DATADIR.iterdir()))
     assert path.exists()
 
 
