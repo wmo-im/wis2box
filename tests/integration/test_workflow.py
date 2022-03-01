@@ -58,7 +58,7 @@ def test_metadata_station_publish():
 
     r = requests.get(f'{API_URL}/collections/stations/items').json()
 
-    assert r['numberMatched'] == 19
+    assert r['numberMatched'] == 7
 
 
 def test_metadata_discovery_publish():
@@ -72,7 +72,7 @@ def test_metadata_discovery_publish():
     assert r['id'] == 'data.core.observations-surface-land.mw.FWCL.landFixed'
     assert r['properties']['title'] == 'Surface weather observations (hourly)'
 
-#    assert len(r['properties']['associations']) == 2
+    assert len(r['properties']['associations']) == 2
 
     spatial_extent = [
         32.6881653175,
