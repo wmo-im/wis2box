@@ -130,12 +130,12 @@ def test_data_api():
 
     # filter by WIGOS station identifier
     params = {
-        'wigos_station_identifier': '0-454-2-AWSCHINGALE'
+        'wigos_station_identifier': '0-454-2-AWSLOBI'
     }
 
     r = requests.get(url, params=params).json()
 
-    assert r['numberMatched'] == 469
+    assert r['numberMatched'] == 1
 
     # filter by datetime (instant)
     params = {
