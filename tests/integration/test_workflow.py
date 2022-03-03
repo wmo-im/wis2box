@@ -167,11 +167,11 @@ def test_data_api():
     assert r['numberMatched'] == 23
 
     # filter by bbox
+    bbox = [35.2, -16, 36, -15]
     params = {
-        'bbox': '35.2,-16,36,-15'
+        'bbox': ','.join(bbox)
     }
 
     r = requests.get(url, params=params).json()
-    print(r)
 
-#    assert r['numberMatched'] == 512
+    assert r['numberMatched'] == 512
