@@ -169,7 +169,7 @@ def test_data_api():
     # filter by bbox
     bbox = [35.2, -16, 36, -15]
     params = {
-        'bbox': ','.join(bbox)
+        'bbox': ','.join(list(map(str, bbox)))
     }
 
     r = requests.get(url, params=params).json()
