@@ -174,4 +174,4 @@ def test_data_api():
 
     r = requests.get(url, params=params).json()
 
-    assert r['numberMatched'] == 512
+    assert r['numberMatched'] == 17
