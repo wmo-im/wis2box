@@ -117,7 +117,7 @@ def publish_collection() -> bool:
         'links': ['https://example.org'],
         'bbox': [-180, -90, 180, 90],
         'id_field': 'identifier',
-        'time_field': 'recordCreated',
+        'time_field': 'created',
         'title_field': 'title',
     }
 
