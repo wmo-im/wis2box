@@ -1,7 +1,75 @@
 version: "3"
 
+# define virtual network to give fixed IP for loki
+networks:
+  vpcbr: # virtual network name
+    driver: bridge
+    ipam:
+     config: # here, we define our ip space
+       - subnet: 10.5.0.0/24
+         gateway: 10.5.0.1
+
+# this is a YAML anchor to avoid repetition
+x-logging: &logging
+  logging:
+    driver: loki
+    options: # note: the ip is the ip we will assign later to loki in this file
+      loki-url: "http://10.5.0.2:3100/loki/api/v1/push"
+
 services:
+  # The Loki database for storing logs.
+  loki:
+    <<: *logging
+    container_name: loki
+    image: grafana/loki:2.4.1
+    volumes:
+      - loki-data:/loki
+    networks:
+      vpcbr: # this is the place where we assign the static ipv4 address
+        ipv4_address: 10.5.0.2
+      default:
+  # cadvisor to export metrics on our containers
+  cadvisor:
+    image: google/cadvisor
+    container_name: cadvisor
+    volumes:
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    restart: always
+  # prometheus to collect metrics
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+  # Grafana, graphical monitoring dashboards for wis2box using data from loki and prometheus
+  grafana:
+    <<: *logging
+    container_name: grafana
+    image: grafana/grafana-oss:latest
+    volumes:
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+    environment:
+      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_HIDE_VERSION=true
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/etc/grafana/provisioning/dashboards/home.json
+      - GF_ANALYTICS_CHECK_FOR_UPDATES=false
+      - GF_USERS_VIEWERS_CAN_EDIT=true
+      - GF_UNIFIED_ALERTING_ENABLED=false
+      - GF_ALERTING_ENABLED=false
+    ports:
+      - 3000:3000
+  
   web-proxy:
+    <<: *logging
     container_name: nginx
     image: nginx:alpine
     restart: always
@@ -15,6 +83,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
 
   wis2box-ui:
+    <<: *logging
     container_name: wis2box-ui
     image: ghcr.io/wmo-im/wis2box-ui:latest
     env_file:
@@ -36,6 +105,7 @@ services:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:ro
 
   elasticsearch:
+    <<: *logging
     container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
     environment:
@@ -60,6 +130,7 @@ services:
       retries: 10
 
   mosquitto:
+    <<: *logging
     container_name: mosquitto
     # image: eclipse-mosquitto
     build:
@@ -69,8 +140,11 @@ services:
       - ../dev.env
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
+    depends_on:
+      - loki
 
   data-consumer:
+    <<: *logging
     container_name: data-consumer
     image: ghcr.io/metpx/sarracenia:latest
     env_file:
@@ -86,6 +160,7 @@ services:
     command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
 
   mqp-publisher:
+    <<: *logging
     container_name: mqp-publisher
     image: ghcr.io/metpx/sarracenia:latest
     env_file:
@@ -101,6 +176,7 @@ services:
     command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
 
   ca-republisher:
+    <<: *logging
     container_name: ca-republisher
     image: ghcr.io/metpx/sarracenia:latest
     env_file:
@@ -116,6 +192,7 @@ services:
     #command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
 
   de-republisher:
+    <<: *logging
     container_name: de-republisher
     image: ghcr.io/metpx/sarracenia:latest
     env_file:
@@ -131,6 +208,7 @@ services:
     # command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
 
   wis2box:
+    <<: *logging
     container_name: wis2box
     build:
       context: ..
@@ -160,5 +238,7 @@ services:
 
 volumes:
   es-data:
+  loki-data:
+  prometheus-data:
 
 
