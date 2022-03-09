@@ -17,6 +17,9 @@ services:
   wis2box-ui:
     container_name: wis2box-ui
     image: ghcr.io/wmo-im/wis2box-ui:latest
+    env_file:
+      - default.env
+      - ../dev.env
     depends_on:
       - pygeoapi
 
