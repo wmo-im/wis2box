@@ -152,7 +152,7 @@
             "type": "loki",
             "uid": "P55348B596EBB51C3"
           },
-          "expr": "sum(count_over_time({compose_service=\"ca-republisher\"} |= \"INFO\" [1m]))",
+          "expr": "sum(count_over_time({compose_service=\"de-republisher\"} |= \"INFO\" [1m]))",
           "hide": false,
           "legendFormat": "Number of INFOs",
           "refId": "B"
@@ -162,7 +162,7 @@
             "type": "loki",
             "uid": "P55348B596EBB51C3"
           },
-          "expr": "sum(count_over_time({compose_service=\"ca-republisher\"} |= \"WARNING\" [1m]))",
+          "expr": "sum(count_over_time({compose_service=\"de-republisher\"} |= \"WARNING\" [1m]))",
           "hide": false,
           "legendFormat": "Number of WARNINGs",
           "refId": "C"
@@ -172,14 +172,14 @@
             "type": "loki",
             "uid": "P55348B596EBB51C3"
           },
-          "expr": "sum(count_over_time({compose_service=\"ca-republisher\"} |= \"ERROR\" [1m]))",
+          "expr": "sum(count_over_time({compose_service=\"de-republisher\"} |= \"ERROR\" [1m]))",
           "legendFormat": "Number of ERRORs",
           "queryType": "range",
           "refId": "A",
           "resolution": 1
         }
       ],
-      "title": "ca-republisher activity",
+      "title": "de-republisher activity",
       "transformations": [],
       "type": "timeseries"
     },
@@ -371,11 +371,11 @@
             "type": "loki",
             "uid": "P55348B596EBB51C3"
           },
-          "expr": "{compose_service=\"ca-republisher\"} |= \"ERROR\"",
+          "expr": "{compose_service=\"de-republisher\"} |= \"ERROR\"",
           "refId": "A"
         }
       ],
-      "title": "ca-republisher logs, ERROR",
+      "title": "de-republisher logs, ERROR",
       "type": "logs"
     },
     {
@@ -445,11 +445,11 @@
             "type": "loki",
             "uid": "P55348B596EBB51C3"
           },
-          "expr": "{compose_service=\"ca-republisher\"} |= \"WARNING\"",
+          "expr": "{compose_service=\"de-republisher\"} |= \"WARNING\"",
           "refId": "A"
         }
       ],
-      "title": "ca-republisher logs, WARNING",
+      "title": "de-republisher logs, WARNING",
       "type": "logs"
     },
     {
@@ -519,11 +519,11 @@
             "type": "loki",
             "uid": "P55348B596EBB51C3"
           },
-          "expr": "{compose_service=\"ca-republisher\"} |= \"INFO\"",
+          "expr": "{compose_service=\"de-republisher\"} |= \"INFO\"",
           "refId": "A"
         }
       ],
-      "title": "ca-republisher logs, INFO",
+      "title": "de-republisher logs, INFO",
       "type": "logs"
     },
     {
