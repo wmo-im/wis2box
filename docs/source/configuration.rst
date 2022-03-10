@@ -60,7 +60,7 @@ wis2box. The default relationship below resembles the directory structure within
 
 .. code-block:: bash
 
-    WIS2BOX_HOST_DATADIR=${PWD}/wis2box-data # wis2box host data directory
+    WIS2BOX_HOST_DATADIR=${PWD}/wis2box-data  # wis2box host data directory
     WIS2BOX_DATADIR=/data/wis2box  # wis2box data directory
     WIS2BOX_DATA_RETENTION_DAYS=7  # wis2box data retention time, in days. Data older than this value is
                                    # is deleted on a daily basis
@@ -96,6 +96,7 @@ PubSub configuration provides connectivity information for the PubSub broker.
 .. code-block:: bash
 
     WIS2BOX_BROKER=mqtt://wis2box:wis2box@mosquitto/  # RFC 1738 syntax of internal broker endpoint
+    WIS2BOX_MQTT_URL=mqtt://localhost:1883  # public MQTT url
 
 
 Other

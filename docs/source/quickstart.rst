@@ -11,14 +11,13 @@ Download wis2box and start using Malawi test data:
     cd wis2box
 
 
-For the purposes of a quickstart, this deployment expects the test environment, which includes data and metadata. This
+For the purposes of a quickstart, this deployment expects the test environment, which includes data and metadata, and runs on localhost. This
 is done by using the test environment file:
 
 .. code-block:: bash
 
     cp tests/test.env dev.env
     vi dev.env
-    # ensure WIS2BOX_HOST_DATADIR is set to a local path on disk for persistent storage
 
 
 .. note::
