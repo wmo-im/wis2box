@@ -412,7 +412,7 @@
           "refId": "A"
         }
       ],
-      "title": "mqp-republisher logs, ERROR",
+      "title": "mqp-publisher logs, ERROR",
       "type": "logs"
     },
     {
@@ -486,7 +486,7 @@
           "refId": "A"
         }
       ],
-      "title": "mqp-republisher logs, WARNING",
+      "title": "mqp-publisher logs, WARNING",
       "type": "logs"
     },
     {
@@ -560,7 +560,7 @@
           "refId": "A"
         }
       ],
-      "title": "mqp-republisher logs, INFO",
+      "title": "mqp-publisher logs, INFO",
       "type": "logs"
     }
   ],
