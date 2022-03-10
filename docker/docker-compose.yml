@@ -15,11 +15,13 @@ x-logging: &logging
     driver: loki
     options: # note: the ip is the ip we will assign later to loki in this file
       loki-url: "http://10.5.0.2:3100/loki/api/v1/push"
+      mode: non-blocking
+      max-buffer-size: 4m
+      loki-retries: "3"
 
 services:
   # The Loki database for storing logs.
   loki:
-    <<: *logging
     container_name: loki
     image: grafana/loki:2.4.1
     volumes:
@@ -30,6 +32,7 @@ services:
       default:
   # cadvisor to export metrics on our containers
   cadvisor:
+    <<: *logging
     image: google/cadvisor
     container_name: cadvisor
     volumes:
@@ -39,6 +42,7 @@ services:
     restart: always
   # prometheus to collect metrics
   prometheus:
+    <<: *logging
     image: prom/prometheus
     container_name: prometheus
     volumes:
