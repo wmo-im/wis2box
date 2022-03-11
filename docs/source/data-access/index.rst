@@ -16,8 +16,9 @@ API
    :maxdepth: 2
 
    python-api-requests
-   python-api-OWSLib
-   R-api
+   python-api-owslib
+   r-api
+   qgis-api
 
 
 PubSub
@@ -29,8 +30,8 @@ PubSub
    python-mqp-subscribe
 
 
-Running These Examples
-----------------------
+Running the examples
+--------------------
 
 To be able to run these examples, one needs to start up a Jupyter Notebook environment.  Below
 is an example of starting a Jupyter session:

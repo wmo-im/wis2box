@@ -31,6 +31,7 @@ Features
   * Data
 
     * `BUFR`_
+    * `GeoJSON`_
 
   * APIs
 
@@ -49,3 +50,4 @@ Features
 .. _`MQTT`: https://mqtt.org
 .. _`STAC`: https://stacspec.org
 .. _`BUFR`: https://en.wikipedia.org/wiki/BUFR
+.. _`GeoJSON`: https://datatracker.ietf.org/doc/html/rfc7946
