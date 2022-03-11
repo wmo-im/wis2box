@@ -19,7 +19,6 @@ API
    python-api-owslib
    r-api
    qgis-api
-   excel-api
 
 
 PubSub
