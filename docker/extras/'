@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  ftpd_server:
+    container_name: ftp
+    image: stilliard/pure-ftpd
+    env_file:
+      - default.env
+      - ../dev.env
+    ports:
+      - 21:21
+    volumes:
+      - ${WIS2BOX_DATADIR}/data/public:/home/username/
+    environment:
+      PUBLICHOST: "localhost"
+      FTP_USER_NAME: ${FTP_USERNAME}
+      FTP_USER_PASS: ${FTP_PASSWORD}
+      FTP_USER_HOME: /home/${FTP_USERNAME}
+    restart: always
