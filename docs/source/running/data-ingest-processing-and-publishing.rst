@@ -55,7 +55,7 @@ placed in the appropriate topic hierarchy directory.
 
 .. note::
 
-    wis2box can make ``WIS2BOX/data/incoming`` accessible via webdav by enabling ``docker/docker-compose.webdav.yml``.
+    wis2box can make ``WIS2BOX/data/incoming`` accessible via WebDAV by enabling ``docker/extras/docker-compose.webdav.yml``.
 
 
 Summary
