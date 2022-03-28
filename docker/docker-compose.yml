@@ -21,22 +21,19 @@ services:
       - default.env
       - ../dev.env
     depends_on:
-      - pygeoapi
+      - wis2box-api
 
-  pygeoapi:
-    container_name: pygeoapi
-    build:
-      context: ./pygeoapi
+  wis2box-api:
+    container_name: wis2box-api
+    image: ghcr.io/wmo-im/wis2box-api:latest
     env_file:
       - default.env
       - ../dev.env
-    environment:
-      - SCRIPT_NAME=/pygeoapi
     depends_on:
       - elasticsearch
+      - wis2box
     volumes:
-      - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:ro
-      - ./pygeoapi/pygeoapi-config.yml:/pygeoapi/local.config.yml:ro
+      - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:ro
 
   elasticsearch:
     container_name: elasticsearch
@@ -134,7 +131,6 @@ services:
     volumes:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
       - ./wis2box/wis2box.cron:/etc/cron.d/wis2box:ro
-      - ./pygeoapi/pygeoapi-config.yml:/data/wis2box/pygeoapi-config.yml:rw
     depends_on:
       - mosquitto
 volumes:

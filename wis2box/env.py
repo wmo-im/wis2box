@@ -23,6 +23,7 @@ import click
 import logging
 import os
 from pathlib import Path
+from shutil import copy2
 from urllib.parse import urlparse
 
 from wis2box import cli_helpers
@@ -123,6 +124,9 @@ def create(ctx, verbosity):
     (DATADIR / 'config').mkdir(parents=True, exist_ok=True)
     (DATADIR / 'metadata' / 'discovery').mkdir(parents=True, exist_ok=True)
     (DATADIR / 'metadata' / 'station').mkdir(parents=True, exist_ok=True)
+
+    click.echo(f'Creating wis2box-api configuration at {API_CONFIG}')
+    copy2('/app/docker/wis2box-api/wis2box-api-config.yml', API_CONFIG)
 
 
 @click.command()
