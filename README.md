@@ -1,7 +1,7 @@
 # wis2box
 
-[![Tests](https://github.com/wmo-im/wis2box/workflows/tests%20%E2%9A%99%EF%B8%8F/badge.svg)](https://github.com/wmo-im/wis2box/actions/workflows/tests.yml)
-[![Docs](https://github.com/wmo-im/wis2box/workflows/docs/badge.svg)](https://github.com/wmo-im/wis2box/actions/workflows/docs.yml)
+[![Tests](https://github.com/wmo-im/wis2box/workflows/tests%20%E2%9A%99%EF%B8%8F/badge.svg)](https://github.com/wmo-im/wis2box/actions/workflows/tests-docker.yml)
+[![Docs](https://readthedocs.org/projects/docs/badge)](https://wis2box.readthedocs.org)
 
 ## WIS 2.0 in a box
 
