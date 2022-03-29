@@ -106,12 +106,12 @@ wis2box's architecture allows for additional services as required by
 adding Docker containers. Examples of additional services include adding a container
 for a samba share or FTP server. Key considerations for adding services:
 
-- volume mapping data directories: all wis2box data can be found at `${WIS2BOX_DATADIR}`
-  - incoming: `${WIS2BOX_DATADIR}/data/incoming`
-  - public: `${WIS2BOX_DATADIR}/data/public`
-- Elasticsearch indexes can be found at the container/URL `http://elasticsearch:9200`
+- volume mapping data directories: all wis2box data can be found at ``${WIS2BOX_DATADIR}``
+  - incoming: ``${WIS2BOX_DATADIR}/data/incoming``
+  - public: ``${WIS2BOX_DATADIR}/data/public``
+- Elasticsearch indexes can be found at the container/URL ``http://elasticsearch:9200``
 
-Examples of additional services can be found in `docker/extras`.
+Examples of additional services can be found in ``docker/extras``.
 
 
 .. _`OGC API - Features`: https://ogcapi.ogc.org/features
