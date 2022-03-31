@@ -103,6 +103,10 @@ class BaseAbstractData:
             for key2, value2 in value.items():
                 if key2 == '_meta':
                     continue
+                if value2 is None:
+                    LOGGER.debug(f'No data; skipping')
+                    continue
+                filename = DATADIR_PUBLIC / (rfp) / key
                 filename = DATADIR_PUBLIC / (rfp) / key
                 filename = filename.with_suffix(f'.{key2}')
 
