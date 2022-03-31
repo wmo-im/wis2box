@@ -107,7 +107,6 @@ class BaseAbstractData:
                     LOGGER.debug(f'No data; skipping')
                     continue
                 filename = DATADIR_PUBLIC / (rfp) / key
-                filename = DATADIR_PUBLIC / (rfp) / key
                 filename = filename.with_suffix(f'.{key2}')
 
                 LOGGER.debug(f'Writing data to {filename}')
