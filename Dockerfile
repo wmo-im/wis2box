@@ -48,7 +48,7 @@ RUN apt-get update -y \
     # install wis2box dependencies
     && pip3 install https://github.com/wmo-im/csv2bufr/archive/dev.zip \
     && pip3 install https://github.com/geopython/pygeometa/archive/master.zip \
-    && pip3 install https://github.com/metpx/sarracenia/archive/v03_wip.zip \
+    && pip3 install https://github.com/MetPX/sarracenia/archive/refs/tags/v3.00.14.zip \
     # install wis2box
     && cd /app \
     && python3 setup.py install \
