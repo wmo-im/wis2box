@@ -41,8 +41,6 @@ try:
     DATADIR_ARCHIVE = DATADIR / 'data' / 'archive'
     API_CONFIG = Path(os.environ.get('WIS2BOX_API_CONFIG'))
 except (OSError, TypeError):
-    import traceback
-    print(traceback.format_exc())
     msg = 'Configuration filepaths do not exist!'
     LOGGER.error(msg)
     raise EnvironmentError(msg)
@@ -51,6 +49,7 @@ API_TYPE = os.environ.get('WIS2BOX_API_TYPE')
 API_URL = os.environ.get('WIS2BOX_API_URL')
 API_BACKEND_TYPE = os.environ.get('WIS2BOX_API_BACKEND_TYPE')
 API_BACKEND_URL = os.environ.get('WIS2BOX_API_BACKEND_URL').rstrip('/')
+AUTH_STORE = os.environ.get('WIS2BOX_AUTH_STORE')
 OSCAR_API_TOKEN = os.environ.get('WIS2BOX_OSCAR_API_TOKEN')
 URL = os.environ.get('WIS2BOX_URL')
 
