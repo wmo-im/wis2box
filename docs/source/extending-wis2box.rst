@@ -77,7 +77,7 @@ Once your package is installed on the wis2box container, the data mappings need 
 your plugin to a topic hierarchy.  See :ref:`data-mappings` for more information.
 
 
-An example plugin for proof of concept can be found in https://github.com/wmo-cop/wis2box-malawi-observations
+An example plugin for proof of concept can be found in https://github.com/wmo-cop/wis2box-csv-observations
 
 Example plugins
 ----------------
@@ -89,12 +89,12 @@ by downstream applications.
    :header: "Plugin(s)", "Organization/Project","Description"
    :align: left
 
-   `wis2box-malawi-observations`_,WMO,plugin for Malawi surface observation data
+   `wis2box-csv-observations`_,WMO,plugin for CSV surface observation data
    `wis2box-pyopencdms-plugin`_,OpenCDMS,plugin for connecting the Open Climate Data Management System to wis2box
 
 .. _`datetime`: https://docs.python.org/3/library/datetime.html
 .. _`Python Package Index (PyPI)`: https://pypi.org
 .. _`Python packaging tutorial`: https://packaging.python.org/en/latest/tutorials/packaging-projects
 .. _`Cookiecutter PyPackage`: https://github.com/audreyfeldroy/cookiecutter-pypackage
-.. _`wis2box-malawi-observations`: https://github.com/wmo-cop/wis2box-malawi-observations
+.. _`wis2box-csv-observations`: https://github.com/wmo-cop/wis2box-csv-observations
 .. _`wis2box-pyopencdms-plugin`: https://github.com/opencdms/wis2box-pyopencdms-plugin

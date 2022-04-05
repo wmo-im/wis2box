@@ -131,6 +131,8 @@ class BaseAbstractData:
             for key2, value2 in value.items():
                 if key2 == '_meta':
                     continue
+                if value2 is None:
+                    continue
                 filename = DATADIR_PUBLIC / (rfp) / key
                 yield filename.with_suffix(f'.{key2}')
 

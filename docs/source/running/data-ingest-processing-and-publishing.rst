@@ -6,8 +6,13 @@ Data ingest, processing and publishing
 At this point, the system is ready for ingest/processing and publishing.
 
 Data ingest, processing and publishing can be run in automated fashion or via
-the wis2box CLI. Data is ingested, processed, and published  as WMO BUFR data,
-as well GeoJSON features.
+the wis2box CLI. Data is ingested, processed, and published as WMO BUFR data,
+as well as GeoJSON features.
+
+.. warning::
+   GeoJSON **data** representations provided in wis2box are in development and
+   are subject to change based on evolving requirements for observation data
+   representations in WIS 2.0 technical regulations.
 
 Interactive ingest, processing and publishing
 ---------------------------------------------
@@ -50,7 +55,7 @@ placed in the appropriate topic hierarchy directory.
 
 .. note::
 
-    wis2box can make ``WIS2BOX/data/incoming`` accessible via webdav by enabling ``docker/docker-compose.webdav.yml``.
+    wis2box can make ``WIS2BOX/data/incoming`` accessible via WebDAV by enabling ``docker/extras/docker-compose.webdav.yml``.
 
 
 Summary
