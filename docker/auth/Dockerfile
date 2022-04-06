@@ -19,26 +19,17 @@
 #
 ###############################################################################
 
-__version__ = '0.2.dev0'
+FROM wis2box_project_wis2box
 
-import click
+RUN apt-get update -y \
+    && apt-get install -y gunicorn python3-pip python3-gevent python3-flask python3-flask-cors \
+    && pip3 install jinja2==3.0.3
 
-from wis2box.data import data
-from wis2box.env import environment
-from wis2box.metadata import metadata
-from wis2box.api import api
-from wis2box.auth import auth
+RUN mkdir -p /wis2box-auth/wis2box-auth/
 
+COPY ./app.py /wis2box-auth/wis2box-auth/app.py
+COPY ./entrypoint.sh /entrypoint.sh
 
-@click.group()
-@click.version_option(version=__version__)
-def cli():
-    """WIS 2.0 in a box"""
-    pass
+WORKDIR /wis2box-auth
 
-
-cli.add_command(environment)
-cli.add_command(data)
-cli.add_command(metadata)
-cli.add_command(api)
-cli.add_command(auth)
+CMD ["sh", "-c", "/entrypoint.sh"]

@@ -28,7 +28,6 @@ import shutil
 import click
 
 from wis2box import cli_helpers
-from wis2box.data.auth import auth
 from wis2box.api.backend import load_backend
 from wis2box.env import (DATADIR_ARCHIVE, DATADIR_INCOMING, DATADIR_PUBLIC,
                          DATA_RETENTION_DAYS)
@@ -207,7 +206,6 @@ def ingest(ctx, topic_hierarchy, path, recursive, verbosity):
 
 
 data.add_command(archive)
-data.add_command(auth)
 data.add_command(clean)
 data.add_command(info)
 data.add_command(ingest)
