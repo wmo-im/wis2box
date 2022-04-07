@@ -25,7 +25,7 @@ from secrets import choice
 from string import ascii_letters, digits
 
 from wis2box import cli_helpers
-from wis2box.topic_hierarchy import TopicHierarchy
+from wis2box.topic_hierarchy import validate_and_load
 from wis2box.auth.base import BaseAuth
 from wis2box.env import AUTH_STORE
 
@@ -36,12 +36,12 @@ def is_resource_open(topic: str) -> bool:
     """
     Checks if topic has access control configured
 
-    :param topic: topic hierarchy
+    :param topic: `str` topic hierarchy
 
     :returns: `bool` of result
     """
     auth_db = BaseAuth(AUTH_STORE)
-    th = TopicHierarchy(topic)
+    th, _ = validate_and_load(topic)
     return auth_db.is_resource_open(th.dotpath)
 
 
@@ -49,13 +49,13 @@ def is_token_authorized(auth_key: str, topic: str) -> bool:
     """
     Checks if token is authorized to access a topic
 
-    :param key: key
-    :param th: topic hierarchy
+    :param auth_key: `str` auth_key
+    :param topic: `str` topic hierarchy
 
     :returns: `bool` of result
     """
     auth_db = BaseAuth(AUTH_STORE)
-    th = TopicHierarchy(topic)
+    th, _ = validate_and_load(topic)
     return auth_db.is_token_authorized(auth_key, th.dotpath)
 
 
@@ -69,7 +69,7 @@ def auth():
 @click.pass_context
 @cli_helpers.OPTION_TOPIC_HIERARCHY
 def is_restricted(ctx, topic_hierarchy):
-    """Check resource access"""
+    """Check if topic has access control"""
     click.echo(is_resource_open(topic_hierarchy))
 
 
@@ -78,14 +78,14 @@ def is_restricted(ctx, topic_hierarchy):
 @cli_helpers.OPTION_TOPIC_HIERARCHY
 @click.argument('token')
 def has_access(ctx, topic_hierarchy, token):
-    """Check resource access"""
+    """Check if a token has access to a topic"""
     click.echo(is_token_authorized(token, topic_hierarchy))
 
 
 @click.command()
 @click.pass_context
 def show(ctx):
-    """Show access controlled resources"""
+    """Show topics with access control configured"""
     auth_db = BaseAuth(AUTH_STORE)
     [click.echo(f'Topic: {topic}') for topic in auth_db.topics()]
 
@@ -95,7 +95,7 @@ def show(ctx):
 @cli_helpers.OPTION_TOPIC_HIERARCHY
 @click.argument('token', required=False)
 def add_token(ctx, topic_hierarchy, token):
-    """Add auth token to topic hierarchy"""
+    """Add access token for a topic"""
 
     if topic_hierarchy is None:
         raise click.ClickException('Missing -th/--topic-hierarchy')
@@ -116,7 +116,7 @@ def add_token(ctx, topic_hierarchy, token):
 @cli_helpers.OPTION_TOPIC_HIERARCHY
 @click.argument('token', required=False, nargs=-1)
 def remove_tokens(ctx, topic_hierarchy, token):
-    """Delete auth token"""
+    """Delete one to many tokens for a topic"""
 
     if topic_hierarchy is None:
         raise click.ClickException('Missing -th/--topic-hierarchy')

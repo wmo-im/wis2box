@@ -20,7 +20,7 @@
 #
 ###############################################################################
 
-# pygeoapi entry script
+# wis2box-auth entry script
 
 echo "START /entrypoint.sh"
 
@@ -34,9 +34,6 @@ CONTAINER_PORT=${CONTAINER_PORT:=80}
 WSGI_WORKERS=${WSGI_WORKERS:=4}
 WSGI_WORKER_TIMEOUT=${WSGI_WORKER_TIMEOUT:=6000}
 WSGI_WORKER_CLASS=${WSGI_WORKER_CLASS:=gevent}
-
-# What to invoke: default is to run gunicorn server
-entry_cmd=${1:-run}
 
 # Shorthand
 function error() {

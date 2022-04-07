@@ -23,6 +23,7 @@ wis2box |release| documentation
    running/index
    services
    data-access/index
+   auth
    extending-wis2box
    development
    contributing

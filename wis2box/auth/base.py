@@ -24,7 +24,7 @@ import hmac
 import logging
 import os
 import sqlite3
-from typing import Iterable, Tuple
+from typing import Iterator, Tuple
 
 LOGGER = logging.getLogger(__name__)
 
@@ -33,6 +33,10 @@ def hash_new_password(password: str) -> Tuple[bytes, bytes]:
     """
     Hash the provided password with a randomly-generated salt and return the
     salt and hash to store in the database.
+
+    :param password: `str` of new password
+
+    :returns: `Tuple` of password hash and salt used to generate hash
     """
 
     salt = os.urandom(24)
@@ -44,6 +48,12 @@ def is_correct_password(salt: bytes, pw_hash: bytes, password: str) -> bool:
     """
     Given a previously-stored salt and hash, and a password provided by a user
     trying to log in, check whether the password is correct.
+
+    :param salt: `bytes` of stored password salt
+    :param pw_hash: `bytes` of stored password hash
+    :param password: `str` of password to validate
+
+    :returns: `bool` result of if salt and password digest match stored pw_hash
     """
 
     return hmac.compare_digest(
@@ -95,7 +105,12 @@ class BaseAuth:
             s = 'CREATE TABLE IF NOT EXISTS auth (salt text PRIMARY KEY, key text NOT NULL, topic text NOT NULL)'  # noqa
             conn.execute(s)
 
-    def topics(self) -> Iterable[str]:
+    def topics(self) -> Iterator[str]:
+        """
+        Returns all topics with access control configured
+
+        :returns: `Iterator` of Topic Hierarchy strings
+        """
         try:
             with SQLite3Backend(self.db) as conn:
                 s = 'SELECT DISTINCT topic FROM auth'
@@ -106,12 +121,12 @@ class BaseAuth:
             msg = f'Insert error: {err}'
             LOGGER.error(msg)
 
-    def _yield(self, key, th) -> str:
+    def _yield(self, key: str, th: str) -> str:
         """
         Yields a key's salt for a topic hierarchy
 
-        :param key: key
-        :param th: topic hierarchy
+        :param key: `str` key
+        :param th: `str` topic hierarchy
 
         :returns: `str` salt of authenticatied token
         """
@@ -128,33 +143,33 @@ class BaseAuth:
             msg = f'Insert error: {err}'
             LOGGER.error(msg)
 
-    def is_resource_open(self, th) -> bool:
+    def is_resource_open(self, th: str) -> bool:
         """
         Checks to see if resource has access control configured
 
-        :param th: topic hierarchy
+        :param th: `str` topic hierarchy
 
         :returns: `bool` of result
         """
         return False if th in self.topics() else True
 
-    def is_token_authorized(self, key, th) -> bool:
+    def is_token_authorized(self, key: str, th: str) -> bool:
         """
         Validates a tokens access to a topic
 
-        :param key: key
-        :param th: topic hierarchy
+        :param key: `str` key
+        :param th: `str` topic hierarchy
 
         :returns: `bool` of result
         """
         return True if self._yield(key, th) else False
 
-    def add(self, key, th) -> bool:
+    def add(self, key: str, th: str) -> bool:
         """
-        Adds a token and topic
+        Hashes and stores a new token for a topic
 
-        :param key: key
-        :param th: topic hierarchy
+        :param key: `str` key
+        :param th: `str` topic hierarchy
 
         :returns: `bool` of result
         """
@@ -169,12 +184,12 @@ class BaseAuth:
 
         return True
 
-    def delete_by_token(self, key, th) -> bool:
+    def delete_by_token(self, key: str, th: str) -> bool:
         """
-        Adds a token and topic
+        Delete a token for a topic
 
-        :param key: key
-        :param th: topic hierarchy
+        :param key: `str` key
+        :param th: `str` topic hierarchy
 
         :returns: `bool` of result
         """
@@ -193,11 +208,9 @@ class BaseAuth:
 
     def delete_by_topic_hierarchy(self, th) -> bool:
         """
-        Adds a token and topic
+        Delete all tokens for a topic
 
-        :param key: key
-        :param salt: salt
-        :param topic: topic
+        :param th: `str` topic hierarchy
 
         :returns: `bool` of result
         """
