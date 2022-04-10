@@ -91,7 +91,7 @@ def validate_and_load(topic_hierarchy: str,
             'topic_hierarchy': topic_hierarchy,
             'codepath': DATADIR_DATA_MAPPINGS['data'][th.dotpath]['plugin'],
             'template': DATADIR_DATA_MAPPINGS['data'][th.dotpath]['template'],
-            'pattern':  DATADIR_DATA_MAPPINGS['data'][th.dotpath]['file-pattern']
+            'pattern':  DATADIR_DATA_MAPPINGS['data'][th.dotpath]['file-pattern']  # noqa
         }
         plugin = load_plugin('data', defs)
 
@@ -108,7 +108,7 @@ def validate_and_load(topic_hierarchy: str,
                     'topic_hierarchy': key,
                     'codepath': value['plugin'],
                     'template': value['template'],
-                    'pattern' : value['file-pattern']
+                    'pattern': value['file-pattern']
                 }
                 plugin = load_plugin('data', defs)
                 th = TopicHierarchy(key)
