@@ -37,7 +37,7 @@ def load_backend() -> Any:
 
     LOGGER.debug('Loading backend')
 
-    codepath = PLUGINS['api_backend'][API_BACKEND_TYPE]
+    codepath = PLUGINS['api_backend'][API_BACKEND_TYPE]['plugin']
     defs = {
         'codepath': codepath,
         'url': API_BACKEND_URL

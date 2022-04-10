@@ -37,7 +37,7 @@ def load_config() -> Any:
 
     LOGGER.debug('Loading config')
 
-    codepath = PLUGINS['api_config'][API_TYPE]
+    codepath = PLUGINS['api_config'][API_TYPE]['plugin']
     defs = {
         'codepath': codepath,
         'condig': API_CONFIG

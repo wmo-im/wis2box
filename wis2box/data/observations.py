@@ -49,7 +49,7 @@ class ObservationData(BaseAbstractData):
         self.mappings = {}
         self.output_data = {}
 
-        mapping_bufr4 = Path(MAPPINGS) / 'synop_bufr.json'
+        mapping_bufr4 = Path(MAPPINGS) / self.template
         mapping_geojson = Path(MAPPINGS) / 'wmo_om_rc0.geojson'
 
         with mapping_bufr4.open() as fh1, mapping_geojson.open() as fh2:

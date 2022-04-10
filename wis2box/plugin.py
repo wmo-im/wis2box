@@ -30,10 +30,14 @@ LOGGER = logging.getLogger(__name__)
 
 PLUGINS = {
     'api_backend': {
-        'Elasticsearch': 'wis2box.api.backend.elastic.ElasticBackend'
+        'Elasticsearch': {
+            'plugin': 'wis2box.api.backend.elastic.ElasticBackend'
+        }
     },
     'api_config': {
-        'pygeoapi': 'wis2box.api.config.pygeoapi.PygeoapiConfig'
+        'pygeoapi': {
+            'plugin': 'wis2box.api.config.pygeoapi.PygeoapiConfig'
+        }
     }
 }
 
@@ -62,13 +66,19 @@ def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
     else:
         plugin_mappings = DATADIR_DATA_MAPPINGS
 
+    # check code path is valid
     if '.' not in codepath:
-        msg = f'Plugin {codepath} not found'
+        msg = f'Invalid plugin codepath: {codepath}'
         LOGGER.exception(msg)
         raise InvalidPluginError(msg)
 
-    if ('.' not in codepath or codepath not in
-            plugin_mappings[plugin_type].values()):
+    valid_plugin = False
+    for key in plugin_mappings[plugin_type]:
+        if codepath == plugin_mappings[plugin_type][key]['plugin']:
+            valid_plugin = True
+            break
+
+    if not valid_plugin:
         msg = f'Plugin {codepath} not found'
         LOGGER.exception(msg)
         raise InvalidPluginError(msg)
@@ -81,8 +91,9 @@ def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
     module = importlib.import_module(packagename)
     class_ = getattr(module, classname)
 
+    # is this still needed or do we just want class_(defs)
     if plugin_type == PluginTypes.DATA.value:
-        plugin = class_(defs.get('topic_hierarchy'))
+        plugin = class_(defs)
     elif plugin_type == PluginTypes.API_BACKEND.value:
         plugin = class_(defs)
     elif plugin_type == PluginTypes.API_CONFIG.value:
