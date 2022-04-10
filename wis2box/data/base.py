@@ -30,7 +30,7 @@ LOGGER = logging.getLogger(__name__)
 
 class BaseAbstractData:
     """Abstract data"""
-    def __init__(self, topic_hierarchy: TopicHierarchy) -> None:
+    def __init__(self, defs: dict) -> None:
         """
         Abstract data initializer
 
@@ -42,8 +42,8 @@ class BaseAbstractData:
 
         self.filename = None
         self.incoming_filepath = None
-        self.topic_hierarchy = TopicHierarchy(topic_hierarchy)
-
+        self.topic_hierarchy = TopicHierarchy(defs["topic_hierarchy"])
+        self.template = defs["template"]
         self.output_data = {}
         self.discovery_metadata = {}
 
