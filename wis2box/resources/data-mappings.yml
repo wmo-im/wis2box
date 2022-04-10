@@ -3,7 +3,3 @@ data:
         plugin: wis2box.data.observations.ObservationData
         template: synop_bufr.json
         file-pattern:
-    data.core.observations-surface-marine:
-        plugin: wis2box.data.observations.ObservationData
-        template: tide_gauge.json
-        file-pattern:

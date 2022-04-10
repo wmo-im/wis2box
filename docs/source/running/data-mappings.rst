@@ -4,15 +4,16 @@ Data mappings
 =============
 
 Once a topic hierarchy is defined, it needs to be included in the wis2box data mappings
-configuration. wis2box provides a default data mapping:
+configuration. wis2box provides a default data mapping (in yaml format):
 
 .. literalinclude:: ../../../wis2box/resources/data-mappings.yml
    :language: yaml
 
-The format of the ``data`` property is ``key: value``, where:
+The data mappings are indicated by the ``data`` keyword, with each topic having a separate entry specifying:
 
-- ``key``: the topic hierarchy defined in the system
-- ``value``: the codepath that implements the relevant data processing
+- ``plugin``: the codepath of the plugin.
+- ``template``: additional argument allowing a mapping template name to be passed to the plugin.
+- ``file-pattern``: additional argument allowing a file pattern to be passed to the plugin.
 
 The default data mapping can be overriden by user-defined data mappings with the following steps:
 
