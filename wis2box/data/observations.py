@@ -54,6 +54,7 @@ class ObservationDataCSV(BaseAbstractData):
 
         mapping_bufr4 = DATADIR_CONFIG / "csv2bufr" / self.template
 
+
         with mapping_bufr4.open() as fh1:
             self.mappings['bufr4'] = json.load(fh1)
 
