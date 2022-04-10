@@ -17,7 +17,7 @@ The format of the ``data`` property is ``key: value``, where:
 The default data mapping can be overriden by user-defined data mappings with the following steps:
 
 - create a YAML file similar to the above to include your topic hierarchy
-- set the ``WIS2BOX_DATA_MAPPINGS`` environment variable to point to the new file of definitions
+- set the ``WIS2BOX_DATADIR_DATA_MAPPINGS`` environment variable to point to the new file of definitions
 - restart wis2box
 
 See :ref:`extending-wis2box` for more information on adding your own data processing
