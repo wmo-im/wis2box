@@ -28,6 +28,7 @@ import sys
 DOCKER_COMPOSE_ARGS = """
     -f docker/docker-compose.yml
     -f docker/docker-compose.override.yml
+    -f docker/docker-compose.monitoring.yml
     --env-file dev.env
     -p wis2box_project
     """
