@@ -82,7 +82,7 @@ services:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
       - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_HIDE_VERSION=true
       - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/etc/grafana/provisioning/dashboards/home.json
       - GF_ANALYTICS_CHECK_FOR_UPDATES=false
@@ -90,7 +90,6 @@ services:
       - GF_UNIFIED_ALERTING_ENABLED=false
       - GF_ALERTING_ENABLED=false
       - GF_USERS_DEFAULT_THEME=dark
-      - GF_AUTH_DISABLE_LOGIN_FORM=true
       - GF_DISABLE_SIGNOUT_MENU=true
     ports:
       - 3000:3000
