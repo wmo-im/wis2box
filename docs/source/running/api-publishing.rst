@@ -58,14 +58,10 @@ driven workflow. If manual ingest is needed, the following command can be run in
 
    wis2box api add-collection-items --topic-hierarchy foo.bar.baz
 
-API container restart
----------------------
+.. note::
 
-Any change to API configuration requires a restart of the API container, which can be run via the following:
+   Changes to the API configuration are reflected and updated automatically.
 
-.. code-block:: bash
-
-   python3 wis2box-ctl.py restart wis2box
 
 Summary
 -------
