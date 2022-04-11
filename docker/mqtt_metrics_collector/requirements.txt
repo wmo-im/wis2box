@@ -1,0 +1,2 @@
+prometheus-client
+paho-mqtt
