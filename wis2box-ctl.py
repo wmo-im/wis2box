@@ -181,14 +181,8 @@ def make(args) -> None:
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} ps {containers}'))
     elif args.command == "lint":
         files = walk_path(".")
-        run(args, ('flake8', *files))
-    else:
-        print(usage())
+        run(args, ('python3', '-m', 'flake8', *files))
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print(usage())
-        sys.exit(1)
-
     make(args)

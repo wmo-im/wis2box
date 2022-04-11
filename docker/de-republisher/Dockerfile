@@ -19,7 +19,7 @@
 #
 ###############################################################################
 
-FROM ghcr.io/metpx/sarracenia_x64:latest
+FROM ghcr.io/metpx/sarracenia:latest
 
 COPY ./config /root/.config/sr3
 

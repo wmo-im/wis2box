@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ###############################################################################
 #
 # Licensed to the Apache Software Foundation (ASF) under one
@@ -20,9 +20,13 @@
 #
 ###############################################################################
 
+# wis2box entry script
+
+echo "START /entrypoint.sh"
+
 set +e
 
-echo  "Waiting for Elasticsearch container..."
-
-# First wait for ES to be up and then execute the original pygeoapi entrypoint.
-/wait-for-elasticsearch.sh http://elasticsearch:9200 /entrypoint.sh || echo "ES failed: $?, exit" && exit 1
+wis2box environment create
+cp /wis2box-api/wis2box-api-config.yml ${WIS2BOX_API_CONFIG}
+sr3 --logStdout start
+sleep infinity

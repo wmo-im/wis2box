@@ -72,12 +72,6 @@ Logout of wis2box container:
 
     exit
 
-Restart the wis2box API container:
-
-.. code-block:: bash
-
-    python3 wis2box-ctl.py restart pygeoapi
-
 
 From here, you can run ``python3 wis2box-ctl.py status`` to confirm that containers are running.
 

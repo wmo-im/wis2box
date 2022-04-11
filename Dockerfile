@@ -26,9 +26,11 @@ MAINTAINER "tomkralidis@gmail.com"
 ARG WIS2BOX_PIP3_EXTRA_PACKAGES
 ENV TZ="Etc/UTC" \
     DEBIAN_FRONTEND="noninteractive" \
-    BUILD_PACKAGES="build-essential cmake gfortran python3-wheel"
+    BUILD_PACKAGES="build-essential cmake gfortran python3-wheel" \
+    DEBIAN_PACKAGES="bash vim git python3-pip python3-dev curl libffi-dev libeccodes0 python3-eccodes python3-cryptography libssl-dev libudunits2-0 python3-amqp python3-paho-mqtt python3-netifaces python3-dateparser python3-tz"
 
 COPY docker/wis2box/config /root/.config/sr3
+COPY docker/wis2box-api /wis2box-api
 
 COPY . /app
 
@@ -44,11 +46,11 @@ RUN if [ "$WIS2BOX_PIP3_EXTRA_PACKAGES" = "None" ]; \
 # TODO: remove build packages for a smaller image
 RUN apt-get update -y \
     && apt-get install -y ${BUILD_PACKAGES} \
-    && apt-get install -y bash vim git python3-pip python3-dev curl libffi-dev libeccodes0 python3-eccodes python3-cryptography libssl-dev libudunits2-0 \
+    && apt-get install -y ${DEBIAN_PACKAGES} \
     # install wis2box dependencies
     && pip3 install https://github.com/wmo-im/csv2bufr/archive/dev.zip \
     && pip3 install https://github.com/geopython/pygeometa/archive/master.zip \
-    && pip3 install https://github.com/MetPX/sarracenia/archive/refs/tags/v3.00.14.zip \
+    && pip3 install metpx-sr3 \
     # install wis2box
     && cd /app \
     && python3 setup.py install \
@@ -64,4 +66,6 @@ RUN apt-get update -y \
 
 WORKDIR /home/wis2box
 
-CMD sh -c "wis2box environment create && sr3 --logStdout start && sleep infinity"
+COPY ./docker/entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT [ "/entrypoint.sh" ]

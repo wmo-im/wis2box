@@ -47,8 +47,7 @@ jobs:
           && wis2box api add-collection-items --recursive --path /data/wis2box/data/public"
     - name: restart wis2box API container 🏁
       run: |
-        python3 wis2box-ctl.py restart pygeoapi
-        sleep 30
+        sleep 10
         python3 wis2box-ctl.py status -a
     - name: run integration tests ⚙️
       run: |

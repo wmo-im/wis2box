@@ -9,7 +9,7 @@ services:
     ports:
       - 9999:80
 
-  pygeoapi:
+  wis2box-api:
     ports:
       - 5001:80
 

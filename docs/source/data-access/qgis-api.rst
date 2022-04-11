@@ -28,7 +28,7 @@ interact with the wis2box discovery catalogue:
 - click the "Services" tab
 - click "New"
 - enter a name for the discovery catalogue endpoint
-- enter the URL to the discovery catalogue endpoint (i.e. ``http://localhost:8999/pygeoapi/collections/discovery-metadata``)
+- enter the URL to the discovery catalogue endpoint (i.e. ``http://localhost:8999/oapi/collections/discovery-metadata``)
 - ensure "Catalogue Type" is set to "OGC API - Records"
 - click "OK"
 
@@ -70,7 +70,7 @@ with the wis2box API:
 - from the QGIS menu, select *Layer -> Add Layer -> Add WFS Layer...*
 - click "New"
 - enter a name for the API endpoint
-- enter the URL to the API endpoint (i.e. ``http://localhost:8999/pygeoapi``)
+- enter the URL to the API endpoint (i.e. ``http://localhost:8999/oapi``)
 - under "WFS Options", set "Version" to "OGC API - Features"
 - click "OK"
 - click "Connect"

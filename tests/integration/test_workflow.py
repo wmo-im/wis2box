@@ -32,7 +32,7 @@ import requests
 DATADIR = Path('.').parent.absolute() / 'tests/data'
 
 URL = 'http://localhost:8999'
-API_URL = f'{URL}/pygeoapi'
+API_URL = f'{URL}/oapi'
 
 
 def test_metadata_station_cache():

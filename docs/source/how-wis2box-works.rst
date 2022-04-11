@@ -72,7 +72,7 @@ wis2box is built on free and open source (FOSS) technology.
 
    Data Consumer,PubSub,`mosquitto`_ `MetPX-Sarracenia`_, `MQTT`_
    Data Management,data processing and publishing,`pygeometa`_ `pyoscar`_,:abbr:`WCMP (WMO Core Metadata Profile)` :abbr:`WMDR (WIGOS Metadata Record)`
-   API Application,data discovery and access,`pygeoapi`_ `Elasticsearch`_,`OGC API`_
+   API Application,data discovery and access,`wis2box-api`_, `pygeoapi`_ `Elasticsearch`_,`OGC API`_
    Web Application,data discovery and visualization,`Vue.js`_ `Leaflet`_,`OGC API`_
 
 
@@ -91,3 +91,4 @@ wis2box is built on free and open source (FOSS) technology.
 .. _`Docker Compose`: https://docs.docker.com/compose
 .. _`OGC API`: https://ogcapi.ogc.org
 .. _`MetPX-Sarracenia`: https://github.com/MetPX/sarracenia
+.. _`wis2box-api`: https://github.com/wmo-im/wis2box-api
