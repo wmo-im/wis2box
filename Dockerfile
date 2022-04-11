@@ -30,6 +30,7 @@ ENV TZ="Etc/UTC" \
     DEBIAN_PACKAGES="bash vim git python3-pip python3-dev curl libffi-dev libeccodes0 python3-eccodes python3-cryptography libssl-dev libudunits2-0 python3-amqp python3-paho-mqtt python3-netifaces python3-dateparser python3-tz"
 
 COPY docker/wis2box/config /root/.config/sr3
+COPY docker/wis2box-api /wis2box-api
 
 COPY . /app
 
@@ -65,4 +66,6 @@ RUN apt-get update -y \
 
 WORKDIR /home/wis2box
 
-CMD sh -c "wis2box environment create && sr3 --logStdout start && sleep infinity"
+COPY ./docker/entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT [ "/entrypoint.sh" ]
