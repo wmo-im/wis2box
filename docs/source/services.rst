@@ -9,21 +9,21 @@ to users, applications and beyond.
 Discovery Catalogue
 -------------------
 
-The discovery catalogue is powered by `OGC API - Records`_ and is located at http://localhost:8999/pygeoapi/collections/discovery-metadata
+The discovery catalogue is powered by `OGC API - Records`_ and is located at http://localhost:8999/oapi/collections/discovery-metadata
 
-The OGC API endpoint is located by default at http://localhost:8999/pygeoapi.  The discovery catalogue endpoint is located at http://localhost:8999/pygeoapi/collections/discovery-metadata
+The OGC API endpoint is located by default at http://localhost:8999/oapi.  The discovery catalogue endpoint is located at http://localhost:8999/oapi/collections/discovery-metadata
 
 Below are some examples of working with the discovery catalogue.
 
-- description of catalogue: http://localhost:8999/pygeoapi/collections/discovery-metadata
-- catalogue queryables: http://localhost:8999/pygeoapi/collections/discovery-metadata/queryables
+- description of catalogue: http://localhost:8999/oapi/collections/discovery-metadata
+- catalogue queryables: http://localhost:8999/oapi/collections/discovery-metadata/queryables
 - catalogue queries
 
-  - records (browse): http://localhost:8999/pygeoapi/collections/discovery-metadata/items
-  - query by spatial (bounding box): http://localhost:8999/pygeoapi/collections/discovery-metadata/items?bbox=32,-17,36,-8
-  - query by temporal extent (since): http://localhost:8999/pygeoapi/collections/discovery-metadata/items?datetime=2021/..
-  - query by temporal extent (before): http://localhost:8999/pygeoapi/collections/discovery-metadata/items?datetime=../2022
-  - query by freetext: http://localhost:8999/pygeoapi/collections/discovery-metadata/items?q=observations
+  - records (browse): http://localhost:8999/oapi/collections/discovery-metadata/items
+  - query by spatial (bounding box): http://localhost:8999/oapi/collections/discovery-metadata/items?bbox=32,-17,36,-8
+  - query by temporal extent (since): http://localhost:8999/oapi/collections/discovery-metadata/items?datetime=2021/..
+  - query by temporal extent (before): http://localhost:8999/oapi/collections/discovery-metadata/items?datetime=../2022
+  - query by freetext: http://localhost:8999/oapi/collections/discovery-metadata/items?q=observations
 
 .. note::
 
@@ -36,10 +36,10 @@ Below are some examples of working with the discovery catalogue.
 Data API
 --------
 
-wis2box data is made available via `OGC API - Features`_ and is located at http://localhost:8999/pygeoapi
+wis2box data is made available via `OGC API - Features`_ and is located at http://localhost:8999/oapi
 standards.
 
-The OGC API endpoint is located by default at http://localhost:8999/pygeoapi
+The OGC API endpoint is located by default at http://localhost:8999/oapi
 
 Below are some examples of working with the discovery catalogue.
 
@@ -50,20 +50,20 @@ Below are some examples of working with the discovery catalogue.
      collection id accordingly
 
 
-- list of dataset collections: http://localhost:8999/pygeoapi/collections
-- collection description: http://localhost:8999/pygeoapi/collections/data.core.observations-surface-land.mw.FWCL.landFixed
-- collection queryables: http://localhost:8999/pygeoapi/collections/data.core.observations-surface-land.mw.FWCL.landFixed/queryables
-- collection items (browse): http://localhost:8999/pygeoapi/collections/data.core.observations-surface-land.mw.FWCL.landFixed/items
+- list of dataset collections: http://localhost:8999/oapi/collections
+- collection description: http://localhost:8999/oapi/collections/data.core.observations-surface-land.mw.FWCL.landFixed
+- collection queryables: http://localhost:8999/oapi/collections/data.core.observations-surface-land.mw.FWCL.landFixed/queryables
+- collection items (browse): http://localhost:8999/oapi/collections/data.core.observations-surface-land.mw.FWCL.landFixed/items
 - collection queries
 
-  - set limit/offset (paging): http://localhost:8999/pygeoapi/collections/data.core.observations-surface-land.mw.FWCL.landFixed/items?limit=1&startindex=2
-  - query by spatial (bounding box): http://localhost:8999/pygeoapi/collections/data.core.observations-surface-land.mw.FWCL.landFixed/items?bbox=32,-17,36,-8
-  - query by temporal extent (since): http://localhost:8999/pygeoapi/collections/data.core.observations-surface-land.mw.FWCL.landFixed/items?datetime=2021/..
-  - query by temporal extent (before): http://localhost:8999/pygeoapi/collections/data.core.observations-surface-land.mw.FWCL.landFixed/items?datetime=../2022
+  - set limit/offset (paging): http://localhost:8999/oapi/collections/data.core.observations-surface-land.mw.FWCL.landFixed/items?limit=1&startindex=2
+  - query by spatial (bounding box): http://localhost:8999/oapi/collections/data.core.observations-surface-land.mw.FWCL.landFixed/items?bbox=32,-17,36,-8
+  - query by temporal extent (since): http://localhost:8999/oapi/collections/data.core.observations-surface-land.mw.FWCL.landFixed/items?datetime=2021/..
+  - query by temporal extent (before): http://localhost:8999/oapi/collections/data.core.observations-surface-land.mw.FWCL.landFixed/items?datetime=../2022
 
 .. note::
 
-   - adding ``f=json`` to URLs will provide the equivalent JSON/GeoJSON representations 
+   - adding ``f=json`` to URLs will provide the equivalent JSON/GeoJSON representations
    - query predicates (``datetime``, ``bbox``, ``q``, etc.) can be combined
 
 .. seealso:: :ref:`data-access`
