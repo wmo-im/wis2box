@@ -21,7 +21,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 4,
+  "id": 50,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -34,161 +34,73 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 100,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 11,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "normal"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+            "fixedColor": "light-green",
+            "mode": "fixed"
           },
           "mappings": [],
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
                 "color": "green",
                 "value": null
               },
               {
+                "color": "orange",
+                "value": 70
+              },
+              {
                 "color": "red",
-                "value": 80
+                "value": 85
               }
             ]
           }
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Number of ERRORs"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Number of INFOs"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Number of WARNINGs"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "yellow",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 4,
+        "w": 24,
         "x": 0,
         "y": 0
       },
-      "id": 11,
-      "interval": "1m",
+      "id": 4,
+      "interval": "1h",
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
         },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
+        "showThresholdLabels": false,
+        "showThresholdMarkers": false,
+        "text": {
+          "titleSize": 13
         }
       },
+      "pluginVersion": "8.4.4",
       "targets": [
         {
           "datasource": {
             "type": "loki",
-            "uid": "P55348B596EBB51C3"
+            "uid": "wis2box-loki"
           },
-          "expr": "sum(count_over_time({compose_service=\"de-republisher\"} |= \"INFO\" [1m]))",
-          "hide": false,
-          "legendFormat": "Number of INFOs",
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P55348B596EBB51C3"
-          },
-          "expr": "sum(count_over_time({compose_service=\"de-republisher\"} |= \"WARNING\" [1m]))",
-          "hide": false,
-          "legendFormat": "Number of WARNINGs",
-          "refId": "C"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P55348B596EBB51C3"
-          },
-          "expr": "sum(count_over_time({compose_service=\"de-republisher\"} |= \"ERROR\" [1m]))",
-          "legendFormat": "Number of ERRORs",
-          "queryType": "range",
-          "refId": "A",
-          "resolution": 1
+          "expr": "sum by (wigos_id) (count_over_time({container_name=\"data-consumer\"} |= \"file:/\" |= \"/data/incoming\" | pattern `<_>file:/<prefix>WIGOS_<wigos_id>_<timestamp>.<file_type>` [$__interval]))",
+          "legendFormat": "{{wigos_id}}",
+          "refId": "A"
         }
       ],
-      "title": "de-republisher activity",
-      "transformations": [],
-      "type": "timeseries"
+      "title": "incoming csv-files received by wigos-id ",
+      "type": "gauge"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P55348B596EBB51C3"
+        "type": "prometheus",
+        "uid": "PABAFD29CE247021E"
       },
-      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -197,9 +109,11 @@
           "custom": {
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 5,
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "drawStyle": "bars",
-            "fillOpacity": 100,
+            "fillOpacity": 33,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -208,7 +122,7 @@
             },
             "lineInterpolation": "linear",
             "lineWidth": 1,
-            "pointSize": 11,
+            "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
@@ -216,12 +130,13 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "normal"
+              "mode": "none"
             },
             "thresholdsStyle": {
               "mode": "off"
             }
           },
+          "decimals": 0,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -237,62 +152,16 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Number of ERRORs"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Number of INFOs"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Number of WARNINGs"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "yellow",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 0
+        "h": 6,
+        "w": 15,
+        "x": 0,
+        "y": 4
       },
-      "id": 10,
-      "interval": "1m",
+      "id": 2,
+      "interval": "1h",
       "options": {
         "legend": {
           "calcs": [],
@@ -300,271 +169,266 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi",
+          "mode": "single",
           "sort": "none"
         }
       },
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P55348B596EBB51C3"
+            "type": "prometheus",
+            "uid": "PABAFD29CE247021E"
           },
-          "expr": "sum(count_over_time({compose_service=\"mqp-publisher\"} |= \"INFO\" [1m]))",
-          "hide": false,
-          "legendFormat": "Number of INFOs",
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P55348B596EBB51C3"
-          },
-          "expr": "sum(count_over_time({compose_service=\"mqp-publisher\"} |= \"WARNING\" [1m]))",
-          "hide": false,
-          "legendFormat": "Number of WARNINGs",
-          "refId": "C"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P55348B596EBB51C3"
-          },
-          "expr": "sum(count_over_time({compose_service=\"mqp-publisher\"} |= \"ERROR\" [1m]))",
-          "legendFormat": "Number of ERRORs",
-          "queryType": "range",
-          "refId": "A",
-          "resolution": 1
+          "exemplar": true,
+          "expr": "delta(csv_incoming_nrfile{}[1h])",
+          "interval": "",
+          "legendFormat": "Nr of csv-files in /data/incoming per hour",
+          "refId": "A"
         }
       ],
-      "title": "mqp-publisher activity",
-      "transformations": [],
+      "title": "csv-files per hour in /data/incoming",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "loki",
-        "uid": "P55348B596EBB51C3"
+        "uid": "wis2box-loki"
       },
-      "description": "",
       "gridPos": {
-        "h": 5,
-        "w": 12,
-        "x": 0,
-        "y": 8
-      },
-      "id": 12,
-      "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": true,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": false,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true
-      },
-      "pluginVersion": "8.4.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P55348B596EBB51C3"
-          },
-          "expr": "{compose_service=\"de-republisher\"} |= \"ERROR\"",
-          "refId": "A"
-        }
-      ],
-      "title": "de-republisher logs, ERROR",
-      "type": "logs"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P55348B596EBB51C3"
-      },
-      "description": "",
-      "gridPos": {
-        "h": 5,
-        "w": 12,
-        "x": 12,
-        "y": 8
-      },
-      "id": 9,
-      "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": true,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": false,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true
-      },
-      "pluginVersion": "8.4.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P55348B596EBB51C3"
-          },
-          "expr": "{compose_service=\"mqp-publisher\"} |= \"ERROR\"",
-          "refId": "A"
-        }
-      ],
-      "title": "mqp-publisher logs, ERROR",
-      "type": "logs"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P55348B596EBB51C3"
-      },
-      "description": "",
-      "gridPos": {
-        "h": 5,
-        "w": 12,
-        "x": 0,
-        "y": 13
-      },
-      "id": 7,
-      "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": true,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": false,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true
-      },
-      "pluginVersion": "8.4.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P55348B596EBB51C3"
-          },
-          "expr": "{compose_service=\"de-republisher\"} |= \"WARNING\"",
-          "refId": "A"
-        }
-      ],
-      "title": "de-republisher logs, WARNING",
-      "type": "logs"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P55348B596EBB51C3"
-      },
-      "description": "",
-      "gridPos": {
-        "h": 5,
-        "w": 12,
-        "x": 12,
-        "y": 13
-      },
-      "id": 13,
-      "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": true,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": false,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true
-      },
-      "pluginVersion": "8.4.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P55348B596EBB51C3"
-          },
-          "expr": "{compose_service=\"mqp-publisher\"} |= \"WARNING\"",
-          "refId": "A"
-        }
-      ],
-      "title": "mqp-publisher logs, WARNING",
-      "type": "logs"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P55348B596EBB51C3"
-      },
-      "description": "",
-      "gridPos": {
-        "h": 5,
-        "w": 12,
-        "x": 0,
-        "y": 18
-      },
-      "id": 2,
-      "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": true,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": false,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true
-      },
-      "pluginVersion": "8.4.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P55348B596EBB51C3"
-          },
-          "expr": "{compose_service=\"de-republisher\"} |= \"INFO\"",
-          "refId": "A"
-        }
-      ],
-      "title": "de-republisher logs, INFO",
-      "type": "logs"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P55348B596EBB51C3"
-      },
-      "description": "",
-      "gridPos": {
-        "h": 5,
-        "w": 12,
-        "x": 12,
-        "y": 18
+        "h": 18,
+        "w": 9,
+        "x": 15,
+        "y": 4
       },
       "id": 8,
       "options": {
         "dedupStrategy": "none",
-        "enableLogDetails": true,
+        "enableLogDetails": false,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": false,
+        "showLabels": true,
+        "showTime": true,
         "sortOrder": "Descending",
         "wrapLogMessage": true
       },
-      "pluginVersion": "8.4.3",
       "targets": [
         {
           "datasource": {
             "type": "loki",
-            "uid": "P55348B596EBB51C3"
+            "uid": "wis2box-loki"
           },
-          "expr": "{compose_service=\"mqp-publisher\"} |= \"INFO\"",
+          "expr": "{compose_service=~\"data-consumer|mqp-publisher|wis2box\"} |= \"ERROR\" | label_format container_name=\"\"",
+          "hide": false,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "wis2box-loki"
+          },
+          "expr": "{compose_service=~\"data-consumer|mqp-publisher|wis2box\"} |= \"Error\" | label_format container_name=\"\"",
+          "hide": false,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "wis2box-loki"
+          },
+          "expr": "{compose_service=~\"data-consumer|mqp-publisher|wis2box\"} |= \"Traceback\" | label_format container_name=\"\"",
+          "hide": false,
+          "refId": "D"
+        }
+      ],
+      "title": "ERRORs detected",
+      "type": "logs"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PABAFD29CE247021E"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 5,
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 30,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 15,
+        "x": 0,
+        "y": 10
+      },
+      "id": 6,
+      "interval": "1h",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PABAFD29CE247021E"
+          },
+          "exemplar": true,
+          "expr": "delta(bufr4_public_nrfile[1h])",
+          "interval": "",
+          "legendFormat": "Nr of bufr4-files in public per hour",
           "refId": "A"
         }
       ],
-      "title": "mqp-publisher logs, INFO",
-      "type": "logs"
+      "title": "bufr4-files per hour in /data/public",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PABAFD29CE247021E"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 5,
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 36,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 15,
+        "x": 0,
+        "y": 16
+      },
+      "id": 10,
+      "interval": "1h",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PABAFD29CE247021E"
+          },
+          "exemplar": true,
+          "expr": "delta(mqtt_msg_count_total[$__interval])",
+          "interval": "",
+          "legendFormat": "mqtt-messages per hour on xpublic/#",
+          "refId": "A"
+        }
+      ],
+      "title": "mqtt messages per hour on xpublic/#",
+      "type": "timeseries"
     }
   ],
-  "refresh": "",
   "schemaVersion": 35,
   "style": "dark",
   "tags": [],
@@ -572,13 +436,13 @@
     "list": []
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-2d",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Subscribe & Publish Monitoring",
-  "uid": "6n1yRuLnk",
-  "version": 10,
+  "title": "wis2box workflow monitoring",
+  "uid": "lIowuuP7k",
+  "version": 29,
   "weekStart": ""
 }
