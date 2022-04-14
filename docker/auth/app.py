@@ -64,11 +64,12 @@ def extract_topic(uri: str) -> str:
     pattern = r'(data[\/.][a-z]{4,11}[\/.][a-z-]+[\/.][a-z]{2}[\/.][A-Z]*[\/.][a-zA-Z]+)'  # noqa
     prog = re.compile(pattern)
     match = prog.search(uri)
-    return match[0] if match else ''
+    return match[0] if match else None
 
 
 @app.route('/authorize')
 def authorize():
+    api_key = None
     request_uri = request.headers.get('X-Original-URI')
     request_ = request.from_values(request_uri)
 
@@ -76,14 +77,15 @@ def authorize():
     resource = extract_topic(request_uri)
 
     LOGGER.debug('Extracting API token')
-    api_key = request_.args.get('token')
-    auth_header = request.headers.get('Authorization', '')
-    if 'Bearer' in auth_header:
-        api_key = auth_header.replace('Bearer', '').strip()
+    auth_header = request.headers.get('Authorization')
+    if request_.args.get('token'):
+        api_key = request_.args.get('token')
+    elif auth_header is not None and 'Bearer' in auth_header:
+        api_key = auth_header.split()[-1].strip()
 
     # check if resource passed exists in auth list
     # if no, it's open, return
-    if resource == '' or is_resource_open(resource):
+    if resource is None or is_resource_open(resource):
         return get_response(200, 'Resource is open')
 
     LOGGER.debug(f'Request for restricted resource: {resource}')

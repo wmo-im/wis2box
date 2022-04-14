@@ -128,13 +128,14 @@ class BaseAuth:
         :param key: `str` key
         :param th: `str` topic hierarchy
 
-        :returns: `str` salt of authenticatied token
+        :returns: `str` salt of authenticated token
         """
 
         try:
             with SQLite3Backend(self.db) as conn:
                 s = 'SELECT * FROM auth WHERE topic=:th'
-                for row in conn.execute(s, {'th': th}):
+                for row in conn.execute(s,
+                                        {'th': th}):
                     rd = dict(row)
                     if is_correct_password(rd['salt'], rd['key'], key):
                         return rd['salt']
@@ -176,8 +177,9 @@ class BaseAuth:
         salt, pw_hash = hash_new_password(key)
         try:
             with SQLite3Backend(self.db) as conn:
-                s = 'INSERT INTO auth (salt, key, topic) VALUES (?, ?, ?)'
-                conn.execute(s, (salt, pw_hash, th))
+                s = 'INSERT INTO auth (salt, key, topic) VALUES (:salt, :key, :topic)' # noqa
+                conn.execute(s,
+                             {'salt': salt, 'key': pw_hash, 'topic': th})
         except sqlite3.IntegrityError as err:
             msg = f'Insert error: {err}'
             LOGGER.error(msg)
@@ -217,7 +219,8 @@ class BaseAuth:
 
         try:
             with SQLite3Backend(self.db) as conn:
-                conn.execute('DELETE FROM auth WHERE topic=:th', {'th': th})
+                conn.execute('DELETE FROM auth WHERE topic=:th',
+                             {'th': th})
         except sqlite3.IntegrityError as err:
             msg = f'Insert error: {err}'
             LOGGER.error(msg)

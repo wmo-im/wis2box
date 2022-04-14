@@ -28,15 +28,23 @@ way to retrieve it once it is lost.
 Authenticating
 --------------
 
-Once a token has been generated for a topic, it can be used by appending as an argument. It can also be
-passed as an Authentication header with a bearer token. Token credentials can also be validated using the
-wis2box command line utility.
+Token credentials can be validated using the wis2box command line utility.
 
 .. code-block:: bash
 
     wis2box auth show
-    wis2box auth has_access --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed mytoken
-    wis2box auth has_access --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed notmytoken
+    wis2box auth has-access --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed mytoken
+    wis2box auth has-access --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed notmytoken
+
+
+Once a token has been generated, access to any data of that topic in the WAF or API requires token authentication.
+Tokens are passed as a bearer token in the Authentication header or as an argument appended to the URI. Headers can be
+easily added to requests using `cURL`_.
+
+.. code-block:: bash
+
+    curl -H "Authorization: Bearer mytoken" "http://localhost:8999/oapi/collections/data.core.observations-surface-land.mw.FWCL.landFixed"
+    curl -H "Authorization: Bearer notmytoken" "http://localhost:8999/oapi/collections/data.core.observations-surface-land.mw.FWCL.landFixed"
 
 
 Removing Access Control
@@ -64,3 +72,4 @@ provides an overview of more modifications that can be made to wis2box.
 .. _`Gluu`: https://gluu.org/
 .. _`Keycloak`: https://www.keycloak.org/
 .. _`LemonLDAP`: https://lemonldap-ng.org/
+.. _`cURL`: https://curl.se/

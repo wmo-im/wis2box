@@ -70,7 +70,7 @@ def auth():
 @cli_helpers.OPTION_TOPIC_HIERARCHY
 def is_restricted(ctx, topic_hierarchy):
     """Check if topic has access control"""
-    click.echo(is_resource_open(topic_hierarchy))
+    click.echo(not is_resource_open(topic_hierarchy))
 
 
 @click.command()

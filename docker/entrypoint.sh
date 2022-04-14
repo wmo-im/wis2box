@@ -27,6 +27,11 @@ echo "START /entrypoint.sh"
 set +e
 
 wis2box environment create
-cp /wis2box-api/wis2box-api-config.yml ${WIS2BOX_API_CONFIG}
+if test -f "${WIS2BOX_API_CONFIG}"; then
+    echo "${WIS2BOX_API_CONFIG} already exists."
+else
+    echo "Creating ${WIS2BOX_API_CONFIG}."
+    cp /wis2box-api/wis2box-api-config.yml ${WIS2BOX_API_CONFIG}
+fi
 sr3 --logStdout start
 sleep infinity
