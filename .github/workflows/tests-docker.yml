@@ -34,7 +34,7 @@ jobs:
         python3 wis2box-ctl.py status
     - name: test wis2box data ingest/process/publish workflow ⚙️
       run: |
-        docker exec `docker ps -q --filter ancestor=wis2box_project_wis2box` sh -c " \
+        docker exec wis2box sh -c " \
           wis2box environment create \
           && wis2box environment show \
           && wis2box data setup --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed \

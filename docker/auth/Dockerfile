@@ -1,4 +1,3 @@
-#!/bin/bash
 ###############################################################################
 #
 # Licensed to the Apache Software Foundation (ASF) under one
@@ -20,18 +19,17 @@
 #
 ###############################################################################
 
-# wis2box entry script
+FROM wis2box_project_wis2box
 
-echo "START /entrypoint.sh"
+RUN apt-get update -y \
+    && apt-get install -y gunicorn python3-pip python3-gevent python3-flask python3-flask-cors \
+    && pip3 install jinja2==3.0.3
 
-set +e
+RUN mkdir -p /wis2box-auth/wis2box-auth/
 
-wis2box environment create
-if test -f "${WIS2BOX_API_CONFIG}"; then
-    echo "${WIS2BOX_API_CONFIG} already exists."
-else
-    echo "Creating ${WIS2BOX_API_CONFIG}."
-    cp /wis2box-api/wis2box-api-config.yml ${WIS2BOX_API_CONFIG}
-fi
-sr3 --logStdout start
-sleep infinity
+COPY ./app.py /wis2box-auth/wis2box-auth/app.py
+COPY ./entrypoint.sh /entrypoint.sh
+
+WORKDIR /wis2box-auth
+
+CMD ["sh", "-c", "/entrypoint.sh"]

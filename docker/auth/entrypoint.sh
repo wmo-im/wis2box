@@ -20,18 +20,39 @@
 #
 ###############################################################################
 
-# wis2box entry script
+# wis2box-auth entry script
 
 echo "START /entrypoint.sh"
 
 set +e
 
-wis2box environment create
-if test -f "${WIS2BOX_API_CONFIG}"; then
-    echo "${WIS2BOX_API_CONFIG} already exists."
-else
-    echo "Creating ${WIS2BOX_API_CONFIG}."
-    cp /wis2box-api/wis2box-api-config.yml ${WIS2BOX_API_CONFIG}
-fi
-sr3 --logStdout start
-sleep infinity
+# gunicorn env settings with defaults
+SCRIPT_NAME="/"
+CONTAINER_NAME="wis2box-auth"
+CONTAINER_HOST=${CONTAINER_HOST:=0.0.0.0}
+CONTAINER_PORT=${CONTAINER_PORT:=80}
+WSGI_WORKERS=${WSGI_WORKERS:=4}
+WSGI_WORKER_TIMEOUT=${WSGI_WORKER_TIMEOUT:=6000}
+WSGI_WORKER_CLASS=${WSGI_WORKER_CLASS:=gevent}
+
+# Shorthand
+function error() {
+	echo "ERROR: $@"
+	exit -1
+}
+
+# Workdir
+cd '/wis2box-auth'
+
+# SCRIPT_NAME should not have value '/'
+[[ "${SCRIPT_NAME}" = '/' ]] && export SCRIPT_NAME="" && echo "make SCRIPT_NAME empty from /"
+
+echo "Start gunicorn name=${CONTAINER_NAME} on ${CONTAINER_HOST}:${CONTAINER_PORT} with ${WSGI_WORKERS} workers and SCRIPT_NAME=${SCRIPT_NAME}"
+exec gunicorn --workers ${WSGI_WORKERS} \
+        --worker-class=${WSGI_WORKER_CLASS} \
+        --timeout ${WSGI_WORKER_TIMEOUT} \
+        --name=${CONTAINER_NAME} \
+        --bind ${CONTAINER_HOST}:${CONTAINER_PORT} \
+        wis2box-auth.app:app
+
+echo "END /entrypoint.sh"
