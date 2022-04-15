@@ -28,6 +28,11 @@ INTERRUPT = False
 def collect_file_data_by_topic(root,filematch):
     """
     helper-function to collect data using labels 'topic' from given root-path and file-type
+    
+    :param root: root-path for file search
+    :param filematch: string to be contained in file-name to be considered a match
+    
+    :returns: dictionary with topic as key
     """
     from fnmatch import fnmatch
     data = {}
