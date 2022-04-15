@@ -53,7 +53,19 @@ logger.setLevel(WIS2BOX_LOGGING_LOGLEVEL)
 INTERRUPT = False
 
 def sub_connect(client, userdata, flags, rc, properties=None):
-    logger.info("on connection to subscribe:", mqtt.connack_string(rc))
+    """
+    function executed 'on_connect' for paho.mqtt.client: subscribe to xpublic/# 
+
+    :param client: client-object associated to 'on_connect'
+    :param userdata: userdata
+    :param flags: flags
+    :param rc: return-code received 'on_connect'
+    :param properties: properties
+
+    :returns: `None`
+    """
+
+    logger.info(f"on connection to subscribe: {mqtt.connack_string(rc)}")
     for s in ["xpublic/#"]:
         client.subscribe(s, qos=1)
 
@@ -62,9 +74,9 @@ mqtt_msg_by_topic_counter = Counter('mqtt_msg_count_by_topic', 'Number of messag
 
 def sub_mqtt_metrics(client, userdata, msg):
     """
-    subscribe and update MQTT metrics for each new message received
+    function executed 'on_message' for paho.mqtt.client: update counters for each new message received
 
-    :param client: MQTT-client subscribed to MQTT-broker 
+    :param client: client-object associated to 'on_message'
     :param userdata: MQTT-userdata
     :param msg: MQTT-message-object received by subscriber
 
