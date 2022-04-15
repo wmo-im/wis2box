@@ -65,7 +65,7 @@ def gather_file_metrics():
     csv_incoming_bytes_by_topic_gauge = Gauge('csv_incoming_bytes_by_topic', 'Bytes used by csv stored in /data/incoming, by topic', ["topic"])
     
     
-    while INTERRUPT == False:
+    while not INTERRUPT:
         # count bufr4 in outgoing directory
         bufr_public_files = 0
         bufr_public_bytes = 0
