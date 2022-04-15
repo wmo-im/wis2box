@@ -62,7 +62,13 @@ mqtt_msg_by_topic_counter = Counter('mqtt_msg_count_by_topic', 'Number of messag
 
 def sub_mqtt_metrics(client, userdata, msg):
     """
-      subscribe and update MQTT metrics for each new message received
+    subscribe and update MQTT metrics for each new message received
+
+    :param client: MQTT-client subscribed to MQTT-broker 
+    :param userdata: MQTT-userdata
+    :param msg: MQTT-message-object received by subscriber
+
+    :returns: `None`
     """
     m = json.loads(msg.payload.decode('utf-8'))
     logger.info(f"Received message on topic ={msg.topic}")
@@ -71,7 +77,9 @@ def sub_mqtt_metrics(client, userdata, msg):
 
 def gather_mqtt_metrics():
     """
-      setup mqtt-client to monitor metrics from broker on this box
+    setup mqtt-client to monitor metrics from broker on this box
+
+    :returns: `None`
     """
     # explicitly set the counter to 0 at the start
     mqtt_msg_counter.inc(0)
@@ -82,14 +90,14 @@ def gather_mqtt_metrics():
     # generate a random clientId for the mqtt-session
     r = random.Random()
     client_id = f"mqtt_metrics_collector_{r.randint(1,1000):04d}"
-    logger.info(f"{BROKER}")
+    logger.info(BROKER)
     try:
         broker_arr = BROKER.replace('mqtt://','').split(':')
         logger.info(f"{broker_arr[0]}")
         mqtt_username = broker_arr[0]
         mqtt_pwd = str( broker_arr[1] ).split('@')[0]
         mqtt_host = str( broker_arr[1] ).split('@')[1]
-        logger.info(f"setup mqtt-client-connection mqtt_host={mqtt_host}, mqtt_username={mqtt_username}, mqtt_pwd={mqtt_pwd}, client_id={client_id} ")
+        logger.info(f"setup mqtt-client-connection mqtt_host={mqtt_host}, mqtt_username={mqtt_username}, mqtt_pwd=***, client_id={client_id} ")
         client = mqtt.Client(client_id=client_id, protocol=mqtt.MQTTv5)
         client.on_connect = sub_connect
         client.on_message = sub_mqtt_metrics
