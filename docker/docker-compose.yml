@@ -134,7 +134,6 @@ services:
     depends_on:
       - mosquitto
 
-<<<<<<< HEAD
   wis2box-auth:
     container_name: wis2box-auth
     build:
@@ -146,8 +145,7 @@ services:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
     depends_on:
       - wis2box
-=======
->>>>>>> d97aa68 (first version with grafana/loki/prometheus)
+
 volumes:
   es-data:
 
