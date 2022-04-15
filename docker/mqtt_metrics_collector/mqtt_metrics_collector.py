@@ -53,7 +53,7 @@ logger.setLevel(WIS2BOX_LOGGING_LOGLEVEL)
 INTERRUPT = False
 
 def sub_connect(client, userdata, flags, rc, properties=None):
-    print("on connection to subscribe:", mqtt.connack_string(rc))
+    logger.info("on connection to subscribe:", mqtt.connack_string(rc))
     for s in ["xpublic/#"]:
         client.subscribe(s, qos=1)
 
