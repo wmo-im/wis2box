@@ -103,7 +103,9 @@ services:
     <<: *logging
   mosquitto:
     <<: *logging
-  pygeoapi:
+  wis2box-api:
+    <<: *logging
+  wis2box-auth:
     <<: *logging
 
 volumes:
