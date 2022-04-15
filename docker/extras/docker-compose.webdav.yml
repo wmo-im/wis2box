@@ -7,10 +7,10 @@ services:
     container_name: wis2box-webdav-incoming
     environment:
       AUTH_TYPE: Digest
-      USERNAME: ${WEBDAV_USERNAME}
-      PASSWORD: ${WEBDAV_PWD}
+      USERNAME: ${WEBDAV_USERNAME:-webdav}
+      PASSWORD: ${WEBDAV_PWD:-webdav}
     ports:
       - 80:80
     volumes:
-      - ${WIS2BOX_DATADIR}/data/incoming:/var/lib/dav/data/incoming
-      - ${WIS2BOX_DATADIR}/data/public:/var/lib/dav/data/public
+      - ${WIS2BOX_HOST_DATADIR}/data/incoming:/var/lib/dav/data/incoming:rw
+      - ${WIS2BOX_HOST_DATADIR}/data/public:/var/lib/dav/data/public:rw
