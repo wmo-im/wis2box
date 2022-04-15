@@ -72,7 +72,9 @@ def collect_file_data_by_topic(root,filematch):
 
 def gather_file_metrics():
     """
-      gather file metrics by checking content of wis2box public directory
+    gather file metrics by checking content of wis2box public directory
+
+    :returns: `None`
     """    
     bufr_public_nrfile_gauge = Gauge('bufr4_public_nrfile', 'Number of bufr4 in /data/public')
     bufr_public_nrfile_by_topic_gauge = Gauge('bufr4_public_nrfile_by_topic', 'Number of bufr4 in /data/public, by topic',["topic"])
