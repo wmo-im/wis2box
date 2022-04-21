@@ -72,51 +72,63 @@ services:
 
   data-consumer:
     container_name: data-consumer
-    build:
-      context: ./data-consumer
+    image: ghcr.io/metpx/sarracenia:latest
     env_file:
       - default.env
       - ../dev.env
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
+      - ./sarracenia/admin.conf:/root/.config/sr3/admin.conf:rw
+      - ./sarracenia/default.conf:/root/.config/sr3/default.conf:rw
+      - ./sarracenia/incoming.conf:/root/.config/sr3/watch/incoming.conf:rw
     depends_on:
       - mosquitto
+    command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
 
   mqp-publisher:
     container_name: mqp-publisher
-    build:
-      context: ./mqp-publisher
+    image: ghcr.io/metpx/sarracenia:latest
     env_file:
       - default.env
       - ../dev.env
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
+      - ./sarracenia/admin.conf:/root/.config/sr3/admin.conf:rw
+      - ./sarracenia/default.conf:/root/.config/sr3/default.conf:rw
+      - ./sarracenia/public.conf:/root/.config/sr3/subscribe/public.conf:rw
     depends_on:
       - mosquitto
+    command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
 
   ca-republisher:
     container_name: ca-republisher
-    build:
-      context: ./ca-republisher
+    image: ghcr.io/metpx/sarracenia:latest
     env_file:
       - default.env
       - ../dev.env
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
+      - ./sarracenia/admin.conf:/root/.config/sr3/admin.conf:rw
+      - ./sarracenia/default.conf:/root/.config/sr3/default.conf:rw
+      - ./sarracenia/subscribe/ca-republisher.conf:/root/.config/sr3/subscribe/ca-republisher.conf:rw
     depends_on:
       - mosquitto
+    #command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
 
   de-republisher:
     container_name: de-republisher
-    build:
-      context: ./de-republisher
+    image: ghcr.io/metpx/sarracenia:latest
     env_file:
       - default.env
       - ../dev.env
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
+      - ./sarracenia/admin.conf:/root/.config/sr3/admin.conf:rw
+      - ./sarracenia/default.conf:/root/.config/sr3/default.conf:rw
+      - ./sarracenia/subscribe/de-republisher.conf:/root/.config/sr3/subscribe/de-republisher.conf:rw
     depends_on:
       - mosquitto
+    # command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
 
   wis2box:
     container_name: wis2box
