@@ -26,6 +26,10 @@ jobs:
         cp tests/test.env dev.env
         cat dev.env
         python3 wis2box-ctl.py config
+    - name: install loki plugin for docker
+      run: | 
+        docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
+        docker plugin ls
     - name: build wis2box images and start containers ⚙️
       run: |
         python3 wis2box-ctl.py build
