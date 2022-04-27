@@ -29,17 +29,14 @@ REGISTRY.unregister(PROCESS_COLLECTOR)
 REGISTRY.unregister(PLATFORM_COLLECTOR)
 
 # remove python-gargage-collectior metrics
-REGISTRY.unregister(REGISTRY._names_to_collectors['python_gc_objects_uncollectable_total'])
-#REGISTRY.unregister(REGISTRY._names_to_collectors['python_gc_objects_collected_total'])
+REGISTRY.unregister(
+    REGISTRY._names_to_collectors['python_gc_objects_uncollectable_total'])
 
 import logging
 
-from base64 import b64decode
 import json
 import paho.mqtt.client as mqtt
 import random
-import urllib
-import urllib.request
 
 import sys
 
@@ -54,7 +51,8 @@ INTERRUPT = False
 
 def sub_connect(client, userdata, flags, rc, properties=None):
     """
-    function executed 'on_connect' for paho.mqtt.client: subscribe to xpublic/# 
+    function executed 'on_connect' for paho.mqtt.client
+    subscribes to xpublic/#
 
     :param client: client-object associated to 'on_connect'
     :param userdata: userdata
@@ -69,12 +67,15 @@ def sub_connect(client, userdata, flags, rc, properties=None):
     for s in ["xpublic/#"]:
         client.subscribe(s, qos=1)
 
-mqtt_msg_counter = Counter('mqtt_msg_count', 'Number of messages seen on MQTT')
-mqtt_msg_by_topic_counter = Counter('mqtt_msg_count_by_topic', 'Number of messages seen on MQTT, by topic', ["topic"])
+mqtt_msg_counter = Counter('mqtt_msg_count',
+    'Number of messages seen on MQTT')
+mqtt_msg_by_topic_counter = Counter('mqtt_msg_count_by_topic',
+    'Number of messages seen on MQTT, by topic', ["topic"])
 
 def sub_mqtt_metrics(client, userdata, msg):
     """
-    function executed 'on_message' for paho.mqtt.client: update counters for each new message received
+    function executed 'on_message' for paho.mqtt.client
+    updates counters for each new message received
 
     :param client: client-object associated to 'on_message'
     :param userdata: MQTT-userdata
@@ -82,7 +83,7 @@ def sub_mqtt_metrics(client, userdata, msg):
 
     :returns: `None`
     """
-    m = json.loads(msg.payload.decode('utf-8'))
+    # m = json.loads(msg.payload.decode('utf-8'))
     logger.info(f"Received message on topic ={msg.topic}")
     mqtt_msg_by_topic_counter.labels(msg.topic).inc(1)
     mqtt_msg_counter.inc(1)
@@ -107,9 +108,10 @@ def gather_mqtt_metrics():
         broker_arr = BROKER.replace('mqtt://','').split(':')
         logger.info(f"{broker_arr[0]}")
         mqtt_username = broker_arr[0]
-        mqtt_pwd = str( broker_arr[1] ).split('@')[0]
-        mqtt_host = str( broker_arr[1] ).split('@')[1]
-        logger.info(f"setup mqtt-client-connection mqtt_host={mqtt_host}, mqtt_username={mqtt_username}, mqtt_pwd=***, client_id={client_id} ")
+        mqtt_pwd = str(broker_arr[1]).split('@')[0]
+        mqtt_host = str(broker_arr[1]).split('@')[1]
+        logger.info("setup connection")
+        logger.info(f"host={mqtt_host}, user={mqtt_username}")
         client = mqtt.Client(client_id=client_id, protocol=mqtt.MQTTv5)
         client.on_connect = sub_connect
         client.on_message = sub_mqtt_metrics
@@ -125,4 +127,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

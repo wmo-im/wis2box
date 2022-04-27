@@ -33,8 +33,8 @@ REGISTRY.unregister(PROCESS_COLLECTOR)
 REGISTRY.unregister(PLATFORM_COLLECTOR)
 
 # remove python-gargage-collectior metrics
-REGISTRY.unregister(REGISTRY._names_to_collectors['python_gc_objects_uncollectable_total'])
-#REGISTRY.unregister(REGISTRY._names_to_collectors['python_gc_objects_collected_total'])
+REGISTRY.unregister( 
+    REGISTRY._names_to_collectors['python_gc_objects_uncollectable_total'] )
 
 WIS2BOX_LOGGING_LOGLEVEL = os.environ.get('WIS2BOX_LOGGING_LOGLEVEL')
 # gotta log to stdout so docker logs sees the python-logs
@@ -45,47 +45,61 @@ logger.setLevel(WIS2BOX_LOGGING_LOGLEVEL)
 
 INTERRUPT = False
 
-def collect_file_data_by_topic(root,filematch):
+
+def collect_file_data_by_topic(root, filematch):
     """
-    helper-function to collect data using labels 'topic' from given root-path and file-type
-    
+    helper-function to collect data using labels 'topic'
+
     :param root: root-path for file search
     :param filematch: string to be contained in file-name to be considered a match
-    
+
     :returns: dictionary with topic as key
     """
     from fnmatch import fnmatch
     data = {}
     for path, subdirs, files in os.walk(root):
         for name in files:
-            if fnmatch(name,filematch):
-                topic = '.'.join(path.replace(root,'').split('/')[2:]) if 'public' in root else '.'.join(path.replace(root,'').split('/')[1:]) 
+            if fnmatch(name, filematch):
+                topic = ''
+                if 'public' in root: 
+                    topic = '.'.join(path.replace(root,'').split('/')[2:])
+                else:
+                    topic = '.'.join(path.replace(root, '').split('/')[1:])
                 size = os.stat(os.path.join(path, name)).st_size
                 if topic in data:
                     data[topic]['size'] += size
                     data[topic]['file_count'] += 1
-                else :  
+                else:
                     data[topic] = {}
                     data[topic]['size'] = size
                     data[topic]['file_count'] = 1
     return data
+
 
 def gather_file_metrics():
     """
     gather file metrics by checking content of wis2box public directory
 
     :returns: `None`
-    """    
-    bufr_public_nrfile_gauge = Gauge('bufr4_public_nrfile', 'Number of bufr4 in /data/public')
-    bufr_public_nrfile_by_topic_gauge = Gauge('bufr4_public_nrfile_by_topic', 'Number of bufr4 in /data/public, by topic',["topic"])
-    bufr_public_bytes_gauge = Gauge('bufr4_public_bytes', 'Bytes used by bufr4 stored in /data/public')
-    bufr_public_bytes_by_topic_gauge = Gauge('bufr4_public_bytes_by_topic', 'Bytes used by bufr4 stored in /data/public, by topic',["topic"])
+    """
+    bufr_public_nrfile_gauge = Gauge('bufr4_public_nrfile',
+        'Number of bufr4 in /data/public')
+    bufr_public_nrfile_by_topic_gauge = Gauge('bufr4_public_nrfile_by_topic',
+        'Number of bufr4 in /data/public, by topic',["topic"])
+    bufr_public_bytes_gauge = Gauge('bufr4_public_bytes',
+        'Bytes used by bufr4 stored in /data/public')
+    bufr_public_bytes_by_topic_gauge = Gauge('bufr4_public_bytes_by_topic',
+        'Bytes used by bufr4 stored in /data/public, by topic',["topic"])
 
-    csv_incoming_nrfile_gauge = Gauge('csv_incoming_nrfile', 'Number of csv in /data/incoming')
-    csv_incoming_nrfile_by_topic_gauge = Gauge('csv_incoming_nrfile_by_topic', 'Number of csv in /data/incoming, by topic', ["topic"])
-    csv_incoming_bytes_gauge = Gauge('csv_incoming_bytes', 'Bytes used by csv stored in /data/incoming')
-    csv_incoming_bytes_by_topic_gauge = Gauge('csv_incoming_bytes_by_topic', 'Bytes used by csv stored in /data/incoming, by topic', ["topic"])
-    
+    csv_incoming_nrfile_gauge = Gauge('csv_incoming_nrfile',
+        'Number of csv in /data/incoming')
+    csv_incoming_nrfile_by_topic_gauge = Gauge('csv_incoming_nrfile_by_topic',
+        'Number of csv in /data/incoming, by topic', ["topic"])
+    csv_incoming_bytes_gauge = Gauge('csv_incoming_bytes',
+        'Bytes used by csv stored in /data/incoming')
+    csv_incoming_bytes_by_topic_gauge = Gauge('csv_incoming_bytes_by_topic', 
+        'Bytes used by csv stored in /data/incoming, by topic',
+        ["topic"])
     
     while not INTERRUPT:
         # count bufr4 in outgoing directory
@@ -123,10 +137,12 @@ def gather_file_metrics():
         logger.debug(f"Now sleep for {X} seconds !")
         sleep(X)
 
+
 def main():
     start_http_server(8000)
     # this will loop forever
     gather_file_metrics()
-    
+
+
 if __name__ == '__main__':
-    main() 
+    main()
