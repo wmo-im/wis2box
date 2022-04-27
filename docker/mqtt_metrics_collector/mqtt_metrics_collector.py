@@ -20,6 +20,12 @@
 ###############################################################################
 
 import os
+import logging
+
+import paho.mqtt.client as mqtt
+import random
+
+import sys
 
 from prometheus_client import start_http_server, Counter
 
@@ -32,13 +38,6 @@ REGISTRY.unregister(PLATFORM_COLLECTOR)
 REGISTRY.unregister(
     REGISTRY._names_to_collectors['python_gc_objects_uncollectable_total'])
 
-import logging
-
-import json
-import paho.mqtt.client as mqtt
-import random
-
-import sys
 
 WIS2BOX_LOGGING_LOGLEVEL = os.environ.get('WIS2BOX_LOGGING_LOGLEVEL')
 # gotta log to stdout so docker logs sees the python-logs
@@ -48,6 +47,7 @@ logger = logging.getLogger('mqtt_metrics_collector')
 logger.setLevel(WIS2BOX_LOGGING_LOGLEVEL)
 
 INTERRUPT = False
+
 
 def sub_connect(client, userdata, flags, rc, properties=None):
     """
@@ -67,10 +67,13 @@ def sub_connect(client, userdata, flags, rc, properties=None):
     for s in ["xpublic/#"]:
         client.subscribe(s, qos=1)
 
+
 mqtt_msg_counter = Counter('mqtt_msg_count',
-    'Number of messages seen on MQTT')
-mqtt_msg_by_topic_counter = Counter('mqtt_msg_count_by_topic',
-    'Number of messages seen on MQTT, by topic', ["topic"])
+                           'Nr of messages seen on MQTT')
+mqtt_msg_topic_counter = Counter('mqtt_msg_count_topic',
+                                 'Nr of messages seen on MQTT, by topic',
+                                 ["topic"])
+
 
 def sub_mqtt_metrics(client, userdata, msg):
     """
@@ -85,8 +88,9 @@ def sub_mqtt_metrics(client, userdata, msg):
     """
     # m = json.loads(msg.payload.decode('utf-8'))
     logger.info(f"Received message on topic ={msg.topic}")
-    mqtt_msg_by_topic_counter.labels(msg.topic).inc(1)
+    mqtt_msg_topic_counter.labels(msg.topic).inc(1)
     mqtt_msg_counter.inc(1)
+
 
 def gather_mqtt_metrics():
     """
@@ -99,13 +103,13 @@ def gather_mqtt_metrics():
 
     # parse username and password out of the WIS2BOX_BROKER variable
     BROKER = os.environ.get('WIS2BOX_BROKER')
-    
+
     # generate a random clientId for the mqtt-session
     r = random.Random()
     client_id = f"mqtt_metrics_collector_{r.randint(1,1000):04d}"
     logger.info(BROKER)
     try:
-        broker_arr = BROKER.replace('mqtt://','').split(':')
+        broker_arr = BROKER.replace('mqtt://', '').split(':')
         logger.info(f"{broker_arr[0]}")
         mqtt_username = broker_arr[0]
         mqtt_pwd = str(broker_arr[1]).split('@')[0]
@@ -121,9 +125,11 @@ def gather_mqtt_metrics():
     except Exception as e:
         logger.error(f"Failed to setup MQTT-client with error: {e}")
 
+
 def main():
     start_http_server(8001)
     gather_mqtt_metrics()
+
 
 if __name__ == '__main__':
     main()
