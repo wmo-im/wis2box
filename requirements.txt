@@ -1,4 +1,5 @@
 isodate
+pandas
 parse
 pygeometa
 pyoscar

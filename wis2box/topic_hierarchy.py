@@ -49,19 +49,20 @@ class TopicHierarchy:
         """
         Determines whether a topic hierarchy is valid
 
-        :returns: `bool` of whether the topic hierarchy is validjo
+        :returns: `bool` of whether the topic hierarchy is valid
         """
 
         # TODO: implement when WCMP 2.0 codelists are implemented
         return True
 
 
-def validate_and_load(topic_hierarchy: str,
+def validate_and_load(topic_hierarchy: str, file_type: str = None,
                       fuzzy: bool = False) -> Tuple[TopicHierarchy, Any]:
     """
-    Validate topic hierarchy and load data defs
+    Validate topic hierarchy and load plugin
 
     :param topic_hierarchy: `str` of topic hierarchy path
+    :param file_type: `str` the type of file we are processing, e.g. csv, bufr, xml  # noqa
     :param fuzzy: `bool` of whether to do fuzzy matching of topic hierarchy
                   (e.g. "*foo.bar.baz*).
                   Defaults to `False` (i.e. "foo.bar.baz")
@@ -84,14 +85,25 @@ def validate_and_load(topic_hierarchy: str,
             msg = 'Topic hierarchy not in data mappings'
             LOGGER.error(msg)
             raise ValueError(msg)
+        # check if file type set, if not use first in list
+        if file_type is None:
+            file_type = DATADIR_DATA_MAPPINGS['data'][th.dotpath]['plugins'].keys()  # noqa
+            file_type = list(file_type)[0]
+            msg = f"file type missing in call to validate_and_load, set to first type: {file_type}"  # noqa
+            LOGGER.debug(msg)
+        if file_type not in DATADIR_DATA_MAPPINGS['data'][th.dotpath]['plugins']:  # noqa
+            msg = f'Unknown file type ({file_type}) for topic {th.dotpath} in data mappings'  # noqa
+            LOGGER.error(msg)
+            raise ValueError(msg)
 
         LOGGER.debug('Loading plugin')
 
         defs = {
             'topic_hierarchy': topic_hierarchy,
-            'codepath': DATADIR_DATA_MAPPINGS['data'][th.dotpath]['plugin'],
-            'template': DATADIR_DATA_MAPPINGS['data'][th.dotpath]['template'],
-            'pattern':  DATADIR_DATA_MAPPINGS['data'][th.dotpath]['file-pattern']  # noqa
+            'codepath': DATADIR_DATA_MAPPINGS['data'][th.dotpath]['plugins'][file_type]['plugin'],  # noqa
+            'template': DATADIR_DATA_MAPPINGS['data'][th.dotpath]['plugins'][file_type]['template'],  # noqa
+            'pattern':  DATADIR_DATA_MAPPINGS['data'][th.dotpath]['plugins'][file_type]['file-pattern'],  # noqa
+            'format': file_type
         }
         plugin = load_plugin('data', defs)
 
@@ -104,11 +116,16 @@ def validate_and_load(topic_hierarchy: str,
             LOGGER.debug(f'pattern: {pattern}')
             if fnmatch(topic_hierarchy, pattern):
                 LOGGER.debug(f'Matched {topic_hierarchy} to {pattern}')
+                if file_type not in value['plugins']:
+                    msg = f'Unknown filetype ({file_type}) for topic {key} in data mappings'
+                    LOGGER.error(msg)
+                    raise ValueError(msg)
                 defs = {
                     'topic_hierarchy': key,
-                    'codepath': value['plugin'],
-                    'template': value['template'],
-                    'pattern': value['file-pattern']
+                    'codepath': value['plugins'][file_type]['plugin'],
+                    'template': value['plugins'][file_type]['template'],
+                    'pattern': value['plugins'][file_type]['file-pattern'],
+                    'format': file_type
                 }
                 plugin = load_plugin('data', defs)
                 th = TopicHierarchy(key)

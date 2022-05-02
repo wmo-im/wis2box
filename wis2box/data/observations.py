@@ -32,7 +32,7 @@ from wis2box.env import DATADIR
 LOGGER = logging.getLogger(__name__)
 
 
-class ObservationData(BaseAbstractData):
+class ObservationDataCSV(BaseAbstractData):
     """Observation data"""
     def __init__(self, topic_hierarchy: str) -> None:
         """
@@ -50,11 +50,9 @@ class ObservationData(BaseAbstractData):
         self.output_data = {}
 
         mapping_bufr4 = Path(MAPPINGS) / self.template
-        mapping_geojson = Path(MAPPINGS) / 'wmo_om_rc0.geojson'
 
-        with mapping_bufr4.open() as fh1, mapping_geojson.open() as fh2:
+        with mapping_bufr4.open() as fh1:
             self.mappings['bufr4'] = json.load(fh1)
-            self.mappings['geojson'] = json.load(fh2)
 
         self.station_metadata = None
 
@@ -63,10 +61,10 @@ class ObservationData(BaseAbstractData):
 
         LOGGER.debug('Extracting WSI from filename')
         try:
-            regex = r'WIGOS_(\d-\d+-\d+-\w+)_.*'
+            regex = self.file_filter
             wsi = re.match(regex, input_data.name).group(1)
         except AttributeError:
-            msg = f'Invalid filename format: {input_data}'
+            msg = f'Invalid filename format: {input_data} ({self.file_filter})'
             LOGGER.error(msg)
             raise ValueError(msg)
 
@@ -79,20 +77,19 @@ class ObservationData(BaseAbstractData):
         with sm.open() as fh1:
             self.station_metadata = json.load(fh1)
 
-        LOGGER.debug('Generating BUFR4 and GeoJSON')
+        LOGGER.debug('Generating BUFR4')
         with input_data.open() as fh1:
             results = transform_csv(fh1.read(),
                                     self.station_metadata,
-                                    self.mappings['bufr4'],
-                                    self.mappings['geojson'])
-
-        LOGGER.debug('Generating GeoJSON')
-        for item in results:
+                                    self.mappings['bufr4'])
+        # convert to list
+        LOGGER.debug('Iterating over BUFR messages')
+        for item in results:   # item = { 'bufr4': ..., '_meta': ...}
             LOGGER.debug('Setting obs date for filepath creation')
-
             identifier = item['_meta']['identifier']
             data_date = item['_meta']['data_date']
-
+            if not isinstance(item['bufr4'], list):  # make sure item[bufr4] is a list. once csv2bufr is changed this can be removed.
+                item['bufr4'] = [item['bufr4']]
             self.output_data[identifier] = item
             self.output_data[identifier]['_meta']['relative_filepath'] = \
                 self.get_local_filepath(data_date)
@@ -102,6 +99,7 @@ class ObservationData(BaseAbstractData):
     def get_local_filepath(self, date_):
         yyyymmdd = date_.strftime('%Y-%m-%d')
 
+        # return (Path(yyyymmdd) / 'wis' / self.publish_topic.dirpath)
         return (Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath)
 
 
@@ -115,7 +113,7 @@ def process_data(data: str, discovery_metadata: dict) -> bool:
     :returns: `bool` of processing result
     """
 
-    d = ObservationData(discovery_metadata)
+    d = ObservationDataCSV(discovery_metadata)
     LOGGER.info('Transforming data')
     d.transform(data)
     LOGGER.info('Publishing data')

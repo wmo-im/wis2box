@@ -60,6 +60,7 @@ def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
     """
 
     codepath = defs.get('codepath')
+    fmt = defs.get('format')
 
     if plugin_type in ['api_backend', 'api_config']:
         plugin_mappings = PLUGINS
@@ -73,10 +74,15 @@ def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
         raise InvalidPluginError(msg)
 
     valid_plugin = False
-    for key in plugin_mappings[plugin_type]:
-        if codepath == plugin_mappings[plugin_type][key]['plugin']:
-            valid_plugin = True
-            break
+    for key, value in plugin_mappings[plugin_type].items():
+        if 'plugins' in value:
+            if codepath == value['plugins'][fmt]['plugin']:
+                valid_plugin = True
+                break
+        else:
+            if codepath == value['plugin']:
+                valid_plugin = True
+                break
 
     if not valid_plugin:
         msg = f'Plugin {codepath} not found'
