@@ -54,6 +54,7 @@ OSCAR_API_TOKEN = os.environ.get('WIS2BOX_OSCAR_API_TOKEN')
 URL = os.environ.get('WIS2BOX_URL')
 
 BROKER = os.environ.get('WIS2BOX_BROKER')
+MQTT_URL = os.environ.get('WIS2BOX_MQTT_URL')
 broker_url = urlparse(BROKER)
 if broker_url.port is not None:
     broker_url_port = f':{broker_url.port}'
@@ -92,6 +93,7 @@ if None in [
     API_TYPE,
     API_URL,
     MQP_URL,
+    MQTT_URL,
     URL
 ]:
     msg = 'Environment variables not set!'
