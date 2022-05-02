@@ -131,6 +131,7 @@ class BaseAbstractData:
 
     # TODO: fix annotation/types
 
+
     def files(self) -> bool:
         LOGGER.debug('Listing processed files')
         for identifier, item in self.output_data.items():
@@ -143,6 +144,7 @@ class BaseAbstractData:
                 filename = DATADIR_PUBLIC / (rfp) / f"{identifier}"
                 filename = filename.with_suffix(f".{format_}")
                 yield filename
+
 
     @property
     def directories(self):

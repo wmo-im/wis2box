@@ -13,4 +13,3 @@ data:
                 plugin: wis2box.data.base.BaseAbstractData
                 template:
                 file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.geojson$'
-
