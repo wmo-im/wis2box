@@ -23,7 +23,6 @@
 import argparse
 import os
 import subprocess
-import sys
 
 DOCKER_COMPOSE_ARGS = """
     -f docker/docker-compose.yml
@@ -33,10 +32,9 @@ DOCKER_COMPOSE_ARGS = """
     -p wis2box_project
     """
 
-parser=argparse.ArgumentParser( \
-    description='manage a compposition of docker containers to implement a wis 2 box', \
-    formatter_class=argparse.RawTextHelpFormatter )
-#    formatter_class=argparse.ArgumentDefaultsHelpFormatter )
+parser = argparse.ArgumentParser(
+    description='manage a compposition of docker containers to implement a wis 2 box',
+    formatter_class=argparse.RawTextHelpFormatter)
 
 parser.add_argument(
     '--simulate',
@@ -145,21 +143,21 @@ def make(args) -> None:
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} config'))
     elif args.command == "build":
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} build {containers}'))
-    elif args.command in [ "up",  "start"]:
+    elif args.command in ["up", "start"]:
         run(args, split('docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions'))
         if containers:
-            run( args, split( f"docker start {containers}" ) )
+            run(args, split(f"docker start {containers}"))
         else:
             run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} up -d'))
     elif args.command == "login":
-        run(args, split( f'docker exec -it {container} /bin/bash'))
+        run(args, split(f'docker exec -it {container} /bin/bash'))
     elif args.command == "login-root":
         run(args, split(f'docker exec -u -0 -it {container} /bin/bash'))
     elif args.command == "logs":
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} logs --follow {containers}'))
-    elif args.command in [ "stop" , "down"]:
+    elif args.command in ["stop", "down"]:
         if containers:
-            run( args, split( f"docker stop {containers}" ) )
+            run(args, split(f"docker stop {containers}"))
         else:
             run(
                 args,
