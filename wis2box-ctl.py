@@ -133,7 +133,7 @@ def make(args) -> None:
     :returns: None.
     """
 
-    # if you selected a bunch of them... default to none.. which is all of them.
+    # if you selected a bunch of them, default to all
     containers = "" if not args.args else ' '.join(args.args)
 
     # if there can be only one, default to wisbox
@@ -142,9 +142,11 @@ def make(args) -> None:
     if args.command == "config":
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} config'))
     elif args.command == "build":
-        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} build {containers}'))
+        run(args, split(
+            f'docker-compose {DOCKER_COMPOSE_ARGS} build {containers}'))
     elif args.command in ["up", "start"]:
-        run(args, split('docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions'))
+        run(args, split(
+            'docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions'))
         if containers:
             run(args, split(f"docker start {containers}"))
         else:
@@ -154,15 +156,14 @@ def make(args) -> None:
     elif args.command == "login-root":
         run(args, split(f'docker exec -u -0 -it {container} /bin/bash'))
     elif args.command == "logs":
-        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} logs --follow {containers}'))
+        run(args, split(
+            f'docker-compose {DOCKER_COMPOSE_ARGS} logs --follow {containers}'))
     elif args.command in ["stop", "down"]:
         if containers:
             run(args, split(f"docker stop {containers}"))
         else:
-            run(
-                args,
-                split(
-                    f'docker-compose {DOCKER_COMPOSE_ARGS} down --remove-orphans {containers}'))
+            run(args, split(
+                f'docker-compose {DOCKER_COMPOSE_ARGS} down --remove-orphans {containers}'))
     elif args.command == "update":
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} pull'))
     elif args.command == "prune":
@@ -175,10 +176,11 @@ def make(args) -> None:
         _ = run(args, split('docker ps -a -q'), asciiPipe=True)
         run(args, split(f'docker rm {_}'))
     elif args.command == "restart":
-        run(args,
-            split(f'docker-compose {DOCKER_COMPOSE_ARGS} restart {containers}'))
+        run(args, split(
+            f'docker-compose {DOCKER_COMPOSE_ARGS} restart {containers}'))
     elif args.command == "status":
-        run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} ps {containers}'))
+        run(args, split(
+            f'docker-compose {DOCKER_COMPOSE_ARGS} ps {containers}'))
     elif args.command == "lint":
         files = walk_path(".")
         run(args, ('python3', '-m', 'flake8', *files))
