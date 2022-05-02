@@ -23,7 +23,6 @@ import click
 import logging
 import os
 from pathlib import Path
-from urllib.parse import urlparse
 
 from wis2box import cli_helpers
 from wis2box.util import yaml_load
@@ -54,13 +53,7 @@ OSCAR_API_TOKEN = os.environ.get('WIS2BOX_OSCAR_API_TOKEN')
 URL = os.environ.get('WIS2BOX_URL')
 
 BROKER = os.environ.get('WIS2BOX_BROKER')
-broker_url = urlparse(BROKER)
-if broker_url.port is not None:
-    broker_url_port = f':{broker_url.port}'
-else:
-    broker_url_port = ''
-
-MQP_URL = f'{broker_url.scheme}://{broker_url.hostname}{broker_url_port}/'
+MQTT_URL = os.environ.get('WIS2BOX_MQTT_URL')
 
 try:
     DATA_RETENTION_DAYS = int(os.environ.get('WIS2BOX_DATA_RETENTION_DAYS'))
@@ -91,7 +84,7 @@ if None in [
     OSCAR_API_TOKEN,
     API_TYPE,
     API_URL,
-    MQP_URL,
+    MQTT_URL,
     URL
 ]:
     msg = 'Environment variables not set!'
