@@ -31,6 +31,7 @@ LOGGER = logging.getLogger(__name__)
 class Handler:
     def __init__(self, filepath: Path, topic_hierarchy: str = None):
         self.filepath = filepath
+        self.filetype = filepath.suffix
         self.plugin = None
 
         if topic_hierarchy is not None:
@@ -41,7 +42,7 @@ class Handler:
             fuzzy = True
 
         try:
-            self.topic_hierarchy, self.plugin = validate_and_load(th, fuzzy=fuzzy) # noqa
+            self.topic_hierarchy, self.plugin = validate_and_load(th, self.filetype, fuzzy = fuzzy) # noqa
         except Exception as err:
             msg = f'Topic Hierarchy validation error: {err}'
             LOGGER.error(msg)
