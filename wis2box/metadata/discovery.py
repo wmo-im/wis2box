@@ -28,7 +28,7 @@ from pygeometa.schemas.ogcapi_records import OGCAPIRecordOutputSchema
 from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
-from wis2box.env import API_URL, MQTT_URL
+from wis2box.env import API_URL, MQP_URL
 from wis2box.metadata.base import BaseMetadata
 
 LOGGER = logging.getLogger(__name__)
@@ -53,7 +53,7 @@ class DiscoveryMetadata(BaseMetadata):
 
         LOGGER.debug('Adding distribution links')
         oafeat_link = {
-            'url': f"{API_URL}/collections/items/{identifier}",
+            'url': f"{API_URL}/collections/{identifier}",
             'type': 'OAFeat',
             'name': identifier,
             'description': identifier,
@@ -61,7 +61,7 @@ class DiscoveryMetadata(BaseMetadata):
         }
 
         mqp_link = {
-            'url': MQTT_URL,
+            'url': MQP_URL,
             'type': 'MQTT',
             'name': identifier,
             'description': identifier,
@@ -88,7 +88,7 @@ class DiscoveryMetadata(BaseMetadata):
 
         LOGGER.debug('Adding canonical link')
         canonical_link = {
-            'url': f"{API_URL}/collections/discovery-metadata/{identifier}",
+            'url': f"{API_URL}/collections/discovery-metadata/items/{identifier}",
             'type': 'OARec',
             'name': identifier,
             'description': identifier,
