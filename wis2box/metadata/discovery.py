@@ -88,7 +88,7 @@ class DiscoveryMetadata(BaseMetadata):
 
         LOGGER.debug('Adding canonical link')
         canonical_link = {
-            'url': f"{API_URL}/collections/discovery-metadata/items/{identifier}",
+            'url': f"{API_URL}/collections/discovery-metadata/items/{identifier}", # noqa
             'type': 'OARec',
             'name': identifier,
             'description': identifier,

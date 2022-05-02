@@ -23,7 +23,6 @@ import click
 import logging
 import os
 from pathlib import Path
-from urllib.parse import urlparse
 
 from wis2box import cli_helpers
 from wis2box.util import yaml_load
