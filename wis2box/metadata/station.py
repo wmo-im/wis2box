@@ -25,6 +25,7 @@ import json
 import logging
 from pathlib import Path
 
+from owslib.ogcapi.features import Features
 from pygeometa.schemas.wmo_wigos import WMOWIGOSOutputSchema
 
 from wis2box import cli_helpers
@@ -35,6 +36,7 @@ from wis2box.metadata.base import BaseMetadata
 from wis2box.metadata.oscar import get_station_report, upload_station_metadata
 
 LOGGER = logging.getLogger(__name__)
+API_URL = 'http://wis2box-api:80/oapi'
 
 
 class StationMetadata(BaseMetadata):
@@ -60,6 +62,27 @@ def station():
     pass
 
 
+def load_topics():
+    oaf = Features(API_URL)
+
+    dm = oaf.collection_items('discovery-metadata')
+
+    for topic in dm['features']:
+        for link in topic['properties']['associations']:
+            if link['type'] == 'OAFeat':
+                yield link
+
+
+def check_station_topics(topics, wigos_id):
+    oaf = Features(API_URL)
+
+    for topic in topics:
+        obs = oaf.collection_items(
+            topic['title'], wigos_station_identifier=wigos_id)
+        if obs['numberMatched'] > 0:
+            yield topic
+
+
 def publish_station_collection() -> None:
     """
     Publishes station collection to API config and backend
@@ -72,11 +95,13 @@ def publish_station_collection() -> None:
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
     station_metadata_files = Path(DATADIR) / 'metadata' / 'station'
+    topics = load_topics()
 
     for f in station_metadata_files.glob('*.json'):
         with f.open() as fh:
             d = json.load(fh)
             wigos_id = d['wigosIds'][0]['wid']
+            station_topics = check_station_topics(topics, wigos_id)
             feature = {
                 'id': d['id'],
                 'type': 'Feature',
@@ -92,6 +117,7 @@ def publish_station_collection() -> None:
                     'wigos_id': wigos_id,
                     'name': d['name'],
                     'url': f"{oscar_baseurl}/{wigos_id}",
+                    'topics': list(station_topics),
                     # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
                     'status': 'operational'
                 }
