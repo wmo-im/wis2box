@@ -26,16 +26,14 @@ jobs:
         cp tests/test.env dev.env
         cat dev.env
         python3 wis2box-ctl.py config
-    - name: install loki plugin for docker
-      run: | 
-        docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
-        docker plugin ls
-    - name: build wis2box images and start containers ⚙️
+    - name: build wis2box
       run: |
         python3 wis2box-ctl.py build
+    - name: start containers ⚙️
+      run: |
         python3 wis2box-ctl.py start
-        sleep 5
-        python3 wis2box-ctl.py status
+        sleep 15
+        python3 wis2box-ctl.py status -a
     - name: test wis2box data ingest/process/publish workflow ⚙️
       run: |
         docker exec wis2box sh -c " \
@@ -43,16 +41,12 @@ jobs:
           && wis2box environment show \
           && wis2box data setup --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed \
           && wis2box data info --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed \
-          && wis2box metadata station cache /data/wis2box/metadata/station/station_list.csv \
-          && wis2box metadata station publish-collection \
           && wis2box metadata discovery publish /data/wis2box/metadata/discovery/surface-weather-observations.yml \
+          && wis2box api add-collection-items --recursive --path /data/wis2box/data/public \
           && wis2box data ingest --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed -p /data/wis2box/observations \
           && wis2box api add-collection --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed /data/wis2box/metadata/discovery/surface-weather-observations.yml \
-          && wis2box api add-collection-items --recursive --path /data/wis2box/data/public"
-    - name: restart wis2box API container 🏁
-      run: |
-        sleep 10
-        python3 wis2box-ctl.py status -a
+          && wis2box metadata station cache /data/wis2box/metadata/station/station_list.csv \
+          && wis2box metadata station publish-collection"
     - name: run integration tests ⚙️
       run: |
         pytest -s tests/integration
