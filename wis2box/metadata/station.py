@@ -77,9 +77,15 @@ def check_station_topics(topics, wigos_id):
     oaf = Features(API_URL)
 
     for topic in topics:
-        obs = oaf.collection_items(
-            topic['title'], wigos_station_identifier=wigos_id)
+        try:
+            obs = oaf.collection_items(
+                topic["title"], wigos_station_identifier=wigos_id)
+        except RuntimeError as err:
+            LOGGER.error(f'Error in topic {topic["title"]}: {err}')
+            continue
+
         if obs['numberMatched'] > 0:
+            topic['type'] = 'application/json'
             yield topic
 
 
@@ -95,7 +101,7 @@ def publish_station_collection() -> None:
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
     station_metadata_files = Path(DATADIR) / 'metadata' / 'station'
-    topics = load_topics()
+    topics = list(load_topics())
 
     for f in station_metadata_files.glob('*.json'):
         with f.open() as fh:
@@ -117,10 +123,10 @@ def publish_station_collection() -> None:
                     'wigos_id': wigos_id,
                     'name': d['name'],
                     'url': f"{oscar_baseurl}/{wigos_id}",
-                    'topics': list(station_topics),
                     # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
                     'status': 'operational'
-                }
+                },
+                'links': list(station_topics)
             }
 
         LOGGER.debug('Publishing to backend')
