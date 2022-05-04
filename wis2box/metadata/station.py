@@ -24,6 +24,7 @@ import csv
 import json
 import logging
 from pathlib import Path
+from typing import Iterator
 
 from owslib.ogcapi.features import Features
 from pygeometa.schemas.wmo_wigos import WMOWIGOSOutputSchema
@@ -31,12 +32,11 @@ from pygeometa.schemas.wmo_wigos import WMOWIGOSOutputSchema
 from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
-from wis2box.env import DATADIR
+from wis2box.env import DATADIR, API_URL
 from wis2box.metadata.base import BaseMetadata
 from wis2box.metadata.oscar import get_station_report, upload_station_metadata
 
 LOGGER = logging.getLogger(__name__)
-API_URL = 'http://wis2box-api:80/oapi'
 
 
 class StationMetadata(BaseMetadata):
@@ -62,8 +62,14 @@ def station():
     pass
 
 
-def load_topics():
-    oaf = Features(API_URL)
+def load_datasets() -> Iterator[dict]:
+    """
+    Load datasets from oapi
+
+    :returns: `list`, of link relations for all datasets
+    """
+    OAPI_URL = API_URL.replace('localhost', 'host.docker.internal')
+    oaf = Features(OAPI_URL)
 
     dm = oaf.collection_items('discovery-metadata')
 
@@ -73,10 +79,21 @@ def load_topics():
                 yield link
 
 
-def check_station_topics(topics, wigos_id):
-    oaf = Features(API_URL)
+def check_station_datasets(datasets: list, wigos_id: str) -> Iterator[dict]:
+    """
+    Filter datasets for topics with observations from station
 
-    for topic in topics:
+    :param datasets: `list` of datasets
+    :param wigos_id: `string` of station WIGOS id
+
+
+    :returns: `list`, of link relations to collections from a station
+    """
+
+    OAPI_URL = API_URL.replace('localhost', 'host.docker.internal')
+    oaf = Features(OAPI_URL)
+
+    for topic in datasets:
         try:
             obs = oaf.collection_items(
                 topic["title"], wigos_station_identifier=wigos_id)
@@ -101,13 +118,13 @@ def publish_station_collection() -> None:
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
     station_metadata_files = Path(DATADIR) / 'metadata' / 'station'
-    topics = list(load_topics())
+    topics = list(load_datasets())
 
     for f in station_metadata_files.glob('*.json'):
         with f.open() as fh:
             d = json.load(fh)
             wigos_id = d['wigosIds'][0]['wid']
-            station_topics = check_station_topics(topics, wigos_id)
+            station_topics = check_station_datasets(topics, wigos_id)
             feature = {
                 'id': d['id'],
                 'type': 'Feature',

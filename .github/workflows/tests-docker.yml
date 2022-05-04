@@ -40,6 +40,7 @@ jobs:
           wis2box environment create \
           && wis2box environment show \
           && wis2box data setup -th data.core.observations-surface-land.mw.FWCL.landFixed \
+          && wis2box data info -th data.core.observations-surface-land.mw.FWCL.landFixed \
           && wis2box metadata discovery publish /data/wis2box/metadata/discovery/surface-weather-observations.yml \
           && wis2box metadata station cache /data/wis2box/metadata/station/station_list.csv \
           && wis2box metadata station publish-collection \
