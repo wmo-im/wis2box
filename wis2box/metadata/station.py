@@ -32,7 +32,7 @@ from pygeometa.schemas.wmo_wigos import WMOWIGOSOutputSchema
 from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
-from wis2box.env import DATADIR, API_URL
+from wis2box.env import DATADIR, DOCKER_API_URL
 from wis2box.metadata.base import BaseMetadata
 from wis2box.metadata.oscar import get_station_report, upload_station_metadata
 
@@ -68,8 +68,7 @@ def load_datasets() -> Iterator[dict]:
 
     :returns: `list`, of link relations for all datasets
     """
-    OAPI_URL = API_URL.replace('localhost', 'host.docker.internal')
-    oaf = Features(OAPI_URL)
+    oaf = Features(DOCKER_API_URL)
 
     dm = oaf.collection_items('discovery-metadata')
 
@@ -90,13 +89,12 @@ def check_station_datasets(datasets: list, wigos_id: str) -> Iterator[dict]:
     :returns: `list`, of link relations to collections from a station
     """
 
-    OAPI_URL = API_URL.replace('localhost', 'host.docker.internal')
-    oaf = Features(OAPI_URL)
+    oaf = Features(DOCKER_API_URL)
 
     for topic in datasets:
         try:
             obs = oaf.collection_items(
-                topic["title"], wigos_station_identifier=wigos_id)
+                topic['title'], wigos_station_identifier=wigos_id)
         except RuntimeError as err:
             LOGGER.error(f'Error in topic {topic["title"]}: {err}')
             continue

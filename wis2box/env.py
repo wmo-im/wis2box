@@ -48,6 +48,7 @@ API_TYPE = os.environ.get('WIS2BOX_API_TYPE')
 API_URL = os.environ.get('WIS2BOX_API_URL')
 API_BACKEND_TYPE = os.environ.get('WIS2BOX_API_BACKEND_TYPE')
 API_BACKEND_URL = os.environ.get('WIS2BOX_API_BACKEND_URL').rstrip('/')
+DOCKER_API_URL = os.environ.get('DOCKER_API_URL')
 AUTH_STORE = os.environ.get('WIS2BOX_AUTH_STORE')
 OSCAR_API_TOKEN = os.environ.get('WIS2BOX_OSCAR_API_TOKEN')
 URL = os.environ.get('WIS2BOX_URL')
@@ -81,6 +82,7 @@ if None in [
     DATADIR,
     DATADIR_INCOMING,
     DATADIR_PUBLIC,
+    DOCKER_API_URL,
     OSCAR_API_TOKEN,
     API_TYPE,
     API_URL,
