@@ -119,6 +119,7 @@ def publish_station_collection() -> None:
     topics = list(load_datasets())
 
     for f in station_metadata_files.glob('*.json'):
+        LOGGER.debug(f'Adding station metadata from {f.name}')
         with f.open() as fh:
             d = json.load(fh)
             wigos_id = d['wigosIds'][0]['wid']
