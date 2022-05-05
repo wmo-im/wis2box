@@ -23,6 +23,8 @@ import json
 import logging
 from pathlib import Path
 
+import re
+
 from bufr2geojson import transform as as_geojson
 
 from wis2box.data.base import BaseAbstractData
@@ -77,6 +79,7 @@ class ObservationDataBUFR(BaseAbstractData):
                         self.output_data[identifier]['geojson'], indent=4)
                     self.output_data[identifier]['_meta']['relative_filepath'] = \
                         self.get_local_filepath(data_date)
+
         return True
 
     def get_local_filepath(self, date_):
