@@ -48,7 +48,7 @@ class Handler:
             LOGGER.error(msg)
             raise ValueError(msg)
 
-    def handle(self, notify = False) -> bool:
+    def handle(self, notify=False) -> bool:
         try:
             self.plugin.transform(self.filepath)
             self.plugin.publish()

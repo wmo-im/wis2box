@@ -95,6 +95,7 @@ class ObservationDataBUFR(BaseAbstractData):
                 fh.write(json.dumps(item['geojson'], indent=4))
         return True
 
+
 def process_data(data: str, discovery_metadata: dict) -> bool:
     """
     Data processing workflow for observations
