@@ -87,6 +87,7 @@ class ObservationDataBUFR(BaseAbstractData):
         return (Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath)
 
 
+
 def process_data(data: str, discovery_metadata: dict) -> bool:
     """
     Data processing workflow for observations
