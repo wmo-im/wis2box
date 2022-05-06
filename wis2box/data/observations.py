@@ -59,7 +59,6 @@ class ObservationDataCSV(BaseAbstractData):
 
         self.station_metadata = None
 
-
     def transform(self, input_data: Path) -> bool:
         LOGGER.debug('Processing data')
 
@@ -92,7 +91,7 @@ class ObservationDataCSV(BaseAbstractData):
             LOGGER.debug('Setting obs date for filepath creation')
             identifier = item['_meta']['identifier']
             data_date = item['_meta']['data_date']
-            if not isinstance(item['bufr4'], list):  # make sure item[bufr4] is a list. once csv2bufr is changed this can be removed.
+            if not isinstance(item['bufr4'], list):  # noqa make sure item[bufr4] is a list. once csv2bufr is changed this can be removed.
                 item['bufr4'] = [item['bufr4']]
             self.output_data[identifier] = item
             self.output_data[identifier]['_meta']['relative_filepath'] = \
@@ -139,7 +138,7 @@ class ObservationDataCSV(BaseAbstractData):
                         }
                         msg = json.dumps(msg)
 
-                        LOGGER.debug(f"Publishing: {msg} to {self.topic_hierarchy.dirpath}")
+                        LOGGER.debug(f"Publishing: {msg} to {self.topic_hierarchy.dirpath}")  # noqa
 
                         # Parse BROKER into components
                         o = urlparse(BROKER)
@@ -150,7 +149,7 @@ class ObservationDataCSV(BaseAbstractData):
                         uid, pwd = uidpwd.split(":")
 
                         # set topic
-                        topic = f"xlocal/v03/data/wis2box/{self.topic_hierarchy.dirpath}"
+                        topic = f"xlocal/v03/data/wis2box/{self.topic_hierarchy.dirpath}"  # noqa
 
                         # set arguments for publishing
                         pubargs = {
@@ -166,7 +165,7 @@ class ObservationDataCSV(BaseAbstractData):
 
                         # now publish
                         try:
-                            publish.single( **pubargs )
+                            publish.single(**pubargs)
 
                         except Exception as err:
                             print(pubargs)
@@ -174,6 +173,7 @@ class ObservationDataCSV(BaseAbstractData):
 
                     feature_count += 1
         return True
+
 
 def process_data(data: str, discovery_metadata: dict) -> bool:
     """
