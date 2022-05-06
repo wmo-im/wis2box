@@ -42,11 +42,13 @@ RUN if [ "$WIS2BOX_PIP3_EXTRA_PACKAGES" = "None" ]; \
 # FIXME: pygeometa: remove and install from requirements.txt once we have a stable release
 # FIXME: sarracenia: remove install from requirements.txt once we have a stable release
 # TODO: remove build packages for a smaller image
-RUN apt-get update -y \
-    && apt-get install -y ${BUILD_PACKAGES} \
+RUN apt-get update -y --fix-missing
+
+RUN apt-get install -y ${BUILD_PACKAGES} \
     && apt-get install -y bash vim git python3-pip python3-dev curl libffi-dev libeccodes0 python3-eccodes python3-cryptography libssl-dev libudunits2-0 \
     # install wis2box dependencies
     && pip3 install https://github.com/wmo-im/csv2bufr/archive/dev.zip \
+    && pip3 install https://github.com/wmo-im/bufr2geojson/archive/dev.zip \
     && pip3 install https://github.com/geopython/pygeometa/archive/master.zip \
     && pip3 install https://github.com/MetPX/sarracenia/archive/refs/tags/v3.00.14.zip \
     # install wis2box
