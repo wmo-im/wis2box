@@ -31,7 +31,6 @@ services:
       - ../dev.env
     depends_on:
       - elasticsearch
-      - wis2box
     volumes:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:ro
 
@@ -145,6 +144,7 @@ services:
       - ./wis2box/wis2box.cron:/etc/cron.d/wis2box:ro
     depends_on:
       - mosquitto
+      - wis2box-api
 
   wis2box-auth:
     container_name: wis2box-auth
