@@ -94,6 +94,9 @@ class BaseAbstractData:
 
         raise NotImplementedError()
 
+    def notify(self) -> bool:
+        raise NotImplementedError()
+
     def publish(self) -> bool:
         LOGGER.info('Writing output data')
 

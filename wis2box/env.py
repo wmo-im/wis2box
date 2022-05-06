@@ -39,6 +39,7 @@ try:
     DATADIR_INCOMING = DATADIR / 'data' / 'incoming'
     DATADIR_PUBLIC = DATADIR / 'data' / 'public'
     DATADIR_ARCHIVE = DATADIR / 'data' / 'archive'
+    DATADIR_CONFIG = DATADIR / 'config'
     API_CONFIG = Path(os.environ.get('WIS2BOX_API_CONFIG'))
 except (OSError, TypeError):
     import traceback
