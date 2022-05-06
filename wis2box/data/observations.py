@@ -54,11 +54,11 @@ class ObservationDataCSV(BaseAbstractData):
 
         mapping_bufr4 = DATADIR_CONFIG / "csv2bufr" / self.template
 
-
         with mapping_bufr4.open() as fh1:
             self.mappings['bufr4'] = json.load(fh1)
 
         self.station_metadata = None
+
 
     def transform(self, input_data: Path) -> bool:
         LOGGER.debug('Processing data')
@@ -109,6 +109,7 @@ class ObservationDataCSV(BaseAbstractData):
             # get relative file path
             rfp = item['_meta']['relative_filepath']
             # iterate over formats
+<<<<<<< HEAD
             for format_, the_data in item.items():  # only bufr4 and _meta
                 if format_ == "_meta":  # not data, skip
                     continue
@@ -166,6 +167,70 @@ class ObservationDataCSV(BaseAbstractData):
 
         return True
 
+=======
+            for format_, collection in item.items():  # only bufr4 and _meta
+                if format_ == "_meta":  # not data, skip
+                    continue
+                nfeatures = len(collection)
+                feature_count = 0
+                LOGGER.info(f"Number of features: {nfeatures}")
+                for feature in collection:
+                    key = ""
+                    if nfeatures > 1:
+                        key = f"-{feature_count}"
+                    filename = (rfp) / f"{identifier}{key}"
+                    filename = filename.with_suffix(f'.{format_}')
+                    if feature is None:
+                        msg = f'Empty data for {identifier}-{key}; not publishing'  # noqa
+                        LOGGER.warning(msg)
+                    else:
+                        msg = {
+                            "pubTime": datetime.now().strftime("%Y%m%dT%H%M%S.00"),  # noqa
+                            "baseUrl": "file:/",
+                            "relPath": str(DATADIR_PUBLIC / filename),
+                            "integrity": {
+                                "method": "md5",
+                                "value": item["_meta"]["md5"]
+                            }
+                        }
+                        msg = json.dumps(msg)
+
+                        LOGGER.debug(f"Publishing: {msg} to {self.topic_hierarchy.dirpath}")
+
+                        # Parse BROKER into components
+                        o = urlparse(BROKER)
+
+                        # separate uid and pwd from url
+                        uidpwd, url = o.netloc.split("@")
+                        # now separate uid and pwd
+                        uid, pwd = uidpwd.split(":")
+
+                        # set topic
+                        topic = f"xlocal/v03/data/wis2box/{self.topic_hierarchy.dirpath}"
+
+                        # set arguments for publishing
+                        pubargs = {
+                            'topic': topic,
+                            'payload': msg,
+                            'hostname': f"{url}",
+                            'auth': {'username': uid, 'password': pwd}
+                        }
+
+                        # update port if specified
+                        if o.port is not None:
+                            pubargs['port'] = o.port
+
+                        # now publish
+                        try:
+                            publish.single( **pubargs )
+
+                        except Exception as err:
+                            print(pubargs)
+                            raise err
+
+                    feature_count += 1
+        return True
+>>>>>>> 03950ff (Changes to handle mappings better)
 
 def process_data(data: str, discovery_metadata: dict) -> bool:
     """
