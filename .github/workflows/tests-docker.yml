@@ -29,6 +29,7 @@ jobs:
     - name: build wis2box
       run: |
         python3 wis2box-ctl.py build
+        python3 wis2box-ctl.py update
     - name: start containers ⚙️
       run: |
         python3 wis2box-ctl.py start
@@ -41,8 +42,8 @@ jobs:
           && wis2box environment show \
           && wis2box data setup -th data.core.observations-surface-land.mw.FWCL.landFixed \
           && wis2box data info -th data.core.observations-surface-land.mw.FWCL.landFixed \
-          && wis2box metadata discovery publish /data/wis2box/metadata/discovery/surface-weather-observations.yml \
           && wis2box metadata station cache /data/wis2box/metadata/station/station_list.csv \
+          && wis2box metadata discovery publish /data/wis2box/metadata/discovery/surface-weather-observations.yml \
           && wis2box metadata station publish-collection \
           && wis2box api add-collection -th data.core.observations-surface-land.mw.FWCL.landFixed /data/wis2box/metadata/discovery/surface-weather-observations.yml \
           && wis2box data ingest -th data.core.observations-surface-land.mw.FWCL.landFixed -p /data/wis2box/observations \
