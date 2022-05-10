@@ -30,14 +30,16 @@ located in ``wis2box/data/base.py``. Any wis2box plugin needs to inherit from
         def transform(self, input_data: Path) -> bool:
             # transform data
             # populate self.output_data with a dict as per:
-            self.output_data [{
-                '_meta': {
-                    'identifier': 'c123'
-                    'data_date': datetime_object
-                },
-                'bufr4': bytes(12356),
-                'geojson': geojson_string
-            }]
+            self.output_data {
+                'c123': {
+                    '_meta': {
+                        'identifier': 'c123'
+                        'data_date': datetime_object
+                    },
+                    'bufr4': bytes(12356),
+                    'geojson': geojson_string
+                }
+            }
             return True
 
 
@@ -45,9 +47,10 @@ The key function that plugin needs to implement is the ``transform`` function. T
 should return a ``True`` or ``False`` of the result of the processing, as well as populate
 the ``output_data`` property.
 
-The ``output_data`` property should provide a ``list`` of objects with the following properties:
+The ``output_data`` property should provide a ``dict`` of keys/values.  Each key should be the identifier
+of the item, with the following values ``dict``:
 
-- ``_meta``: object with identifier and Python `datetime`_ objects based on the observed datetime of the data
+- ``_meta``: object with ``identifier`` and ``data_date`` (as Python `datetime`_ objects) based on the observed datetime of the data
 - ``<format-extension>``: 1..n properties for each format representation, with the key being the filename
   extension. The value of this property can be a string or bytes, depending on whether the underlying data
   is ASCII or binary, for example
