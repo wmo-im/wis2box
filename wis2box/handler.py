@@ -52,8 +52,6 @@ class Handler:
         try:
             self.plugin.transform(self.filepath)
             self.plugin.publish(notify)
-            #if notify:
-            #    self.plugin.notify()
         except Exception as err:
             msg = f'file {self.filepath} failed to transform/publish: {err}'
             LOGGER.warning(msg)

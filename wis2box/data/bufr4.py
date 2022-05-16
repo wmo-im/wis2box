@@ -22,7 +22,6 @@
 import json
 import logging
 from pathlib import Path
-import re
 
 from bufr2geojson import transform as as_geojson
 
