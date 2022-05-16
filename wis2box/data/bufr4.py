@@ -60,24 +60,25 @@ class ObservationDataBUFR(BaseAbstractData):
             # - dict['id']
             # - dict['id']['_meta']
             # - dict['id']
-            LOGGER.info("++++++ HERE ++++++")
-            LOGGER.info(collection)
             for key, item in collection.items():
-                LOGGER.info("Processing feature")
-                LOGGER.info('Setting obs date for filepath creation')
                 identifier = key
                 data_date = item['_meta']['data_date']
                 # some dates can be range/period, split and get end date/time
                 if '/' in data_date:
                     data_date = data_date.split("/")[1]
+                # now we need to make sure we only include those items expected
+                items_to_remove = list()
+                for key2 in item:
+                    if key2 not in ('geojson', '_meta'):
+                        items_to_remove.append(key2)
+                for key2 in items_to_remove:
+                    item.pop(key2)
                 self.output_data[identifier] = item
                 self.output_data[identifier]['geojson'] = json.dumps(
                     self.output_data[identifier]['geojson'], indent=4)
-                LOGGER.info('Setting relative path')
                 self.output_data[identifier]['_meta']['relative_filepath'] = \
                     self.get_local_filepath(data_date)
         fh.close()
-        LOGGER.info("Transform complete")
         return True
 
     def get_local_filepath(self, date_):
