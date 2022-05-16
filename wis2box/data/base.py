@@ -106,15 +106,12 @@ class BaseAbstractData:
     def publish(self, notify: bool = False) -> bool:
         # save output_data to disk and send notification if requested
         LOGGER.info('Writing output data')
-        print("1")
         # iterate over items to publish
         for identifier, item in self.output_data.items():
-            print("2")
             # get relative filepath
             rfp = item['_meta']['relative_filepath']
             # now iterate over formats
             for format_, the_data in item.items():
-                print("3")
                 if format_ == '_meta':  # not data, skip
                     continue
                 # check we actually have data
@@ -124,7 +121,7 @@ class BaseAbstractData:
                     notify = False
                 filename = DATADIR_PUBLIC / (rfp) / f"{identifier}.{format_}"
                 filename = filename.with_suffix(f'.{format_}')
-                LOGGER.debug(f'Writing data to {filename}')
+                LOGGER.info(f'Writing data to {filename}')
                 # make sure directory structure exists
                 filename.parent.mkdir(parents=True, exist_ok=True)
                 # check mode we want to write data in
@@ -145,6 +142,8 @@ class BaseAbstractData:
         for identifier, item in self.output_data.items():
             rfp = item['_meta']['relative_filepath']
             for format_, the_data in item.items():
+                if format_ == '_meta':
+                    continue
                 filename = DATADIR_PUBLIC / (rfp) / f"{identifier}"
                 filename = filename.with_suffix(f".{format_}")
                 yield filename
