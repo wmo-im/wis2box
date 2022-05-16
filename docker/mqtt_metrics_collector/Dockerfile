@@ -31,6 +31,10 @@ COPY *.py /usr/src/app/
 	
 EXPOSE 8000
 
+<<<<<<< HEAD:docker/mqtt_metrics_collector/Dockerfile
 ENV PYTHONUNBUFFERED="true"
 	
 ENTRYPOINT [ "python3","-u","mqtt_metrics_collector.py" ]
+=======
+CMD sh -c "whoami && sr3 --logStdout start && sleep infinity"
+>>>>>>> b7ba097 (updates following call, remove unused package + general code tidy.):docker/ca-republisher/Dockerfile

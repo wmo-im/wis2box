@@ -51,6 +51,18 @@ SETTINGS = {
                                 'type': 'keyword'
                             }
                         }
+                    },
+                    'value': {
+                        'type': 'float',
+                        'coerce': True
+                    },
+                    'metadata': {
+                        'properties': {
+                            'value': {
+                                'type': 'float',
+                                'coerce': True
+                            }
+                        }
                     }
                 }
             }

@@ -1,9 +1,12 @@
 isodate
 <<<<<<< HEAD
+<<<<<<< HEAD
 OWSLib
 =======
 pandas
 >>>>>>> 418c0e2 (Update separating bufr and geojson.)
+=======
+>>>>>>> b7ba097 (updates following call, remove unused package + general code tidy.)
 parse
 pygeometa
 pyoscar
