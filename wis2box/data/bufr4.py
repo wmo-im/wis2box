@@ -80,12 +80,12 @@ class ObservationDataBUFR(BaseAbstractData):
                     self.output_data[identifier]['_meta']['relative_filepath'] = \
                         self.get_local_filepath(data_date)
 
+
         return True
 
     def get_local_filepath(self, date_):
         yyyymmdd = date_[0:10]  # date_.strftime('%Y-%m-%d')
         return (Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath)
-
 
 
 def process_data(data: str, discovery_metadata: dict) -> bool:

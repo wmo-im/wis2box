@@ -95,6 +95,12 @@ class BaseAbstractData:
         raise NotImplementedError()
 
     def notify(self) -> bool:
+        # update here to add basic functionality
+        # revert publish to simpler format
+        # phenomenonTime
+        # resultTime
+        # update docs
+        # dockerfile Machinery, ben to do.
         raise NotImplementedError()
 
     def publish(self, notify: bool = False) -> bool:
@@ -130,7 +136,6 @@ class BaseAbstractData:
         return True
 
     # TODO: fix annotation/types
-
 
     def files(self) -> bool:
         LOGGER.debug('Listing processed files')
