@@ -50,50 +50,40 @@ class ObservationDataBUFR(BaseAbstractData):
         self.output_data = {}
 
     def transform(self, input_data: Path) -> bool:
-        LOGGER.debug('Processing bufr data')
+        LOGGER.info('Processing BUFR data')
         fh = open(input_data)
-        results = as_geojson(fh)
-        LOGGER.debug('Iterating over GeoJSON features')
+        results = as_geojson(fh, serialize=False)
+        LOGGER.info('Iterating over GeoJSON features')
         # need to fix the next section, need to iterate over item['geojson']
-        for collection in results:
-            LOGGER.debug(collection)
+        for collection in results:  # results is an iterator
+            # for each iteration we have:
+            # - dict['id']
+            # - dict['id']['_meta']
+            # - dict['id']
+            LOGGER.info("++++++ HERE ++++++")
+            LOGGER.info(collection)
             for key, item in collection.items():
-                LOGGER.debug("Processing feature")
-                LOGGER.debug('Setting obs date for filepath creation')
+                LOGGER.info("Processing feature")
+                LOGGER.info('Setting obs date for filepath creation')
                 identifier = key
                 data_date = item['_meta']['data_date']
                 # some dates can be range/period, split and get end date/time
                 if '/' in data_date:
                     data_date = data_date.split("/")[1]
                 self.output_data[identifier] = item
-                LOGGER.debug('Setting relative path')
+                self.output_data[identifier]['geojson'] = json.dumps(
+                    self.output_data[identifier]['geojson'], indent=4)
+                LOGGER.info('Setting relative path')
                 self.output_data[identifier]['_meta']['relative_filepath'] = \
                     self.get_local_filepath(data_date)
         fh.close()
-        LOGGER.debug("Transform complete")
+        LOGGER.info("Transform complete")
         return True
 
     def get_local_filepath(self, date_):
         yyyymmdd = date_[0:10]  # date_.strftime('%Y-%m-%d')
-
         # return (Path(yyyymmdd) / 'wis' / self.publish_topic.dirpath)
         return (Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath)
-
-    def files(self) -> bool:
-        LOGGER.debug('Listing processed files')
-        for identifier, item in self.output_data.items():
-            rfp = item['_meta']['relative_filepath']
-            filename = DATADIR_PUBLIC / (rfp) / f"{identifier}.geojson"
-            yield filename
-
-    def publish(self) -> bool:
-        LOGGER.debug('Saving data files')
-        for identifier, item in self.output_data.items():
-            rfp = item['_meta']['relative_filepath']
-            filename = DATADIR_PUBLIC / (rfp) / f"{identifier}.geojson"
-            with filename.open('w') as fh:
-                fh.write(json.dumps(item['geojson'], indent=4))
-        return True
 
 
 def process_data(data: str, discovery_metadata: dict) -> bool:
