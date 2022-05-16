@@ -47,6 +47,7 @@ RUN if [ "$WIS2BOX_PIP3_EXTRA_PACKAGES" = "None" ]; \
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 RUN apt-get update -y \
     && apt-get install -y ${BUILD_PACKAGES} \
     && apt-get install -y ${DEBIAN_PACKAGES} \
@@ -59,6 +60,9 @@ RUN apt-get update -y --fix-missing \
 =======
 RUN apt-get update \
 >>>>>>> bda4502 (More tidying up.)
+=======
+RUN apt-get update -y \
+>>>>>>> 78d9b7d (More tidying up.)
     && apt-get install -y ${BUILD_PACKAGES} \
 >>>>>>> 1ae6964 (More tidying up.)
     && apt-get install -y bash vim git python3-pip python3-dev curl libffi-dev libeccodes0 python3-eccodes python3-cryptography libssl-dev libudunits2-0 \

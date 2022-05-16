@@ -138,7 +138,7 @@ class BaseAbstractData:
             for format_, the_data in item.items():
                 if format_ == '_meta':
                     continue
-                if the_data in None:
+                if the_data is None:
                     continue
                 filename = DATADIR_PUBLIC / (rfp) / f"{identifier}"
                 filename = filename.with_suffix(f".{format_}")
