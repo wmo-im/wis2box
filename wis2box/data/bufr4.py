@@ -80,7 +80,6 @@ class ObservationDataBUFR(BaseAbstractData):
                     self.output_data[identifier]['_meta']['relative_filepath'] = \
                         self.get_local_filepath(data_date)
 
-
         return True
 
     def get_local_filepath(self, date_):

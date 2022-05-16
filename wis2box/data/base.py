@@ -146,6 +146,7 @@ class BaseAbstractData:
                     continue
                 if the_data is None:
                     continue
+
                 filename = DATADIR_PUBLIC / (rfp) / f"{identifier}"
                 filename = filename.with_suffix(f".{format_}")
                 yield filename
