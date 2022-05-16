@@ -95,12 +95,6 @@ class BaseAbstractData:
         raise NotImplementedError()
 
     def notify(self) -> bool:
-        # update here to add basic functionality
-        # revert publish to simpler format
-        # phenomenonTime
-        # resultTime
-        # update docs
-        # dockerfile Machinery, ben to do.
         raise NotImplementedError()
 
     def publish(self, notify: bool = False) -> bool:
