@@ -23,4 +23,4 @@ FROM ghcr.io/metpx/sarracenia_x64:latest
 
 COPY ./config /root/.config/sr3
 
-#CMD sh -c "whoami && sr3 --logStdout start && sleep infinity"
+CMD sh -c "whoami && sr3 --logStdout start && sleep infinity"

@@ -50,34 +50,33 @@ class ObservationDataBUFR(BaseAbstractData):
 
     def transform(self, input_data: Path) -> bool:
         LOGGER.info('Processing BUFR data')
-        fh = open(input_data)
-        results = as_geojson(fh, serialize=False)
-        LOGGER.info('Iterating over GeoJSON features')
-        # need to fix the next section, need to iterate over item['geojson']
-        for collection in results:  # results is an iterator
-            # for each iteration we have:
-            # - dict['id']
-            # - dict['id']['_meta']
-            # - dict['id']
-            for key, item in collection.items():
-                identifier = key
-                data_date = item['_meta']['data_date']
-                # some dates can be range/period, split and get end date/time
-                if '/' in data_date:
-                    data_date = data_date.split("/")[1]
-                # now we need to make sure we only include those items expected
-                items_to_remove = list()
-                for key2 in item:
-                    if key2 not in ('geojson', '_meta'):
-                        items_to_remove.append(key2)
-                for key2 in items_to_remove:
-                    item.pop(key2)
-                self.output_data[identifier] = item
-                self.output_data[identifier]['geojson'] = json.dumps(
-                    self.output_data[identifier]['geojson'], indent=4)
-                self.output_data[identifier]['_meta']['relative_filepath'] = \
-                    self.get_local_filepath(data_date)
-        fh.close()
+        with open(input_data) as fh:
+            results = as_geojson(fh, serialize=False)
+            LOGGER.info('Iterating over GeoJSON features')
+            # need to fix the next section, need to iterate over item['geojson']
+            for collection in results:  # results is an iterator
+                # for each iteration we have:
+                # - dict['id']
+                # - dict['id']['_meta']
+                # - dict['id']
+                for key, item in collection.items():
+                    identifier = key
+                    data_date = item['_meta']['data_date']
+                    # some dates can be range/period, split and get end date/time
+                    if '/' in data_date:
+                        data_date = data_date.split("/")[1]
+                    # now we need to make sure we only include those items expected
+                    items_to_remove = list()
+                    for key2 in item:
+                        if key2 not in ('geojson', '_meta'):
+                            items_to_remove.append(key2)
+                    for key2 in items_to_remove:
+                        item.pop(key2)
+                    self.output_data[identifier] = item
+                    self.output_data[identifier]['geojson'] = json.dumps(
+                        self.output_data[identifier]['geojson'], indent=4)
+                    self.output_data[identifier]['_meta']['relative_filepath'] = \
+                        self.get_local_filepath(data_date)
         return True
 
     def get_local_filepath(self, date_):
