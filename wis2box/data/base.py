@@ -95,12 +95,6 @@ class BaseAbstractData:
         raise NotImplementedError()
 
     def notify(self) -> bool:
-        # update here to add basic functionality
-        # revert publish to simpler format
-        # phenomenonTime
-        # resultTime
-        # update docs
-        # dockerfile Machinery, ben to do.
         raise NotImplementedError()
 
     def publish(self, notify: bool = False) -> bool:
@@ -143,6 +137,8 @@ class BaseAbstractData:
             rfp = item['_meta']['relative_filepath']
             for format_, the_data in item.items():
                 if format_ == '_meta':
+                    continue
+                if the_data in None:
                     continue
                 filename = DATADIR_PUBLIC / (rfp) / f"{identifier}"
                 filename = filename.with_suffix(f".{format_}")

@@ -82,7 +82,6 @@ class ObservationDataBUFR(BaseAbstractData):
 
     def get_local_filepath(self, date_):
         yyyymmdd = date_[0:10]  # date_.strftime('%Y-%m-%d')
-        # return (Path(yyyymmdd) / 'wis' / self.publish_topic.dirpath)
         return (Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath)
 
 
