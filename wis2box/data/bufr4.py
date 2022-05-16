@@ -25,6 +25,7 @@ from pathlib import Path
 
 import re
 
+
 from bufr2geojson import transform as as_geojson
 
 from wis2box.data.base import BaseAbstractData
