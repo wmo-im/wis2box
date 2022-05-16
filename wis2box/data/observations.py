@@ -61,7 +61,6 @@ class ObservationDataCSV(BaseAbstractData):
 
     def transform(self, input_data: Path) -> bool:
         LOGGER.debug('Processing data')
-
         LOGGER.debug('Extracting WSI from filename')
         try:
             regex = self.file_filter
@@ -91,8 +90,6 @@ class ObservationDataCSV(BaseAbstractData):
             LOGGER.debug('Setting obs date for filepath creation')
             identifier = item['_meta']['identifier']
             data_date = item['_meta']['data_date']
-            if not isinstance(item['bufr4'], list):  # noqa make sure item[bufr4] is a list. once csv2bufr is changed this can be removed.
-                item['bufr4'] = [item['bufr4']]
             self.output_data[identifier] = item
             self.output_data[identifier]['_meta']['relative_filepath'] = \
                 self.get_local_filepath(data_date)
@@ -101,7 +98,6 @@ class ObservationDataCSV(BaseAbstractData):
 
     def get_local_filepath(self, date_):
         yyyymmdd = date_.strftime('%Y-%m-%d')
-
         # return (Path(yyyymmdd) / 'wis' / self.publish_topic.dirpath)
         return (Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath)
 
@@ -111,67 +107,61 @@ class ObservationDataCSV(BaseAbstractData):
             # get relative file path
             rfp = item['_meta']['relative_filepath']
             # iterate over formats
-            for format_, collection in item.items():  # only bufr4 and _meta
+            for format_, the_data in item.items():  # only bufr4 and _meta
                 if format_ == "_meta":  # not data, skip
                     continue
-                nfeatures = len(collection)
-                feature_count = 0
-                LOGGER.info(f"Number of features: {nfeatures}")
-                for feature in collection:
-                    key = ""
-                    if nfeatures > 1:
-                        key = f"-{feature_count}"
-                    filename = (rfp) / f"{identifier}{key}"
-                    filename = filename.with_suffix(f'.{format_}')
-                    if feature is None:
-                        msg = f'Empty data for {identifier}-{key}; not publishing'  # noqa
-                        LOGGER.warning(msg)
-                    else:
-                        msg = {
-                            "pubTime": datetime.now().strftime("%Y%m%dT%H%M%S.00"),  # noqa
-                            "baseUrl": "file:/",
-                            "relPath": str(DATADIR_PUBLIC / filename),
-                            "integrity": {
-                                "method": "md5",
-                                "value": item["_meta"]["md5"]
-                            }
+                filename = (rfp) / f'{identifier}'
+                filename = filename.with_suffix(f'.{format_}')
+                if the_data is None:
+                    msg = f'Empty data for {identifier}-{key}; not publishing'  # noqa
+                    LOGGER.warning(msg)
+                else:
+                    msg = {
+                        "pubTime": datetime.now().strftime("%Y%m%dT%H%M%S.00"),
+                        # noqa
+                        "baseUrl": "file:/",
+                        "relPath": str(DATADIR_PUBLIC / filename),
+                        "integrity": {
+                            "method": "md5",
+                            "value": item["_meta"]["md5"]
                         }
-                        msg = json.dumps(msg)
+                    }
+                    msg = json.dumps(msg)
 
-                        LOGGER.debug(f"Publishing: {msg} to {self.topic_hierarchy.dirpath}")  # noqa
+                    LOGGER.debug(
+                        f"Publishing: {msg} to {self.topic_hierarchy.dirpath}")  # noqa
 
-                        # Parse BROKER into components
-                        o = urlparse(BROKER)
+                    # Parse BROKER into components
+                    o = urlparse(BROKER)
 
-                        # separate uid and pwd from url
-                        uidpwd, url = o.netloc.split("@")
-                        # now separate uid and pwd
-                        uid, pwd = uidpwd.split(":")
+                    # separate uid and pwd from url
+                    uidpwd, url = o.netloc.split("@")
+                    # now separate uid and pwd
+                    uid, pwd = uidpwd.split(":")
 
-                        # set topic
-                        topic = f"xlocal/v03/data/wis2box/{self.topic_hierarchy.dirpath}"  # noqa
+                    # set topic
+                    topic = f"xlocal/v03/data/wis2box/{self.topic_hierarchy.dirpath}"  # noqa
 
-                        # set arguments for publishing
-                        pubargs = {
-                            'topic': topic,
-                            'payload': msg,
-                            'hostname': f"{url}",
-                            'auth': {'username': uid, 'password': pwd}
-                        }
+                    # set arguments for publishing
+                    pubargs = {
+                        'topic': topic,
+                        'payload': msg,
+                        'hostname': f"{url}",
+                        'auth': {'username': uid, 'password': pwd}
+                    }
 
-                        # update port if specified
-                        if o.port is not None:
-                            pubargs['port'] = o.port
+                    # update port if specified
+                    if o.port is not None:
+                        pubargs['port'] = o.port
 
-                        # now publish
-                        try:
-                            publish.single(**pubargs)
+                    # now publish
+                    try:
+                        publish.single(**pubargs)
 
-                        except Exception as err:
-                            print(pubargs)
-                            raise err
+                    except Exception as err:
+                        print(pubargs)
+                        raise err
 
-                    feature_count += 1
         return True
 
 
