@@ -18,7 +18,7 @@ jobs:
       run: |
         pip3 install -r requirements-dev.txt
         python3 setup.py install
-    - name: running on 📦
+    - name: software running on 📦
       run: |
         docker version
         docker-compose version
@@ -38,7 +38,6 @@ jobs:
     - name: start containers ⚙️
       run: |
         python3 wis2box-ctl.py start
-        sleep 15
         python3 wis2box-ctl.py status -a
     - name: test wis2box data ingest/process/publish workflow ⚙️
       run: |
