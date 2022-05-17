@@ -1,15 +1,15 @@
 data:
     data.core.observations-surface-land.mw.FWCL.landFixed:
         plugins:
-            .csv:
+            csv:
                 plugin: wis2box.data.observations.ObservationDataCSV
                 template: synop-bufr.json
                 file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.csv$'
-            .bufr4:
+            bufr4:
                 plugin: wis2box.data.bufr4.ObservationDataBUFR
                 template:
                 file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
-            .geojson:
+            geojson:
                 plugin: wis2box.data.base.BaseAbstractData
                 template:
                 file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.geojson$'
