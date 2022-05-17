@@ -52,6 +52,9 @@ SETTINGS = {
                             }
                         }
                     },
+                    'phenomenonTime': {
+                        'type': 'text'
+                    },
                     'value': {
                         'type': 'float',
                         'coerce': True
