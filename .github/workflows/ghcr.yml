@@ -3,16 +3,18 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Create and publish image to GitHub Container Registry
+name: publish image to ghcr.io
 
 on:
   push:
     branches:
       - main
+  release:
+    types: [published]
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: wis2box 
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   # Push image to GitHub Packages.
@@ -24,31 +26,41 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout branch
+        uses: actions/checkout@v2
 
-      - name: Build image
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
 
-      - name: Log in to registry
-        # This is where you will update the PAT to GHCR_BUILD_TOKEN
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Rename image for publication
-        run: |
-          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
 
-          # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          # Strip git ref prefix from version
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-          # Use Docker `latest` tag convention
-          [ "$VERSION" == "main" ] && VERSION=latest
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
-          echo FULLCONTAINERNAME=$IMAGE_ID:$VERSION >> $GITHUB_ENV
-          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=semver,pattern={{version}}
 
-      - name: Push to CR
-        run: docker push ${{ env.FULLCONTAINERNAME }}
+      - name: Build and push
+        uses: docker/build-push-action@v2.7.0
+        with:
+          context: ./
+          file: ./Dockerfile
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/arm64, linux/amd64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

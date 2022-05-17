@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   # promtail for scraping logs
   promtail:
@@ -52,7 +50,7 @@ services:
       - GF_ALERTING_ENABLED=false
     ports:
       - 3000:3000
-  
+
   web-proxy:
     container_name: nginx
     image: nginx:alpine

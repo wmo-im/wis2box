@@ -1,5 +1,3 @@
-version: "3"
-
 # define virtual network to give fixed IP for loki used by the logging-driver for all containers
 networks:
   vpcbr: # virtual network name
@@ -38,7 +36,7 @@ services:
     env_file:
       - default.env
       - ../dev.env
-    build: 
+    build:
       context: ./mqtt_metrics_collector
     depends_on:
       - mosquitto
@@ -51,7 +49,7 @@ services:
     env_file:
       - default.env
       - ../dev.env
-    build: 
+    build:
       context: ./metrics_collector
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/data/public:/data/wis2box/data/public:ro
