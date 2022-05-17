@@ -97,7 +97,7 @@ def test_data_ingest():
     item_waf = r.json()
 
     assert item_waf['id'] == 'WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500'
-    assert item_waf['properties']['phenomenonTime'] == '2021-07-07T14:55:00+00:00'  # noqa
+    assert item_waf['properties']['resultTime'] == '2021-07-07T14:55:00+00:00'  # noqa
 
     item_datadir_public = DATADIR / 'data' / 'public' / item
     assert item_datadir_public.exists()
