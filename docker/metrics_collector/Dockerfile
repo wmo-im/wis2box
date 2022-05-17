@@ -31,6 +31,10 @@ COPY *_collector.py /usr/src/app/
 	
 EXPOSE 8000
 
+<<<<<<< HEAD:docker/metrics_collector/Dockerfile
 ENV PYTHONUNBUFFERED="true"
 	
 ENTRYPOINT [ "python3","-u","metrics_collector.py" ]
+=======
+#CMD sh -c "whoami && sr3 --logStdout start && sleep infinity"
+>>>>>>> 8c780a3 (ca republisher disabled):docker/ca-republisher/Dockerfile
