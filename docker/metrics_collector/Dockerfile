@@ -27,14 +27,10 @@ WORKDIR /usr/src/app
 COPY requirements.txt /usr/src/app
 RUN pip install --no-cache-dir -r requirements.txt
 	
-COPY *_collector.py /usr/src/app/
-	
+COPY *.py /usr/src/app/
+
 EXPOSE 8000
 
-<<<<<<< HEAD:docker/metrics_collector/Dockerfile
 ENV PYTHONUNBUFFERED="true"
-	
-ENTRYPOINT [ "python3","-u","metrics_collector.py" ]
-=======
-#CMD sh -c "whoami && sr3 --logStdout start && sleep infinity"
->>>>>>> 8c780a3 (ca republisher disabled):docker/ca-republisher/Dockerfile
+
+ENTRYPOINT [ "python3","-u","mqtt_metrics_collector.py" ]
