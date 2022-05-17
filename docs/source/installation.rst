@@ -12,12 +12,21 @@ Dependencies are installed as containers in the deployment of wis2box. This
 is true for the wis2box software itself, which runs as a container orchestrating the necessary
 data management workflows of a node in the WIS 2.0 network.
 
-wis2box runs on `Python`_ 3.8, `Docker Engine`_ 20.10.14, and `Docker Compose`_ 2.4.1.
+wis2box requires the following prior to installation:
+
+.. csv-table::
+   :header: Requirement,Version
+   :align: left
+
+   `Python`_,3.8
+   `Docker Engine`_, 20.10.14
+   `Docker Compose`_,2.4.1
+
 If these are already installed, you can skip to installing wis2box.
 
-    - To install Python, follow `Python installation`_.
-    - To install Docker, follow `Docker Engine installation`_.
-    - To install Docker Compose, follow `Compose installation`_.
+- To install Python, follow `Python installation`_.
+- To install Docker, follow `Docker Engine installation`_.
+- To install Docker Compose, follow `Compose installation`_.
 
 Successful installation can be confirmed by inspecting the versions on your system.
 

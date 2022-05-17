@@ -12,7 +12,7 @@ Grafana uses two data-sources to display monitoring-data:
 - loki: logging end-point for the docker-containers that compose the wis2box
 
 Prometheus exporters for wis2box
---------------------
+--------------------------------
 
 The exporters for wis2box are based on the `Prometheus Python Client <https://github.com/prometheus/client_python>`_
 
