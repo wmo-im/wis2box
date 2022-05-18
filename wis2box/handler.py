@@ -31,7 +31,7 @@ LOGGER = logging.getLogger(__name__)
 class Handler:
     def __init__(self, filepath: Path, topic_hierarchy: str = None):
         self.filepath = filepath
-        self.filetype = filepath.suffix.replace(".","")
+        self.filetype = filepath.suffix.replace(".", "")
 
         self.plugin = None
 
