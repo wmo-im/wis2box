@@ -34,4 +34,3 @@ EXPOSE 8000
 ENV PYTHONUNBUFFERED="true"
 	
 ENTRYPOINT [ "python3","-u","mqtt_metrics_collector.py" ]
-
