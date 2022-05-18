@@ -18,6 +18,11 @@ jobs:
       run: |
         pip3 install -r requirements-dev.txt
         python3 setup.py install
+    - name: software running on 📦
+      run: |
+        docker version
+        docker compose version
+        python3 -V
     - name: run unit tests ⚙️
       run: |
         pytest tests/unit
@@ -29,10 +34,10 @@ jobs:
     - name: build wis2box
       run: |
         python3 wis2box-ctl.py build
+        python3 wis2box-ctl.py update
     - name: start containers ⚙️
       run: |
         python3 wis2box-ctl.py start
-        sleep 15
         python3 wis2box-ctl.py status -a
     - name: test wis2box data ingest/process/publish workflow ⚙️
       run: |
