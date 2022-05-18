@@ -70,12 +70,15 @@ def load_datasets() -> Iterator[dict]:
     """
     oaf = Features(DOCKER_API_URL)
 
-    dm = oaf.collection_items('discovery-metadata')
-
-    for topic in dm['features']:
-        for link in topic['links']:
-            if link['type'] == 'OAFeat':
-                yield link
+    try:
+        dm = oaf.collection_items('discovery-metadata')
+        for topic in dm['features']:
+            for link in topic['links']:
+                if link['type'] == 'OAFeat':
+                    yield link
+    except RuntimeError:
+        LOGGER.warning('discovery-metadata collection has not been created')
+        yield {}
 
 
 def check_station_datasets(datasets: list, wigos_id: str) -> Iterator[dict]:
@@ -92,11 +95,14 @@ def check_station_datasets(datasets: list, wigos_id: str) -> Iterator[dict]:
     oaf = Features(DOCKER_API_URL)
 
     for topic in datasets:
+        if topic == {}:
+            continue
+
         try:
             obs = oaf.collection_items(
                 topic['title'], wigos_station_identifier=wigos_id)
         except RuntimeError as err:
-            LOGGER.error(f'Error in topic {topic["title"]}: {err}')
+            LOGGER.warning(f'Warning in topic {topic["title"]}: {err}')
             continue
 
         if obs['numberMatched'] > 0:
