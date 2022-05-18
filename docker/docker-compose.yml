@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   web-proxy:
     container_name: nginx
@@ -30,8 +28,10 @@ services:
       - default.env
       - ../dev.env
     depends_on:
-      - elasticsearch
-      - wis2box
+      elasticsearch:
+        condition: service_healthy
+      wis2box:
+        condition: service_started
     volumes:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:ro
 
