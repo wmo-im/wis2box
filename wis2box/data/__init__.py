@@ -22,10 +22,16 @@
 from datetime import datetime
 import json
 import logging
+import os
 from pathlib import Path
 import shutil
 
 import click
+
+from sarracenia import Message
+from sarracenia.config import default_config
+from sarracenia.moth import Moth
+
 
 from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
@@ -121,7 +127,7 @@ def show_info(topic_hierarchy: str) -> dict:
     return {
         'topic_hierarchy': th.dotpath,
         'directories': plugin.directories
-     }
+    }
 
 
 @click.group()
@@ -197,11 +203,28 @@ def setup(ctx, topic_hierarchy, verbosity):
 @cli_helpers.OPTION_VERBOSITY
 def ingest(ctx, topic_hierarchy, path, recursive, verbosity):
     """Ingest data file or directory"""
+    cfg = default_config()
+    cfg.parse_file("/root/.config/sr3/subscribe/data-bufr2geojson.conf")
+    cfg.integrity_method = "md5"
+
+    posting_engine = Moth.pubFactory(cfg.broker, cfg.dictify())
 
     for file_to_process in walk_path(path, '.*', recursive):
         click.echo(f'Processing {file_to_process}')
         handler = Handler(file_to_process, topic_hierarchy)
-        _ = handler.handle(notify=True)
+        if handler.handle():
+            LOGGER.debug('Data processed')
+            for filepath_out in handler.plugin.files():
+                LOGGER.debug(f'Public filepath: {filepath_out}')
+                m = Message.fromFileData(
+                    filepath_out,
+                    cfg,
+                    os.stat(filepath_out)
+                )
+                posting_engine.putNewMessage(m)
+
+                # when done, should close... cleaner...
+                posting_engine.close()
     click.echo("Done")
 
 
