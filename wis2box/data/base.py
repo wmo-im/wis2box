@@ -30,6 +30,7 @@ LOGGER = logging.getLogger(__name__)
 
 class BaseAbstractData:
     """Abstract data"""
+
     def __init__(self, defs: dict) -> None:
         """
         Abstract data initializer
@@ -144,7 +145,6 @@ class BaseAbstractData:
                 filename = DATADIR_PUBLIC / (rfp) / f"{identifier}"
                 filename = filename.with_suffix(f".{format_}")
                 yield filename
-
 
     @property
     def directories(self):

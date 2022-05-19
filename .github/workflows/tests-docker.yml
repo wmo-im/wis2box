@@ -50,11 +50,10 @@ jobs:
           && wis2box metadata station cache /data/wis2box/metadata/station/station_list.csv \
           && wis2box metadata station publish-collection \
           && wis2box api add-collection -th data.core.observations-surface-land.mw.FWCL.landFixed /data/wis2box/metadata/discovery/surface-weather-observations.yml \
-          && wis2box data ingest -th data.core.observations-surface-land.mw.FWCL.landFixed -p /data/wis2box/observations \
-          && wis2box api add-collection-items --recursive -p /data/wis2box/data/public"
+          && cp /data/wis2box/observations/* /data/wis2box/data/incoming/data/core/observations-surface-land/mw/FWCL/landFixed"
     - name: run integration tests ⚙️
       run: |
-        sleep 5
+        sleep 20
         pytest -s tests/integration
     - name: run flake8 ⚙️
       run: |

@@ -23,19 +23,17 @@ import json
 import logging
 from pathlib import Path
 
-import re
-
 
 from bufr2geojson import transform as as_geojson
 
 from wis2box.data.base import BaseAbstractData
-from wis2box.env import DATADIR_PUBLIC
 
 LOGGER = logging.getLogger(__name__)
 
 
 class ObservationDataBUFR(BaseAbstractData):
     """Observation data"""
+
     def __init__(self, topic_hierarchy: str) -> None:
         """
         Abstract data initializer
@@ -56,29 +54,31 @@ class ObservationDataBUFR(BaseAbstractData):
         with open(input_data) as fh:
             results = as_geojson(fh, serialize=False)
             LOGGER.info('Iterating over GeoJSON features')
-            # need to fix the next section, need to iterate over item['geojson']
+            # TODO: iterate over item['geojson']
             for collection in results:  # results is an iterator
                 # for each iteration we have:
                 # - dict['id']
                 # - dict['id']['_meta']
                 # - dict['id']
-                for key, item in collection.items():
-                    identifier = key
+                for id, item in collection.items():
                     data_date = item['_meta']['data_date']
-                    # some dates can be range/period, split and get end date/time
+                    # date is range/period, split and get end date/time
                     if '/' in data_date:
                         data_date = data_date.split("/")[1]
-                    # now we need to make sure we only include those items expected
+
+                    # make sure we only include those items expected
                     items_to_remove = list()
                     for key2 in item:
                         if key2 not in ('geojson', '_meta'):
                             items_to_remove.append(key2)
                     for key2 in items_to_remove:
                         item.pop(key2)
-                    self.output_data[identifier] = item
-                    self.output_data[identifier]['geojson'] = json.dumps(
-                        self.output_data[identifier]['geojson'], indent=4)
-                    self.output_data[identifier]['_meta']['relative_filepath'] = \
+
+                    # populate output data for publication
+                    self.output_data[id] = item
+                    self.output_data[id]['geojson'] = json.dumps(
+                        self.output_data[id]['geojson'], indent=4)
+                    self.output_data[id]['_meta']['relative_filepath'] = \
                         self.get_local_filepath(data_date)
 
         return True

@@ -89,15 +89,15 @@ def test_metadata_discovery_publish():
 def test_data_ingest():
     """Test data ingest/process publish"""
 
-    item = '2021-07-07/wis/data/core/observations-surface-land/mw/FWCL/landFixed/WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500.geojson'  # noqa
+    item = '2021-07-07/wis/data/core/observations-surface-land/mw/FWCL/landFixed/WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500-82.geojson'  # noqa
 
     r = requests.get(f'{URL}/data/{item}')  # noqa
     assert r.status_code == 200
 
     item_waf = r.json()
 
-    assert item_waf['id'] == 'WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500'
-    assert item_waf['properties']['resultTime'] == '2021-07-07T14:55:00+00:00'  # noqa
+    assert item_waf['reportId'] == 'WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500'
+    assert item_waf['properties']['resultTime'] == '2021-07-07T14:55:00Z'  # noqa
 
     item_datadir_public = DATADIR / 'data' / 'public' / item
     assert item_datadir_public.exists()
@@ -105,13 +105,13 @@ def test_data_ingest():
     with item_datadir_public.open() as fh:
         assert item_waf == json.load(fh)
 
-    item_api_url = f'{API_URL}/collections/data.core.observations-surface-land.mw.FWCL.landFixed/items/WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500'  # noqa
+    item_api_url = f'{API_URL}/collections/data.core.observations-surface-land.mw.FWCL.landFixed/items/{item_waf["id"]}'  # noqa
 
     item_api = requests.get(item_api_url).json()
 
     # make minor adjustments to payload to normalize API additions
     item_api.pop('links')
-    item_waf['properties']['id'] = item_waf['properties']['identifier']
+    item_waf['properties']['id'] = item_waf['id']
 
     assert item_waf == item_api
 
@@ -128,7 +128,7 @@ def test_data_api():
 
     r = requests.get(url, params=params).json()
 
-    assert r['numberMatched'] == 1
+    assert r['numberMatched'] == 17
 
     # filter by datetime (instant)
     params = {
@@ -137,7 +137,7 @@ def test_data_api():
 
     r = requests.get(url, params=params).json()
 
-    assert r['numberMatched'] == 6
+    assert r['numberMatched'] == 99
 
     # filter by datetime (since)
     params = {
@@ -146,7 +146,7 @@ def test_data_api():
 
     r = requests.get(url, params=params).json()
 
-    assert r['numberMatched'] == 13
+    assert r['numberMatched'] == 218
 
     # filter by datetime (before)
     params = {
@@ -155,7 +155,7 @@ def test_data_api():
 
     r = requests.get(url, params=params).json()
 
-    assert r['numberMatched'] == 23
+    assert r['numberMatched'] == 385
 
     # filter by datetime (since year)
     params = {
@@ -164,7 +164,7 @@ def test_data_api():
 
     r = requests.get(url, params=params).json()
 
-    assert r['numberMatched'] == 23
+    assert r['numberMatched'] == 385
 
     # filter by bbox
     bbox = [35.2, -16, 36, -15]
@@ -174,4 +174,4 @@ def test_data_api():
 
     r = requests.get(url, params=params).json()
 
-    assert r['numberMatched'] == 17
+    assert r['numberMatched'] == 283
