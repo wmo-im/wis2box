@@ -64,7 +64,7 @@ jobs:
           cp /data/wis2box/observations/* /data/wis2box/data/incoming/data/core/observations-surface-land/mw/FWCL/landFixed"
     - name: run integration tests ⚙️
       run: |
-        sleep 20
+        sleep 25
         pytest -s tests/integration
     - name: run flake8 ⚙️
       run: |
