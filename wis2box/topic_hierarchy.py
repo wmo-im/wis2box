@@ -86,12 +86,12 @@ def validate_and_load(topic_hierarchy: str, file_type: str = None,
             LOGGER.error(msg)
             raise ValueError(msg)
         # check if file type set, if not use first in list
+        plugins = DATADIR_DATA_MAPPINGS['data'][th.dotpath]['plugins']
         if file_type is None:
-            file_type = DATADIR_DATA_MAPPINGS['data'][th.dotpath]['plugins'].keys()  # noqa
-            file_type = list(file_type)[0]
+            file_type = list(plugins.keys()).pop(0)
             msg = f"file type missing in call to validate_and_load, set to first type: {file_type}"  # noqa
             LOGGER.debug(msg)
-        if file_type not in DATADIR_DATA_MAPPINGS['data'][th.dotpath]['plugins']:  # noqa
+        if file_type not in plugins:
             msg = f'Unknown file type ({file_type}) for topic {th.dotpath} in data mappings'  # noqa
             LOGGER.error(msg)
             raise ValueError(msg)
@@ -100,9 +100,9 @@ def validate_and_load(topic_hierarchy: str, file_type: str = None,
 
         defs = {
             'topic_hierarchy': topic_hierarchy,
-            'codepath': DATADIR_DATA_MAPPINGS['data'][th.dotpath]['plugins'][file_type]['plugin'],  # noqa
-            'template': DATADIR_DATA_MAPPINGS['data'][th.dotpath]['plugins'][file_type]['template'],  # noqa
-            'pattern':  DATADIR_DATA_MAPPINGS['data'][th.dotpath]['plugins'][file_type]['file-pattern'],  # noqa
+            'codepath': plugins[file_type]['plugin'],
+            'template': plugins[file_type]['template'],
+            'pattern':  plugins[file_type]['file-pattern'],
             'format': file_type
         }
         plugin = load_plugin('data', defs)
@@ -117,7 +117,7 @@ def validate_and_load(topic_hierarchy: str, file_type: str = None,
             if fnmatch(topic_hierarchy, pattern):
                 LOGGER.debug(f'Matched {topic_hierarchy} to {pattern}')
                 if file_type not in value['plugins']:
-                    msg = f'Unknown filetype ({file_type}) for topic {key} in data mappings'
+                    msg = f'Unknown filetype ({file_type}) for topic {key} in data mappings' # noqa
                     LOGGER.error(msg)
                     raise ValueError(msg)
                 defs = {
