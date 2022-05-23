@@ -112,7 +112,6 @@ class BaseAbstractData:
                 if the_data is None:
                     msg = f'Empty data for {identifier}-{key}; not publishing'  # noqa
                     LOGGER.warning(msg)
-                    notify = False
                 filename = DATADIR_PUBLIC / (rfp) / f"{identifier}.{format_}"
                 filename = filename.with_suffix(f'.{format_}')
                 LOGGER.info(f'Writing data to {filename}')
@@ -125,8 +124,8 @@ class BaseAbstractData:
                     mode = 'w'
                 with filename.open(mode) as fh:
                     fh.write(item[format_])
-                if notify:
-                    self.notify()
+        if notify:
+            self.notify()
         return True
 
     # TODO: fix annotation/types

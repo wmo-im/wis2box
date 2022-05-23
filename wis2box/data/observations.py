@@ -159,7 +159,7 @@ class ObservationDataCSV(BaseAbstractData):
                         publish.single(**pubargs)
 
                     except Exception as err:
-                        print(pubargs)
+                        LOGGER.error(pubargs)
                         raise err
 
         return True
