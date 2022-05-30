@@ -28,16 +28,24 @@ Features
 * download/access of data from WIS 2.0 network to your local environment
 * standards-based data services and access mechanisms:
 
-  * Data
+  * Data formats
 
     * `BUFR`_
     * `GeoJSON`_
 
+  * Message formats
+
+    * `GeoJSON`_
+
+  * Access and notification protocols
+
+    * `HTTP`_
+    * `MQTT`_
+
   * APIs
 
     * `OGC API`_
-    * `MQTT`_
-    * `STAC`_
+
 * robust and extensible plugin framework. Write your own data processing engines and integrate
   seamlessly into wis2box!
 * free and open source (FOSS)
@@ -47,6 +55,7 @@ Features
 .. _`WIS 2.0 principles`: https://community.wmo.int/activity-areas/wis/wis2-implementation
 .. _`WMO`: https://public.wmo.int
 .. _`OGC API`: https://ogcapi.ogc.org
+.. _`HTTP`: https://developer.mozilla.org/en-US/docs/Web/HTTP
 .. _`MQTT`: https://mqtt.org
 .. _`STAC`: https://stacspec.org
 .. _`BUFR`: https://en.wikipedia.org/wiki/BUFR
