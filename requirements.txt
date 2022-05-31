@@ -1,6 +1,7 @@
 isodate
 OWSLib
 parse
+pandas
 pygeometa
 pyoscar
 PyYAML
