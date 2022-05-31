@@ -31,6 +31,8 @@ LOGGER = logging.getLogger(__name__)
 class Handler:
     def __init__(self, filepath: Path, topic_hierarchy: str = None):
         self.filepath = filepath
+        self.filetype = filepath.suffix.replace(".", "")
+
         self.plugin = None
 
         if topic_hierarchy is not None:
@@ -41,16 +43,17 @@ class Handler:
             fuzzy = True
 
         try:
-            self.topic_hierarchy, self.plugin = validate_and_load(th, fuzzy=fuzzy) # noqa
+            self.topic_hierarchy, self.plugin = validate_and_load(th, self.filetype, fuzzy=fuzzy) # noqa
         except Exception as err:
             msg = f'Topic Hierarchy validation error: {err}'
             LOGGER.error(msg)
             raise ValueError(msg)
 
-    def handle(self) -> bool:
+    def handle(self, notify=False) -> bool:
         try:
             self.plugin.transform(self.filepath)
-            self.plugin.publish()
+            self.plugin.publish(notify)
+
         except Exception as err:
             msg = f'file {self.filepath} failed to transform/publish: {err}'
             LOGGER.warning(msg)

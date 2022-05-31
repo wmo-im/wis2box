@@ -44,11 +44,26 @@ SETTINGS = {
             },
             'properties': {
                 'properties': {
-                    'phenomenonTime': {
+                    'resultTime': {
                         'type': 'date',
                         'fields': {
                             'raw': {
                                 'type': 'keyword'
+                            }
+                        }
+                    },
+                    'phenomenonTime': {
+                        'type': 'text'
+                    },
+                    'value': {
+                        'type': 'float',
+                        'coerce': True
+                    },
+                    'metadata': {
+                        'properties': {
+                            'value': {
+                                'type': 'float',
+                                'coerce': True
                             }
                         }
                     }
@@ -128,7 +143,7 @@ class ElasticBackend(BaseBackend):
             'name': 'Elasticsearch',
             'data': f'{self.url}/{es_index}.*',
             'id_field': 'id',
-            'time_field': 'phenomenonTime'
+            'time_field': 'resultTime'
         }
 
     def delete_collection(self, collection_id: str) -> None:
@@ -180,7 +195,7 @@ class ElasticBackend(BaseBackend):
                 feature['properties']['id'] = feature['id']
                 if self._is_dataset(collection_id):
                     LOGGER.debug('Determinining index date from OM GeoJSON')
-                    date_ = parse_date(feature['properties']['phenomenonTime'])
+                    date_ = parse_date(feature['properties']['resultTime'])
                     es_index2 = f"{es_index}.{date_.strftime('%Y-%m-%d')}"
                 yield {
                     '_index': es_index2,

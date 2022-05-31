@@ -30,7 +30,8 @@ LOGGER = logging.getLogger(__name__)
 
 class BaseAbstractData:
     """Abstract data"""
-    def __init__(self, topic_hierarchy: TopicHierarchy) -> None:
+
+    def __init__(self, defs: dict) -> None:
         """
         Abstract data initializer
 
@@ -42,8 +43,9 @@ class BaseAbstractData:
 
         self.filename = None
         self.incoming_filepath = None
-        self.topic_hierarchy = TopicHierarchy(topic_hierarchy)
-
+        self.topic_hierarchy = TopicHierarchy(defs['topic_hierarchy'])
+        self.template = defs['template']
+        self.file_filter = defs['pattern']
         self.output_data = {}
         self.discovery_metadata = {}
 
@@ -88,53 +90,60 @@ class BaseAbstractData:
 
         :param input_data: `bytes` or `str` of data payload
 
-        :returns: `bool` of processsing result
+        :returns: `bool` of processing result
         """
 
         raise NotImplementedError()
 
-    def publish(self) -> bool:
-        LOGGER.debug('Writing output data')
-        for key, value in self.output_data.items():
-            LOGGER.debug(f'Writing product {key}')
+    def notify(self) -> bool:
+        raise NotImplementedError()
 
-            rfp = value['_meta']['relative_filepath']
-
-            for key2, value2 in value.items():
-                if key2 == '_meta':
+    def publish(self, notify: bool = False) -> bool:
+        # save output_data to disk and send notification if requested
+        LOGGER.info('Writing output data')
+        # iterate over items to publish
+        for identifier, item in self.output_data.items():
+            # get relative filepath
+            rfp = item['_meta']['relative_filepath']
+            # now iterate over formats
+            for format_, the_data in item.items():
+                if format_ == '_meta':  # not data, skip
                     continue
-                filename = DATADIR_PUBLIC / (rfp) / key
-                filename = filename.with_suffix(f'.{key2}')
-
-                LOGGER.debug(f'Writing data to {filename}')
-                filename.parent.mkdir(parents=True, exist_ok=True)
-
-                if value2 is None:
-                    msg = f'Empty data for {key2}; not publishing'
+                # check that we actually have data
+                if the_data is None:
+                    msg = f'Empty data for {identifier}-{key}; not publishing'  # noqa
                     LOGGER.warning(msg)
+                filename = DATADIR_PUBLIC / (rfp) / f"{identifier}.{format_}"
+                filename = filename.with_suffix(f'.{format_}')
+                LOGGER.info(f'Writing data to {filename}')
+                # make sure directory structure exists
+                filename.parent.mkdir(parents=True, exist_ok=True)
+                # check the mode we want to write data in
+                if isinstance(the_data, bytes):
+                    mode = 'wb'
                 else:
-                    if isinstance(value2, bytes):
-                        mode = 'wb'
-                    if isinstance(value2, str):
-                        mode = 'w'
-
-                    with filename.open(mode) as fh:
-                        fh.write(value2)
-
+                    mode = 'w'
+                with filename.open(mode) as fh:
+                    fh.write(item[format_])
+        if notify:
+            self.notify()
         return True
 
     # TODO: fix annotation/types
+
     def files(self) -> bool:
         LOGGER.debug('Listing processed files')
-        for key, value in self.output_data.items():
-            rfp = value['_meta']['relative_filepath']
-            for key2, value2 in value.items():
-                if key2 == '_meta':
+        for identifier, item in self.output_data.items():
+            rfp = item['_meta']['relative_filepath']
+            for format_, the_data in item.items():
+                if format_ == '_meta':
                     continue
-                if value2 is None:
+                if the_data is None:
                     continue
-                filename = DATADIR_PUBLIC / (rfp) / key
-                yield filename.with_suffix(f'.{key2}')
+
+                filename = DATADIR_PUBLIC / (rfp) / f'{identifier}'
+                filename = filename.with_suffix(f'.{format_}')
+                yield filename
 
     @property
     def directories(self):

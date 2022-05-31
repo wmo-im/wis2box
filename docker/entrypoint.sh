@@ -33,5 +33,8 @@ else
     echo "Creating ${WIS2BOX_API_CONFIG}."
     cp /wis2box-api/wis2box-api-config.yml ${WIS2BOX_API_CONFIG}
 fi
+
+git clone https://github.com/wmo-im/csv2bufr-templates.git ${WIS2BOX_DATADIR}/config/csv2bufr
+
 sr3 --logStdout start
 sleep infinity

@@ -68,9 +68,18 @@ class DiscoveryMetadata(BaseMetadata):
             'function': 'collection'
         }
 
+        canonical_link = {
+            'url': f"{API_URL}/collections/discovery-metadata/items/{identifier}",  # noqa
+            'type': 'OARec',
+            'name': identifier,
+            'description': identifier,
+            'function': 'canonical'
+        }
+
         md['distribution'] = {
             'oafeat': oafeat_link,
-            'mqtt': mqp_link
+            'mqtt': mqp_link,
+            'canonical': canonical_link
         }
 
         LOGGER.debug('Generating OARec discovery metadata')
@@ -85,16 +94,6 @@ class DiscoveryMetadata(BaseMetadata):
             anytext_bag.extend(v['keywords']['en'])
 
         record['properties']['_metadata-anytext'] = ' '.join(anytext_bag)
-
-        LOGGER.debug('Adding canonical link')
-        canonical_link = {
-            'url': f"{API_URL}/collections/discovery-metadata/items/{identifier}", # noqa
-            'type': 'OARec',
-            'name': identifier,
-            'description': identifier,
-            'function': 'canonical'
-        }
-        record['links'].append(canonical_link)
 
         return record
 
