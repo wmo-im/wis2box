@@ -89,6 +89,8 @@ services:
       - GF_ALERTING_ENABLED=false
       - GF_USERS_DEFAULT_THEME=dark
       - GF_DISABLE_SIGNOUT_MENU=true
+      - GF_SERVER_ROOT_URL=${WIS2BOX_URL:-http://localhost:8999}/monitoring
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
     ports:
       - 3000:3000
   data-consumer:
