@@ -10,7 +10,7 @@ The Grafana endpoint can be visualized at http://localhost/monitoring.
 Grafana uses two data sources to display monitoring data:
 
 - Prometheus: actively 'scrapes' data from the configured prometheus-client exporters every X seconds
-- Loki: logging endpoint for the docker-containers that compose the wis2box
+- Loki: logging endpoint for the Docker containers that compose the wis2box
 
 Prometheus exporters for wis2box
 --------------------------------
@@ -23,7 +23,7 @@ The exporters for wis2box are based on the `Prometheus Python Client <https://gi
 Loki logging
 ------------
 
-The logs of the following docker-containers are sent to Loki:
+The logs of the following Docker containers are sent to Loki:
 
 - data-consumer
 - mqp-publisher
