@@ -43,7 +43,7 @@ class Handler:
             fuzzy = True
 
         try:
-            self.topic_hierarchy, self.plugin = validate_and_load(th, self.filetype, fuzzy = fuzzy) # noqa
+            self.topic_hierarchy, self.plugin = validate_and_load(th, self.filetype, fuzzy=fuzzy) # noqa
         except Exception as err:
             msg = f'Topic Hierarchy validation error: {err}'
             LOGGER.error(msg)

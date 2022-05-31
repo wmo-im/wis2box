@@ -1,6 +1,5 @@
 isodate
 OWSLib
-pandas
 parse
 pygeometa
 pyoscar

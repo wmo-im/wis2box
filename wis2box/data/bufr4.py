@@ -23,7 +23,6 @@ import json
 import logging
 from pathlib import Path
 
-
 from bufr2geojson import transform as as_geojson
 
 from wis2box.data.base import BaseAbstractData

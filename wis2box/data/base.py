@@ -43,9 +43,9 @@ class BaseAbstractData:
 
         self.filename = None
         self.incoming_filepath = None
-        self.topic_hierarchy = TopicHierarchy(defs["topic_hierarchy"])
-        self.template = defs["template"]
-        self.file_filter = defs["pattern"]
+        self.topic_hierarchy = TopicHierarchy(defs['topic_hierarchy'])
+        self.template = defs['template']
+        self.file_filter = defs['pattern']
         self.output_data = {}
         self.discovery_metadata = {}
 
@@ -109,7 +109,7 @@ class BaseAbstractData:
             for format_, the_data in item.items():
                 if format_ == '_meta':  # not data, skip
                     continue
-                # check we actually have data
+                # check that we actually have data
                 if the_data is None:
                     msg = f'Empty data for {identifier}-{key}; not publishing'  # noqa
                     LOGGER.warning(msg)
@@ -118,7 +118,7 @@ class BaseAbstractData:
                 LOGGER.info(f'Writing data to {filename}')
                 # make sure directory structure exists
                 filename.parent.mkdir(parents=True, exist_ok=True)
-                # check mode we want to write data in
+                # check the mode we want to write data in
                 if isinstance(the_data, bytes):
                     mode = 'wb'
                 else:
@@ -141,8 +141,8 @@ class BaseAbstractData:
                 if the_data is None:
                     continue
 
-                filename = DATADIR_PUBLIC / (rfp) / f"{identifier}"
-                filename = filename.with_suffix(f".{format_}")
+                filename = DATADIR_PUBLIC / (rfp) / f'{identifier}'
+                filename = filename.with_suffix(f'.{format_}')
                 yield filename
 
     @property
