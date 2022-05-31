@@ -73,7 +73,7 @@ def load_datasets() -> Iterator[dict]:
     dm = oaf.collection_items('discovery-metadata')
 
     for topic in dm['features']:
-        for link in topic['properties']['associations']:
+        for link in topic['links']:
             if link['type'] == 'OAFeat':
                 yield link
 
