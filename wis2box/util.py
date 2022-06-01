@@ -94,7 +94,7 @@ def walk_path(path: Path, regex: str, recursive: bool) -> Iterator[Path]:
     :param path: required, string. os directory.
     :param regex: required, string. regex pattern to match files
 
-    :returns: list. List of csv filepaths.
+    :returns: list. Iterator of file paths.
     """
 
     reg = re.compile(regex)
