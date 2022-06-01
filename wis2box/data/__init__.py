@@ -56,9 +56,13 @@ def archive_data(source_directory: Path, target_directory: Path) -> None:
     today_dir = DATADIR_ARCHIVE / datetime.now().date().strftime('%Y-%m-%d')
     LOGGER.debug(f'Archive directory {today_dir}')
 
-    for file_or_dir in source_directory.glob('*'):
-        LOGGER.debug(f'Moving {file_or_dir} to {today_dir}')
-        shutil.move(file_or_dir, today_dir / file_or_dir.name)
+    for file in walk_path(source_directory, '.*', True):
+        LOGGER.debug(f'Moving {file} to {today_dir}')
+
+        file_rel_path = today_dir / file.relative_to(source_directory)
+        file_rel_path.parent.mkdir(parents=True, exist_ok=True)
+
+        shutil.move(file, file_rel_path)
 
     return
 
@@ -121,7 +125,7 @@ def show_info(topic_hierarchy: str) -> dict:
     return {
         'topic_hierarchy': th.dotpath,
         'directories': plugin.directories
-     }
+    }
 
 
 @click.group()
@@ -142,7 +146,7 @@ def archive(ctx, verbosity):
 
 @click.command()
 @click.pass_context
-@click.option('--days', '-d', help='Number of days of data to keep')
+@click.option('--days', '-d', help='Number of days of data to keep', type=int)
 @cli_helpers.OPTION_VERBOSITY
 def clean(ctx, days, verbosity):
     """Clean data directories and API indexes"""

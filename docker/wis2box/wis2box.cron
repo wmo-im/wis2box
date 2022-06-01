@@ -1,5 +1,5 @@
 # Clean out files older than WIS2BOX_DATA_RETENTION_DAYS daily at 0Z
-0 * * * * wis2box data clean --days=$WIS2BOX_DATA_RETENTION_DAYS
+0 0 * * * wis2box data clean --days=$WIS2BOX_DATA_RETENTION_DAYS
 
 # Archive data daily at 1Z
-1 * * * * wis2box data clean --days=$WIS2BOX_DATA_RETENTION_DAYS
+0 1 * * * wis2box data archive

@@ -21,7 +21,7 @@ Cleaning is performed by default daily at 0Z by the system, and can also be run 
 
 
    # delete data older than --days (force override)
-   wis2box data clean --days=$WIS2BOX_DATA_RETENTION_DAYS
+   wis2box data clean --days=30
 
 
 Archiving
