@@ -102,7 +102,7 @@ def check_station_datasets(datasets: list, wigos_id: str) -> Iterator[dict]:
             obs = oaf.collection_items(
                 topic['title'], wigos_station_identifier=wigos_id)
         except RuntimeError as err:
-            LOGGER.warning(f'Warning in topic {topic["title"]}: {err}')
+            LOGGER.warning(f'Warning from topic {topic["title"]}: {err}')
             continue
 
         if obs['numberMatched'] > 0:
