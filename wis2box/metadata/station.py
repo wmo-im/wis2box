@@ -112,6 +112,7 @@ def publish_station_collection() -> None:
     """
 
     backend = load_backend()
+    LOGGER.debug('Deleting existing station collection')
     try:
         backend.delete_collection('stations')
     except RuntimeError as err:
