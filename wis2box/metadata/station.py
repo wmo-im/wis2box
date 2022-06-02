@@ -112,6 +112,10 @@ def publish_station_collection() -> None:
     """
 
     backend = load_backend()
+    try:
+        backend.delete_collection('stations')
+    except RuntimeError as err:
+        LOGGER.warning(err)
 
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
