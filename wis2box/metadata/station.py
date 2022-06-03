@@ -95,7 +95,7 @@ def check_station_datasets(datasets: list, wigos_id: str) -> Iterator[dict]:
     oaf = Features(DOCKER_API_URL)
 
     for topic in datasets:
-        if topic == {}:
+        if not topic:
             continue
 
         try:
