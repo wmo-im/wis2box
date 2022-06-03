@@ -50,8 +50,8 @@ class ObservationDataBUFR(BaseAbstractData):
 
     def transform(self, input_data: Path) -> bool:
         LOGGER.info('Processing BUFR data')
-        with open(input_data) as fh:
-            results = as_geojson(fh, serialize=False)
+        with open(input_data, 'rb') as fh:
+            results = as_geojson(fh.read(), serialize=False)
             LOGGER.info('Iterating over GeoJSON features')
             # TODO: iterate over item['geojson']
             for collection in results:  # results is an iterator
