@@ -49,7 +49,7 @@ RUN apt-get update -y \
     && apt-get install -y ${DEBIAN_PACKAGES} \
     # install wis2box dependencies
     && pip3 install https://github.com/wmo-im/csv2bufr/archive/refs/tags/v0.1.2.zip \
-    && pip3 install https://github.com/wmo-im/bufr2geojson/archive/refs/tags/v0.1.0.zip \
+    && pip3 install https://github.com/wmo-im/bufr2geojson/archive/refs/tags/v0.2.0.zip \
     && pip3 install https://github.com/geopython/pygeometa/archive/master.zip \
     && pip3 install metpx-sr3 \
     # install wis2box
