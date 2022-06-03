@@ -53,18 +53,25 @@ Publish station collection and discovery metadata to the API:
 
 .. code-block:: bash
 
+    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/surface-weather-observations.yml
     wis2box metadata station cache $WIS2BOX_DATADIR/metadata/station/station_list.csv
     wis2box metadata station publish-collection
-    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/surface-weather-observations.yml
 
-
-Process data via CLI:
+Ingest and publish data via command-line interface (CLI) or an MQTT event driven workflow:
 
 .. code-block:: bash
 
-    wis2box data ingest --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed --path $WIS2BOX_DATADIR/observations/WIGOS_0-454-2-AWSNAMITAMBO_2021-07-07.csv
-    wis2box api add-collection-items --recursive --path $WIS2BOX_DATADIR/data/public
+    # CLI
+    wis2box data ingest --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed --path $WIS2BOX_DATADIR/observations
+    # OR
+    # Event driven
+    cp $WIS2BOX_DATADIR/observations/* $WIS2BOX_DATADIR/data/incoming/data/core/observations-surface-land/mw/FWCL/landFixed
 
+Re-publish the stations collection to additionally include link relations to collections with observations published from that station:
+
+.. code-block:: bash
+
+    wis2box metadata station publish-collection
 
 Logout of wis2box container:
 

@@ -6,6 +6,8 @@ jobs:
   main:
     strategy:
       fail-fast: false
+      matrix:
+        ingest: [cli, event]
     runs-on: ubuntu-latest
 
     steps:
@@ -39,7 +41,7 @@ jobs:
       run: |
         python3 wis2box-ctl.py start
         python3 wis2box-ctl.py status -a
-    - name: test wis2box data ingest/process/publish workflow ⚙️
+    - name: Setup wis2box collections ⚙️
       run: |
         docker exec wis2box sh -c " \
           wis2box environment create \
@@ -49,11 +51,20 @@ jobs:
           && wis2box metadata discovery publish /data/wis2box/metadata/discovery/surface-weather-observations.yml \
           && wis2box metadata station cache /data/wis2box/metadata/station/station_list.csv \
           && wis2box metadata station publish-collection \
-          && wis2box api add-collection -th data.core.observations-surface-land.mw.FWCL.landFixed /data/wis2box/metadata/discovery/surface-weather-observations.yml \
-          && cp /data/wis2box/observations/* /data/wis2box/data/incoming/data/core/observations-surface-land/mw/FWCL/landFixed"
+          && wis2box api add-collection -th data.core.observations-surface-land.mw.FWCL.landFixed /data/wis2box/metadata/discovery/surface-weather-observations.yml"
+    - name: Ingest & publish data from CLI
+      if: ${{ matrix.ingest == 'cli' }}
+      run: |
+        docker exec wis2box sh -c " \
+          wis2box data ingest -th data.core.observations-surface-land.mw.FWCL.landFixed -p /data/wis2box/observations"
+    - name: Ingest & publish data with event workflow
+      if: ${{ matrix.ingest == 'event' }}
+      run: |
+        docker exec wis2box sh -c " \
+          cp /data/wis2box/observations/* /data/wis2box/data/incoming/data/core/observations-surface-land/mw/FWCL/landFixed"
     - name: run integration tests ⚙️
       run: |
-        sleep 20
+        sleep 25
         pytest -s tests/integration
     - name: run flake8 ⚙️
       run: |
