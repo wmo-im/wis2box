@@ -18,4 +18,4 @@ data:
             bufr4:
                 plugin: wis2box.data.base.ObservationPassthrough
                 template:
-                file-pattern: '.bufr4$'
+                file-pattern: '\.bufr4$'
