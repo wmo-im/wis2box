@@ -13,3 +13,9 @@ data:
                 plugin: wis2box.data.base.BaseAbstractData
                 template:
                 file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.geojson$'
+    data.core.test-passthrough:
+        plugins:
+            bufr4:
+                plugin: wis2box.data.base.ObservationPassthrough
+                template:
+                file-pattern: '.bufr4$'
