@@ -66,7 +66,7 @@ class ObservationPassthrough(BaseAbstractData):
         self.output_data[identifier][filetype] = results
         self.output_data[identifier]['_meta'] = {}
         self.output_data[identifier]['_meta']['relative_filepath'] = self.get_local_filepath(datetime.now())  # noqa
-        self.output_data[identifier]['_meta']['md5'] = hashlib.md5(results).hexdigest()
+        self.output_data[identifier]['_meta']['md5'] = hashlib.md5(results).hexdigest()  # noqa
         return True
 
     def get_local_filepath(self, date_):
