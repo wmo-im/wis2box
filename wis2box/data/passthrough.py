@@ -147,7 +147,7 @@ def process_data(data: str, discovery_metadata: dict) -> bool:
     :returns: `bool` of processing result
     """
 
-    d = ObservationDataCSV(discovery_metadata)
+    d = ObservationPassthrough(discovery_metadata)
     LOGGER.info('Transforming data')
     d.transform(data)
     LOGGER.info('Publishing data')
