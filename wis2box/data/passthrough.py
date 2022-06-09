@@ -58,7 +58,7 @@ class ObservationPassthrough(BaseAbstractData):
         with input_data.open(mode="rb") as fh1:
             results = fh1.read()
 
-        identifier = input_data.name
+        identifier = input_data.with_suffix('')
         filetype = input_data.suffix
         filetype = filetype[1:]
 

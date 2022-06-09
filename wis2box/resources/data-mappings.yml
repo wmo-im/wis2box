@@ -16,7 +16,8 @@ data:
     data.core.test-passthrough:
         plugins:
             bufr4:
-                plugin: wis2box.data.base.ObservationPassthrough
+                plugin: wis2box.data.passthrough.ObservationPassthrough
                 template:
                 file-pattern: '\.bufr4$'
+
                 
