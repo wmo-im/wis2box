@@ -30,7 +30,7 @@ from urllib.parse import urlparse
 import paho.mqtt.publish as publish
 
 from wis2box.data.base import BaseAbstractData
-from wis2box.env import DATADIR, DATADIR_CONFIG, DATADIR_PUBLIC, BROKER
+from wis2box.env import DATADIR_PUBLIC, BROKER
 
 LOGGER = logging.getLogger(__name__)
 
@@ -54,11 +54,11 @@ class ObservationPassthrough(BaseAbstractData):
     def transform(self, input_data: Path) -> bool:
         LOGGER.debug('Passthrough')
         LOGGER.debug('Loading data')
-        
+
         with input_data.open(mode="rb") as fh1:
             results = fh1.read()
 
-        identifier = input_data.with_suffix('')
+        identifier = input_data.stem
         filetype = input_data.suffix
         filetype = filetype[1:]
 
@@ -75,7 +75,7 @@ class ObservationPassthrough(BaseAbstractData):
 
     def notify(self):
         for identifier, item in self.output_data.items():
-            LOGGER.debug(f'Notifying product {identifier}')
+            LOGGER.info(f'Notifying product {identifier}')
             # get relative file path
             rfp = item['_meta']['relative_filepath']
             # iterate over formats

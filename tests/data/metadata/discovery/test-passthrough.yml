@@ -61,7 +61,7 @@ identification:
         - climatologyMeteorologyAtmosphere
     extents:
         spatial:
-            - bbox: [-180,-90.0,180,90]
+            - bbox: [-180,-90,180,90]
               crs: 4326
         temporal:
             - begin: 2021-11-29
