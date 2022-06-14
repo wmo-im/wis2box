@@ -41,15 +41,15 @@ class Event(FlowCB):
 
             filepath = (Path('/') / incoming_message['relPath'])
 
-            LOGGER.info(f'Incoming filepath: {filepath}')
+            LOGGER.debug(f'Incoming filepath: {filepath}')
 
             try:
-                LOGGER.info(f'Processing {filepath}')
+                LOGGER.debug(f'Processing {filepath}')
                 handler = Handler(filepath)
                 if handler.handle():
-                    LOGGER.info('Data processed')
+                    LOGGER.debug('Data processed')
                     for filepath_out in handler.plugin.files():
-                        LOGGER.info(f'Public filepath: {filepath_out}')
+                        LOGGER.debug(f'Public filepath: {filepath_out}')
                         message = Message.fromFileData(
                             filepath_out,
                             self.options,

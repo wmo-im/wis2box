@@ -101,7 +101,6 @@ class BaseAbstractData:
     def publish(self, notify: bool = False) -> bool:
         # save output_data to disk and send notification if requested
         LOGGER.info('Writing output data')
-        LOGGER.info(self.__repr__)
         # iterate over items to publish
         for identifier, item in self.output_data.items():
             # get relative filepath

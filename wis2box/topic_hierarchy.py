@@ -37,11 +37,11 @@ class TopicHierarchy:
         self.dirpath = None
 
         if '/' in self.path:
-            LOGGER.info('Transforming from directory to dotted path')
+            LOGGER.debug('Transforming from directory to dotted path')
             self.dirpath = self.path
             self.dotpath = self.path.replace('/', '.')
         elif '.' in self.path:
-            LOGGER.info('Transforming from dotted to directory path')
+            LOGGER.debug('Transforming from dotted to directory path')
             self.dotpath = self.path
             self.dirpath = self.path.replace('.', '/')
 
@@ -72,7 +72,7 @@ def validate_and_load(topic_hierarchy: str, file_type: str = None,
               plugin object
     """
 
-    LOGGER.info(f'Validating topic hierarchy: {topic_hierarchy}')
+    LOGGER.debug(f'Validating topic hierarchy: {topic_hierarchy}')
     th = TopicHierarchy(topic_hierarchy)
     data_mappings = DATADIR_DATA_MAPPINGS['data']
     found = False
@@ -83,26 +83,26 @@ def validate_and_load(topic_hierarchy: str, file_type: str = None,
         raise ValueError(msg)
 
     if fuzzy:
-        LOGGER.info('Searching data mappings for fuzzy topic match')
+        LOGGER.debug('Searching data mappings for fuzzy topic match')
         for topic, defs in data_mappings.items():
 
             pattern = f'*{topic}*'
-            LOGGER.info(f'Attempting to fuzzy match with {pattern}')
+            LOGGER.debug(f'Attempting to fuzzy match with {pattern}')
             if fnmatch(th.dotpath, pattern):
 
-                LOGGER.info(f'Reloading topic to {topic}')
+                LOGGER.debug(f'Reloading topic to {topic}')
                 th = TopicHierarchy(topic)
 
-                LOGGER.info(f'Matched topic {topic_hierarchy} on {th.dotpath}')
+                LOGGER.debug(f'Matched topic {topic_hierarchy} on {th.dotpath}')
                 found = True
                 plugins = defs['plugins']
 
 
     else:
-        LOGGER.info('Searching data mappings for exact topic match')
+        LOGGER.debug('Searching data mappings for exact topic match')
         if th.dotpath in data_mappings:
 
-            LOGGER.info(f'Matched topic {th.path} on {th.dotpath}')
+            LOGGER.debug(f'Matched topic {th.path} on {th.dotpath}')
             found = True
             plugins = data_mappings[th.dotpath]['plugins']
 
@@ -114,15 +114,14 @@ def validate_and_load(topic_hierarchy: str, file_type: str = None,
     if file_type is None:
         LOGGER.warning('File type missing')
         file_type = next(iter(plugins))
-        LOGGER.info(f'File type set to first type: {file_type}')
+        LOGGER.debug(f'File type set to first type: {file_type}')
 
     if file_type not in plugins:
         msg = f'Unknown file type ({file_type}) for topic {th.dotpath}'  # noqa
         LOGGER.error(msg)
         raise ValueError(msg)
 
-    LOGGER.info(f'Adding plugin definition for {file_type}')
-    LOGGER.info(f'{plugins[file_type]["plugin"]}')
+    LOGGER.debug(f'Adding plugin definition for {file_type}')
     data_defs = {
         'topic_hierarchy': th.dotpath,
         'codepath': plugins[file_type]['plugin'],

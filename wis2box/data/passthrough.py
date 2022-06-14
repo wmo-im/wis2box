@@ -75,7 +75,7 @@ class ObservationPassthrough(BaseAbstractData):
 
     def notify(self):
         for identifier, item in self.output_data.items():
-            LOGGER.info(f'Notifying product {identifier}')
+            LOGGER.debug(f'Notifying product {identifier}')
             # get relative file path
             rfp = item['_meta']['relative_filepath']
             # iterate over formats
