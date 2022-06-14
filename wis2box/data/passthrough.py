@@ -24,13 +24,12 @@ import hashlib
 import json
 import logging
 from pathlib import Path
-import re
 from urllib.parse import urlparse
 
 import paho.mqtt.publish as publish
 
 from wis2box.data.base import BaseAbstractData
-from wis2box.env import DATADIR, DATADIR_CONFIG, DATADIR_PUBLIC, BROKER
+from wis2box.env import DATADIR_PUBLIC, BROKER
 
 LOGGER = logging.getLogger(__name__)
 
@@ -50,15 +49,14 @@ class ObservationPassthrough(BaseAbstractData):
         super().__init__(topic_hierarchy)
         self.output_data = {}
 
-
     def transform(self, input_data: Path) -> bool:
         LOGGER.debug('Passthrough')
         LOGGER.debug('Loading data')
-        
+
         with input_data.open(mode="rb") as fh1:
             results = fh1.read()
 
-        identifier = input_data.with_suffix('')
+        identifier = input_data.stem
         filetype = input_data.suffix
         filetype = filetype[1:]
 
