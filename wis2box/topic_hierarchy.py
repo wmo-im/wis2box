@@ -45,7 +45,6 @@ class TopicHierarchy:
             self.dotpath = self.path
             self.dirpath = self.path.replace('.', '/')
 
-
     def is_valid(self) -> bool:
         """
         Determines whether a topic hierarchy is valid
@@ -90,13 +89,12 @@ def validate_and_load(topic_hierarchy: str, file_type: str = None,
             LOGGER.debug(f'Attempting to fuzzy match with {pattern}')
             if fnmatch(th.dotpath, pattern):
 
-                LOGGER.debug(f'Reloading topic to {topic}')
-                th = TopicHierarchy(topic)
-
-                LOGGER.debug(f'Matched topic {topic_hierarchy} on {th.dotpath}')
+                LOGGER.debug(f'Matched topic {th.path} on {th.dotpath}')
                 found = True
                 plugins = defs['plugins']
 
+                LOGGER.debug(f'Reloading topic to {topic}')
+                th = TopicHierarchy(topic)
 
     else:
         LOGGER.debug('Searching data mappings for exact topic match')
@@ -131,4 +129,3 @@ def validate_and_load(topic_hierarchy: str, file_type: str = None,
     }
     plugin = load_plugin('data', data_defs)
     return th, plugin
-

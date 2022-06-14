@@ -24,7 +24,6 @@ import hashlib
 import json
 import logging
 from pathlib import Path
-import re
 from urllib.parse import urlparse
 
 import paho.mqtt.publish as publish
@@ -49,7 +48,6 @@ class ObservationPassthrough(BaseAbstractData):
 
         super().__init__(topic_hierarchy)
         self.output_data = {}
-
 
     def transform(self, input_data: Path) -> bool:
         LOGGER.debug('Passthrough')
