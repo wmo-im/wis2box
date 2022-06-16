@@ -89,7 +89,8 @@ class ElasticBackend(BaseBackend):
         self.type = 'Elasticsearch'
         self.url = defs.get('url').rstrip('/')
 
-        self.conn = Elasticsearch([self.url])
+        self.conn = Elasticsearch([self.url], timeout=30,
+                                  max_retries=10, retry_on_timeout=True)
 
     @staticmethod
     def es_id(collection_id: str) -> str:

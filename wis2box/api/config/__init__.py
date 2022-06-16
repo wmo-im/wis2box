@@ -30,7 +30,7 @@ LOGGER = logging.getLogger(__name__)
 
 def load_config() -> Any:
     """
-    Load wis2box config
+    Load wis2box API config
 
     :returns: plugin object
     """
@@ -40,7 +40,7 @@ def load_config() -> Any:
     codepath = PLUGINS['api_config'][API_TYPE]['plugin']
     defs = {
         'codepath': codepath,
-        'condig': API_CONFIG
+        'config': API_CONFIG
     }
 
     return load_plugin('api_config', defs)
