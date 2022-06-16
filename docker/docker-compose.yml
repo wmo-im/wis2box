@@ -100,6 +100,7 @@ services:
       - mosquitto
     command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
 
+
   ca-republisher:
     container_name: ca-republisher
     image: ghcr.io/metpx/sarracenia:latest
