@@ -38,6 +38,11 @@ PLUGINS = {
         'pygeoapi': {
             'plugin': 'wis2box.api.config.pygeoapi.PygeoapiConfig'
         }
+    },
+    'pubsub': {
+        'mqtt': {
+            'plugin': 'wis2box.pubsub.mqtt.MQTTPubSubClient'
+        }
     }
 }
 
@@ -46,6 +51,7 @@ class PluginTypes(Enum):
     API_BACKEND = 'api_backend'
     API_CONFIG = 'api_config'
     DATA = 'data'
+    PUBSUB = 'pubsub'
 
 
 def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
@@ -62,7 +68,7 @@ def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
     codepath = defs.get('codepath')
     fmt = defs.get('format')
 
-    if plugin_type in ['api_backend', 'api_config']:
+    if plugin_type in ['api_backend', 'api_config', 'pubsub']:
         plugin_mappings = PLUGINS
     else:
         plugin_mappings = DATADIR_DATA_MAPPINGS
@@ -97,13 +103,7 @@ def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
     module = importlib.import_module(packagename)
     class_ = getattr(module, classname)
 
-    # is this still needed or do we just want class_(defs)
-    if plugin_type == PluginTypes.DATA.value:
-        plugin = class_(defs)
-    elif plugin_type == PluginTypes.API_BACKEND.value:
-        plugin = class_(defs)
-    elif plugin_type == PluginTypes.API_CONFIG.value:
-        plugin = class_(defs)
+    plugin = class_(defs)
 
     return plugin
 

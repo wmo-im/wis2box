@@ -54,8 +54,9 @@ AUTH_STORE = os.environ.get('WIS2BOX_AUTH_STORE')
 OSCAR_API_TOKEN = os.environ.get('WIS2BOX_OSCAR_API_TOKEN')
 URL = os.environ.get('WIS2BOX_URL')
 
+BROKER_TYPE = os.environ.get('WIS2BOX_BROKER_TYPE')
 BROKER = os.environ.get('WIS2BOX_BROKER')
-MQTT_URL = os.environ.get('WIS2BOX_MQTT_URL')
+BROKER_PUBLIC = os.environ.get('WIS2BOX_BROKER_PUBLIC')
 
 try:
     DATA_RETENTION_DAYS = int(os.environ.get('WIS2BOX_DATA_RETENTION_DAYS'))
@@ -78,8 +79,9 @@ if 'WIS2BOX_DATADIR_DATA_MAPPINGS' in os.environ:
         LOGGER.error(msg)
         raise EnvironmentError(msg)
 
+missing_environment_variables = []
 
-if None in [
+required_environment_variables = [
     DATADIR,
     DATADIR_INCOMING,
     DATADIR_PUBLIC,
@@ -87,10 +89,17 @@ if None in [
     OSCAR_API_TOKEN,
     API_TYPE,
     API_URL,
-    MQTT_URL,
+    BROKER_PUBLIC,
     URL
-]:
-    msg = 'Environment variables not set!'
+]
+
+for rev in required_environment_variables:
+    LOGGER.warning(f'Missing envirionment variable {rev}')
+    if rev is None:
+        missing_environment_variables.append(rev)
+
+if missing_environment_variables:
+    msg = f'Environment variables not set! {missing_environment_variables}'
     LOGGER.error(msg)
     raise EnvironmentError(msg)
 

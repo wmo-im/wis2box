@@ -19,28 +19,49 @@
 #
 ###############################################################################
 
+from urllib.parse import urlparse
 import logging
-from typing import Any
-
-from wis2box.env import API_TYPE, API_CONFIG
-from wis2box.plugin import load_plugin, PLUGINS
 
 LOGGER = logging.getLogger(__name__)
 
 
-def load_config() -> Any:
-    """
-    Load wis2box API config
+class BasePubSubClient:
+    """Abstract PubSub client"""
+    def __init__(self, broker: str) -> None:
+        """
+        PubSub initializer
 
-    :returns: plugin object
-    """
+        :param broker: `str` of broker RFC1738 URL
 
-    LOGGER.debug('Loading config')
+        :returns: `None`
+        """
 
-    codepath = PLUGINS['api_config'][API_TYPE]['plugin']
-    defs = {
-        'codepath': codepath,
-        'config': API_CONFIG
-    }
+        self.type = None
+        self.broker = broker
+        self.broker_url = urlparse(self.broker['url'])
 
-    return load_plugin('api_config', defs)
+    def pub(self, topic: str, message: str) -> bool:
+        """
+        Publish a message to a broker/topic
+
+        :param topic: `str` of topic
+        :param message: `str` of message
+
+        :returns: `bool` of publish result
+        """
+
+        raise NotImplementedError()
+
+    def sub(self, topic: str) -> None:
+        """
+        Subscribe to a broker/topic
+
+        :param topic: `str` of topic
+
+        :returns: `None`
+        """
+
+        raise NotImplementedError()
+
+    def __repr__(self):
+        return '<BasePubSubClient>'

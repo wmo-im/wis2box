@@ -19,28 +19,18 @@
 #
 ###############################################################################
 
+import click
 import logging
-from typing import Any
 
-from wis2box.env import API_TYPE, API_CONFIG
-from wis2box.plugin import load_plugin, PLUGINS
+from wis2box.pubsub.watch import watch
 
 LOGGER = logging.getLogger(__name__)
 
 
-def load_config() -> Any:
-    """
-    Load wis2box API config
+@click.group()
+def pubsub():
+    """PubSub workflow"""
+    pass
 
-    :returns: plugin object
-    """
 
-    LOGGER.debug('Loading config')
-
-    codepath = PLUGINS['api_config'][API_TYPE]['plugin']
-    defs = {
-        'codepath': codepath,
-        'config': API_CONFIG
-    }
-
-    return load_plugin('api_config', defs)
+pubsub.add_command(watch)

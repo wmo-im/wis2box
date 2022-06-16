@@ -30,7 +30,7 @@ LOGGER = logging.getLogger(__name__)
 
 def load_backend() -> Any:
     """
-    Load wis2box backend
+    Load wis2box API backend
 
     :returns: plugin object
     """

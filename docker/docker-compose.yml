@@ -35,6 +35,23 @@ services:
     volumes:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:ro
 
+#  minio: 
+#    image: minio/minio
+#    environment:
+#      MINIO_ROOT_USER: foo 
+#      MINIO_ROOT_PASSWORD: 12345678FOO
+#    command: server /data
+##    volumes:
+##      - s3-data:/data
+#    volumes:
+#      - type: bind
+#        source: /Users/tkralidi/Dev/eoepca/data
+#        target: /data
+#    ports:
+#      - "9000:9000"
+#    deploy:
+#      replicas: 1-
+
   elasticsearch:
     container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
@@ -57,7 +74,7 @@ services:
     healthcheck:
       test: ["CMD", "curl", "http://localhost:9200"]
       interval: 5s
-      retries: 10
+      retries: 100
 
   mosquitto:
     container_name: mosquitto
@@ -70,20 +87,35 @@ services:
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
 
+#  data-consumer:
+#    container_name: data-consumer
+#    image: ghcr.io/metpx/sarracenia:latest
+#    env_file:
+#      - default.env
+#      - ../dev.env
+#    volumes:
+#      - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
+#      - ./sarracenia/admin.conf:/root/.config/sr3/admin.conf:rw
+#      - ./sarracenia/default.conf:/root/.config/sr3/default.conf:rw
+#      - ./sarracenia/incoming.conf:/root/.config/sr3/watch/incoming.conf:rw
+#    depends_on:
+#      - mosquitto
+#    command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
+
   data-consumer:
     container_name: data-consumer
-    image: ghcr.io/metpx/sarracenia:latest
+    build:
+      context: ..
+    #user: wis2box:wis2box
     env_file:
       - default.env
       - ../dev.env
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
-      - ./sarracenia/admin.conf:/root/.config/sr3/admin.conf:rw
-      - ./sarracenia/default.conf:/root/.config/sr3/default.conf:rw
-      - ./sarracenia/incoming.conf:/root/.config/sr3/watch/incoming.conf:rw
+#      - ../wis2box/:/usr/local/lib/python3.8/dist-packages/wis2box-0.2.dev0-py3.8.egg/wis2box/
     depends_on:
       - mosquitto
-    command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
+    command: "wis2box pubsub watch --path /data/wis2box/incoming --verbosity INFO"
 
   mqp-publisher:
     container_name: mqp-publisher
@@ -143,8 +175,10 @@ services:
     volumes:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
       - ./wis2box/wis2box.cron:/etc/cron.d/wis2box:ro
+#      - ../wis2box/:/usr/local/lib/python3.8/dist-packages/wis2box-0.2.dev0-py3.8.egg/wis2box/
     depends_on:
       - mosquitto
+    command: "sr3 --logStdout start && sleep infinity"
 
   wis2box-auth:
     container_name: wis2box-auth

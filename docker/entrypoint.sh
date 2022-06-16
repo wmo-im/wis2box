@@ -34,7 +34,9 @@ else
     cp /wis2box-api/wis2box-api-config.yml ${WIS2BOX_API_CONFIG}
 fi
 
-git clone https://github.com/wmo-im/csv2bufr-templates.git ${WIS2BOX_DATADIR}/config/csv2bufr
+if [ ! -d "${WIS2BOX_DATADIR}/config/csv2bufr" ]; then
+  git clone https://github.com/wmo-im/csv2bufr-templates.git ${WIS2BOX_DATADIR}/config/csv2bufr
+fi
 
-sr3 --logStdout start
-sleep infinity
+#sr3 --logStdout start
+#sleep infinity

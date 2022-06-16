@@ -19,28 +19,14 @@
 #
 ###############################################################################
 
+from enum import Enum
 import logging
-from typing import Any
-
-from wis2box.env import API_TYPE, API_CONFIG
-from wis2box.plugin import load_plugin, PLUGINS
 
 LOGGER = logging.getLogger(__name__)
 
 
-def load_config() -> Any:
-    """
-    Load wis2box API config
-
-    :returns: plugin object
-    """
-
-    LOGGER.debug('Loading config')
-
-    codepath = PLUGINS['api_config'][API_TYPE]['plugin']
-    defs = {
-        'codepath': codepath,
-        'config': API_CONFIG
-    }
-
-    return load_plugin('api_config', defs)
+class Topics(Enum):
+    DATA_INCOMING = 'xlocal/data_incoming'
+    DATA_TRANSFORMED = 'xlocal/data_transferred'
+    DATA_PUBLISHED = 'xlocal/data_published'
+    METADATA_PUBLISHED = 'xlocal/metadata_published'
