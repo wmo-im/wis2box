@@ -33,4 +33,4 @@ EXPOSE 8000
 
 ENV PYTHONUNBUFFERED="true"
 
-ENTRYPOINT [ "python3","-u","metrics_collector.py" ]
+ENTRYPOINT [ "python3","-u","file_metrics_collector.py" ]

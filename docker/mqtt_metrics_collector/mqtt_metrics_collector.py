@@ -21,13 +21,15 @@
 
 import os
 import logging
+import json
 
 import paho.mqtt.client as mqtt
 import random
 
 import sys
+import time
 
-from prometheus_client import start_http_server, Counter
+from prometheus_client import start_http_server, Gauge, Counter
 
 # de-register default-collectors
 from prometheus_client import REGISTRY, PROCESS_COLLECTOR, PLATFORM_COLLECTOR
@@ -63,22 +65,18 @@ def sub_connect(client, userdata, flags, rc, properties=None):
     :returns: `None`
     """
 
-    logger.info(f"on connection to subscribe: {mqtt.connack_string(rc)}")
+    logger.info(f"received connack_string : {mqtt.connack_string(rc)}")
     for s in ["xpublic/#"]:
         client.subscribe(s, qos=1)
 
 
-mqtt_msg_counter = Counter('mqtt_msg_count',
-                           'Nr of messages seen on MQTT')
-mqtt_msg_topic_counter = Counter('mqtt_msg_count_topic',
-                                 'Nr of messages seen on MQTT, by topic',
-                                 ["topic"])
+mqtt_msg_array = []
 
 
 def sub_mqtt_metrics(client, userdata, msg):
     """
     function executed 'on_message' for paho.mqtt.client
-    updates counters for each new message received
+    updates gauges for each new message received
 
     :param client: client-object associated to 'on_message'
     :param userdata: MQTT-userdata
@@ -86,10 +84,21 @@ def sub_mqtt_metrics(client, userdata, msg):
 
     :returns: `None`
     """
-    # m = json.loads(msg.payload.decode('utf-8'))
     logger.info(f"Received message on topic ={msg.topic}")
-    mqtt_msg_topic_counter.labels(msg.topic).inc(1)
-    mqtt_msg_counter.inc(1)
+    global mqtt_msg_array
+    # update msg-array
+    msg_payload = json.loads(msg.payload.decode('utf-8'))
+    rel_path = msg_payload['relPath']
+    logger.info(f"rel_path={rel_path}")
+    file_type = rel_path.split('.')[-1]
+    topic_date = rel_path.split('/')[0].replace('-', '')
+    wigos_id = ''
+    if 'WIGOS_' in rel_path and topic_date in rel_path:
+        wigos_id = rel_path.split('WIGOS_')[1].split('_'+topic_date)[0]
+    if 'bufr' in file_type:
+        mqtt_msg_array.append({'msg_time': time.time(),
+                               'topic': msg.topic,
+                               'wigos_id': wigos_id})
 
 
 def gather_mqtt_metrics():
@@ -98,9 +107,6 @@ def gather_mqtt_metrics():
 
     :returns: `None`
     """
-    # explicitly set the counter to 0 at the start
-    mqtt_msg_counter.inc(0)
-
     # parse username and password out of the WIS2BOX_BROKER variable
     BROKER = os.environ.get('WIS2BOX_BROKER')
 
@@ -121,9 +127,58 @@ def gather_mqtt_metrics():
         client.on_message = sub_mqtt_metrics
         client.username_pw_set(mqtt_username, mqtt_pwd)
         client.connect(mqtt_host)
-        client.loop_forever()
+        loop_forever = True
+        # use a Gauge to measure number of messages per hour
+        mqtt_msg_count_ph = Gauge(
+            'mqtt_msg_per_hour',
+            'Msg for bufr4 on xpublic per hour')
+        # intialize gauge at 0
+        mqtt_msg_count_ph.set(0)
+        # Counter to measure total number of messages
+        mqtt_msg_count_total = Counter(
+            'mqtt_msg_total',
+            'Msg for bufr4 on xpublic total')
+        # Counter to measure total messages per wigos-id
+        mqtt_msg_count_wsi_total = Counter(
+            'mqtt_msg_wsi_total',
+            'Msg for bufr4 on xpublic total, by WIGOS-ID',
+            ["wigos_id"])
+        global mqtt_msg_array
+        mqtt_msg_array = []
+        mqtt_msg_lasthour_array = []
+        sleep_secs = 30
+        while loop_forever:
+            # start loop
+            client.loop_start()
+            # sleep while we collect messages
+            logger.debug(f"Sleep for {sleep_secs} seconds ")
+            time.sleep(sleep_secs)
+            # take snapshot of messages in mqtt_msg_array
+            mqtt_msg_snapshot = mqtt_msg_array[:]
+            # reset array to receive new messages
+            mqtt_msg_array = []
+            logger.info(
+                f"len(mqtt_msg_snapshot)={len(mqtt_msg_snapshot)}")
+            # get reference time to prune messages dated more than 1 hour ago
+            past = time.time() - 1*60*60  # 1 hour
+            # prune old messages
+            mqtt_msg_lasthour_array = [
+                m for m in mqtt_msg_lasthour_array if m['msg_time'] >= past
+            ]
+            for msg in mqtt_msg_snapshot:
+                # add msg of snapshot into lasthour_array
+                mqtt_msg_lasthour_array.append(msg)
+                # update counter per wigos_id
+                mqtt_msg_count_wsi_total.labels(msg['wigos_id']).inc(1)
+                # update total counter
+                mqtt_msg_count_total.inc(1)
+            # set per-hour gauge using length of lasthour_array
+            mqtt_msg_count_ph.set(len(mqtt_msg_lasthour_array))
+            # stop loop
+            client.loop_stop()
+
     except Exception as e:
-        logger.error(f"Failed to setup MQTT-client with error: {e}")
+        logger.error(f"gather_mqtt_metrics() threw error: {e}")
 
 
 def main():

@@ -29,7 +29,7 @@ services:
       vpcbr: # this is the place where we assign the static ipv4 address
         ipv4_address: 10.5.0.2
       default:
-    # mqtt_metrics_collector, listens to mqtt-broker
+  # mqtt_metrics_collector, listens to mqtt-broker to collect metrics on published messages
   mqtt_metrics_collector:
     <<: *logging
     container_name: mqtt_metrics_collector
@@ -42,15 +42,15 @@ services:
       - mosquitto
     ports:
       - 8001:8001
-  # metrics_collector, to collect metrics for wis2box-services
-  metrics_collector:
+  # file_metrics_collector, to collect metrics for files in the wis2box-data-directory
+  file_metrics_collector:
     <<: *logging
-    container_name: metrics_collector
+    container_name: file_metrics_collector
     env_file:
       - default.env
       - ../dev.env
     build:
-      context: ./metrics_collector
+      context: ./file_metrics_collector
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/data/public:/data/wis2box/data/public:ro
       - ${WIS2BOX_HOST_DATADIR}/data/incoming:/data/wis2box/data/incoming:ro
@@ -66,6 +66,8 @@ services:
       - prometheus-data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090
   # Grafana, graphical monitoring dashboards for wis2box using data from loki and prometheus
   grafana:
     <<: *logging
@@ -106,6 +108,8 @@ services:
   wis2box-api:
     <<: *logging
   wis2box-auth:
+    <<: *logging
+  elasticsearch:
     <<: *logging
 
 volumes:

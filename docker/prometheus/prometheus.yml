@@ -12,10 +12,10 @@ alerting:
       # - alertmanager:9093
 
 scrape_configs:
-  - job_name: 'metrics_collector'
+  - job_name: 'file_metrics_collector'
     scrape_interval: 5s
     static_configs:
-    - targets: ['metrics_collector:8000']
+    - targets: ['file_metrics_collector:8000']
   - job_name: 'mqtt_metrics_collector'
     scrape_interval: 5s
     static_configs:
