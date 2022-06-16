@@ -96,8 +96,7 @@ class BaseAbstractData:
         raise NotImplementedError()
 
     def notify(self) -> bool:
-        pass
-        #raise NotImplementedError()
+        raise NotImplementedError()
 
     def publish(self, notify: bool = False) -> bool:
         # save output_data to disk and send notification if requested
