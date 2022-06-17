@@ -115,7 +115,7 @@ services:
 #      - ../wis2box/:/usr/local/lib/python3.8/dist-packages/wis2box-0.2.dev0-py3.8.egg/wis2box/
     depends_on:
       - mosquitto
-    command: "wis2box pubsub watch --path /data/wis2box/incoming --verbosity INFO"
+    command: sh -c "wis2box pubsub watch --path /data/wis2box/incoming --verbosity INFO"
 
   mqp-publisher:
     container_name: mqp-publisher
@@ -131,36 +131,6 @@ services:
     depends_on:
       - mosquitto
     command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
-
-  ca-republisher:
-    container_name: ca-republisher
-    image: ghcr.io/metpx/sarracenia:latest
-    env_file:
-      - default.env
-      - ../dev.env
-    volumes:
-      - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
-      - ./sarracenia/admin.conf:/root/.config/sr3/admin.conf:rw
-      - ./sarracenia/default.conf:/root/.config/sr3/default.conf:rw
-      - ./sarracenia/subscribe/ca-republisher.conf:/root/.config/sr3/subscribe/ca-republisher.conf:rw
-    depends_on:
-      - mosquitto
-    #command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
-
-  de-republisher:
-    container_name: de-republisher
-    image: ghcr.io/metpx/sarracenia:latest
-    env_file:
-      - default.env
-      - ../dev.env
-    volumes:
-      - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
-      - ./sarracenia/admin.conf:/root/.config/sr3/admin.conf:rw
-      - ./sarracenia/default.conf:/root/.config/sr3/default.conf:rw
-      - ./sarracenia/subscribe/de-republisher.conf:/root/.config/sr3/subscribe/de-republisher.conf:rw
-    depends_on:
-      - mosquitto
-    # command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
 
   wis2box:
     container_name: wis2box
@@ -178,7 +148,7 @@ services:
 #      - ../wis2box/:/usr/local/lib/python3.8/dist-packages/wis2box-0.2.dev0-py3.8.egg/wis2box/
     depends_on:
       - mosquitto
-    command: "sr3 --logStdout start && sleep infinity"
+    command: sh -c "sr3 --logStdout start && sleep infinity"
 
   wis2box-auth:
     container_name: wis2box-auth

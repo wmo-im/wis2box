@@ -146,30 +146,6 @@ services:
     depends_on:
       - mosquitto
 
-  ca-republisher:
-    container_name: ca-republisher
-    build:
-      context: ./ca-republisher
-    env_file:
-      - default.env
-      - ../dev.env
-    volumes:
-      - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
-    depends_on:
-      - mosquitto
-
-  de-republisher:
-    container_name: de-republisher
-    build:
-      context: ./de-republisher
-    env_file:
-      - default.env
-      - ../dev.env
-    volumes:
-      - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
-    depends_on:
-      - mosquitto
-
   wis2box:
     container_name: wis2box
     build:
