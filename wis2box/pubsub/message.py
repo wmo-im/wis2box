@@ -81,7 +81,7 @@ class PubSubMessage:
 
         sh = getattr(hashlib, algorithm)()
 
-        with open(self.filepath, 'rb') as fh:
+        with self.filepath.open('rb') as fh:
             while True:
                 chunk = fh.read(sh.block_size)
                 if not chunk:

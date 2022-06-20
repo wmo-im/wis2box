@@ -115,7 +115,7 @@ services:
 #      - ../wis2box/:/usr/local/lib/python3.8/dist-packages/wis2box-0.2.dev0-py3.8.egg/wis2box/
     depends_on:
       - mosquitto
-    command: sh -c "wis2box pubsub watch --path /data/wis2box/incoming --verbosity INFO"
+    command: sh -c "wis2box pubsub watch --path /data/wis2box/data/incoming --verbosity INFO"
 
   mqp-publisher:
     container_name: mqp-publisher

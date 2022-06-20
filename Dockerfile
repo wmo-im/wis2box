@@ -69,4 +69,4 @@ WORKDIR /home/wis2box
 
 COPY ./docker/entrypoint.sh /entrypoint.sh
 
-ENTRYPOINT [ "/entrypoint.sh" ]
+RUN bash /entrypoint.sh

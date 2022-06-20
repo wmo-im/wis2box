@@ -94,12 +94,13 @@ required_environment_variables = [
 ]
 
 for rev in required_environment_variables:
-    LOGGER.warning(f'Missing envirionment variable {rev}')
     if rev is None:
-        missing_environment_variables.append(rev)
+        envvar_name = [k for k, v in locals().items() if v is rev][0]
+        LOGGER.warning(f'Missing environment variable {envvar_name}')
+        missing_environment_variables.append(envvar_name)
 
 if missing_environment_variables:
-    msg = f'Environment variables not set! {missing_environment_variables}'
+    msg = f'Environment variables not set! = {missing_environment_variables}'
     LOGGER.error(msg)
     raise EnvironmentError(msg)
 
