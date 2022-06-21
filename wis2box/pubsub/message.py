@@ -50,7 +50,7 @@ class PubSubMessage:
         """
 
         self.type = type_
-        self.filepath = filepath
+        self.filepath = Path(filepath)
         self.message = {}
 
     def prepare(self):
@@ -95,7 +95,7 @@ class Sarracenia_v03Message(PubSubMessage):
     def __init__(self, filepath):
         super().__init__('sarracenia-v03', filepath)
 
-        self.message['relPath'] = self.filepath
+        self.message['relPath'] = self.filepath.as_posix()
         self.message['baseUrl'] = '/'
 
     def prepare(self):
