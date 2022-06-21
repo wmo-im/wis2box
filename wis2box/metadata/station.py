@@ -195,9 +195,9 @@ def cache(ctx, filepath, verbosity):
         except RuntimeError:
             click.echo(f'Station not found: {wsi}')
 
-        filename = f"{DATADIR}/metadata/station/{wsi}.json"
+        filename = DATADIR / 'metadata' / 'station' / f'{wsi}.json'
         LOGGER.debug(f'Writing file to {filename}')
-        with open(filename, 'w') as fh:
+        with filename.open('w') as fh:
             json.dump(station_report, fh)
 
 
