@@ -39,3 +39,5 @@ fi
 if [ ! -d "$WIS2BOX_DATADIR/config/csv2bufr" ]; then
   git clone https://github.com/wmo-im/csv2bufr-templates.git $WIS2BOX_DATADIR/config/csv2bufr
 fi
+
+wis2box pubsub watch --path ${WIS2BOX_DATADIR}/data/incoming --verbosity INFO

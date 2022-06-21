@@ -114,7 +114,6 @@ services:
       - ./wis2box/wis2box.cron:/etc/cron.d/wis2box:ro
     depends_on:
       - mosquitto
-    command: sh -c "sr3 --logStdout start && sleep infinity"
 
   wis2box-auth:
     container_name: wis2box-auth
