@@ -118,7 +118,7 @@ services:
   wis2box-auth:
     container_name: wis2box-auth
     build:
-      context: ./auth
+      context: ./wis2box-auth
     env_file:
       - default.env
       - ../dev.env

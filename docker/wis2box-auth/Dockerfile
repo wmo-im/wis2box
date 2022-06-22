@@ -28,8 +28,8 @@ RUN apt-get update -y \
 RUN mkdir -p /wis2box-auth/wis2box-auth/
 
 COPY ./app.py /wis2box-auth/wis2box-auth/app.py
-COPY ./entrypoint.sh /entrypoint.sh
+COPY ./entrypoint.sh /auth-entrypoint.sh
 
 WORKDIR /wis2box-auth
 
-CMD ["sh", "-c", "/entrypoint.sh"]
+CMD ["sh", "-c", "/auth-entrypoint.sh"]

@@ -22,9 +22,9 @@
 
 # wis2box-auth entry script
 
-echo "START /entrypoint.sh"
+echo "START /auth-entrypoint.sh"
 
-set +e
+set -e
 
 # gunicorn env settings with defaults
 SCRIPT_NAME="/"
@@ -55,4 +55,4 @@ exec gunicorn --workers ${WSGI_WORKERS} \
         --bind ${CONTAINER_HOST}:${CONTAINER_PORT} \
         wis2box-auth.app:app
 
-echo "END /entrypoint.sh"
+echo "END /auth-entrypoint.sh"
