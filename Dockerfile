@@ -70,3 +70,4 @@ WORKDIR /home/wis2box
 COPY ./docker/entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT [ "/entrypoint.sh" ]
+CMD ["sh", "-cx", "sr3 --logStdout start && sleep infinity"]

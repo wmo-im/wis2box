@@ -82,7 +82,7 @@ services:
       - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
     depends_on:
       - mosquitto
-    command: sh -c "wis2box pubsub watch --path /data/wis2box/data/incoming --verbosity INFO"
+    command: ["wis2box", "pubsub", "watch", "--path", "/data/wis2box/data/incoming", "--verbosity", "INFO"]
 
   mqp-publisher:
     container_name: mqp-publisher

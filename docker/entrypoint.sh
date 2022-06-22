@@ -24,11 +24,10 @@
 
 echo "START /entrypoint.sh"
 
-set +e
+set -e
 
 env
 
-wis2box environment create
 if test -f "$WIS2BOX_API_CONFIG"; then
     echo "$WIS2BOX_API_CONFIG already exists."
 else
@@ -40,4 +39,7 @@ if [ ! -d "$WIS2BOX_DATADIR/config/csv2bufr" ]; then
   git clone https://github.com/wmo-im/csv2bufr-templates.git $WIS2BOX_DATADIR/config/csv2bufr
 fi
 
-wis2box pubsub watch --path ${WIS2BOX_DATADIR}/data/incoming --verbosity INFO
+wis2box environment create
+echo wis2box environment show
+echo "END /entrypoint.sh"
+exec "$@"
