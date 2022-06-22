@@ -96,7 +96,8 @@ class Handler(FileSystemEventHandler):
         s = Sarracenia_v03Message(event.src_path)
         s.prepare()
 
-        broker.pub(Topics.DATA_INCOMING.value, s.dumps())
+        topic = f'xlocal/v03{s.filepath.parent}'
+        broker.pub(topic, s.dumps())
 
 
 @click.command()

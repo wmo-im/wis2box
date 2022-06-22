@@ -96,12 +96,11 @@ class Sarracenia_v03Message(PubSubMessage):
         super().__init__('sarracenia-v03', filepath)
 
         self.message['relPath'] = self.filepath.as_posix()
-        self.message['baseUrl'] = '/'
+        self.message['baseUrl'] = 'file:/'
 
     def prepare(self):
         self.message['pubTime'] = datetime.now().strftime('%Y%m%dT%H%M%S.%f')
-        filepath = Path(self.message['relPath']) / self.message['baseUrl']
-        self.message['size'] = filepath.stat().st_size
+        self.message['size'] = self.filepath.stat().st_size
         self.message['integrity'] = {
             'method': 'sha512',
             'value': self._generate_checksum('sha512'),
