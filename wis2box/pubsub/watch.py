@@ -31,7 +31,6 @@ from watchdog.events import FileSystemEventHandler
 from wis2box import cli_helpers
 from wis2box.env import BROKER, BROKER_TYPE
 from wis2box.plugin import load_plugin, PLUGINS
-from wis2box.pubsub.topics import Topics
 
 LOGGER = logging.getLogger(__name__)
 
