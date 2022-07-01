@@ -73,7 +73,7 @@ services:
   data-consumer:
     container_name: data-consumer
     build:
-      context: ..
+      context: ./watchpuppy
     #user: wis2box:wis2box
     env_file:
       - default.env
@@ -82,7 +82,6 @@ services:
       - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
     depends_on:
       - mosquitto
-    command: ["wis2box", "pubsub", "watch", "--path", "/data/wis2box/data/incoming", "--verbosity", "INFO"]
 
   mqp-publisher:
     container_name: mqp-publisher
