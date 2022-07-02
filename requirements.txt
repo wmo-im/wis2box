@@ -1,7 +1,7 @@
 isodate
 OWSLib
 parse
-pygeometa
+pygeometa==0.11.1
 pyoscar
 PyYAML
 metpx-sr3
