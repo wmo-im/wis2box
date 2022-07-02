@@ -49,6 +49,9 @@ class DiscoveryMetadata(BaseMetadata):
 
         md = deepcopy(mcf)
 
+        if md['identification']['extents']['temporal'][0]['end'] is None:
+            md['identification']['extents']['temporal'][0].pop('end')
+
         identifier = md['metadata']['identifier']
 
         LOGGER.debug('Adding distribution links')
@@ -94,9 +97,6 @@ class DiscoveryMetadata(BaseMetadata):
             anytext_bag.extend(v['keywords']['en'])
 
         record['properties']['_metadata-anytext'] = ' '.join(anytext_bag)
-
-        if md['identification']['extents']['temporal'][0]['end'] is None:
-            record['properties']['extent']['temporal']['interval'][0].pop()
 
         return record
 
