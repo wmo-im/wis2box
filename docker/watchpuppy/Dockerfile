@@ -28,8 +28,6 @@ RUN pip install --no-cache-dir watchdog paho-mqtt
 
 COPY *.py /usr/src/app/
 	
-EXPOSE 8000
-
 ENV PYTHONUNBUFFERED="true"
 	
-CMD [ "python3","-u","watchpuppy.py" ]
+CMD [ "python3", "-u", "watchpuppy.py" ]

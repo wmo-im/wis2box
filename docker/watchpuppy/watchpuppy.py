@@ -20,22 +20,19 @@
 ###############################################################################
 
 
+from datetime import datetime
+import json
 import logging
 import os
+from pathlib import Path
 import sys
 import time
-
-from pathlib import Path
-
-from datetime import datetime
-
-from watchdog.observers import Observer
-from watchdog.events import PatternMatchingEventHandler
 from urllib.parse import urlparse
 
 import paho.mqtt.publish as publish
+from watchdog.observers import Observer
+from watchdog.events import PatternMatchingEventHandler
 
-import json
 
 LOGGING_LOGLEVEL = os.environ.get('WIS2BOX_LOGGING_LOGLEVEL')
 LOGGER = logging.getLogger('watchpuppy')
@@ -45,6 +42,7 @@ logging.basicConfig(stream=sys.stdout)
 WATCHPATH = os.environ.get('WATCHPATH', '')
 POLLING_INTERVAL = os.environ.get('POLLING_INTERVAL', 5)
 FILE_PATTERNS = os.environ.get('FILE_PATTERNS', '*.*')
+TOPIC_BASE = 'xlocal/v03'
 
 MQTT_BROKER = os.environ.get('WIS2BOX_BROKER', '')
 
@@ -56,8 +54,17 @@ class NotMQTTException(Exception):
 
 class WatchpuppyMessage:
     def __init__(self, filepath):
+        """
+        Initializer
+
+        :param filepath: path to data file/object
+
+        :returns: `WatchpuppyMessage`
+        """
+
         # self.type = 'watchpuppy'
         # pretend to be sarracenia
+
         self.type = 'sarracenia-v03'
         self.filepath = Path(filepath)
         self.message = {}
@@ -67,11 +74,6 @@ class WatchpuppyMessage:
     def prepare(self):
         self.message['pubTime'] = datetime.now().strftime('%Y%m%dT%H%M%S.%f')
         self.message['size'] = self.filepath.stat().st_size
-        # ignore integrity in watchpuppy
-        # self.message['integrity'] = {
-        #    'method': 'sha512',
-        #    'value': self._generate_checksum('sha512'),
-        # }
 
     def dumps(self) -> str:
         """
@@ -79,6 +81,7 @@ class WatchpuppyMessage:
 
         :returns: `str` of message content
         """
+
         return json.dumps(self.message)
 
 
@@ -88,29 +91,31 @@ class Watchpuppy:
     """
 
     def __init__(self, broker_conn_string: str):
+        self.mqtt_port = 1883
         self.observer = Observer()
         file_patterns = FILE_PATTERNS.split(',')
-        LOGGER.info(
-            f'Init event-handler on patterns: {file_patterns}')
+        LOGGER.info(f'Init event-handler on patterns: {file_patterns}')
+
         self.event_handler = PatternMatchingEventHandler(
             patterns=file_patterns,
             ignore_patterns=[],
             ignore_directories=True)
+
         self.event_handler.on_created = self.on_created
-        self.mqtt_port = 1883
+
         # check if the broker_conn_string refers to an mqtt-connection-string
         broker_url = urlparse(broker_conn_string)
         if broker_url.scheme == 'mqtts':
             self.mqtt_port = 8883
         elif broker_url.scheme != 'mqtt':
             raise NotMQTTException
+
         self.broker_url = broker_url
 
     def run(self, path: Path, polling_interval: int):
         """
         Run watch
 
-        :param broke_url
         :param path: `pathlib.Path` of directory path
         :param polling_interval: `int` of polling interval
 
@@ -139,7 +144,7 @@ class Watchpuppy:
         try:
             msg = WatchpuppyMessage(event.src_path)
             msg.prepare()
-            topic = f'xlocal/v03{msg.filepath.parent}'
+            topic = f'{TOPIC_BASE}{msg.filepath.parent}'
             LOGGER.info(f'Publish msg={msg.dumps()} on topic={topic}')
             publish.single(
                 topic=topic,
@@ -159,6 +164,7 @@ def main():
     """
     Watch a directory for new files and publish a message when file is seen
     """
+
     LOGGER.info(f"Listening to {WATCHPATH} every {POLLING_INTERVAL} second")  # noqa
 
     w = Watchpuppy(broker_conn_string=MQTT_BROKER)
