@@ -95,6 +95,9 @@ class DiscoveryMetadata(BaseMetadata):
 
         record['properties']['_metadata-anytext'] = ' '.join(anytext_bag)
 
+        if record['properties']['extent']['temporal']['interval'][-1] == 'None':  # noqa
+            record['properties']['extent']['temporal']['interval'][-1] = None
+
         return record
 
 
