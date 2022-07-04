@@ -32,6 +32,8 @@ from wis2box import cli_helpers
 from wis2box.env import BROKER, BROKER_TYPE
 from wis2box.plugin import load_plugin, PLUGINS
 
+TOPIC_BASE = 'xlocal/v03'
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -93,9 +95,8 @@ class Handler(FileSystemEventHandler):
 
         from wis2box.pubsub.message import Sarracenia_v03Message
         s = Sarracenia_v03Message(event.src_path)
-        s.prepare()
 
-        topic = f'xlocal/v03{s.filepath.parent}'
+        topic = f'{TOPIC_BASE}{event.src_path}'
         broker.pub(topic, s.dumps())
 
 

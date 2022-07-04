@@ -97,7 +97,14 @@ class MQTTPubSubClient(BasePubSubClient):
         :returns: `None`
         """
 
-        raise NotImplementedError()
+        def on_message(client, userdata, msg):
+            LOGGER.debug(f'Topic: {msg.topic}')
+            LOGGER.debug(f'Message: {msg.payload}')
+
+        LOGGER.debug(f'Subscribing to broker {self.broker}')
+        self.conn.subscribe(topic)
+        self.conn.on_message = on_message
+        self.conn.loop_forever()
 
     def __repr__(self):
-        return '<BasePubSubClient>'
+        return '<MQTTPubSubClient>'

@@ -19,14 +19,17 @@
 #
 ###############################################################################
 
-from enum import Enum
 import logging
 
 LOGGER = logging.getLogger(__name__)
 
-
-class Topics(Enum):
-    DATA_INCOMING = 'xlocal/data_incoming'
-    DATA_TRANSFORMED = 'xlocal/data_transferred'
-    DATA_PUBLISHED = 'xlocal/data_published'
-    METADATA_PUBLISHED = 'xlocal/metadata_published'
+TOPICS = {
+    'DATA_INCOMING': {
+        'topic': 'xlocal/data_incoming',
+        'handler': 'wis2box.event.data_ingest.Event'
+    },
+    'DATA_PUBLISHED': {
+        'topic': 'xlocal/data_published',
+        'handler': 'wis2box.event.data_api_publish.Event'
+    }
+}

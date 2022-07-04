@@ -26,12 +26,22 @@ import hashlib
 import logging
 from pathlib import Path
 
+from wis2box.env import URL
+from wis2box.util import json_serial
+
 LOGGER = logging.getLogger(__name__)
 
 
 class SecureHashAlgorithms(Enum):
     SHA512 = 'sha512'
     MD5 = 'md5'
+
+
+DATA_OBJECT_MIMETYPES = {
+    'bufr4': 'application/x-bufr',
+    'grib2': 'application/x-grib2',
+    'geojson': 'application/json'
+}
 
 
 class PubSubMessage:
@@ -51,7 +61,10 @@ class PubSubMessage:
 
         self.type = type_
         self.filepath = Path(filepath)
-        self.message = {}
+        self.length = self.filepath.stat().st_size
+        self.publish_datetime = datetime.now().strftime('%Y%m%dT%H%M%S.%f')
+        self.checksum_type = SecureHashAlgorithms.SHA512.value
+        self.checksum_value = self._generate_checksum(self.checksum_type)
 
     def prepare(self):
         """
@@ -62,13 +75,19 @@ class PubSubMessage:
 
         raise NotImplementedError()
 
-    def dumps(self) -> str:
+    def dumps(self, dict_: dict = {}) -> str:
         """
         Return string representation of message
 
+        :param message: `str` of message content
+
         :returns: `str` of message content
         """
-        return json.dumps(self.message)
+
+        if dict_:
+            return json.dumps(dict_, default=json_serial)
+        else:
+            return json.dumps(self, default=json_serial)
 
     def _generate_checksum(self, algorithm: SecureHashAlgorithms) -> str:
         """
@@ -95,18 +114,54 @@ class Sarracenia_v03Message(PubSubMessage):
     def __init__(self, filepath):
         super().__init__('sarracenia-v03', filepath)
 
-        self.message['relPath'] = self.filepath.as_posix()
-        self.message['baseUrl'] = 'file:/'
-
-    def prepare(self):
-        self.message['pubTime'] = datetime.now().strftime('%Y%m%dT%H%M%S.%f')
-        self.message['size'] = self.filepath.stat().st_size
-        self.message['integrity'] = {
-            'method': 'sha512',
-            'value': self._generate_checksum('sha512'),
+    def dumps(self):
+        message = {
+            'relPath': self.filepath.as_posix(),
+            'baseUrl': 'file:/',
+            'pubTime': self.publish_datetime,
+            'size': self.length,
+            'integrity': {
+                'method': self.checksum_type,
+                'value': self.checksum_value
+            }
         }
+
+        return self.dumps(message)
 
 
 class WISNotificationMessage(PubSubMessage):
-    def __init__(self):
-        super().__init__('wis2-notification-message')
+    def __init__(self, filepath):
+        super().__init__('wis2-notification-message', filepath)
+
+    def dumps(self, identifier, geometry=None):
+
+        suffix = self.filepath.suffix.replace('.', '')
+
+        try:
+            mimetype = DATA_OBJECT_MIMETYPES[suffix]
+        except KeyError:
+            mimetype = 'application/octet-stream'
+
+        message = {
+            'id': identifier,
+            'type': 'Feature',
+            'version': 'v04',
+            'geometry': geometry,
+            'properties': {
+                'pubTime': self.publish_datetime,
+                'content': {
+                    'length': self.length
+                },
+                'integrity': {
+                    'method': self.checksum_type,
+                    'value': self.checksum_value
+                }
+            },
+            'links': [{
+                'rel': 'canonical',
+                'type': mimetype,
+                'href': f'{URL}/{self.filepath.as_posix()}'
+            }]
+        }
+
+        return self.dumps(message)
