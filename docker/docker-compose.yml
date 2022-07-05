@@ -35,6 +35,15 @@ services:
     volumes:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:ro
 
+  minio:
+    image: minio/minio
+    environment:
+      MINIO_ROOT_USER: ${WIS2BOX_S3_USER:-minio}
+      MINIO_ROOT_PASSWORD: ${WIS2BOX_S3_PASSWORD:-minio123}
+    command: server --console-address ":9001" /data
+    volumes:
+      - ${WIS2BOX_HOST_DATADIR}/data:/data
+
   elasticsearch:
     container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2

@@ -15,6 +15,13 @@ services:
     ports:
       - 5001:80
 
+  minio:
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    deploy:
+      replicas: 1
+
   elasticsearch:
     ports:
       - 9200:9200
