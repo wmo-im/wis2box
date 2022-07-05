@@ -29,7 +29,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 from wis2box import cli_helpers
-from wis2box.env import BROKER, BROKER_TYPE
+from wis2box.env import BROKER
 from wis2box.plugin import load_plugin, PLUGINS
 
 TOPIC_BASE = 'xlocal/v03'
@@ -87,7 +87,7 @@ class Handler(FileSystemEventHandler):
         LOGGER.info('Advertising to broker')
 
         defs = {
-            'codepath': PLUGINS['pubsub'][BROKER_TYPE]['plugin'],
+            'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
             'url': BROKER
         }
 

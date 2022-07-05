@@ -54,7 +54,6 @@ AUTH_STORE = os.environ.get('WIS2BOX_AUTH_STORE')
 OSCAR_API_TOKEN = os.environ.get('WIS2BOX_OSCAR_API_TOKEN')
 URL = os.environ.get('WIS2BOX_URL')
 
-BROKER_TYPE = os.environ.get('WIS2BOX_BROKER_TYPE')
 BROKER = os.environ.get('WIS2BOX_BROKER')
 BROKER_PUBLIC = os.environ.get('WIS2BOX_BROKER_PUBLIC')
 

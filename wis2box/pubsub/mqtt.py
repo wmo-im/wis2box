@@ -21,6 +21,7 @@
 
 import logging
 import random
+from typing import Any, Callable
 
 from paho.mqtt import client as mqtt_client
 
@@ -105,6 +106,18 @@ class MQTTPubSubClient(BasePubSubClient):
         self.conn.subscribe(topic)
         self.conn.on_message = on_message
         self.conn.loop_forever()
+
+    def bind(self, event: str, function: Callable[..., Any]) -> None:
+        """
+        Binds an event to a function
+
+        :param event: `str` of event name
+        :param function: Python callable
+
+        :returns: `None`
+        """
+
+        setattr(self.conn, event, function)
 
     def __repr__(self):
         return '<MQTTPubSubClient>'

@@ -19,19 +19,41 @@
 #
 ###############################################################################
 
+import json
 import logging
+
+import click
+
+from wis2box import cli_helpers
+from wis2box.env import BROKER
+from wis2box.handler import Handler
+from wis2box.plugin import load_plugin, PLUGINS
 
 LOGGER = logging.getLogger(__name__)
 
-TOPICS = {
-    'DATA_INCOMING': {
-        'bucket': 'incoming',
-        'topic': 'xlocal/data_incoming',
-        'handler': 'wis2box.event.data_ingest.Event'
-    },
-    'DATA_PUBLISHED': {
-        'bucket': 'public',
-        'topic': 'xlocal/data_public',
-        'handler': 'wis2box.event.data_api_publish.Event'
+
+def on_message_handler(client, userdata, msg):
+    print(msg)
+    #filepath = json.loads(msg.payload)['filepath']
+    #handler = Handler(filepath)
+
+
+@click.command()
+@click.pass_context
+@click.option('--broker', '-b', help='URL to broker')
+@click.option('--topic', '-t', help='topic to subscribe to')
+@cli_helpers.OPTION_VERBOSITY
+def subscribe(ctx, broker, topic, verbosity):
+    """Subscribe to a broker/topic"""
+    click.echo(f'Subscribing to broker {broker}, topic {topic}')
+
+    defs = {
+        'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
+        'url': BROKER
     }
-}
+
+    broker = load_plugin('pubsub', defs)
+
+    broker.bind('on_message', on_message_handler)
+
+    broker.sub(topic)

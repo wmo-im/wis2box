@@ -21,6 +21,7 @@
 
 from urllib.parse import urlparse
 import logging
+from typing import Any, Callable
 
 LOGGER = logging.getLogger(__name__)
 
@@ -57,6 +58,18 @@ class BasePubSubClient:
         Subscribe to a broker/topic
 
         :param topic: `str` of topic
+
+        :returns: `None`
+        """
+
+        raise NotImplementedError()
+
+    def bind(self, event: str, function: Callable[..., Any]) -> None:
+        """
+        Binds an event to a function
+
+        :param event: `str` of event name
+        :param function: Python callable
 
         :returns: `None`
         """
