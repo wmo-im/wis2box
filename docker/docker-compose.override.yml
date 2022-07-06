@@ -22,3 +22,13 @@ services:
   mosquitto:
     ports:
       - 1883:1883
+      
+  aria2-pro:
+    ports:
+      - 6800:6800
+      - 6888:6888
+      - 6888:6888/udp
+
+  ariang:
+    ports:
+      - 6880:6880
