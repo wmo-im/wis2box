@@ -1,0 +1,216 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "github.com/MetPX/wmo_mesh/message-schema.json",
+  "type": "object",
+  "title": "The WIS mesh data notification schema",
+  "description": "Formal description of the messages send as notification about data/file availability.",
+  "required": [
+    "pubTime",
+    "baseUrl",
+    "relPath",
+    "integrity"
+  ],
+  "properties": {
+    "pubTime": {
+      "$id": "#/properties/pubTime",
+      "format": "regex",
+      "pattern": "[0-9]{8}T[0-9]{6}(\\.[0-9]+)?Z?",
+      "type": "string",
+      "title": "Publication time",
+      "description": "Time of ingestion into the mesh. ISO 8601.",
+      "examples": [
+        "20190213T123456.789Z"
+      ]
+    },
+    "baseUrl": {
+      "$id": "#/properties/baseUrl",
+      "type": "string",
+      "title": "Base URL of the service",
+      "description": "URL pointing to the server that send this notification and where the data (file) is available. For historical reasons the URL is spelled 'Url'.",
+      "examples": [
+        "https://host.example.com/data"
+      ]
+    },
+    "relPath": {
+      "$id": "#/properties/relPath",
+      "type": "string",
+      "title": "Relative path",
+      "description": "Relative path identifies location of the file (relative to the base URL) but also can be considered as very brief metadata as the path is expected to contain standardised components such as name of producing organization.",
+      "examples": [
+        "20190213/wis/int/wmo/example/test.txt"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "integrity": {
+      "$id": "#/properties/integrity",
+      "type": "object",
+      "title": "Checksum or a digital signature of the file.",
+      "required": [
+        "method",
+        "value"
+      ],
+      "properties": {
+        "method": {
+          "$id": "#/properties/sum/properties/method",
+          "type": "string",
+          "title": "Checksumming (or signature) method",
+          "examples": [
+            "sha512", "md5", "remove", "link", "cod", "arbitrary", "md5name", "random"
+          ]
+        },
+        "value": {
+          "$id": "#/properties/sum/properties/value",
+          "type": "string",
+          "title": "The Value Schema",
+          "description": "Base 64 encoded checksum or digital signature",
+          "examples": [
+            "sZRqySSS0jR8YjW00mERhA=="
+          ]
+        }
+      }
+    },
+    "retPath": {
+      "$id": "#/properties/retPath",
+      "type": "string",
+      "title": "Retrieval path",
+      "description": "If the relPath cannot be used to construct a URL that unambiguously identifies the data instance, than this value can be used to override it. In other words, this can be a very ugly string that together with the baseUrl forms a URL that your web server understands, while the relPath is a nice and structured and standardised and human readable identifier.",
+      "examples": [
+        "hgmpf/pfrck?instanceID=61686f79"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "size": {
+      "$id": "#/properties/size",
+      "type": "integer",
+      "title": "File size in bytes (octets)",
+      "default": 0,
+      "examples": [
+        12345
+      ]
+    },
+    "atime": {
+      "$id": "#/properties/atime",
+      "format": "regex",
+      "pattern": "[0-9]{8}T[0-9]{6}(\\.[0-9]+)?Z?",
+      "type": "string",
+      "title": "File access date/time",
+      "description": "Optional file attribute that can help simulate 'rsync'. ISO 8601.",
+      "examples": [
+        "20201023T123456.789Z"
+      ]
+    },
+    "mtime": {
+      "$id": "#/properties/atime",
+      "format": "regex",
+      "pattern": "[0-9]{8}T[0-9]{6}(\\.[0-9]+)?Z?",
+      "type": "string",
+      "title": "File modification date/time",
+      "description": "Optional file attribute that can help simulate 'rsync'. ISO 8601.",
+      "examples": [
+        "20201023T123456.789Z"
+      ]
+    },
+    "mode": {
+      "$id": "#/properties/mode",
+      "format": "regex",
+      "pattern": "[0-7]{3}",
+      "type": "string",
+      "title": "File access mode in Unix like octal number.",
+      "examples": [
+        "640"
+      ]
+    },
+    "partitionStrategy": {
+      "$id": "#/properties/partitionStrategy",
+      "type": "object",
+      "title": "Partition strategy",
+      "description": "Optional way of anouncing patrialy available files.",
+      "required": [
+        "method",
+        "size",
+        "count",
+        "remainder",
+        "number"
+      ],
+      "properties": {
+        "method": {
+          "$id": "#/properties/partitionStrategy/properties/method",
+          "type": "string",
+          "title": "The Method Schema",
+          "default": "",
+          "examples": [
+            "partitioned", "inplace"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "size": {
+          "$id": "#/properties/partitionStrategy/properties/blockSize",
+          "type": "integer",
+          "title": "The Blocksize Schema",
+          "default": 0,
+          "examples": [
+            65535
+          ],
+          "pattern": "^(.*)$"
+        },
+        "count": {
+          "$id": "#/properties/partitionStrategy/properties/count",
+          "type": "integer",
+          "title": "The Blockcount Schema",
+          "default": 0,
+          "examples": [
+            65535
+          ],
+          "pattern": "^(.*)$"
+        },
+        "remainder": {
+          "$id": "#/properties/partitionStrategy/properties/lastBlock",
+          "type": "integer",
+          "title": "The size of the Lastblock Schema",
+          "default": 0,
+          "examples": [
+            1, 21352352
+          ]
+        },
+        "number": {
+          "$id": "#/properties/partitionStrategy/properties/blockNumber",
+          "type": "integer",
+          "title": "The Blocknumber Schema",
+          "default": 0,
+          "examples": [
+            0
+          ]
+        }
+      }
+    },
+    "content": {
+      "$id": "#/properties/content",
+      "type": "object",
+      "title": "Content (body) of the file",
+      "description": "Optional way how to send the content of a file to optimize transfer of small files.",
+      "required": [
+        "encoding",
+        "value"
+      ],
+      "properties": {
+        "encoding": {
+          "$id": "#/properties/content/properties/encoding",
+          "type": "string",
+          "title": "Message encoding",
+          "examples": [
+            "utf-8", "base64"
+          ]
+        },
+        "value": {
+          "$id": "#/properties/content/properties/value",
+          "type": "string",
+          "title": "The file data",
+          "examples": [
+            "Hello world!"
+          ]
+        }
+      }
+    }
+  }
+}
