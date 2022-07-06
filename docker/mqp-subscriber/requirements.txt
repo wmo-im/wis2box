@@ -1,0 +1,6 @@
+mqtt-paho
+requests
+urllib3
+websocket-client
+jsonschema
+parse
