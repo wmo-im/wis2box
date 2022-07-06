@@ -21,4 +21,7 @@
 ###############################################################################
 
 set +e
-python3 /data/wis2box/mqp-subscriber/pubSubDWD_geoJSON.py --config /data/wis2box/mqp-subscriber/configFiles/dwd_v04.txt
+mkdir /data/wis2box/config/mqp-subscriber
+cp -r /usr/src/sub/configFiles/* /data/wis2box/config/mqp-subscriber/
+
+python3 /usr/src/sub/pubSubDWD_geoJSON.py --config /data/wis2box/config/mqp-subscriber/dwd_v04.txt
