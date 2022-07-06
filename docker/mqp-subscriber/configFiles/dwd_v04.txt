@@ -1,0 +1,28 @@
+{
+  "toSubscribe": "True",
+  "sub_host": "oflkd011.dwd.de",
+  "sub_cacert": "/etc/pki/tls/certs/ca-bundle.crt",
+  "sub_port": "8883",
+  "sub_protocol": "mqtts",
+  "sub_protocol_version": "MQTTv5", 
+  "sub_user": "everyone",
+  "sub_password": "everyone",
+  "sub_clientname": "wis2box_msg_v04",
+  "sub_topic": "cache/v04/#",
+  "sub_logfile": "log/dwd_v04.log",
+  "sub_loglevel": "INFO",
+  "sub_maxMSGsize": 2048,
+
+  "show_message": "False",
+  "msg_store": "msg_store/",
+
+  "withDownload": "True",
+  "filedownloadURL": "True",
+  "download_proxy": "",
+  "download_targetDir": "/data/wis2box/data/aria2-downloads/",
+  "download_restricted": "False",
+  "download_username": "",
+  "download_password": "",
+  "download_whitelist": "configFiles/wis2box_whitelist.txt",
+  "download_format": ""
+}
