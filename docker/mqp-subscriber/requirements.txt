@@ -1,4 +1,5 @@
-mqtt-paho
+paho-mqtt
+pika
 requests
 urllib3
 websocket-client
