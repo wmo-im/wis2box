@@ -19,30 +19,24 @@
 #
 ###############################################################################
 
-FROM ubuntu:focal
+FROM python:3.8-slim-buster
 
-RUN apt-get update -y && \
-    apt-get install -y python3-pip python3-dev
-RUN pip install setuptools pip --upgrade --force-reinstall
+RUN mkdir -p /usr/src/sub
+RUN mkdir -p /usr/src/sub/configFiles
+RUN mkdir -p /usr/src/sub/log
+RUN mkdir -p /usr/src/sub/msg_store
 
-RUN mkdir -p /data/wis2box/mqp-subscriber
-WORKDIR /data/wis2box/mqp-subscriber
+WORKDIR /usr/src/sub
 
-COPY requirements.txt /data/wis2box/mqp-subscriber/
+COPY requirements.txt /usr/src/sub
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip3 install https://github.com/wmo-im/GTStoWIS2.git
 
-RUN mkdir -p /data/wis2box/mqp-subscriber/configFiles
-RUN mkdir -p /data/wis2box/mqp-subscriber/log
-RUN mkdir -p /data/wis2box/mqp-subscriber/msg_store
-
-COPY configFiles/dwd_v04.txt /data/wis2box/mqp-subscriber/configFiles/
-COPY configFiles/wis2box_whitelist.txt /data/wis2box/mqp-subscriber/configFiles/
-COPY message-schema.json /data/wis2box/mqp-subscriber/
-COPY pubSubDWD_geoJSON.py /data/wis2box/mqp-subscriber/
-RUN chmod +x /data/wis2box/mqp-subscriber/pubSubDWD_geoJSON.py
-
+COPY pubSubDWD_geoJSON.py /usr/src/sub/
+COPY message-schema.json /usr/src/sub/
+COPY configFiles/* /usr/src/sub/configFiles/
 COPY entrypoint.sh /mqp-sub_entrypoint.sh
 RUN chmod +x /mqp-sub_entrypoint.sh
+
+ENV PYTHONUNBUFFERED="true"
 
 ENTRYPOINT [ "/mqp-sub_entrypoint.sh" ]
