@@ -25,15 +25,19 @@ RUN mkdir -p /usr/src/sub
 RUN mkdir -p /usr/src/sub/configFiles
 RUN mkdir -p /usr/src/sub/log
 RUN mkdir -p /usr/src/sub/msg_store
+RUN mkdir -p /usr/src/sub/caFiles
 
 WORKDIR /usr/src/sub
 
-COPY requirements.txt /usr/src/sub
+COPY requirements.txt /usr/src/sub/
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY pubSubDWD_geoJSON.py /usr/src/sub/
 COPY message-schema.json /usr/src/sub/
-COPY configFiles/* /usr/src/sub/configFiles/
+
+COPY configFiles/dwd_v04.txt /usr/src/sub/configFiles/
+COPY configFiles/wis2box_whitelist.txt /usr/src/sub/configFiles/
+
 COPY entrypoint.sh /mqp-sub_entrypoint.sh
 RUN chmod +x /mqp-sub_entrypoint.sh
 
