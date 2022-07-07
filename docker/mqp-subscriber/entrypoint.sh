@@ -21,7 +21,35 @@
 ###############################################################################
 
 set +e
-mkdir /data/wis2box/config/mqp-subscriber
-cp -r /usr/src/sub/configFiles/* /data/wis2box/config/mqp-subscriber/
+DIR="/data/wis2box/config/mqp-subscriber"
+if [ -d "$DIR" ]; then
+  echo "$DIR already exists"
+  DIR2="/data/wis2box/config/mqp-subscriber/configFiles"
+  if [ -d "$DIR2" ]; then
+    echo "$DIR2 already exists"
+    FILE="/data/wis2box/config/mqp-subscriber/configFiles/dwd_v04.txt"
+    if [ -f "$FILE" ]; then
+      echo "$FILE already exists"
+    else
+      cp /usr/src/sub/configFiles/dwd_v04.txt /data/wis2box/config/mqp-subscriber/configFiles/
+    fi
+    FILE2="/data/wis2box/config/mqp-subscriber/configFiles/wis2box_whitelist.txt"
+    if [ -f "$FILE2" ]; then
+      echo "$FILE2 already exists"
+    else
+      cp /usr/src/sub/configFiles/wis2box_whitelist.txt /data/wis2box/config/mqp-subscriber/configFiles/
+    fi
+  else
+    mkdir /data/wis2box/config/mqp-subscriber/configFiles
+    cp /usr/src/sub/configFiles/dwd_v04.txt /data/wis2box/config/mqp-subscriber/configFiles/
+  fi
+else
+  mkdir /data/wis2box/config/mqp-subscriber
+  mkdir /data/wis2box/config/mqp-subscriber/configFiles
+  cp /usr/src/sub/configFiles/dwd_v04.txt /data/wis2box/config/mqp-subscriber/configFiles/
+  cp /usr/src/sub/configFiles/wis2box_whitelist.txt /data/wis2box/config/mqp-subscriber/configFiles/
+fi
+cp /usr/src/sub/caFiles/tls-ca-bundle.pem /usr/src/sub/configFiles/ca-bundle.crt
+python3 /usr/src/sub/pubSubDWD_geoJSON.py --config /data/wis2box/config/mqp-subscriber/configFiles/dwd_v04.txt
+sleep infinity
 
-python3 /usr/src/sub/pubSubDWD_geoJSON.py --config /data/wis2box/config/mqp-subscriber/dwd_v04.txt
