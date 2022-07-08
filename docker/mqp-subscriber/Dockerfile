@@ -21,6 +21,8 @@
 
 FROM python:3.8-slim-buster
 
+ENV NO_PROXY="0.0.0.0,localhost,elasticsearch,aria2-pro"
+
 RUN mkdir -p /usr/src/sub
 RUN mkdir -p /usr/src/sub/configFiles
 RUN mkdir -p /usr/src/sub/log
