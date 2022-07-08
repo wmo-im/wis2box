@@ -216,4 +216,4 @@ volumes:
   es-data:
 
 networks:
-  aria2
+  aria2:
