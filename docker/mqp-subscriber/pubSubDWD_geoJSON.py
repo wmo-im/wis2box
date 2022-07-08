@@ -1,9 +1,7 @@
 #!/usr/bin/python3
-import pika 
 import paho.mqtt.client as mqtt
 from paho.mqtt.properties import Properties
 from paho.mqtt.packettypes import PacketTypes 
-import sys
 import os.path
 import json
 from jsonschema import validate
@@ -12,11 +10,8 @@ from datetime import datetime
 import argparse
 import ssl
 import socket
-
 import logging
 from logging.handlers import RotatingFileHandler
-
-import urllib.request
 import requests
 import shutil
 import hashlib
@@ -24,15 +19,10 @@ import base64
 from websocket import create_connection
 import uuid
 
-##### Args #####
-################
-
-parser=argparse.ArgumentParser( \
-     description='Subscribe to AMQPS message broker with config file' ,\
-     formatter_class=argparse.ArgumentDefaultsHelpFormatter )
+# Args #####
+parser=argparse.ArgumentParser(description='Subscribe to AMQPS message broker with config file', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('--config', default="", type=str, help='config file name')
 args = parser.parse_args()
-
 if args.config == "":
     print("Please use --config and config file name as argument for this script.")
     config_filename = ""
@@ -40,20 +30,11 @@ else:
     config_filename = args.config
     configFile = os.path.basename(config_filename)
 
-##### functions #####
-#####################
-
+# functions #####
 def init_log(logFile, logLevel, loggerName):
     global LOG
-    handlers = [ RotatingFileHandler(filename=logFile,
-            mode='a',
-            maxBytes=512000,
-            backupCount=2)
-           ]
-    logging.basicConfig(handlers=handlers,
-                    level=logLevel,
-                    format='%(levelname)s %(asctime)s %(message)s',
-                    datefmt='%Y%m%dT%H:%M:%S')
+    handlers = [ RotatingFileHandler(filename=logFile, mode='a', maxBytes=512000, backupCount=2) ]
+    logging.basicConfig(handlers=handlers, level=logLevel, format='%(levelname)s %(asctime)s %(message)s', datefmt='%Y%m%dT%H:%M:%S')
     LOG = logging.getLogger(loggerName)
 
 def timeLag(myPubTime):
@@ -114,10 +95,10 @@ def listen4msg(myWebsocket):
                 # write empty file with data_id in name
                 my_data_id = watchlist_downloads[response_gid]["data_id"]
                 myFilename = my_data_id.replace("/",data_id_replace)
-                myDataIDsDir = os.path.join(download_targetDir,dataID_infoFile_dir)
+                myDataIDsDir = os.path.join(download_targetDir, dataID_infoFile_dir)
                 if not os.path.exists(myDataIDsDir):
                     os.makedirs(myDataIDsDir)
-                fullpath = os.path.join(myDataIDsDir,myFilename)
+                fullpath = os.path.join(myDataIDsDir, myFilename)
                 dataIDFile = open(fullpath, "w")
                 dataIDFile.write("\n")
                 dataIDFile.close()
@@ -162,8 +143,8 @@ def close_connect2aria2(myWebsocket):
 # should we download
 def alreadyDownloaded(targetDir, my_data_id):
     already_downloaded = False
-    myFilename = my_data_id.replace("/",data_id_replace) 
-    myDataIDsDir = os.path.join(targetDir,dataID_infoFile_dir)
+    myFilename = my_data_id.replace("/", data_id_replace) 
+    myDataIDsDir = os.path.join(targetDir, dataID_infoFile_dir)
     if not os.path.exists(myDataIDsDir):
         os.makedirs(myDataIDsDir)
     fullpath = os.path.join(myDataIDsDir,myFilename)
@@ -195,7 +176,6 @@ def on_mqtt_message(client, userdata, message):
         topic = message.topic
         msg = json.loads(message.payload.decode("utf-8"))
         #validate(instance=msg, schema=schema)
-        #LOG.debug("validated msg: " + str(topic))
     #except jsonschema.exceptions.ValidationError as err:
         #LOG.error("validation error occured for msg: " + message.payload.decode("utf-8"))
         #LOG.error(err)
@@ -219,7 +199,7 @@ def on_mqtt_message(client, userdata, message):
                     url = item["href"]
         else:
             if "links" in msg.keys():
-                #LOG.debug("links direct in msg")
+                # LOG.debug("links direct in msg")
                 urlList = msg["links"]
                 for item in urlList:
                     if item["rel"] == "canonical":
@@ -253,7 +233,7 @@ def on_mqtt_message(client, userdata, message):
 
         # msg_store
         if msg_store is not None and msg_store != "":
-            fname_identifer = data_identifier.replace("/",data_id_replace)
+            fname_identifer = data_identifier.replace("/", data_id_replace)
             fname = fname_identifer
             toFilename = msg_store +  printTimeNow + "_msg_" + str(fname) + ".txt"
             toFile = open(toFilename, "w")
@@ -308,31 +288,23 @@ def on_connect(client, userdata, flags, rc, properties=None):
     timeNow = datetime.now()
     printTimeNow = timeNow.strftime('%Y%m%dT%H%M%S')
     if rc==0:
-       Connected=True
-       client.connected_flag=True
-       result = client.subscribe(sub_topic, qos=1, options=None, properties=None)
-       if result[0] == 0:
-           LOG.info(" - subscribed to topic: " + str(sub_topic) + " as " + sub_clientname)
-           Subscribed=True
-       else:
-           LOG.error(" - connection failed with result code: " + str(rc))
-           # MQTT on_connect result codes: 
-           # 1 - Connection rejected for unsupported protocol version, 
-           # 2 - Connection rejected for rejected client ID, 
-           # 3 - Connection rejected for unavailable server, 
-           # 4 - Connection rejected for damaged username or password, 
-           # 5 - Connection rejected for unauthorized
+        Connected=True
+        client.connected_flag=True
+        result = client.subscribe(sub_topic, qos=1, options=None, properties=None)
+        if result[0] == 0:
+            LOG.info(" - subscribed to topic: " + str(sub_topic) + " as " + sub_clientname)
+            Subscribed=True
+        else:
+            LOG.error(" - connection failed with result code: " + str(rc))
 
 def on_disconnect(client, userdata, rc, properties=None):
-  global Connected
-  global Subscribed
-  Connected=False
-  client.connected_flag = False
-  Subscribed=False
+    global Connected
+    global Subscribed
+    Connected=False
+    client.connected_flag = False
+    Subscribed=False
 
-##### declaration #####
-#######################
-
+# declaration #####
 Connected=False
 channel_closed = True
 connection_closed = True
@@ -355,19 +327,17 @@ data_id_replace = "__"
 download_whitelist = ""
 dataID_infoFile_dir = "dataIDs/"
 
-##### read config file #####
-############################
-
+# read config file #####
 configFile = configFile.replace(".json","")
 if config_filename == "":
     print("error - config file: no config file.")
 else:
-    ## read config
+    # read config
     with open(config_filename, 'r') as myConfigFile:
         data = myConfigFile.read()
     myConfig = json.loads(data)
 
-    ## subscribe
+    # subscribe
     if "toSubscribe" in myConfig.keys():
         toSubscribe = myConfig["toSubscribe"]
     else:
@@ -414,13 +384,13 @@ else:
 
     show_message =  myConfig["show_message"]
 
-    ## msg_store 
+    # msg_store 
     if "msg_store" in myConfig.keys():
         msg_store = myConfig["msg_store"]
     else:
         msg_store = None
 
-    ## download
+    # download
     if "withDownload" in myConfig.keys():
         withDownload = myConfig["withDownload"]
     else:
@@ -464,74 +434,68 @@ if download_whitelist != "":
                 myWhitelist.append(line)
 
 
-##### programm #####
-####################
-
-# LOG
+# programm #####
 loggerName = "subscribe" + str(configFile)
 LOG = None
-init_log(sub_logfile,sub_loglevel,loggerName)
+init_log(sub_logfile, sub_loglevel, loggerName)
 LOG.info(" ---- NEW SCRIPT RUN ----")
 LOG.info(" whitelist is: " + download_whitelist)
 for item in myWhitelist:
     LOG.info(" in whitelist: " + str(item))
-
 schema = json.load(open("message-schema.json"))
-
 # start connection to aria2 websocket
 ws = connect2aria2(aria2_ws_url)
-
 # subscribe
 if toSubscribe == "True":
-        if sub_protocol == "mqtts" or sub_protocol == "mqtt":
-            LOG.info(" - subscribed with protocol mqtt(s)") 
-            if not toBeClosed:
-                if sub_protocol_version == "MQTTv5":
-                    client = mqtt.Client(sub_clientname, protocol=mqtt.MQTTv5)
-                else:
-                    client = mqtt.Client(sub_clientname, protocol=mqtt.MQTTv311)
-                client.username_pw_set(sub_user, password=sub_password)
-                if sub_protocol == "mqtts":
-                    if sub_cacert != "":
-                        #client.tls_set(ca_certs=sub_cacert,tls_version=ssl.PROTOCOL_TLSv1_2,cert_reqs=ssl.CERT_NONE)
-                        client.tls_set(ca_certs=sub_cacert,tls_version=ssl.PROTOCOL_TLSv1_2)
-                    else:
-                        client.tls_set(tls_version=ssl.PROTOCOL_TLSv1_2)
-                    if sub_host == "localhost" or sub_host == "127.0.0.1":
-                        client.tls_insecure_set(True)
-                client.connected_flag=False
-                client.on_message=on_mqtt_message
-                client.on_connect=on_connect
-                client.on_disconnect=on_disconnect
-                if sub_protocol_version == "MQTTv5":
-                    sub_properties=Properties(PacketTypes.CONNECT)
-                    sub_properties.MaximumPacketSize=sub_maxMSGsize
-                else:
-                    sub_properties=None
-                client.connect(sub_host,port=int(sub_port),properties=sub_properties)
-                client.loop_start()
-                time.sleep(2)
-                if not client.connected_flag:
-                    for x in range(5):
-                        if not client.connected_flag:
-                            LOG.info(" - in wait loop to connect")
-                            time.sleep(2)
-                if not client.connected_flag:
-                    LOG.error(" - no initial sub connection possible")
-                    toBeClosed = True
-                    client.disconnect()
-                    client.loop_stop() 
-                try:
-                    if client.connected_flag:
-                        while True:
-                            if not client.connected_flag:
-                                if not toBeClosed:
-                                    client.connect(sub_host,port=int(sub_port),properties=sub_properties) #connect to broker
-                except KeyboardInterrupt:
-                    print("info - exiting")
-                    client.disconnect()
-                    client.loop_stop() #stop the loop
+    if sub_protocol == "mqtts" or sub_protocol == "mqtt":
+        LOG.info(" - subscribed with protocol mqtt(s)") 
+        if not toBeClosed:
+            if sub_protocol_version == "MQTTv5":
+                client = mqtt.Client(sub_clientname, protocol=mqtt.MQTTv5)
             else:
-                LOG.info(" - exiting")
+                client = mqtt.Client(sub_clientname, protocol=mqtt.MQTTv311)
+            client.username_pw_set(sub_user, password=sub_password)
+            if sub_protocol == "mqtts":
+                if sub_cacert != "":
+                    # client.tls_set(ca_certs=sub_cacert,tls_version=ssl.PROTOCOL_TLSv1_2,cert_reqs=ssl.CERT_NONE)
+                    client.tls_set(ca_certs=sub_cacert, tls_version=ssl.PROTOCOL_TLSv1_2)
+                else:
+                    client.tls_set(tls_version=ssl.PROTOCOL_TLSv1_2)
+                if sub_host == "localhost" or sub_host == "127.0.0.1":
+                    client.tls_insecure_set(True)
+            client.connected_flag=False
+            client.on_message=on_mqtt_message
+            client.on_connect=on_connect
+            client.on_disconnect=on_disconnect
+            if sub_protocol_version == "MQTTv5":
+                sub_properties=Properties(PacketTypes.CONNECT)
+                sub_properties.MaximumPacketSize=sub_maxMSGsize
+            else:
+                sub_properties=None
+            client.connect(sub_host, port=int(sub_port), properties=sub_properties)
+            client.loop_start()
+            time.sleep(2)
+            if not client.connected_flag:
+                for x in range(5):
+                    if not client.connected_flag:
+                        LOG.info(" - in wait loop to connect")
+                        time.sleep(2)
+            if not client.connected_flag:
+                LOG.error(" - no initial sub connection possible")
+                toBeClosed = True
+                client.disconnect()
+                client.loop_stop() 
+            try:
+                if client.connected_flag:
+                    while True:
+                        if not client.connected_flag:
+                            if not toBeClosed:
+                                client.connect(sub_host, port=int(sub_port), properties=sub_properties)
+            except KeyboardInterrupt:
+                print("info - exiting")
+                client.disconnect()
+                client.loop_stop()
+        else:
+            LOG.info(" - exiting")
 
 close_connect2aria2(ws)
