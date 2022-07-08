@@ -20,8 +20,7 @@ from websocket import create_connection
 import uuid
 
 # Args #####
-parser = argparse.ArgumentParser(description = 'Subscribe to AMQPS message broker with config file', \
-                               formatter_class = argparse.ArgumentDefaultsHelpFormatter)
+parser = argparse.ArgumentParser(description='Subscribe to message broker', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('--config', default="", type=str, help='config file name')
 args = parser.parse_args()
 if args.config == "":
@@ -31,23 +30,23 @@ else:
     config_filename = args.config
     configFile = os.path.basename(config_filename)
 
-    
-# functions #####
-def init_log(logFile, logLevel, loggerName):
-    global LOG
-    handlers = [RotatingFileHandler(filename=logFile, \
-                                    mode='a', \
-                                    maxBytes=512000, \
-                                    backupCount=2)]
-    logging.basicConfig(handlers=handlers, \
-                        level=logLevel, \
-                        format='%(levelname)s %(asctime)s %(message)s', \
-                        datefmt='%Y%m%dT%H:%M:%S')
-    LOG = logging.getLogger(loggerName)
 
-    
+# functions #####
+def init_log(logFile, logLevel, myloggerName):
+    global LOG
+    handlers = [RotatingFileHandler(filename=logFile, 
+                                    mode='a', 
+                                    maxBytes=512000, 
+                                    backupCount=2)]
+    logging.basicConfig(handlers=handlers, 
+                        level=logLevel, 
+                        format='%(levelname)s %(asctime)s %(message)s', 
+                        datefmt='%Y%m%dT%H:%M:%S')
+    LOG = logging.getLogger(myloggerName)
+
+
 def timeLag(myPubTime):
-    timeNow = datetime.now()
+    timeNow_timeLag = datetime.now()
     if "Z" in myPubTime:
         myPubTime = myPubTime.replace("Z", "")
     if "z" in myPubTime:
@@ -59,8 +58,8 @@ def timeLag(myPubTime):
         pubTimeDate = datetime.strptime(myPubTime, "%Y%m%dT%H%M%S.%f")
     else:
         pubTimeDate = datetime.strptime(myPubTime, "%Y%m%dT%H%M%S")
-    if timeNow > pubTimeDate:
-        myTimeLag = timeNow - pubTimeDate
+    if timeNow_timeLag > pubTimeDate:
+        myTimeLag = timeNow_timeLag - pubTimeDate
         myTimeLagSec = myTimeLag.total_seconds()
         myTimeLagSec = round(myTimeLagSec, 2)
     else:
@@ -69,19 +68,18 @@ def timeLag(myPubTime):
 
 
 # aria2
-def connect2aria2(aria2_ws_url):
-    myWebsocket = create_connection(aria2_ws_url)
+def connect2aria2(my_aria2_ws_url):
+    myWebsocket = create_connection(my_aria2_ws_url)
     return myWebsocket
 
 
 def getAria2Status(my_gid):
-    jsonreq_status = json.dumps({'jsonrpc': '2.0', \
-                                 'id': 'sub_client_wis2box_dwd', \
-                                 'method': 'aria2.tellStatus', \
+    jsonreq_status = json.dumps({'jsonrpc': '2.0', 
+                                 'id': 'sub_client_wis2box_dwd', 
+                                 'method': 'aria2.tellStatus', 
                                  'params': ['token:P3TERX', my_gid, ["status"]]})
     ws.send(jsonreq_status)
-    LOG.info(" - tellStatus aria2 for gid: " + str(my_gid) \
-             + " is: " + str(jsonreq_status))
+    LOG.info(" - tellStatus aria2 for gid: " + str(my_gid) + " is: " + str(jsonreq_status))
 
 
 def listen4msg(myWebsocket):
@@ -95,8 +93,7 @@ def listen4msg(myWebsocket):
         response_params = msg_json["params"][0]
         response_gid = response_params["gid"]
         if "aria2.onDownloadError" in msg_json["method"]:
-            LOG.error(" - aria2.onDownloadError for gid: " \
-                      + str(watchlist_downloads[response_gid]))
+            LOG.error(" - aria2.onDownloadError for gid: " + str(watchlist_downloads[response_gid]))
             getAria2Status(response_gid)
             if response_gid in watchlist_downloads.keys():
                 watchlist_downloads.pop(response_gid)
@@ -118,12 +115,10 @@ def listen4msg(myWebsocket):
                 dataIDFile = open(fullpath, "w")
                 dataIDFile.write("\n")
                 dataIDFile.close()
-                LOG.info(" - aria2.onDownloadComplete for data_id: " \
-                         + str(my_data_id))                
+                LOG.info(" - aria2.onDownloadComplete for data_id: " + str(my_data_id))                
                 # remove from watchlist_downloads
                 watchlist_downloads.pop(response_gid)
-                LOG.debug(" - deleted gid " + response_gid \
-                          + " from watchlist_downloads")
+                LOG.debug(" - deleted gid " + response_gid + " from watchlist_downloads")
                 # watchlist_downloads empty
                 count = len(watchlist_downloads.keys())
                 LOG.debug(" - watchlist_downloads count: " + str(count))
@@ -131,36 +126,32 @@ def listen4msg(myWebsocket):
                     list_empty = True
                     listen4msg_started = False
             else:
-                LOG.error(" - aria2.onDownloadComplete gid (" + response_gid \
-                          + ") missed in watchlist_downloads")
+                LOG.error(" - aria2.onDownloadComplete gid (" + response_gid + ") missed in watchlist")
 
 
-def send2aria(aria2_http_url, download_url, data_id):
+def send2aria(my_aria2_http_url, download_url, data_id):
     global listen4msg_started, watchlist_downloads, ws
     aria2_id = str(uuid.uuid1())
-    jsonreq = json.dumps({'jsonrpc': '2.0', \
-                          'id': aria2_id, \
-                          'method': 'aria2.addUri', \
+    jsonreq = json.dumps({'jsonrpc': '2.0', 
+                          'id': aria2_id, 
+                          'method': 'aria2.addUri', 
                           'params': ['token:P3TERX', [download_url]]})
-    aria2_downloadReqResponse = requests.post(aria2_http_url, jsonreq)
+    aria2_downloadReqResponse = requests.post(my_aria2_http_url, jsonreq)
     aria2_downloadReqResult = aria2_downloadReqResponse.text
     LOG.debug(aria2_downloadReqResult)
     if "result" in aria2_downloadReqResult:
         aria2_downloadReqResult_json = json.loads(aria2_downloadReqResult)
         download_gid = aria2_downloadReqResult_json['result']
         LOG.info(" - start aria2 download with gid: " + str(download_gid))
-        watchlist_item = {download_gid: {"data_id": data_id, \
+        watchlist_item = {download_gid: {"data_id": data_id, 
                                          "url": download_url}}
         watchlist_downloads.update(watchlist_item)
-        LOG.debug(" - added new item to watchlist_downloads: " \
-                  + str(watchlist_item))
-        LOG.debug(" - listen4msg_started is: " \
-                  + str(listen4msg_started))
+        LOG.debug(" - added new item to watchlist_downloads: " + str(watchlist_item))
+        LOG.debug(" - listen4msg_started is: " + str(listen4msg_started))
         if not listen4msg_started:
             listen4msg(ws)
     else:
-        LOG.error(" - send2aria error result: " \
-                  + str(aria2_downloadReqResult))
+        LOG.error(" - send2aria error result: " + str(aria2_downloadReqResult))
         LOG.error(" - send2aria url: " + download_url)
         LOG.error(" - send2aria data_id: " + data_id)
 
@@ -186,8 +177,8 @@ def alreadyDownloaded(targetDir, my_data_id):
 def inWhitelist(url):
     my_inWhitelist = False
     if download_whitelist != "":
-        for item in myWhitelist:
-            if item in url:
+        for whitelist_item in myWhitelist:
+            if whitelist_item in url:
                 my_inWhitelist = True
     else:
         # no whitelist value in config file, download from everywhere
@@ -200,6 +191,8 @@ def inWhitelist(url):
 # mqtt(s)
 def on_mqtt_message(client, userdata, message):
     global integrity_method, download_targetDir, ws, aria2_http_url
+    timeNow_onMsg = datetime.now()
+    printTimeNow_onMsg = timeNow_onMsg.strftime('%Y%m%dT%H%M%S')
     LOG.info(" ---- NEW MESSAGE ----")
     try:
         topic = message.topic
@@ -211,8 +204,7 @@ def on_mqtt_message(client, userdata, message):
 #       LOG.error(err)
     except Exception as e:
         msg = ""
-        LOG.error(" - json loads error occured for msg: " \
-                  + message.payload.decode("utf-8"))
+        LOG.error(" - json loads error occured for msg: " + message.payload.decode("utf-8"))
         LOG.error(" - on_mqtt_message payload error: " + str(e))
 
     if msg != "":
@@ -225,34 +217,27 @@ def on_mqtt_message(client, userdata, message):
         if "links" in msg["properties"].keys():
             LOG.debug("links under properties")
             urlList = msg["properties"]["links"]
-            for item in urlList:
-                if item["rel"] == "canonical":
-                    url = item["href"]
+            for url_item in urlList:
+                if url_item["rel"] == "canonical":
+                    url = url_item["href"]
         else:
             if "links" in msg.keys():
                 # LOG.debug("links direct in msg")
                 urlList = msg["links"]
-                for item in urlList:
-                    if item["rel"] == "canonical":
-                        url = item["href"]
+                for url_item in urlList:
+                    if url_item["rel"] == "canonical":
+                        url = url_item["href"]
             else:
-                LOG.error(" - no links in message: " \
-                          + message.payload.decode("utf-8"))
+                LOG.error(" - no links in message: " + message.payload.decode("utf-8"))
                 url = ""
         integrity_method = msg["properties"]["integrity"]["method"]
         if integrity_method == "":
-            LOG.error(" - no integrity_method in message: " \
-                      + message.payload.decode("utf-8"))
+            LOG.error(" - no integrity_method in message: " + message.payload.decode("utf-8"))
         else:
-            if integrity_method != "md5" and \
-            integrity_method != "MD5" and \
-            integrity_method != "sha256" and \
-            integrity_method != "SHA256" and \
-            integrity_method != "sha512" and \
-            integrity_method != "SHA512":
-                LOG.error(" - integrity_method in message not md5, sha256 or sha512. \
-                Integrity_method: " + integrity_method \
-                          + "(message: " + message.payload.decode("utf-8") + ")")
+            if integrity_method != "md5" and integrity_method != "MD5" and \
+               integrity_method != "sha256" and integrity_method != "SHA256" and \
+               integrity_method != "sha512" and integrity_method != "SHA512":
+                LOG.error(" - integrity_method in message not md5, sha256 or sha512. Integrity_method: " + integrity_method + "(message: " + message.payload.decode("utf-8") + ")")
 
         data_identifier = ""
         if "data_id" in msg["properties"]:
@@ -277,7 +262,7 @@ def on_mqtt_message(client, userdata, message):
         if msg_store is not None and msg_store != "":
             fname_identifer = data_identifier.replace("/", data_id_replace)
             fname = fname_identifer
-            toFilename = msg_store + printTimeNow + "_msg_" \
+            toFilename = msg_store + printTimeNow_onMsg + "_msg_" \
                          + str(fname) + ".txt"
             toFile = open(toFilename, "w")
             toFile.write(topic + "\n")
@@ -288,7 +273,7 @@ def on_mqtt_message(client, userdata, message):
         if withDownload == "True":
             # aria2 download start
             already_there = False
-            already_there = alreadyDownloaded(download_targetDir, \
+            already_there = alreadyDownloaded(download_targetDir, 
                                               data_identifier)
             LOG.debug(" - alreadyDownloaded: " + str(already_there))
             if not already_there:
@@ -303,38 +288,33 @@ def on_mqtt_message(client, userdata, message):
             if content_encoding != "" and content_value != "":
                 fname = "missingFilename"
                 if "data_id" in msg["properties"]:
-                    fname_identifer = data_identifier.replace("/", \
-                                                              data_id_replace)
+                    fname_identifer = data_identifier.replace("/", data_id_replace)
                     fname = fname_identifer
                 else:
                     LOG.error(" - missing data_id in msg with content")
                 LOG.debug("info - download filename is: " + fname)
-                downloadFile  = (download_targetDir + '/' \
-                                 + fname).replace('//', '/')
+                downloadFile  = (download_targetDir + '/' + fname).replace('//', '/')
                 # already written
                 already_written = False
-                already_written = alreadyDownloaded(download_targetDir, \
-                                                    data_identifier)
+                already_written = alreadyDownloaded(download_targetDir, data_identifier)
                 if not already_written:
                     if url == "":
                         fileContent = '{"topic": "' + str(topic) + '", "content_encoding":"' \
-                        + content_encoding + '", "content_value": "' \
-                        + content_value +'", "msg_id": "' \
-                        + str(msg["id"]) +'"}'
+                                       + content_encoding + '", "content_value": "' \
+                                       + content_value +'", "msg_id": "' \
+                                       + str(msg["id"]) +'"}'
                     else:
                         fileContent = '{"downloadFilename": "' + downloadFile + '", "integrity": "' \
-                        + msg["properties"]["integrity"]["value"] + '", "integrity_method": "' \
-                        + integrity_method + '", "sourceUrl": "' \
-                        + url + '", "content_encoding": "' \
-                        + content_encoding + '", "content_value": "' \
-                        + content_value +'", "data_id": "' + str(msg["properties"]["data_id"]) + '"}'
+                                       + msg["properties"]["integrity"]["value"] + '", "integrity_method": "' \
+                                       + integrity_method + '", "sourceUrl": "' \
+                                       + url + '", "content_encoding": "' \
+                                       + content_encoding + '", "content_value": "' \
+                                       + content_value +'", "data_id": "' + str(msg["properties"]["data_id"]) + '"}'
                     fileContentJSON = json.loads(fileContent)
                     if "topic" in fileContentJSON.keys():
-                        toDownloadFile = "msgContent_" + printTimeNow + ".json"
-                        newDownload = open(download_targetDir \
-                                           + toDownloadFile, "w")
-                        newDownload.write(json.dumps(fileContentJSON, \
-                                                     indent=4))
+                        toDownloadFile = "msgContent_" + printTimeNow_onMsg + ".json"
+                        newDownload = open(download_targetDir + toDownloadFile, "w")
+                        newDownload.write(json.dumps(fileContentJSON, indent=4))
                         newDownload.close()
 
 
@@ -344,18 +324,16 @@ def on_connect(client, userdata, flags, rc, properties=None):
     global Subscribed
     LOG.info(" ---- NEW MQTT CONNECT ----")
     LOG.info(" - on_connect code is: " + str(rc))
-    timeNow = datetime.now()
     if rc == 0:
         Connected = True
         client.connected_flag = True
-        result = client.subscribe(sub_topic, \
-                                  qos=1, \
-                                  options=None, \
+        result = client.subscribe(sub_topic, 
+                                  qos=1, 
+                                  options=None, 
                                   properties=None)
         if result[0] == 0:
             LOG.info(" - subscribed to topic: " \
-                     + str(sub_topic) \
-                     + " as " + sub_clientname)
+                     + str(sub_topic) + " as " + sub_clientname)
             Subscribed = True
         else:
             LOG.error(" - connection failed with result code: " + str(rc))
@@ -410,11 +388,9 @@ else:
         toSubscribe = "False"
     if toSubscribe == "True":
         # mandatory
-        if "sub_protocol" in myConfig.keys() and \
-        "sub_host" in myConfig.keys() and \
-        "sub_port" in myConfig.keys() and \
-        "sub_user" in myConfig.keys() and \
-        "sub_password" in myConfig.keys():
+        if "sub_protocol" in myConfig.keys() and "sub_host" in myConfig.keys() and \
+           "sub_port" in myConfig.keys() and "sub_user" in myConfig.keys() and \
+           "sub_password" in myConfig.keys():
             sub_protocol = myConfig["sub_protocol"]
             sub_host = myConfig["sub_host"]
             sub_port = myConfig["sub_port"]
@@ -440,8 +416,7 @@ else:
             sub_clientname = socket.gethostname()
             if "sub_clientname" in myConfig.keys():
                 if myConfig["sub_clientname"] != "":
-                    sub_clientname = sub_clientname + "_" \
-                    + myConfig["sub_clientname"]
+                    sub_clientname = sub_clientname + "_" + myConfig["sub_clientname"]
             if sub_clientname == sub_host or sub_host == "localhost":
                 sub_clientname = sub_clientname + "_subClient"
             if "sub_protocol_version" in myConfig.keys():
@@ -527,8 +502,7 @@ if toSubscribe == "True":
             if sub_protocol == "mqtts":
                 if sub_cacert != "":
                     # client.tls_set(ca_certs=sub_cacert,tls_version=ssl.PROTOCOL_TLSv1_2,cert_reqs=ssl.CERT_NONE)
-                    client.tls_set(ca_certs=sub_cacert, \
-                                   tls_version=ssl.PROTOCOL_TLSv1_2)
+                    client.tls_set(ca_certs=sub_cacert, tls_version=ssl.PROTOCOL_TLSv1_2)
                 else:
                     client.tls_set(tls_version=ssl.PROTOCOL_TLSv1_2)
                 if sub_host == "localhost" or sub_host == "127.0.0.1":
@@ -542,8 +516,8 @@ if toSubscribe == "True":
                 sub_properties.MaximumPacketSize = sub_maxMSGsize
             else:
                 sub_properties=None
-            client.connect(sub_host, \
-                           port=int(sub_port), \
+            client.connect(sub_host, 
+                           port=int(sub_port), 
                            properties=sub_properties)
             client.loop_start()
             time.sleep(2)
@@ -562,8 +536,8 @@ if toSubscribe == "True":
                     while True:
                         if not client.connected_flag:
                             if not toBeClosed:
-                                client.connect(sub_host, \
-                                               port=int(sub_port), \
+                                client.connect(sub_host, 
+                                               port=int(sub_port), 
                                                properties=sub_properties)
             except KeyboardInterrupt:
                 print("info - exiting")
