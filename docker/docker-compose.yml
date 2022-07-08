@@ -93,6 +93,8 @@ services:
       driver: json-file
       options:
         max-size: 1m
+    networks:
+      - aria2
 
   ariang:
     container_name: ariang
@@ -102,6 +104,8 @@ services:
       driver: json-file
       options:
         max-size: 1m
+    networks:
+      - aria2
 
   mqp-subscriber:
     container_name: mqp-subscriber
@@ -118,6 +122,8 @@ services:
       - ariang
     links:
       - aria2-pro
+    networks:
+      - aria2
 
   data-consumer:
     container_name: data-consumer
@@ -209,4 +215,5 @@ services:
 volumes:
   es-data:
 
-
+networks:
+  aria2
