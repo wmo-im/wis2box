@@ -93,8 +93,8 @@ services:
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
     ports:
       - 3000:3000
-  data-consumer:
-    <<: *logging
+  #data-consumer:
+  #  <<: *logging
   mqp-publisher:
     <<: *logging
   wis2box:
