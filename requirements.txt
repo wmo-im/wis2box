@@ -1,9 +1,10 @@
-boto3
+minio
 isodate
 OWSLib
 parse
 pygeometa
 pyoscar
 PyYAML
-metpx-sr3
 elasticsearch<8
+paho-mqtt
+watchdog

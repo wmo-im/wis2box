@@ -8,3 +8,4 @@ requests
 sphinx
 twine
 wheel
+minio
