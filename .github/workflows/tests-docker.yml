@@ -60,8 +60,7 @@ jobs:
     - name: Ingest & publish data with event workflow
       if: ${{ matrix.ingest == 'event' }}
       run: |
-        docker exec wis2box sh -c " \
-          cp /data/wis2box/observations/* /data/wis2box/data/incoming/data/core/observations-surface-land/mw/FWCL/landFixed"
+        python3 tests/copy_to_incoming.py tests/data/observations/* wis2box-incoming/data/core/observations-surface-land/mw/FWCL/landFixed
     - name: run integration tests ⚙️
       run: |
         sleep 25
