@@ -22,92 +22,111 @@
 from datetime import datetime
 import logging
 from pathlib import Path
-import time
+
+from urllib.parse import urlparse
 
 import click
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
+
+import random
+
+import json
+
+import paho.mqtt.client as mqtt
 
 from wis2box import cli_helpers
+from wis2box.handler import Handler
 from wis2box.env import BROKER
-from wis2box.plugin import load_plugin, PLUGINS
 
 TOPIC_BASE = 'xlocal/v03'
 
 LOGGER = logging.getLogger(__name__)
 
 
-class Watcher:
+class NotMQTTException(Exception):
+    """Raised when schema provided by broker-url is not mqtt or mqtts"""
+    pass
+
+
+def sub_connect(client, userdata, flags, rc, properties=None):
     """
-    Generic watcher class
-    """
+    function executed 'on_connect' for paho.mqtt.client
+    subscribes to topic contain information from storage-layer
 
-    def __init__(self):
-        self.observer = Observer()
+    :param client: client-object associated to 'on_connect'
+    :param userdata: userdata
+    :param flags: flags
+    :param rc: return-code received 'on_connect'
+    :param properties: properties
 
-    def run(self, path: Path, polling_interval: int):
-        """
-        Run watch
-
-        :param path: `pathlib.Path` of directory path
-        :param polling_interval: `int` of polling interval
-
-        :returns: `None`
-        """
-
-        LOGGER.debug('Starting observer')
-        event_handler = Handler()
-        self.observer.schedule(event_handler, path, recursive=True)
-        self.observer.start()
-        try:
-            while True:
-                now = datetime.now().isoformat()
-                LOGGER.debug(f'Heartbeat {now}')
-                time.sleep(polling_interval)
-        except Exception as err:
-            LOGGER.error(f'Observing error: {err}')
-            self.observer.stop()
-
-        self.observer.join()
-
-
-class Handler(FileSystemEventHandler):
-    """
-    Generic watch handler
+    :returns: `None`
     """
 
-    @staticmethod
-    def on_created(event):
-        LOGGER.debug(f'Incoming event path: {event.src_path}')
-        if event.is_directory:
-            LOGGER.debug('Not a file; skipping')
-            return None
+    LOGGER.info(f"on connection to subscribe: {mqtt.connack_string(rc)}")
+    client.subscribe('wis2box-storage/#', qos=1)
 
-        LOGGER.info(f'Received file: {event.src_path}')
-        LOGGER.info('Advertising to broker')
 
-        defs = {
-            'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-            'url': BROKER
-        }
+def sub_on_message(client, userdata, msg):
+    """
+    function executed 'on_message' for paho.mqtt.client
+    to be used on message published by storage-layer
+    run handler on filepath
 
-        broker = load_plugin('pubsub', defs)
+    :param client: client-object associated to 'on_message'
+    :param userdata: MQTT-userdata
+    :param msg: MQTT-message-object received by subscriber
 
-        from wis2box.pubsub.message import Sarracenia_v03Message
-        s = Sarracenia_v03Message(event.src_path)
+    :returns: `None`
+    """
+    LOGGER.info(f"Received message on topic={msg.topic}")
+    msg_payload = json.loads(msg.payload.decode('utf-8'))
+    LOGGER.debug(f"MSG-payload: {msg_payload}")
+    
+    filepath = None
+    if 'EventName' in msg_payload and msg_payload['EventName'] == 's3:ObjectCreated:Put':
+        from wis2box.env import S3_ENDPOINT
+        filepath = S3_ENDPOINT+'/'+msg_payload['Key']
+    elif 'relPath' in msg_payload: 
+        filepath = msg_payload['relPath']
+    else:
+        LOGGER.warning(f"MGS-payload could not be parsed")
 
-        topic = f'{TOPIC_BASE}{event.src_path}'
-        broker.pub(topic, s.dumps())
-
+    try:
+        LOGGER.info(f'Processing {filepath}')
+        handler = Handler(filepath)
+        if handler.handle():
+            LOGGER.info('Data processed')
+            for filepath_out in handler.plugin.files():
+                LOGGER.info(f'Public filepath: {filepath_out}')
+    except ValueError as err:
+        msg = f'handle() error: {err}'
+        LOGGER.error(msg)
+    except Exception as err:
+        msg = f'handle() error: {err}'
+        raise err
 
 @click.command()
 @click.pass_context
-@cli_helpers.OPTION_PATH
-@click.option('--polling_interval', '-pi', type=int, default=5,
-              help='Polling interval')
 @cli_helpers.OPTION_VERBOSITY
-def watch(ctx, path, verbosity, polling_interval=5):
-    """Watch a directory for new files"""
-    click.echo(f"Listening to {path} every {polling_interval} second{'s'[:polling_interval^1]}")  # noqa
-    w = Watcher()
-    w.run(path, polling_interval)
+def watch(ctx, verbosity):
+    """ wis2box data watch
+        starts mqtt_client subscribed to minio-events
+    """
+    click.echo("Starting wis2box-subscriber")
+    # check if BROKER is an MQTT-connection-string before starting
+    broker_url = urlparse(BROKER)
+    mqtt_port = 1883
+    if broker_url.scheme == 'mqtts':
+        mqtt_port = 8883
+    elif broker_url.scheme != 'mqtt':
+        raise NotMQTTException
+    # create random client-id for this subscriber
+    rand_int = random.Random().randint(1, 1000)
+    client_id = f"wisbox-subscriber-{rand_int:04d}"
+    mqtt_client = mqtt.Client(client_id=client_id, protocol=mqtt.MQTTv5)
+    mqtt_client.on_connect = sub_connect
+    mqtt_client.on_message = sub_on_message
+    mqtt_client.username_pw_set(broker_url.username, broker_url.password)
+    mqtt_client.connect(broker_url.hostname, mqtt_port)
+    # loop_forever run until interrupted by user
+    mqtt_client.loop_forever()
+

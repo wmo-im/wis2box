@@ -48,7 +48,7 @@ class ObservationDataBUFR(BaseAbstractData):
         self.mappings = {}
         self.output_data = {}
 
-    def transform(self, input_data: Path) -> bool:
+    def transform(self, input_data, file_name = '') -> bool:
         LOGGER.info('Processing BUFR data')
         with input_data.open('rb') as fh:
             results = as_geojson(fh.read(), serialize=False)

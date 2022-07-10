@@ -59,14 +59,21 @@ class ObservationDataCSV(BaseAbstractData):
 
         self.station_metadata = None
 
-    def transform(self, input_data: Path) -> bool:
+    def transform(self, input_data, file_name = '') -> bool:
+        
+        if type(input_data) == Path:
+            LOGGER.debug(f"input_data has type=Path")
+            file_name = input_data.name
+        elif  type(input_data) == bytes:
+            LOGGER.debug(f"input_data has type=bytes")
+        
         LOGGER.debug('Processing data')
         LOGGER.debug('Extracting WSI from filename')
         try:
             regex = self.file_filter
-            wsi = re.match(regex, input_data.name).group(1)
+            wsi = re.match(regex, file_name).group(1)
         except AttributeError:
-            msg = f'Invalid filename format: {input_data} ({self.file_filter})'
+            msg = f'Invalid filename format: {file_name} ({self.file_filter})'
             LOGGER.error(msg)
             raise ValueError(msg)
 
@@ -80,10 +87,16 @@ class ObservationDataCSV(BaseAbstractData):
             self.station_metadata = json.load(fh1)
 
         LOGGER.debug('Generating BUFR4')
-        with input_data.open() as fh1:
-            results = transform_csv(fh1.read(),
+        if type(input_data) == Path:
+            with input_data.open() as fh1:
+                results = transform_csv(fh1.read(),
+                                        self.station_metadata,
+                                        self.mappings['bufr4'])
+        elif type(input_data) == bytes:
+            results = transform_csv(input_data.decode(),
                                     self.station_metadata,
                                     self.mappings['bufr4'])
+
         # convert to list
         LOGGER.debug('Iterating over BUFR messages')
         for item in results:   # item = { 'bufr4': ..., '_meta': ...}

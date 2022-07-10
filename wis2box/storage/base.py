@@ -19,6 +19,7 @@
 #
 ###############################################################################
 
+from ast import Bytes
 from enum import Enum
 import logging
 from pathlib import Path
@@ -29,13 +30,13 @@ LOGGER = logging.getLogger(__name__)
 
 class StorageTypes(Enum):
     FS = 'fs'
-    S3 = 's3'
+    minio = 'minio'
 
 
 class StorageBase:
     """Abstract storage manager"""
     def __init__(self, storage_type: StorageTypes, source: str,
-                 name: str = None, auth: dict = {}) -> None:
+                 name: str = None, auth: dict = None) -> None:
         """
         DataSource initializer
 
@@ -68,6 +69,18 @@ class StorageBase:
         Access data source from storage
 
         :param filepath: `Path` of file to upload
+        :param identifier: `str` of data source identifier
+
+        :returns: `bool` of put result
+        """
+
+        raise NotImplementedError()
+
+    def put_bytes(self, data: bytes, identifier: str) -> bool:
+        """
+        Access data source from storage
+
+        :param data: `bytes` of file to upload
         :param identifier: `str` of data source identifier
 
         :returns: `bool` of put result

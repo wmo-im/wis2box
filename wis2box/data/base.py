@@ -84,11 +84,12 @@ class BaseAbstractData:
 
         return True
 
-    def transform(self, input_data: Union[bytes, str]) -> bool:
+    def transform(self, input_data: Union[bytes, str], file_name: str = '') -> bool:
         """
         Transform data
 
         :param input_data: `bytes` or `str` of data payload
+        :param file_name, to be used in case input_data is bytes
 
         :returns: `bool` of processing result
         """

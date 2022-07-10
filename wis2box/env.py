@@ -57,6 +57,13 @@ URL = os.environ.get('WIS2BOX_URL')
 BROKER = os.environ.get('WIS2BOX_BROKER')
 BROKER_PUBLIC = os.environ.get('WIS2BOX_BROKER_PUBLIC')
 
+WIS2BOX_STORAGE_TYPE = os.environ.get('WIS2BOX_STORAGE_TYPE','')
+S3_ENDPOINT = os.environ.get('S3_ENDPOINT','')
+S3_ROOT_USER = os.environ.get('S3_ROOT_USER','minio')
+S3_ROOT_PASSWORD = os.environ.get('S3_ROOT_PASSWORD','minio123')
+S3_BUCKET_INCOMING = os.environ.get('S3_BUCKET_INCOMING','wis2box-incoming')
+S3_BUCKET_PUBLIC = os.environ.get('S3_BUCKET_PUBLIC','wis2box-public') 
+
 try:
     DATA_RETENTION_DAYS = int(os.environ.get('WIS2BOX_DATA_RETENTION_DAYS'))
 except TypeError:
@@ -103,7 +110,6 @@ if missing_environment_variables:
     LOGGER.error(msg)
     raise EnvironmentError(msg)
 
-
 @click.group()
 def environment():
     """Environment management"""
@@ -119,10 +125,21 @@ def create(ctx, verbosity):
     click.echo(f'Setting up logging (loglevel={LOGLEVEL}, logfile={LOGFILE})')
     setup_logger(LOGLEVEL, LOGFILE)
 
+    if WIS2BOX_STORAGE_TYPE == 'S3' :
+        click.echo(f'Creating buckets at S3-endpoint = {S3_ENDPOINT}')
+        # TODO: import class from generic storage plugin
+        from wis2box.storage.minio import MinioStorage as storage
+        auth = { 'username' : S3_ROOT_USER, 'password' : S3_ROOT_PASSWORD }
+        incoming_storage = storage(S3_ENDPOINT,S3_BUCKET_INCOMING,auth)
+        incoming_storage.create_bucket(bucket_policy='private')
+        public_storage = storage(S3_ENDPOINT,S3_BUCKET_PUBLIC,auth)
+        public_storage.create_bucket(bucket_policy='readonly')
+    # TODO: decide if/how to offer alternative to minio ? FS-class ?
+    # DATADIR_INCOMING.mkdir(parents=True, exist_ok=True)
+    # DATADIR_PUBLIC.mkdir(parents=True, exist_ok=True)
+
     click.echo(f'Creating baseline directory structure in {DATADIR}')
     DATADIR.mkdir(parents=True, exist_ok=True)
-    DATADIR_INCOMING.mkdir(parents=True, exist_ok=True)
-    DATADIR_PUBLIC.mkdir(parents=True, exist_ok=True)
     DATADIR_ARCHIVE.mkdir(parents=True, exist_ok=True)
     DATADIR_CONFIG.mkdir(parents=True, exist_ok=True)
     (DATADIR / 'cache').mkdir(parents=True, exist_ok=True)
