@@ -45,4 +45,4 @@ RUN chmod +x /mqp-sub_entrypoint.sh
 
 ENV PYTHONUNBUFFERED="true"
 
-ENTRYPOINT [ "/mqp-sub_entrypoint.sh" ]
+#ENTRYPOINT [ "/mqp-sub_entrypoint.sh" ]
