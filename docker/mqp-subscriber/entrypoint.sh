@@ -50,8 +50,6 @@ else
   cp /usr/src/sub/configFiles/wis2box_whitelist.txt /data/wis2box/config/mqp-subscriber/configFiles/
 fi
 
-cp /usr/src/sub/caFiles/tls-ca-bundle.pem /usr/src/sub/configFiles/ca-bundle.crt
-
 PID_FILE="/data/wis2box/config/mqp-subscriber/configFiles/dwd_sub.txt"
 python3 /usr/src/sub/pubSubDWD_geoJSON.py --config /data/wis2box/config/mqp-subscriber/configFiles/dwd_v04.txt
 echo $! > $PID_FILE
