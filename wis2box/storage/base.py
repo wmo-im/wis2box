@@ -22,7 +22,7 @@
 from enum import Enum
 import logging
 from pathlib import Path
-from typing import Any, Union
+from typing import Any
 
 LOGGER = logging.getLogger(__name__)
 
@@ -40,26 +40,19 @@ class PolicyTypes(Enum):
 
 class StorageBase:
     """Abstract storage manager"""
-    def __init__(self, storage_type: StorageTypes, source: str,
-                 name: str = None, auth: dict = None,
-                 policy: Union[PolicyTypes, None] = None) -> None:
+    def __init__(self, defs: dict) -> None:
         """
-        DataSource initializer
+        initializer
 
-        :param storage_type: type of storage
-        :param source: URL of storage service, or basepath of filesystem
-        :param name: bucket or container name (can be None if not applicable)
-        :param auth: `dict` of auth parameters (specific to provider)
-        :param policy: `str` of policy definition
-
-        :returns: `None`
+        :param defs: `dict` of storage parameters
+                     (storage_type, source, name, auth, policy)
         """
 
-        self.storage_type = storage_type
-        self.source = source
-        self.name = name
-        self.auth = auth
-        self.policy = policy
+        self.storage_type = defs.get('storage_type')
+        self.source = defs.get('source')
+        self.name = defs.get('name')
+        self.auth = defs.get('auth')
+        self.policy = defs.get('policy')
 
     def setup(self) -> bool:
         """
