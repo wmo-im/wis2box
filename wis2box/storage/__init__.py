@@ -18,3 +18,41 @@
 # under the License.
 #
 ###############################################################################
+
+import logging
+from typing import Any
+
+from wis2box.env import (STORAGE_TYPE, STORAGE_SOURCE,
+                         STORAGE_USERNAME, STORAGE_PASSWORD)
+from wis2box.plugin import load_plugin
+
+
+LOGGER = logging.getLogger('__name__')
+
+
+def get_data(path: str) -> Any:
+    """
+    Get data from storage
+
+    :param path: path of object/file
+
+    :returns: content of object/file
+    """
+
+    storage_path = path.replace(f'{STORAGE_SOURCE}/', '')
+    name = storage_path.split('/')[0]
+
+    defs = {
+        'storage_type': STORAGE_TYPE,
+        'source': STORAGE_SOURCE,
+        'name': name,
+        'auth': {'username': STORAGE_USERNAME, 'password': STORAGE_PASSWORD}
+    }
+
+    LOGGER.debug('Connecting to storage: {defs}')
+    storage = load_plugin('storage', defs)
+
+    identifier = storage_path.replace(name, '')
+
+    LOGGER.debug(f'Fetching {identifier}')
+    return storage.get(identifier)

@@ -19,24 +19,30 @@
 #
 ###############################################################################
 
-from ast import Bytes
 from enum import Enum
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, Union
 
 LOGGER = logging.getLogger(__name__)
 
 
 class StorageTypes(Enum):
     FS = 'fs'
-    minio = 'minio'
+    minio = 'MinIO'
+
+
+class PolicyTypes(Enum):
+    readonly = 'readonly'
+    readwrite = 'readwrite'
+    private = 'private'
 
 
 class StorageBase:
     """Abstract storage manager"""
     def __init__(self, storage_type: StorageTypes, source: str,
-                 name: str = None, auth: dict = None) -> None:
+                 name: str = None, auth: dict = None),
+                 policy: Union[PolicyTypes, None] = None) -> None:
         """
         DataSource initializer
 
@@ -44,6 +50,7 @@ class StorageBase:
         :param source: URL of storage service, or basepath of filesystem
         :param name: bucket or container name (can be None if not applicable)
         :param auth: `dict` of auth parameters (specific to provider)
+        :param policy: `str` of policy definition
 
         :returns: `None`
         """
@@ -52,6 +59,16 @@ class StorageBase:
         self.source = source
         self.name = name
         self.auth = auth
+        self.policy = policy
+
+    def setup(self) -> bool:
+        """
+        Run setup harness specific to storage
+
+        :returns: `bool` of setup result
+        """
+
+        raise NotImplementedError()
 
     def get(self, identifier: str) -> Any:
         """
