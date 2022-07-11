@@ -143,10 +143,6 @@ def send2aria(my_aria2_http_url, download_url, data_id):
         LOG.error(" - send2aria data_id: " + data_id)
 
 
-def close_connect2aria2(myWebsocket):
-    myWebsocket.close()
-
-
 # should we download
 def alreadyDownloaded(targetDir, my_data_id):
     already_downloaded = False
@@ -503,7 +499,8 @@ if toSubscribe == "True":
                 LOG.error(" - no initial sub connection possible")
                 toBeClosed = True
                 client.disconnect()
-                client.loop_stop() 
+                client.loop_stop()
+                ws.close()
             try:
                 if client.connected_flag:
                     while True:
@@ -514,7 +511,6 @@ if toSubscribe == "True":
                 print("info - exiting")
                 client.disconnect()
                 client.loop_stop()
+                ws.close()
         else:
             LOG.info(" - exiting")
-
-close_connect2aria2(ws)
