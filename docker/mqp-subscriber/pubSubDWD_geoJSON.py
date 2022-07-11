@@ -21,7 +21,7 @@ import uuid
 
 # Args #####
 parser = argparse.ArgumentParser(
-    description='Subscribe to message broker', 
+    description='Subscribe to message broker',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter
 )
 parser.add_argument('--config', default="", type=str, help='config file name')
@@ -38,15 +38,15 @@ else:
 def init_log(logFile, logLevel, myloggerName):
     global LOG
     handlers = [RotatingFileHandler(
-        filename=logFile, 
-        mode='a', 
-        maxBytes=512000, 
+        filename=logFile,
+        mode='a',
+        maxBytes=512000,
         backupCount=2
     )]
     logging.basicConfig(
-        handlers=handlers, 
-        level=logLevel, 
-        format='%(levelname)s %(asctime)s %(message)s', 
+        handlers=handlers,
+        level=logLevel,
+        format='%(levelname)s %(asctime)s %(message)s',
         datefmt='%Y%m%dT%H:%M:%S'
     )
     LOG = logging.getLogger(myloggerName)
@@ -76,7 +76,10 @@ def timeLag(myPubTime):
 
 # aria2
 def connect2aria2(my_aria2_ws_url):
-    myWebsocket = create_connection(my_aria2_ws_url, http_no_proxy=aria2_ws_url)
+    myWebsocket = create_connection(
+        my_aria2_ws_url,
+        http_no_proxy=aria2_ws_url
+    )
     return myWebsocket
 
 
@@ -112,14 +115,20 @@ def listen4msg(myWebsocket):
                 # write empty file with data_id in name
                 my_data_id = watchlist_downloads[response_gid]["data_id"]
                 myFilename = my_data_id.replace("/", data_id_replace)
-                myDataIDsDir = os.path.join(download_targetDir, dataID_infoFile_dir)
+                myDataIDsDir = os.path.join(
+                    download_targetDir,
+                    dataID_infoFile_dir
+                )
                 if not os.path.exists(myDataIDsDir):
                     os.makedirs(myDataIDsDir)
-                fullpath = os.path.join(myDataIDsDir, myFilename)
+                fullpath = os.path.join(
+                    myDataIDsDir,
+                    myFilename
+                )
                 dataIDFile = open(fullpath, "w")
                 dataIDFile.write("\n")
                 dataIDFile.close()
-                LOG.info(" - aria2.onDownloadComplete for data_id: " + str(my_data_id))                
+                LOG.info(" - aria2.onDownloadComplete for data_id: " + str(my_data_id))
                 # remove from watchlist_downloads
                 watchlist_downloads.pop(response_gid)
                 LOG.debug(" - deleted gid " + response_gid + " from watchlist_downloads")
