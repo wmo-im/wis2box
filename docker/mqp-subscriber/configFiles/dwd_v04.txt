@@ -1,7 +1,6 @@
 {
   "toSubscribe": "True",
   "sub_host": "oflkd011.dwd.de",
-  "sub_cacert": "/usr/src/sub/configFiles/ca-bundle.crt",
   "sub_port": "8883",
   "sub_protocol": "mqtts",
   "sub_protocol_version": "MQTTv5", 
