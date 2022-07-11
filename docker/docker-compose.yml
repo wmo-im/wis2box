@@ -124,6 +124,7 @@ services:
       - aria2-pro
     networks:
       - aria2
+    command: sh -c "/mqp-sub_entrypoint.sh && python3 /usr/src/sub/pubSubDWD_geoJSON.py --config /data/wis2box/config/mqp-subscriber/configFiles/dwd_v04.txt"
 
   data-consumer:
     container_name: data-consumer
