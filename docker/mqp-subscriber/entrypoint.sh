@@ -49,30 +49,3 @@ else
   cp /usr/src/sub/configFiles/dwd_v04.txt /data/wis2box/config/mqp-subscriber/configFiles/
   cp /usr/src/sub/configFiles/wis2box_whitelist.txt /data/wis2box/config/mqp-subscriber/configFiles/
 fi
-
-PID_FILE="/data/wis2box/config/mqp-subscriber/configFiles/dwd_sub.txt"
-python3 /usr/src/sub/pubSubDWD_geoJSON.py --config /data/wis2box/config/mqp-subscriber/configFiles/dwd_v04.txt
-echo $! > $PID_FILE
-
-# check process running
-PID=$(cat $PID_FILE)
-if ! kill -0 $PID 2>/dev/null;
-then
-  echo "$PID not running exit container"
-  SUB_RUNNING=false
-else
-  SUB_RUNNING=true
-fi
-
-while $SUB_RUNNING
-do
-  if ! kill -0 $PID 2>/dev/null;
-  then
-    echo "$PID not running exit container"
-    SUB_RUNNING=false
-  else
-    sleep 10
-  fi
-done
-# sleep infinity
-
