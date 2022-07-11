@@ -13,7 +13,7 @@ import socket
 import logging
 from logging.handlers import RotatingFileHandler
 import requests
-# import shutil
+import shutil
 # import hashlib
 # import base64
 from websocket import create_connection
@@ -69,7 +69,7 @@ def timeLag(myPubTime):
 
 # aria2
 def connect2aria2(my_aria2_ws_url):
-    myWebsocket = create_connection(my_aria2_ws_url)
+    myWebsocket = create_connection(my_aria2_ws_url, http_no_proxy=aria2_ws_url)
     return myWebsocket
 
 
@@ -409,7 +409,26 @@ else:
             sub_loglevel = "INFO"
 
         if sub_protocol == "mqtts" or sub_protocol == "mqtt":
-            sub_cacert = myConfig["sub_cacert"]
+            source_cacert_dir = "/usr/src/sub/caFiles/"
+            target_cacert_dir = "/usr/src/sub/configFiles/"
+            cafile_crt=""
+            cafile_pem=""
+            for cafile in os.listdir(source_cacert_dir):
+                if os.path.isfile(os.path.join(source_cacert_dir, cafile)):
+                    if ".crt" in cafile:
+                        cafile_crt=cafile
+                    if ".pem" in cafile:
+                        if "tls" in cafile:
+                            cafile_pem=cafile
+            if cafile_crt == "":
+                if cafile_pem != "":
+                    shutil.copyfile(os.path.join(source_cacert_dir, cafile_pem), os.path.join(target_cacert_dir, "ca-bundle.crt"))
+                    sub_cacert = os.path.join(target_cacert_dir,"ca-bundle.crt")
+            else:
+                shutil.copyfile(os.path.join(source_cacert_dir, cafile_crt), os.path.join(target_cacert_dir, cafile_crt))
+                sub_cacert = os.path.join(target_cacert_dir, cafile_crt)
+            print(sub_cacert)
+
             sub_topic = myConfig["sub_topic"]
             if "sub_maxMSGsize" in myConfig.keys():
                 sub_maxMSGsize = myConfig["sub_maxMSGsize"]
