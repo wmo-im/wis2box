@@ -52,7 +52,7 @@ class Handler:
 
     def handle(self, notify=False) -> bool:
         try:
-            if not self.startswith('http'):
+            if not self.filepath.startswith('http'):
                 self.plugin.transform(self.filepath)
             else:
                 self.plugin.transform(get_data(self.filepath),

@@ -23,10 +23,12 @@ import logging
 from typing import Union
 
 from wis2box.env import DATADIR_INCOMING, DATADIR_PUBLIC
+from wis2box.env import STORAGE_SOURCE, STORAGE_PUBLIC
 from wis2box.topic_hierarchy import TopicHierarchy
 
 LOGGER = logging.getLogger(__name__)
 
+from wis2box.storage import put_data
 
 class BaseAbstractData:
     """Abstract data"""
@@ -112,21 +114,19 @@ class BaseAbstractData:
                     continue
                 # check that we actually have data
                 if the_data is None:
-                    msg = f'Empty data for {identifier}-{key}; not publishing'  # noqa
+                    msg = f'Empty data for {identifier}-{format_}; not publishing'  # noqa
                     LOGGER.warning(msg)
-                filename = DATADIR_PUBLIC / (rfp) / f"{identifier}.{format_}"
-                filename = filename.with_suffix(f'.{format_}')
-                LOGGER.info(f'Writing data to {filename}')
-                # make sure directory structure exists
-                filename.parent.mkdir(parents=True, exist_ok=True)
-                # check the mode we want to write data in
-                if isinstance(the_data, bytes):
-                    mode = 'wb'
                 else:
-                    mode = 'w'
-                with filename.open(mode) as fh:
-                    fh.write(item[format_])
-        if notify:
+                    storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/{rfp}/{identifier}.{format_}"
+                    LOGGER.info(f'Writing data to {storage_path}')
+                    data_bytes = None
+                    if type(the_data) == str:
+                        data_bytes = str(the_data).encode()
+                    elif type(the_data) == bytes:
+                        data_bytes = the_data
+                    else:
+                        LOGGER.warning(f"the_data is neither bytes nor str")
+                    put_data(data_bytes,storage_path) 
             self.notify()
         return True
 

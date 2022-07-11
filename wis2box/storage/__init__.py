@@ -25,7 +25,7 @@ from typing import Any
 from wis2box.env import (STORAGE_TYPE, STORAGE_SOURCE,
                          STORAGE_USERNAME, STORAGE_PASSWORD)
 from wis2box.plugin import load_plugin
-
+from wis2box.plugin import PLUGINS
 
 LOGGER = logging.getLogger('__name__')
 
@@ -46,13 +46,44 @@ def get_data(path: str) -> Any:
         'storage_type': STORAGE_TYPE,
         'source': STORAGE_SOURCE,
         'name': name,
-        'auth': {'username': STORAGE_USERNAME, 'password': STORAGE_PASSWORD}
+        'auth': {'username': STORAGE_USERNAME, 'password': STORAGE_PASSWORD},
+        'codepath': PLUGINS['storage'][STORAGE_TYPE]['plugin']
     }
 
-    LOGGER.debug('Connecting to storage: {defs}')
+    LOGGER.debug(f'Connecting to storage: {name}')
     storage = load_plugin('storage', defs)
 
     identifier = storage_path.replace(name, '')
 
-    LOGGER.debug(f'Fetching {identifier}')
+    LOGGER.debug(f'Fetching data from {identifier}')
     return storage.get(identifier)
+
+def put_data(data: bytes, path: str) -> Any:
+    """
+    Put data into storage
+
+    :param data: bytes of object/file
+
+    :returns: content of object/file
+    """
+
+    storage_path = path.replace(f'{STORAGE_SOURCE}/', '')
+    name = storage_path.split('/')[0]
+
+    defs = {
+        'storage_type': STORAGE_TYPE,
+        'source': STORAGE_SOURCE,
+        'name': name,
+        'auth': {'username': STORAGE_USERNAME, 'password': STORAGE_PASSWORD},
+        'codepath': PLUGINS['storage'][STORAGE_TYPE]['plugin']
+    }
+
+    LOGGER.debug(f'Connecting to storage: {name}')
+    storage = load_plugin('storage', defs)
+
+    identifier = storage_path.replace(name, '')
+
+    LOGGER.debug(f'Storing data into {identifier}')
+    return storage.put(data,identifier)
+
+# add put_data

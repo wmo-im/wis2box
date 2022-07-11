@@ -25,6 +25,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
+from io import BytesIO
 from minio import Minio
 from minio.notificationconfig import NotificationConfig, QueueConfig
 
@@ -152,19 +153,11 @@ class MinIOStorage(StorageBase):
 
         return data
 
-    def put(self, filepath: Path, identifier: str) -> bool:
-
-        LOGGER.debug(f'Putting file {filepath} as object={identifier}')
-        self.client.fput_object(bucket_name=self.name, object_name=identifier,
-                                file_path=filepath)
-
-        return True
-
-    def put_bytes(self, data: bytes, identifier: str) -> bool:
+    def put(self, data: bytes, identifier: str) -> bool:
 
         LOGGER.debug(f'Putting data as object={identifier}')
         self.client.put_object(bucket_name=self.name, object_name=identifier,
-                               data=data, length=-1, part_size=10*1024*1024)
+                               data=BytesIO(data), length=-1, part_size=10*1024*1024)
 
         return True
 

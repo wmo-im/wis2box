@@ -50,8 +50,16 @@ class ObservationDataBUFR(BaseAbstractData):
 
     def transform(self, input_data, file_name = '') -> bool:
         LOGGER.info('Processing BUFR data')
-        with input_data.open('rb') as fh:
-            results = as_geojson(fh.read(), serialize=False)
+        input_bytes = None
+        if type(input_data) == Path:
+            with input_data.open('rb') as fh:
+                input_bytes = fh.read()
+        elif type(input_data) == bytes:
+            input_bytes = input_data
+        else:
+            LOGGER.warning("bufr4 input_data is neither Path nor bytes")
+        if input_bytes is not None:  
+            results = as_geojson(input_bytes, serialize=False)
             LOGGER.info('Iterating over GeoJSON features')
             # TODO: iterate over item['geojson']
             for collection in results:  # results is an iterator
@@ -79,7 +87,7 @@ class ObservationDataBUFR(BaseAbstractData):
                         self.output_data[id]['geojson'], indent=4)
                     self.output_data[id]['_meta']['relative_filepath'] = \
                         self.get_local_filepath(data_date)
-
+            return False
         return True
 
     def get_local_filepath(self, date_):

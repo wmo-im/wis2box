@@ -74,12 +74,12 @@ class StorageBase:
 
         raise NotImplementedError()
 
-    def put(self, filepath: Path, identifier: str) -> bool:
+    def put(self, data: bytes, identifier: str) -> bool:
         """
         Access data source from storage
 
-        :param filepath: `Path` of file to upload
-        :param identifier: `str` of data source identifier
+        :param data: bytes of file to upload
+        :param identifier: `str` of data dest identifier
 
         :returns: `bool` of put result
         """

@@ -87,19 +87,21 @@ class ObservationDataCSV(BaseAbstractData):
             self.station_metadata = json.load(fh1)
 
         LOGGER.debug('Generating BUFR4')
+        input_bytes = None
         if type(input_data) == Path:
             with input_data.open() as fh1:
-                results = transform_csv(fh1.read(),
-                                        self.station_metadata,
-                                        self.mappings['bufr4'])
+                input_bytes = fh1.read()
         elif type(input_data) == bytes:
-            results = transform_csv(input_data.decode(),
-                                    self.station_metadata,
-                                    self.mappings['bufr4'])
+            input_bytes = input_data.decode()
+        else:
+            LOGGER.warning("csv input_data is neither bytes nor Path")
+        results = transform_csv(input_bytes,
+                                self.station_metadata,
+                                self.mappings['bufr4'])
 
         # convert to list
         LOGGER.debug('Iterating over BUFR messages')
-        for item in results:   # item = { 'bufr4': ..., '_meta': ...}
+        for item in results:   
             LOGGER.debug('Setting obs date for filepath creation')
             identifier = item['_meta']['identifier']
             data_date = item['_meta']['data_date']
