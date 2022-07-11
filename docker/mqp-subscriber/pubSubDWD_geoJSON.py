@@ -34,14 +34,8 @@ else:
 # functions #####
 def init_log(logFile, logLevel, myloggerName):
     global LOG
-    handlers = [RotatingFileHandler(filename=logFile, 
-                                    mode='a', 
-                                    maxBytes=512000, 
-                                    backupCount=2)]
-    logging.basicConfig(handlers=handlers, 
-                        level=logLevel, 
-                        format='%(levelname)s %(asctime)s %(message)s', 
-                        datefmt='%Y%m%dT%H:%M:%S')
+    handlers = [RotatingFileHandler(filename=logFile, mode='a', maxBytes=512000, backupCount=2)]
+    logging.basicConfig(handlers=handlers, level=logLevel, format='%(levelname)s %(asctime)s %(message)s', datefmt='%Y%m%dT%H:%M:%S')
     LOG = logging.getLogger(myloggerName)
 
 
@@ -74,10 +68,7 @@ def connect2aria2(my_aria2_ws_url):
 
 
 def getAria2Status(my_gid):
-    jsonreq_status = json.dumps({'jsonrpc': '2.0', 
-                                 'id': 'sub_client_wis2box_dwd', 
-                                 'method': 'aria2.tellStatus', 
-                                 'params': ['token:P3TERX', my_gid, ["status"]]})
+    jsonreq_status = json.dumps({'jsonrpc': '2.0', 'id': 'sub_client_wis2box_dwd', 'method': 'aria2.tellStatus', 'params': ['token:P3TERX', my_gid, ["status"]]})
     ws.send(jsonreq_status)
     LOG.info(" - tellStatus aria2 for gid: " + str(my_gid) + " is: " + str(jsonreq_status))
 
@@ -132,10 +123,7 @@ def listen4msg(myWebsocket):
 def send2aria(my_aria2_http_url, download_url, data_id):
     global listen4msg_started, watchlist_downloads, ws
     aria2_id = str(uuid.uuid1())
-    jsonreq = json.dumps({'jsonrpc': '2.0', 
-                          'id': aria2_id, 
-                          'method': 'aria2.addUri', 
-                          'params': ['token:P3TERX', [download_url]]})
+    jsonreq = json.dumps({'jsonrpc': '2.0', 'id': aria2_id, 'method': 'aria2.addUri', 'params': ['token:P3TERX', [download_url]]})
     aria2_downloadReqResponse = requests.post(my_aria2_http_url, jsonreq)
     aria2_downloadReqResult = aria2_downloadReqResponse.text
     LOG.debug(aria2_downloadReqResult)
@@ -143,8 +131,7 @@ def send2aria(my_aria2_http_url, download_url, data_id):
         aria2_downloadReqResult_json = json.loads(aria2_downloadReqResult)
         download_gid = aria2_downloadReqResult_json['result']
         LOG.info(" - start aria2 download with gid: " + str(download_gid))
-        watchlist_item = {download_gid: {"data_id": data_id, 
-                                         "url": download_url}}
+        watchlist_item = {download_gid: {"data_id": data_id, "url": download_url}}
         watchlist_downloads.update(watchlist_item)
         LOG.debug(" - added new item to watchlist_downloads: " + str(watchlist_item))
         LOG.debug(" - listen4msg_started is: " + str(listen4msg_started))
@@ -199,8 +186,7 @@ def on_mqtt_message(client, userdata, message):
         msg = json.loads(message.payload.decode("utf-8"))
 #       validate(instance=msg, schema=schema)
 #    except jsonschema.exceptions.ValidationError as err:
-#       LOG.error("validation error occured for msg: " \
-#                 + message.payload.decode("utf-8"))
+#       LOG.error("validation error occured for msg: " + message.payload.decode("utf-8"))
 #       LOG.error(err)
     except Exception as e:
         msg = ""
@@ -222,7 +208,6 @@ def on_mqtt_message(client, userdata, message):
                     url = url_item["href"]
         else:
             if "links" in msg.keys():
-                # LOG.debug("links direct in msg")
                 urlList = msg["links"]
                 for url_item in urlList:
                     if url_item["rel"] == "canonical":
@@ -234,9 +219,7 @@ def on_mqtt_message(client, userdata, message):
         if integrity_method == "":
             LOG.error(" - no integrity_method in message: " + message.payload.decode("utf-8"))
         else:
-            if integrity_method != "md5" and integrity_method != "MD5" and \
-               integrity_method != "sha256" and integrity_method != "SHA256" and \
-               integrity_method != "sha512" and integrity_method != "SHA512":
+            if integrity_method != "md5" and integrity_method != "MD5" and integrity_method != "sha256" and integrity_method != "SHA256" and integrity_method != "sha512" and integrity_method != "SHA512":
                 LOG.error(" - integrity_method in message not md5, sha256 or sha512. Integrity_method: " + integrity_method + "(message: " + message.payload.decode("utf-8") + ")")
 
         data_identifier = ""
@@ -251,19 +234,16 @@ def on_mqtt_message(client, userdata, message):
             LOG.info(" - message id:       " + str(msg["id"]))
             LOG.info(" - message data id:     " + str(data_identifier))
             if showTimeLag == "True":
-                LOG.info(" - message publication_datetime:     " \
-                         + str(msg["properties"]["publication_datetime"]))
+                LOG.info(" - message publication_datetime:     " + str(msg["properties"]["publication_datetime"]))
                 LOG.info(" - message time lag:    " + str(time_lag) + "[sec]")
                 LOG.info(" - message url:         " + str(url))
-                LOG.info(" - message content:     " \
-                         + message.payload.decode("utf-8"))
+                LOG.info(" - message content:     " + message.payload.decode("utf-8"))
 
         # msg_store
         if msg_store is not None and msg_store != "":
             fname_identifer = data_identifier.replace("/", data_id_replace)
             fname = fname_identifer
-            toFilename = msg_store + printTimeNow_onMsg + "_msg_" \
-                         + str(fname) + ".txt"
+            toFilename = msg_store + printTimeNow_onMsg + "_msg_" + str(fname) + ".txt"
             toFile = open(toFilename, "w")
             toFile.write(topic + "\n")
             toFile.write(str(message.payload.decode("utf-8")))
@@ -273,8 +253,7 @@ def on_mqtt_message(client, userdata, message):
         if withDownload == "True":
             # aria2 download start
             already_there = False
-            already_there = alreadyDownloaded(download_targetDir, 
-                                              data_identifier)
+            already_there = alreadyDownloaded(download_targetDir, data_identifier)
             LOG.debug(" - alreadyDownloaded: " + str(already_there))
             if not already_there:
                 inWhilelist = inWhitelist(url)
@@ -299,17 +278,9 @@ def on_mqtt_message(client, userdata, message):
                 already_written = alreadyDownloaded(download_targetDir, data_identifier)
                 if not already_written:
                     if url == "":
-                        fileContent = '{"topic": "' + str(topic) + '", "content_encoding":"' \
-                                       + content_encoding + '", "content_value": "' \
-                                       + content_value +'", "msg_id": "' \
-                                       + str(msg["id"]) +'"}'
+                        fileContent = '{"topic": "' + str(topic) + '", "content_encoding":"' + content_encoding + '", "content_value": "' + content_value +'", "msg_id": "' + str(msg["id"]) +'"}'
                     else:
-                        fileContent = '{"downloadFilename": "' + downloadFile + '", "integrity": "' \
-                                       + msg["properties"]["integrity"]["value"] + '", "integrity_method": "' \
-                                       + integrity_method + '", "sourceUrl": "' \
-                                       + url + '", "content_encoding": "' \
-                                       + content_encoding + '", "content_value": "' \
-                                       + content_value +'", "data_id": "' + str(msg["properties"]["data_id"]) + '"}'
+                        fileContent = '{"downloadFilename": "' + downloadFile + '", "integrity": "' + msg["properties"]["integrity"]["value"] + '", "integrity_method": "' + integrity_method + '", "sourceUrl": "' + url + '", "content_encoding": "' + content_encoding + '", "content_value": "' + content_value +'", "data_id": "' + str(msg["properties"]["data_id"]) + '"}'
                     fileContentJSON = json.loads(fileContent)
                     if "topic" in fileContentJSON.keys():
                         toDownloadFile = "msgContent_" + printTimeNow_onMsg + ".json"
@@ -327,13 +298,9 @@ def on_connect(client, userdata, flags, rc, properties=None):
     if rc == 0:
         Connected = True
         client.connected_flag = True
-        result = client.subscribe(sub_topic, 
-                                  qos=1, 
-                                  options=None, 
-                                  properties=None)
+        result = client.subscribe(sub_topic, qos=1, options=None, properties=None)
         if result[0] == 0:
-            LOG.info(" - subscribed to topic: " \
-                     + str(sub_topic) + " as " + sub_clientname)
+            LOG.info(" - subscribed to topic: " + str(sub_topic) + " as " + sub_clientname)
             Subscribed = True
         else:
             LOG.error(" - connection failed with result code: " + str(rc))
@@ -379,18 +346,13 @@ else:
     with open(config_filename, 'r') as myConfigFile:
         data = myConfigFile.read()
     myConfig = json.loads(data)
-
-    # subscribe
     if "toSubscribe" in myConfig.keys():
         toSubscribe = myConfig["toSubscribe"]
     else:
         print("error - config file: missing toSubscribe, set to False")
         toSubscribe = "False"
     if toSubscribe == "True":
-        # mandatory
-        if "sub_protocol" in myConfig.keys() and "sub_host" in myConfig.keys() and \
-           "sub_port" in myConfig.keys() and "sub_user" in myConfig.keys() and \
-           "sub_password" in myConfig.keys():
+        if "sub_protocol" in myConfig.keys() and "sub_host" in myConfig.keys() and "sub_port" in myConfig.keys() and "sub_user" in myConfig.keys() and "sub_password" in myConfig.keys():
             sub_protocol = myConfig["sub_protocol"]
             sub_host = myConfig["sub_host"]
             sub_port = myConfig["sub_port"]
@@ -428,7 +390,6 @@ else:
                 shutil.copyfile(os.path.join(source_cacert_dir, cafile_crt), os.path.join(target_cacert_dir, cafile_crt))
                 sub_cacert = os.path.join(target_cacert_dir, cafile_crt)
             print(sub_cacert)
-
             sub_topic = myConfig["sub_topic"]
             if "sub_maxMSGsize" in myConfig.keys():
                 sub_maxMSGsize = myConfig["sub_maxMSGsize"]
@@ -446,14 +407,10 @@ else:
         message_broker = sub_protocol + "://" + sub_user + ":[passwd]@" + sub_host + ":" + sub_port
 
     show_message = myConfig["show_message"]
-
-    # msg_store 
     if "msg_store" in myConfig.keys():
         msg_store = myConfig["msg_store"]
     else:
         msg_store = None
-
-    # download
     if "withDownload" in myConfig.keys():
         withDownload = myConfig["withDownload"]
     else:
@@ -520,7 +477,6 @@ if toSubscribe == "True":
             client.username_pw_set(sub_user, password=sub_password)
             if sub_protocol == "mqtts":
                 if sub_cacert != "":
-                    # client.tls_set(ca_certs=sub_cacert,tls_version=ssl.PROTOCOL_TLSv1_2,cert_reqs=ssl.CERT_NONE)
                     client.tls_set(ca_certs=sub_cacert, tls_version=ssl.PROTOCOL_TLSv1_2)
                 else:
                     client.tls_set(tls_version=ssl.PROTOCOL_TLSv1_2)
@@ -534,10 +490,8 @@ if toSubscribe == "True":
                 sub_properties=Properties(PacketTypes.CONNECT)
                 sub_properties.MaximumPacketSize = sub_maxMSGsize
             else:
-                sub_properties=None
-            client.connect(sub_host, 
-                           port=int(sub_port), 
-                           properties=sub_properties)
+                sub_properties = None
+            client.connect(sub_host, port=int(sub_port), properties=sub_properties)
             client.loop_start()
             time.sleep(2)
             if not client.connected_flag:
@@ -555,9 +509,7 @@ if toSubscribe == "True":
                     while True:
                         if not client.connected_flag:
                             if not toBeClosed:
-                                client.connect(sub_host, 
-                                               port=int(sub_port), 
-                                               properties=sub_properties)
+                                client.connect(sub_host, port=int(sub_port), properties=sub_properties)
             except KeyboardInterrupt:
                 print("info - exiting")
                 client.disconnect()
