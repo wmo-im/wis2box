@@ -28,7 +28,7 @@ from urllib.parse import urlparse
 from minio import Minio
 from minio.notificationconfig import NotificationConfig, QueueConfig
 
-from wis2box.storage.base import PolicyTypes, StorageBase
+from wis2box.storage.base import PolicyTypes, StorageBase, StorageTypes
 
 LOGGER = logging.getLogger(__name__)
 
@@ -79,13 +79,13 @@ def readwrite_policy(name):
     }
 
 
-class MinioStorage(StorageBase):
+class MinIOStorage(StorageBase):
     """Abstract storage manager"""
-    def __init__(self, storage_type, source: str,
-                 name: str = None, auth: dict = {},
+    def __init__(self, storage_type: StorageTypes, source: str,
+                 name: str, auth: dict = {},
                  policy: Union[PolicyTypes, None] = None) -> None:
 
-        super().__init__('MinIO', source, name, auth, policy)
+        super().__init__(storage_type, source, name, auth, policy)
 
         is_secure = False
 

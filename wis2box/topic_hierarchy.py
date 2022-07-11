@@ -24,7 +24,7 @@ import logging
 from pathlib import Path
 from typing import Any, Tuple, Union
 
-from wis2box.env import DATADIR_DATA_MAPPINGS
+from wis2box.data_mappings import DATADIR_DATA_MAPPINGS
 from wis2box.plugin import load_plugin
 
 LOGGER = logging.getLogger(__name__)

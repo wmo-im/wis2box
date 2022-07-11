@@ -29,7 +29,7 @@ LOGGER = logging.getLogger(__name__)
 
 class StorageTypes(Enum):
     FS = 'fs'
-    minio = 'MinIO'
+    S3 = 'S3'
 
 
 class PolicyTypes(Enum):
@@ -41,7 +41,7 @@ class PolicyTypes(Enum):
 class StorageBase:
     """Abstract storage manager"""
     def __init__(self, storage_type: StorageTypes, source: str,
-                 name: str = None, auth: dict = None),
+                 name: str = None, auth: dict = None,
                  policy: Union[PolicyTypes, None] = None) -> None:
         """
         DataSource initializer

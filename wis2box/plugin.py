@@ -24,7 +24,7 @@ import importlib
 import logging
 from typing import Any
 
-from wis2box.env import DATADIR_DATA_MAPPINGS
+from wis2box.data_mappings import DATADIR_DATA_MAPPINGS
 
 LOGGER = logging.getLogger(__name__)
 
@@ -45,7 +45,7 @@ PLUGINS = {
         }
     },
     'storage': {
-        'minio': {
+        'S3': {
             'plugin': 'wis2box.storage.minio.MinIOStorage'
          }
      }
@@ -74,7 +74,7 @@ def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
     codepath = defs.get('codepath')
     fmt = defs.get('format')
 
-    if plugin_type in ['api_backend', 'api_config', 'pubsub']:
+    if plugin_type in ['api_backend', 'api_config', 'pubsub', 'storage']:
         plugin_mappings = PLUGINS
     else:
         plugin_mappings = DATADIR_DATA_MAPPINGS
@@ -108,7 +108,6 @@ def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
 
     module = importlib.import_module(packagename)
     class_ = getattr(module, classname)
-
     plugin = class_(defs)
 
     return plugin

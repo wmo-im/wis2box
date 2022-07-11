@@ -27,12 +27,9 @@ from pathlib import Path
 from wis2box import cli_helpers
 from wis2box.log import setup_logger
 from wis2box.plugin import load_plugin
-from wis2box.util import yaml_load
+from wis2box.plugin import PLUGINS
 
 LOGGER = logging.getLogger(__name__)
-
-with (Path(__file__).parent / 'resources' / 'data-mappings.yml').open() as fh:
-    DATADIR_DATA_MAPPINGS = yaml_load(fh)
 
 try:
     DATADIR = Path(os.environ.get('WIS2BOX_DATADIR'))
@@ -71,21 +68,8 @@ try:
 except TypeError:
     DATA_RETENTION_DAYS = None
 
-
 LOGLEVEL = os.environ.get('WIS2BOX_LOGGING_LOGLEVEL', 'ERROR')
 LOGFILE = os.environ.get('WIS2BOX_LOGGING_LOGFILE', 'stdout')
-
-if 'WIS2BOX_DATADIR_DATA_MAPPINGS' in os.environ:
-    LOGGER.debug('Overriding WIS2BOX_DATADIR_DATA_MAPPINGS')
-    try:
-        with open(os.environ.get('WIS2BOX_DATADIR_DATA_MAPPINGS')) as fh:
-            DATADIR_DATA_MAPPINGS = yaml_load(fh)
-            assert DATADIR_DATA_MAPPINGS is not None
-    except Exception as err:
-        DATADIR_DATA_MAPPINGS = None
-        msg = f'Missing data mappings: {err}'
-        LOGGER.error(msg)
-        raise EnvironmentError(msg)
 
 missing_environment_variables = []
 
@@ -139,7 +123,8 @@ def create(ctx, verbosity):
     storage_defs = {
         'storage_type': STORAGE_TYPE,
         'source': STORAGE_SOURCE,
-        'auth': {'username': STORAGE_USERNAME, 'password': STORAGE_PASSWORD}
+        'auth': {'username': STORAGE_USERNAME, 'password': STORAGE_PASSWORD},
+        'codepath': PLUGINS['storage'][STORAGE_TYPE]['plugin']
     }
 
     storages = {
@@ -147,7 +132,6 @@ def create(ctx, verbosity):
         'wis2box-incoming': 'private',
         'wis2box-public': 'readonly'
     }
-
     for key, value in storages.items():
         storage_defs['name'] = key
         storage_defs['policy'] = value
