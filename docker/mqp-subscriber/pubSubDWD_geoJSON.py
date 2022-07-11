@@ -20,7 +20,10 @@ from websocket import create_connection
 import uuid
 
 # Args #####
-parser = argparse.ArgumentParser(description='Subscribe to message broker', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser = argparse.ArgumentParser(
+    description='Subscribe to message broker', 
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter
+)
 parser.add_argument('--config', default="", type=str, help='config file name')
 args = parser.parse_args()
 if args.config == "":
@@ -34,8 +37,18 @@ else:
 # functions #####
 def init_log(logFile, logLevel, myloggerName):
     global LOG
-    handlers = [RotatingFileHandler(filename=logFile, mode='a', maxBytes=512000, backupCount=2)]
-    logging.basicConfig(handlers=handlers, level=logLevel, format='%(levelname)s %(asctime)s %(message)s', datefmt='%Y%m%dT%H:%M:%S')
+    handlers = [RotatingFileHandler(
+        filename=logFile, 
+        mode='a', 
+        maxBytes=512000, 
+        backupCount=2
+    )]
+    logging.basicConfig(
+        handlers=handlers, 
+        level=logLevel, 
+        format='%(levelname)s %(asctime)s %(message)s', 
+        datefmt='%Y%m%dT%H:%M:%S'
+    )
     LOG = logging.getLogger(myloggerName)
 
 
@@ -95,7 +108,7 @@ def listen4msg(myWebsocket):
                     listen4msg_started = False
         if "aria2.onDownloadComplete" in msg_json["method"]:
             LOG.info(" - aria2.onDownloadComplete for gid: " + response_gid)
-            if response_gid in watchlist_downloads.keys(): 
+            if response_gid in watchlist_downloads.keys():
                 # write empty file with data_id in name
                 my_data_id = watchlist_downloads[response_gid]["data_id"]
                 myFilename = my_data_id.replace("/", data_id_replace)
@@ -146,7 +159,7 @@ def send2aria(my_aria2_http_url, download_url, data_id):
 # should we download
 def alreadyDownloaded(targetDir, my_data_id):
     already_downloaded = False
-    myFilename = my_data_id.replace("/", data_id_replace) 
+    myFilename = my_data_id.replace("/", data_id_replace)
     myDataIDsDir = os.path.join(targetDir, dataID_infoFile_dir)
     if not os.path.exists(myDataIDsDir):
         os.makedirs(myDataIDsDir)
@@ -483,11 +496,15 @@ if toSubscribe == "True":
             client.on_connect = on_connect
             client.on_disconnect = on_disconnect
             if sub_protocol_version == "MQTTv5":
-                sub_properties=Properties(PacketTypes.CONNECT)
+                sub_properties = Properties(PacketTypes.CONNECT)
                 sub_properties.MaximumPacketSize = sub_maxMSGsize
             else:
                 sub_properties = None
-            client.connect(sub_host, port=int(sub_port), properties=sub_properties)
+            client.connect(
+                sub_host, 
+                port=int(sub_port), 
+                properties=sub_properties
+            )
             client.loop_start()
             time.sleep(2)
             if not client.connected_flag:
@@ -506,9 +523,12 @@ if toSubscribe == "True":
                     while True:
                         if not client.connected_flag:
                             if not toBeClosed:
-                                client.connect(sub_host, port=int(sub_port), properties=sub_properties)
+                                client.connect(
+                                    sub_host, 
+                                    port=int(sub_port), 
+                                    properties=sub_properties
+                                )
             except KeyboardInterrupt:
-                print("info - exiting")
                 client.disconnect()
                 client.loop_stop()
                 ws.close()
