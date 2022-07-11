@@ -83,8 +83,8 @@ def sub_on_message(client, userdata, msg):
     
     filepath = None
     if 'EventName' in msg_payload and msg_payload['EventName'] == 's3:ObjectCreated:Put':
-        from wis2box.env import S3_ENDPOINT
-        filepath = S3_ENDPOINT+'/'+msg_payload['Key']
+        from wis2box.env import STORAGE_SOURCE
+        filepath = STORAGE_SOURCE+'/'+msg_payload['Key']
     elif 'relPath' in msg_payload: 
         filepath = msg_payload['relPath']
     else:

@@ -25,8 +25,9 @@ import os
 from pathlib import Path
 
 from wis2box import cli_helpers
-from wis2box.util import yaml_load
 from wis2box.log import setup_logger
+from wis2box.plugin import load_plugin
+from wis2box.util import yaml_load
 
 LOGGER = logging.getLogger(__name__)
 
@@ -57,12 +58,13 @@ URL = os.environ.get('WIS2BOX_URL')
 BROKER = os.environ.get('WIS2BOX_BROKER')
 BROKER_PUBLIC = os.environ.get('WIS2BOX_BROKER_PUBLIC')
 
-WIS2BOX_STORAGE_TYPE = os.environ.get('WIS2BOX_STORAGE_TYPE','')
-S3_ENDPOINT = os.environ.get('S3_ENDPOINT','')
-S3_ROOT_USER = os.environ.get('S3_ROOT_USER','minio')
-S3_ROOT_PASSWORD = os.environ.get('S3_ROOT_PASSWORD','minio123')
-S3_BUCKET_INCOMING = os.environ.get('S3_BUCKET_INCOMING','wis2box-incoming')
-S3_BUCKET_PUBLIC = os.environ.get('S3_BUCKET_PUBLIC','wis2box-public') 
+STORAGE_TYPE = os.environ.get('WIS2BOX_STORAGE_TYPE')
+STORAGE_SOURCE = os.environ.get('WIS2BOX_STORAGE_SOURCE')
+STORAGE_USERNAME = os.environ.get('WIS2BOX_STORAGE_USERNAME')
+STORAGE_PASSWORD = os.environ.get('WIS2BOX_STORAGE_PASSWORD')
+STORAGE_INCOMING = os.environ.get('WIS2BOX_STORAGE_INCOMING')
+STORAGE_PUBLIC = os.environ.get('WIS2BOX_STORAGE_PUBLIC')
+STORAGE_CONFIG = os.environ.get('WIS2BOX_STORAGE_CONFIG')
 
 try:
     DATA_RETENTION_DAYS = int(os.environ.get('WIS2BOX_DATA_RETENTION_DAYS'))
@@ -96,7 +98,14 @@ required_environment_variables = [
     API_TYPE,
     API_URL,
     BROKER_PUBLIC,
-    URL
+    URL,
+    STORAGE_TYPE,
+    STORAGE_SOURCE,
+    STORAGE_USERNAME,
+    STORAGE_PASSWORD,
+    STORAGE_INCOMING,
+    STORAGE_PUBLIC,
+    STORAGE_CONFIG
 ]
 
 for rev in required_environment_variables:
@@ -109,6 +118,7 @@ if missing_environment_variables:
     msg = f'Environment variables not set! = {missing_environment_variables}'
     LOGGER.error(msg)
     raise EnvironmentError(msg)
+
 
 @click.group()
 def environment():
@@ -125,26 +135,33 @@ def create(ctx, verbosity):
     click.echo(f'Setting up logging (loglevel={LOGLEVEL}, logfile={LOGFILE})')
     setup_logger(LOGLEVEL, LOGFILE)
 
-    if WIS2BOX_STORAGE_TYPE == 'S3' :
-        click.echo(f'Creating buckets at S3-endpoint = {S3_ENDPOINT}')
-        # TODO: import class from generic storage plugin
-        from wis2box.storage.minio import MinioStorage as storage
-        auth = { 'username' : S3_ROOT_USER, 'password' : S3_ROOT_PASSWORD }
-        incoming_storage = storage(S3_ENDPOINT,S3_BUCKET_INCOMING,auth)
-        incoming_storage.create_bucket(bucket_policy='private')
-        public_storage = storage(S3_ENDPOINT,S3_BUCKET_PUBLIC,auth)
-        public_storage.create_bucket(bucket_policy='readonly')
-    # TODO: decide if/how to offer alternative to minio ? FS-class ?
-    # DATADIR_INCOMING.mkdir(parents=True, exist_ok=True)
-    # DATADIR_PUBLIC.mkdir(parents=True, exist_ok=True)
+    click.echo('Setting up storage')
+    storage_defs = {
+        'storage_type': STORAGE_TYPE,
+        'source': STORAGE_SOURCE,
+        'auth': {'username': STORAGE_USERNAME, 'password': STORAGE_PASSWORD}
+    }
 
-    click.echo(f'Creating baseline directory structure in {DATADIR}')
-    DATADIR.mkdir(parents=True, exist_ok=True)
-    DATADIR_ARCHIVE.mkdir(parents=True, exist_ok=True)
-    DATADIR_CONFIG.mkdir(parents=True, exist_ok=True)
-    (DATADIR / 'cache').mkdir(parents=True, exist_ok=True)
-    (DATADIR / 'metadata' / 'discovery').mkdir(parents=True, exist_ok=True)
-    (DATADIR / 'metadata' / 'station').mkdir(parents=True, exist_ok=True)
+    storages = {
+        'wis2box-config': 'private',
+        'wis2box-incoming': 'private',
+        'wis2box-public': 'readonly'
+    }
+
+    for key, value in storages.items():
+        storage_defs['name'] = key
+        storage_defs['policy'] = value
+        storage = load_plugin('storage', storage_defs)
+        storage.setup()
+
+    # TODO: abstract into wis2box.storage.fs.FileSystemStorage
+    # click.echo(f'Creating baseline directory structure in {DATADIR}')
+    # DATADIR.mkdir(parents=True, exist_ok=True)
+    # DATADIR_ARCHIVE.mkdir(parents=True, exist_ok=True)
+    # DATADIR_CONFIG.mkdir(parents=True, exist_ok=True)
+    # (DATADIR / 'cache').mkdir(parents=True, exist_ok=True)
+    # (DATADIR / 'metadata' / 'discovery').mkdir(parents=True, exist_ok=True)
+    # (DATADIR / 'metadata' / 'station').mkdir(parents=True, exist_ok=True)
 
 
 @click.command()

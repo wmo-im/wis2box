@@ -153,5 +153,3 @@ services:
 volumes:
   es-data:
   minio-data:
-
-

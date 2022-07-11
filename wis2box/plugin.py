@@ -43,7 +43,12 @@ PLUGINS = {
         'mqtt': {
             'plugin': 'wis2box.pubsub.mqtt.MQTTPubSubClient'
         }
-    }
+    },
+    'storage': {
+        'minio': {
+            'plugin': 'wis2box.storage.minio.MinIOStorage'
+         }
+     }
 }
 
 
@@ -52,6 +57,7 @@ class PluginTypes(Enum):
     API_CONFIG = 'api_config'
     DATA = 'data'
     PUBSUB = 'pubsub'
+    STORAGE = 'storage'
 
 
 def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
