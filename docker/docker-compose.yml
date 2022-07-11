@@ -84,7 +84,7 @@ services:
       - IPV6_MODE=false
       - UPDATE_TRACKERS=true
       - CUSTOM_TRACKER_URL=
-      - TZ=Asia/Shanghai
+      - TZ=UTC
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/data/aria2-config:/data/wis2box/data/aria2-config
       - ${WIS2BOX_HOST_DATADIR}/data/aria2-downloads:/downloads
