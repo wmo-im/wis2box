@@ -237,8 +237,10 @@ def on_mqtt_message(client, userdata, message):
         if integrity_method == "":
             LOG.error(" - no integrity_method in message: " + message.payload.decode("utf-8"))
         else:
-            if integrity_method != "md5" and integrity_method != "MD5" and integrity_method != "sha256" and integrity_method != "SHA256" and integrity_method != "sha512" and integrity_method != "SHA512":
-                LOG.error(" - integrity_method in message not md5, sha256 or sha512. Integrity_method: " + integrity_method + "(message: " + message.payload.decode("utf-8") + ")")
+            if integrity_method != "md5" and integrity_method != "MD5":
+                if integrity_method != "sha256" and integrity_method != "SHA256":
+                    if integrity_method != "sha512" and integrity_method != "SHA512":
+                        LOG.error(" - integrity_method in message not md5, sha256 or sha512. Integrity_method: " + integrity_method + "(message: " + message.payload.decode("utf-8") + ")")
 
         data_identifier = ""
         if "data_id" in msg["properties"]:
@@ -316,7 +318,12 @@ def on_connect(client, userdata, flags, rc, properties=None):
     if rc == 0:
         Connected = True
         client.connected_flag = True
-        result = client.subscribe(sub_topic, qos=1, options=None, properties=None)
+        result = client.subscribe(
+            sub_topic,
+            qos=1,
+            options=None,
+            properties=None
+        )
         if result[0] == 0:
             LOG.info(" - subscribed to topic: " + str(sub_topic) + " as " + sub_clientname)
             Subscribed = True
@@ -370,14 +377,16 @@ else:
         print("error - config file: missing toSubscribe, set to False")
         toSubscribe = "False"
     if toSubscribe == "True":
-        if "sub_protocol" in myConfig.keys() and "sub_host" in myConfig.keys() and "sub_port" in myConfig.keys() and "sub_user" in myConfig.keys() and "sub_password" in myConfig.keys():
-            sub_protocol = myConfig["sub_protocol"]
-            sub_host = myConfig["sub_host"]
-            sub_port = myConfig["sub_port"]
-            sub_user = myConfig["sub_user"]
-            sub_password = myConfig["sub_password"]
-        else:
-            print("error - config file: missing mandatory value (sub_protocol, sub_host, sub_port, sub_user, sub_password)")
+        if "sub_protocol" in myConfig.keys():
+            if "sub_host" in myConfig.keys() and "sub_port" in myConfig.keys():
+                if "sub_user" in myConfig.keys() and "sub_password" in myConfig.keys():
+                    sub_protocol = myConfig["sub_protocol"]
+                    sub_host = myConfig["sub_host"]
+                    sub_port = myConfig["sub_port"]
+                    sub_user = myConfig["sub_user"]
+                    sub_password = myConfig["sub_password"]
+                else:
+                    print("error - config file: missing mandatory value (sub_protocol, sub_host, sub_port, sub_user, sub_password)")
 
         if "sub_logfile" in myConfig.keys():
             sub_logfile = myConfig["sub_logfile"]
@@ -483,21 +492,31 @@ for item in myWhitelist:
 schema = json.load(open("message-schema.json"))
 # start connection to aria2 websocket
 ws = connect2aria2(aria2_ws_url)
-# subscribe
 if toSubscribe == "True":
     if sub_protocol == "mqtts" or sub_protocol == "mqtt":
         LOG.info(" - subscribed with protocol mqtt(s)") 
         if not toBeClosed:
             if sub_protocol_version == "MQTTv5":
-                client = mqtt.Client(sub_clientname, protocol=mqtt.MQTTv5)
+                client = mqtt.Client(
+                    sub_clientname,
+                    protocol=mqtt.MQTTv5
+                )
             else:
-                client = mqtt.Client(sub_clientname, protocol=mqtt.MQTTv311)
+                client = mqtt.Client(
+                    sub_clientname,
+                    protocol=mqtt.MQTTv311
+                )
             client.username_pw_set(sub_user, password=sub_password)
             if sub_protocol == "mqtts":
                 if sub_cacert != "":
-                    client.tls_set(ca_certs=sub_cacert, tls_version=ssl.PROTOCOL_TLSv1_2)
+                    client.tls_set(
+                        ca_certs=sub_cacert,
+                        tls_version=ssl.PROTOCOL_TLSv1_2
+                    )
                 else:
-                    client.tls_set(tls_version=ssl.PROTOCOL_TLSv1_2)
+                    client.tls_set(
+                        tls_version=ssl.PROTOCOL_TLSv1_2
+                    )
                 if sub_host == "localhost" or sub_host == "127.0.0.1":
                     client.tls_insecure_set(True)
             client.connected_flag = False
