@@ -76,18 +76,6 @@ services:
     env_file:
       - default.env
       - ../dev.env
-#    environment:
-#      - PUID=65534
-#      - PGID=65534
-#      - UMASK_SET=022
-#      - RPC_SECRET=P3TERX
-#      - RPC_PORT=6800
-#      - LISTEN_PORT=6888
-#      - DISK_CACHE=64M
-#      - IPV6_MODE=false
-#      - UPDATE_TRACKERS=true
-#      - CUSTOM_TRACKER_URL=
-#      - TZ=UTC
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/data/aria2-config:/data/wis2box/data/aria2-config
       - ${WIS2BOX_HOST_DATADIR}/data/aria2-downloads:/downloads
@@ -96,8 +84,6 @@ services:
       driver: json-file
       options:
         max-size: 1m
-#    networks:
-#      - aria2
 
   ariang:
     container_name: ariang
@@ -107,8 +93,6 @@ services:
       driver: json-file
       options:
         max-size: 1m
-#    networks:
-#      - aria2
 
   mqp-subscriber:
     container_name: mqp-subscriber
@@ -120,13 +104,12 @@ services:
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/config/mqp-subscriber:/data/wis2box/config/mqp-subscriber:rw
       - ${WIS2BOX_SUB_CACERT}:/usr/src/sub/caFiles/:ro
+      - ${WIS2BOX_HOST_DATADIR}/data/aria2-downloads:/aria2-downloads:rw
     depends_on:
       - aria2-pro
       - ariang
     links:
       - aria2-pro
-#    networks:
-#      - aria2
     command: sh -c "/mqp-sub_entrypoint.sh && python3 /usr/src/sub/pubSubDWD_geoJSON.py --config /data/wis2box/config/mqp-subscriber/configFiles/dwd_v04.txt"
 
   data-consumer:
@@ -218,6 +201,3 @@ services:
       - wis2box
 volumes:
   es-data:
-
-#networks:
-#  aria2:
