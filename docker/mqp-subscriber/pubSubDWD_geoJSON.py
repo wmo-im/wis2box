@@ -75,13 +75,20 @@ def timeLag(myPubTime):
 
 
 # aria2
-def connect2aria2(my_aria2_ws_url):
-    myWebsocket = create_connection(
-        my_aria2_ws_url,
-        http_no_proxy=aria2_ws_url
-    )
+def connect2aria2(aria2_ws_url):
+    count = 0
+    while count < 4:
+        try:
+            myWebsocket = create_connection(
+                aria2_ws_url,
+                http_no_proxy=aria2_ws_url
+            )
+            count = 4
+        except ConnectionRefusedError:
+            time.sleep(2)
+            myWebsocket = None
+            count = count +1
     return myWebsocket
-
 
 def getAria2Status(my_gid):
     jsonreq_status = json.dumps({'jsonrpc': '2.0', 'id': 'sub_client_wis2box_dwd', 'method': 'aria2.tellStatus', 'params': ['token:P3TERX', my_gid, ["status"]]})
@@ -361,6 +368,7 @@ listen4msg_started = False
 data_id_replace = "__"
 download_whitelist = ""
 dataID_infoFile_dir = "dataIDs/"
+ws = None
 
 # read config file #####
 configFile = configFile.replace(".json", "")
@@ -491,7 +499,8 @@ for item in myWhitelist:
     LOG.info(" in whitelist: " + str(item))
 schema = json.load(open("message-schema.json"))
 # start connection to aria2 websocket
-ws = connect2aria2(aria2_ws_url)
+if ws == None:
+    ws = connect2aria2(aria2_ws_url)
 if toSubscribe == "True":
     if sub_protocol == "mqtts" or sub_protocol == "mqtt":
         LOG.info(" - subscribed with protocol mqtt(s)") 
