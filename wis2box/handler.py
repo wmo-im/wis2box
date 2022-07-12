@@ -56,7 +56,7 @@ class Handler:
                 self.plugin.transform(self.filepath)
             else:
                 self.plugin.transform(get_data(self.filepath),
-                                      file_name=self.filepath.split('/')[-1])
+                                      filename=self.filepath.split('/')[-1])
             self.plugin.publish(notify)
         except Exception as err:
             msg = f'file {self.filepath} failed to transform/publish: {err}'

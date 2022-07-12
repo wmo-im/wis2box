@@ -213,6 +213,15 @@ def publish_collection(ctx, verbosity):
 
 @click.command()
 @click.pass_context
+@cli_helpers.OPTION_VERBOSITY
+@cli_helpers.ARGUMENT_FILEPATH
+def sync(ctx, filepath, verbosity):
+    ctx.invoke(cache, filepath=filepath, verbosity=verbosity)
+    ctx.invoke(publish_collection, verbosity=verbosity)
+
+
+@click.command()
+@click.pass_context
 @cli_helpers.ARGUMENT_FILEPATH
 @cli_helpers.OPTION_VERBOSITY
 def publish(ctx, filepath, verbosity):
@@ -232,3 +241,4 @@ def publish(ctx, filepath, verbosity):
 station.add_command(publish)
 station.add_command(publish_collection)
 station.add_command(cache)
+station.add_command(sync)

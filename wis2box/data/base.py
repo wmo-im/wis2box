@@ -22,13 +22,13 @@
 import logging
 from typing import Union
 
-from wis2box.env import DATADIR_INCOMING, DATADIR_PUBLIC
-from wis2box.env import STORAGE_SOURCE, STORAGE_PUBLIC
+from wis2box.env import (DATADIR_INCOMING, DATADIR_PUBLIC,
+                         STORAGE_PUBLIC, STORAGE_SOURCE)
+from wis2box.storage import put_data
 from wis2box.topic_hierarchy import TopicHierarchy
 
 LOGGER = logging.getLogger(__name__)
 
-from wis2box.storage import put_data
 
 class BaseAbstractData:
     """Abstract data"""
@@ -86,12 +86,13 @@ class BaseAbstractData:
 
         return True
 
-    def transform(self, input_data: Union[bytes, str], file_name: str = '') -> bool:
+    def transform(self, input_data: Union[bytes, str],
+                  filename: str = '') -> bool:
         """
         Transform data
 
         :param input_data: `bytes` or `str` of data payload
-        :param file_name, to be used in case input_data is bytes
+        :param filename, to be used in case input_data is bytes
 
         :returns: `bool` of processing result
         """
@@ -113,20 +114,21 @@ class BaseAbstractData:
                 if format_ == '_meta':  # not data, skip
                     continue
                 # check that we actually have data
-                if the_data is None:
-                    msg = f'Empty data for {identifier}-{format_}; not publishing'  # noqa
-                    LOGGER.warning(msg)
-                else:
-                    storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/{rfp}/{identifier}.{format_}"
+                if the_data is not None:
+                    storage_path = f'{STORAGE_SOURCE}/{STORAGE_PUBLIC}/{rfp}/{identifier}.{format_}'  # noqa
                     LOGGER.info(f'Writing data to {storage_path}')
                     data_bytes = None
-                    if type(the_data) == str:
+                    if isinstance(the_data, str):
                         data_bytes = str(the_data).encode()
-                    elif type(the_data) == bytes:
+                    elif isinstance(the_data, bytes):
                         data_bytes = the_data
                     else:
-                        LOGGER.warning(f"the_data is neither bytes nor str")
-                    put_data(data_bytes,storage_path) 
+                        LOGGER.warning('the_data is neither bytes nor str')
+                    LOGGER.debug('Publishing data')
+                    put_data(data_bytes, storage_path)
+                else:
+                    msg = f'Empty data for {identifier}-{format_}; not publishing'  # noqa
+                    LOGGER.warning(msg)
             self.notify()
         return True
 

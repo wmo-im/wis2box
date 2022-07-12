@@ -3,4 +3,8 @@ services:
     volumes:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
       - ./wis2box/wis2box.cron:/etc/cron.d/wis2box:ro
-      - ../wis2box:/usr/local/lib/python3.8/dist-packages/wis2box-0.2.dev0-py3.8.egg/wis2box
+      - ../wis2box:/usr/local/lib/python3.9/site-packages/wis2box-0.2.dev0-py3.9.egg/wis2box
+  wis2box-auth:
+    volumes:
+      - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
+      - ./wis2box-auth/app.py:/wis2box-auth/wis2box-auth/app.py

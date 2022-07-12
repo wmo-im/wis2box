@@ -51,13 +51,22 @@ def generate_collection_metadata(mcf: dict) -> dict:
 
     LOGGER.debug('Creating collection configuration')
 
+    bbox = [
+        generated['geometry']['coordinates'][0][0][0],
+        generated['geometry']['coordinates'][0][0][1],
+        generated['geometry']['coordinates'][0][2][0],
+        generated['geometry']['coordinates'][0][2][1],
+    ]
+
     return {
         'type': 'collection',
         'title': generated['properties']['title'],
         'description': generated['properties']['description'],
         'keywords': record['identification']['keywords'],
         'extents': {
-            'spatial': generated['properties']['extent']['spatial']
+            'spatial': {
+                'bbox': bbox
+            }
         },
         'links': generated['links'],
         'providers': []

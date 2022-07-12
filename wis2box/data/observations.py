@@ -24,6 +24,7 @@ import json
 import logging
 from pathlib import Path
 import re
+from typing import Union
 from urllib.parse import urlparse
 
 from csv2bufr import transform as transform_csv
@@ -59,21 +60,22 @@ class ObservationDataCSV(BaseAbstractData):
 
         self.station_metadata = None
 
-    def transform(self, input_data, file_name = '') -> bool:
-        
-        if type(input_data) == Path:
-            LOGGER.debug(f"input_data has type=Path")
-            file_name = input_data.name
-        elif  type(input_data) == bytes:
-            LOGGER.debug(f"input_data has type=bytes")
-        
+    def transform(self, input_data: Union[Path, bytes],
+                  filename: str = '') -> bool:
+
+        if isinstance(input_data, Path):
+            LOGGER.debug('input_data is a Path')
+            filename = input_data.name
+        elif isinstance(input_data, bytes):
+            LOGGER.debug('input_data is bytes')
+
         LOGGER.debug('Processing data')
         LOGGER.debug('Extracting WSI from filename')
         try:
             regex = self.file_filter
-            wsi = re.match(regex, file_name).group(1)
+            wsi = re.match(regex, filename).group(1)
         except AttributeError:
-            msg = f'Invalid filename format: {file_name} ({self.file_filter})'
+            msg = f'Invalid filename format: {filename} ({self.file_filter})'
             LOGGER.error(msg)
             raise ValueError(msg)
 
@@ -88,20 +90,22 @@ class ObservationDataCSV(BaseAbstractData):
 
         LOGGER.debug('Generating BUFR4')
         input_bytes = None
-        if type(input_data) == Path:
+        if isinstance(input_data, Path):
             with input_data.open() as fh1:
                 input_bytes = fh1.read()
-        elif type(input_data) == bytes:
+        elif isinstance(input_data, bytes):
             input_bytes = input_data.decode()
         else:
-            LOGGER.warning("csv input_data is neither bytes nor Path")
+            LOGGER.warning('csv input_data is neither bytes nor Path')
+
+        LOGGER.debug('Transforming data')
         results = transform_csv(input_bytes,
                                 self.station_metadata,
                                 self.mappings['bufr4'])
 
         # convert to list
         LOGGER.debug('Iterating over BUFR messages')
-        for item in results:   
+        for item in results:
             LOGGER.debug('Setting obs date for filepath creation')
             identifier = item['_meta']['identifier']
             data_date = item['_meta']['data_date']

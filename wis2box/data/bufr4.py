@@ -22,6 +22,7 @@
 import json
 import logging
 from pathlib import Path
+from typing import Union
 
 from bufr2geojson import transform as as_geojson
 
@@ -48,17 +49,18 @@ class ObservationDataBUFR(BaseAbstractData):
         self.mappings = {}
         self.output_data = {}
 
-    def transform(self, input_data, file_name = '') -> bool:
+    def transform(self, input_data: Union[Path, bytes],
+                  filename: str = '') -> bool:
         LOGGER.info('Processing BUFR data')
         input_bytes = None
-        if type(input_data) == Path:
+        if isinstance(input_data, Path):
             with input_data.open('rb') as fh:
                 input_bytes = fh.read()
-        elif type(input_data) == bytes:
+        elif isinstance(input_data, bytes):
             input_bytes = input_data
         else:
-            LOGGER.warning("bufr4 input_data is neither Path nor bytes")
-        if input_bytes is not None:  
+            LOGGER.warning(f'Invalid data type {type(input_data)}')
+        if input_bytes is not None:
             results = as_geojson(input_bytes, serialize=False)
             LOGGER.info('Iterating over GeoJSON features')
             # TODO: iterate over item['geojson']

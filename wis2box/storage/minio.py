@@ -19,13 +19,13 @@
 #
 ###############################################################################
 
+from io import BytesIO
 import json
 import logging
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-from io import BytesIO
 from minio import Minio
 from minio.notificationconfig import NotificationConfig, QueueConfig
 

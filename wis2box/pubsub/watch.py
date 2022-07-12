@@ -85,10 +85,10 @@ def sub_on_message(client, userdata, msg):
     if 'EventName' in msg_payload and msg_payload['EventName'] == 's3:ObjectCreated:Put':
         from wis2box.env import STORAGE_SOURCE
         filepath = STORAGE_SOURCE+'/'+msg_payload['Key']
-    elif 'relPath' in msg_payload: 
+    elif 'relPath' in msg_payload:
         filepath = msg_payload['relPath']
     else:
-        LOGGER.warning(f"MGS-payload could not be parsed")
+        LOGGER.warning('message ayload could not be parsed')
 
     try:
         LOGGER.info(f'Processing {filepath}')
@@ -103,6 +103,7 @@ def sub_on_message(client, userdata, msg):
     except Exception as err:
         msg = f'handle() error: {err}'
         raise err
+
 
 @click.command()
 @click.pass_context
@@ -129,4 +130,3 @@ def watch(ctx, verbosity):
     mqtt_client.connect(broker_url.hostname, mqtt_port)
     # loop_forever run until interrupted by user
     mqtt_client.loop_forever()
-

@@ -24,8 +24,7 @@ from typing import Any
 
 from wis2box.env import (STORAGE_TYPE, STORAGE_SOURCE,
                          STORAGE_USERNAME, STORAGE_PASSWORD)
-from wis2box.plugin import load_plugin
-from wis2box.plugin import PLUGINS
+from wis2box.plugin import load_plugin, PLUGINS
 
 LOGGER = logging.getLogger('__name__')
 
@@ -58,6 +57,7 @@ def get_data(path: str) -> Any:
     LOGGER.debug(f'Fetching data from {identifier}')
     return storage.get(identifier)
 
+
 def put_data(data: bytes, path: str) -> Any:
     """
     Put data into storage
@@ -84,6 +84,4 @@ def put_data(data: bytes, path: str) -> Any:
     identifier = storage_path.replace(name, '')
 
     LOGGER.debug(f'Storing data into {identifier}')
-    return storage.put(data,identifier)
-
-# add put_data
+    return storage.put(data, identifier)
