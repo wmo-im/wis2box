@@ -73,18 +73,21 @@ services:
   aria2-pro:
     container_name: aria2-pro
     image: p3terx/aria2-pro
-    environment:
-      - PUID=65534
-      - PGID=65534
-      - UMASK_SET=022
-      - RPC_SECRET=P3TERX
-      - RPC_PORT=6800
-      - LISTEN_PORT=6888
-      - DISK_CACHE=64M
-      - IPV6_MODE=false
-      - UPDATE_TRACKERS=true
-      - CUSTOM_TRACKER_URL=
-      - TZ=UTC
+    env_file:
+      - default.env
+      - ../dev.env
+#    environment:
+#      - PUID=65534
+#      - PGID=65534
+#      - UMASK_SET=022
+#      - RPC_SECRET=P3TERX
+#      - RPC_PORT=6800
+#      - LISTEN_PORT=6888
+#      - DISK_CACHE=64M
+#      - IPV6_MODE=false
+#      - UPDATE_TRACKERS=true
+#      - CUSTOM_TRACKER_URL=
+#      - TZ=UTC
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/data/aria2-config:/data/wis2box/data/aria2-config
       - ${WIS2BOX_HOST_DATADIR}/data/aria2-downloads:/downloads
