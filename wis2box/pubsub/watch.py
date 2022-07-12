@@ -88,7 +88,7 @@ def sub_on_message(client, userdata, msg):
     elif 'relPath' in msg_payload:
         filepath = msg_payload['relPath']
     else:
-        LOGGER.warning('message ayload could not be parsed')
+        LOGGER.warning('message payload could not be parsed')
 
     try:
         LOGGER.info(f'Processing {filepath}')
