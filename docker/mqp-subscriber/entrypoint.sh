@@ -49,3 +49,6 @@ else
   cp /usr/src/sub/configFiles/dwd_v04.txt /data/wis2box/config/mqp-subscriber/configFiles/
   cp /usr/src/sub/configFiles/wis2box_whitelist.txt /data/wis2box/config/mqp-subscriber/configFiles/
 fi
+
+echo "started clean job"
+/cleanAria2Download.sh > /clean.log &
