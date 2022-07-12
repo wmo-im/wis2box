@@ -22,14 +22,14 @@
 FROM wis2box_project_wis2box
 
 RUN apt-get update -y \
-    && apt-get install -y gunicorn python3-pip python3-gevent python3-flask python3-flask-cors \
-    && pip3 install jinja2==3.0.3
+    && pip3 install pip -U \
+    && pip3 install gevent gunicorn flask flask-cors jinja2==3.0.3
 
-RUN mkdir -p /wis2box-auth/wis2box-auth/
+RUN mkdir -p /wis2box/wis2box-auth/
 
-COPY ./app.py /wis2box-auth/wis2box-auth/app.py
+COPY ./app.py /wis2box/wis2box-auth/app.py
 COPY ./entrypoint.sh /auth-entrypoint.sh
 
-WORKDIR /wis2box-auth
+WORKDIR /wis2box
 
-CMD ["sh", "-c", "/auth-entrypoint.sh"]
+CMD [ "sh", "-c", "/auth-entrypoint.sh" ]

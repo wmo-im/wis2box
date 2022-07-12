@@ -40,6 +40,6 @@ if [ ! -d "$WIS2BOX_DATADIR/config/csv2bufr" ]; then
 fi
 
 wis2box environment create
-echo wis2box environment show
+wis2box environment show
 echo "END /entrypoint.sh"
 exec "$@"

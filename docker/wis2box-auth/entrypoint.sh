@@ -42,7 +42,7 @@ function error() {
 }
 
 # Workdir
-cd '/wis2box-auth'
+cd '/wis2box'
 
 # SCRIPT_NAME should not have value '/'
 [[ "${SCRIPT_NAME}" = '/' ]] && export SCRIPT_NAME="" && echo "make SCRIPT_NAME empty from /"

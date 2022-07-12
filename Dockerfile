@@ -47,7 +47,7 @@ RUN apt-get update -y \
     # cleanup
     && apt autoremove -y  \
     && apt-get -q clean \
-    && rm -rf /var/lib/apt/lists/* 
+    && rm -rf /var/lib/apt/lists/*
 
 #COPY docker/wis2box/config /root/.config/sr3
 COPY docker/wis2box-api /wis2box-api
