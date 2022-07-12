@@ -43,6 +43,9 @@ COPY configFiles/wis2box_whitelist.txt /usr/src/sub/configFiles/
 COPY entrypoint.sh /mqp-sub_entrypoint.sh
 RUN chmod +x /mqp-sub_entrypoint.sh
 
+COPY cleanAria2Download.sh /cleanAria2Download.sh
+RUN chmod +x /cleanAria2Download.sh
+
 ENV PYTHONUNBUFFERED="true"
 
 #ENTRYPOINT [ "/mqp-sub_entrypoint.sh" ]
