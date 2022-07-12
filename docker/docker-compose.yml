@@ -93,8 +93,8 @@ services:
       driver: json-file
       options:
         max-size: 1m
-    networks:
-      - aria2
+#    networks:
+#      - aria2
 
   ariang:
     container_name: ariang
@@ -104,8 +104,8 @@ services:
       driver: json-file
       options:
         max-size: 1m
-    networks:
-      - aria2
+#    networks:
+#      - aria2
 
   mqp-subscriber:
     container_name: mqp-subscriber
@@ -122,8 +122,8 @@ services:
       - ariang
     links:
       - aria2-pro
-    networks:
-      - aria2
+#    networks:
+#      - aria2
     command: sh -c "/mqp-sub_entrypoint.sh && python3 /usr/src/sub/pubSubDWD_geoJSON.py --config /data/wis2box/config/mqp-subscriber/configFiles/dwd_v04.txt"
 
   data-consumer:
@@ -216,5 +216,5 @@ services:
 volumes:
   es-data:
 
-networks:
-  aria2:
+#networks:
+#  aria2:
