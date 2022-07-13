@@ -4,7 +4,7 @@ minio
 OWSLib
 paho-mqtt
 parse
-pygeometa==0.11.1
+pygeometa
 pyoscar
 PyYAML
 watchdog
