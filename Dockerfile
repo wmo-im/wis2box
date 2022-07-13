@@ -33,11 +33,10 @@ RUN if [ "$WIS2BOX_PIP3_EXTRA_PACKAGES" = "None" ]; \
     else export WIS2BOX_PIP3_EXTRA_PACKAGES=pip3 install ${WIS2BOX_PIP3_EXTRA_PACKAGES}; \
     fi
 
+# install dependencies
 # FIXME: install newer version of eccodes
 # FIXME: csv2bufr/bufr2geojson: remove and install from requirements.txt once we have a stable release
 # FIXME: pygeometa: remove and install from requirements.txt once we have a stable release
-
-# install dependencis
 RUN apt-get update -y \
     && apt-get install -y ${DEBIAN_PACKAGES} \
     # install wis2box dependencies
@@ -49,12 +48,10 @@ RUN apt-get update -y \
     && apt-get -q clean \
     && rm -rf /var/lib/apt/lists/*
 
-#COPY docker/wis2box/config /root/.config/sr3
 COPY docker/wis2box-api /wis2box-api
 # copy the app
 COPY . /app
-# (re-)install wis2box
-
+# install wis2box
 RUN cd /app \
     && python3 setup.py install \
     # install wis2box plugins, if defined
@@ -67,4 +64,3 @@ WORKDIR /home/wis2box
 COPY ./docker/entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT [ "/entrypoint.sh" ]
-#CMD ["sh", "-cx", "sr3 --logStdout start && sleep infinity"]
