@@ -19,12 +19,14 @@
 #
 ###############################################################################
 
+import json
 import logging
+from pathlib import Path
 
 import click
 
 from wis2box import cli_helpers
-from wis2box.env import BROKER
+from wis2box.env import BROKER, STORAGE_SOURCE
 from wis2box.handler import Handler
 from wis2box.plugin import load_plugin, PLUGINS
 
@@ -32,9 +34,33 @@ LOGGER = logging.getLogger(__name__)
 
 
 def on_message_handler(client, userdata, msg):
-    print(msg)
-    #filepath = json.loads(msg.payload)['filepath']
-    #handler = Handler(filepath)
+    LOGGER.debug(f'Raw message: {msg.payload}')
+
+    message = json.loads(msg.payload)
+
+    if message.get('EventName') == 's3:ObjectCreated:Put':
+        LOGGER.debug('Incoming data is an s3 data object')
+        filepath = f'{STORAGE_SOURCE}/{message["Key"]}'
+    elif 'relPath' in message:
+        LOGGER.debug('Incoming data is a filesystem path')
+        filepath = Path(message['relPath'])
+    else:
+        LOGGER.warning('message payload could not be parsed')
+        return
+
+    try:
+        LOGGER.info(f'Processing {filepath}')
+        handler = Handler(filepath)
+        if handler.handle():
+            LOGGER.info('Data processed')
+            for filepath_out in handler.plugin.files():
+                LOGGER.info(f'Public filepath: {filepath_out}')
+    except ValueError as err:
+        msg = f'handle() error: {err}'
+        LOGGER.error(msg)
+    except Exception as err:
+        msg = f'handle() error: {err}'
+        raise err
 
 
 @click.command()

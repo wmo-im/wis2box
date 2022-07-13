@@ -98,13 +98,8 @@ class MQTTPubSubClient(BasePubSubClient):
         :returns: `None`
         """
 
-        def on_message(client, userdata, msg):
-            LOGGER.debug(f'Topic: {msg.topic}')
-            LOGGER.debug(f'Message: {msg.payload}')
-
         LOGGER.debug(f'Subscribing to broker {self.broker}')
         self.conn.subscribe(topic)
-        self.conn.on_message = on_message
         self.conn.loop_forever()
 
     def bind(self, event: str, function: Callable[..., Any]) -> None:

@@ -21,7 +21,6 @@
 
 import os
 import logging
-
 from pathlib import Path
 
 from wis2box.util import yaml_load

@@ -21,7 +21,6 @@
 
 from enum import Enum
 import logging
-from pathlib import Path
 from typing import Any
 
 LOGGER = logging.getLogger(__name__)

@@ -22,7 +22,6 @@
 from io import BytesIO
 import json
 import logging
-from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
@@ -81,7 +80,7 @@ def readwrite_policy(name):
 
 
 class MinIOStorage(StorageBase):
-    """Abstract storage manager"""
+    """MinIO storage manager"""
     def __init__(self, defs: dict) -> None:
 
         super().__init__(defs)
@@ -157,7 +156,8 @@ class MinIOStorage(StorageBase):
 
         LOGGER.debug(f'Putting data as object={identifier}')
         self.client.put_object(bucket_name=self.name, object_name=identifier,
-                               data=BytesIO(data), length=-1, part_size=10*1024*1024)
+                               data=BytesIO(data), length=-1,
+                               part_size=10*1024*1024)
 
         return True
 

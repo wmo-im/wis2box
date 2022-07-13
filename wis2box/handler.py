@@ -32,8 +32,17 @@ LOGGER = logging.getLogger(__name__)
 class Handler:
     def __init__(self, filepath: str, topic_hierarchy: str = None):
         self.filepath = filepath
-        self.filetype = filepath.split(".")[-1]
         self.plugin = None
+
+        LOGGER.debug('Detecting file type')
+        if isinstance(self.filepath, Path):
+            LOGGER.debug('filepath is a Path object')
+            self.filetype = self.filepath.suffix[1:]
+            self.is_http = self.filepath.as_posix().startswith('http')
+        else:
+            LOGGER.debug('filepath is a string')
+            self.filetype = self.filepath.split(".")[-1]
+            self.is_http = self.filepath.startswith('http')
 
         if topic_hierarchy is not None:
             th = topic_hierarchy
@@ -52,11 +61,12 @@ class Handler:
 
     def handle(self, notify=False) -> bool:
         try:
-            if not self.filepath.startswith('http'):
-                self.plugin.transform(self.filepath)
-            else:
+            if self.is_http:
                 self.plugin.transform(get_data(self.filepath),
                                       filename=self.filepath.split('/')[-1])
+            else:
+                self.plugin.transform(self.filepath)
+
             self.plugin.publish(notify)
         except Exception as err:
             msg = f'file {self.filepath} failed to transform/publish: {err}'
