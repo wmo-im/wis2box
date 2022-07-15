@@ -26,7 +26,7 @@ from wis2box.env import (STORAGE_TYPE, STORAGE_SOURCE,
                          STORAGE_USERNAME, STORAGE_PASSWORD)
 from wis2box.plugin import load_plugin, PLUGINS
 
-LOGGER = logging.getLogger('__name__')
+LOGGER = logging.getLogger(__name__)
 
 
 def get_data(path: str) -> Any:
@@ -37,7 +37,7 @@ def get_data(path: str) -> Any:
 
     :returns: content of object/file
     """
-
+    LOGGER.debug(f'get_data from : {path}')
     storage_path = path.replace(f'{STORAGE_SOURCE}/', '')
     name = storage_path.split('/')[0]
 

@@ -26,8 +26,9 @@ import hashlib
 import logging
 from pathlib import Path
 
-from wis2box.env import URL
 from wis2box.util import json_serial
+
+from wis2box.storage import get_data
 
 LOGGER = logging.getLogger(__name__)
 
@@ -49,7 +50,7 @@ class PubSubMessage:
     Generic message class
     """
 
-    def __init__(self, type_: str, filepath: Path) -> None:
+    def __init__(self, type_: str, filepath: str) -> None:
         """
         Initializer
 
@@ -60,11 +61,18 @@ class PubSubMessage:
         """
 
         self.type = type_
-        self.filepath = Path(filepath)
-        self.length = self.filepath.stat().st_size
+        self.filepath = filepath
         self.publish_datetime = datetime.now().strftime('%Y%m%dT%H%M%S.%f')
         self.checksum_type = SecureHashAlgorithms.SHA512.value
-        self.checksum_value = self._generate_checksum(self.checksum_type)
+        # needs to get bytes to calc checksum and get length
+        filebytes = None
+        if isinstance(self.filepath, Path):
+            with self.filepath.open('rb') as fh:
+                filebytes = fh.read()
+        else:
+            filebytes = get_data(filepath)
+        self.length = len(filebytes)
+        self.checksum_value = self._generate_checksum(filebytes, self.checksum_type) # noqa
 
     def prepare(self):
         """
@@ -89,24 +97,17 @@ class PubSubMessage:
         else:
             return json.dumps(self, default=json_serial)
 
-    def _generate_checksum(self, algorithm: SecureHashAlgorithms) -> str:
+    def _generate_checksum(self, bytes, algorithm: SecureHashAlgorithms) -> str:  # noqa
         """
         Generate a checksum of message file
 
         :param algorithm: secure hash algorithm (md5, sha512)
 
-        :returns: `str` of hexdigest
+        :returns: `tuple` of hexdigest and length
         """
 
         sh = getattr(hashlib, algorithm)()
-
-        with self.filepath.open('rb') as fh:
-            while True:
-                chunk = fh.read(sh.block_size)
-                if not chunk:
-                    break
-                sh.update(chunk)
-
+        sh.update(bytes)
         return sh.hexdigest()
 
 
@@ -135,13 +136,14 @@ class WISNotificationMessage(PubSubMessage):
 
     def dumps(self, identifier, geometry=None):
 
-        suffix = self.filepath.suffix.replace('.', '')
+        suffix = self.filepath.split('.')[-1]
 
         try:
             mimetype = DATA_OBJECT_MIMETYPES[suffix]
         except KeyError:
             mimetype = 'application/octet-stream'
-
+        # TODO determine how proxy serves data to outside world and fix
+        public_file_url = self.filepath
         message = {
             'id': identifier,
             'type': 'Feature',
@@ -160,8 +162,8 @@ class WISNotificationMessage(PubSubMessage):
             'links': [{
                 'rel': 'canonical',
                 'type': mimetype,
-                'href': f'{URL}/{self.filepath.as_posix()}'
+                'href': public_file_url
             }]
         }
 
-        return self.dumps(message)
+        return json.dumps(message)

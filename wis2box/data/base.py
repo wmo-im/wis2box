@@ -23,9 +23,12 @@ import logging
 from typing import Union
 
 from wis2box.env import (DATADIR_INCOMING, DATADIR_PUBLIC,
-                         STORAGE_PUBLIC, STORAGE_SOURCE)
+                         STORAGE_PUBLIC, STORAGE_SOURCE, BROKER_PUBLIC)
 from wis2box.storage import put_data
 from wis2box.topic_hierarchy import TopicHierarchy
+from wis2box.plugin import load_plugin, PLUGINS
+
+from wis2box.pubsub.message import WISNotificationMessage
 
 LOGGER = logging.getLogger(__name__)
 
@@ -99,8 +102,23 @@ class BaseAbstractData:
 
         raise NotImplementedError()
 
-    def notify(self) -> bool:
-        raise NotImplementedError()
+    def notify(self, storage_path):
+        # publish filepath on public broker
+        LOGGER.info("Send out WISNotificationMessage on public broker")
+        LOGGER.debug(f"storage_path={storage_path}")
+        msg = WISNotificationMessage(storage_path)
+        #  load plugin for broker
+        defs = {
+            'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
+            'url': BROKER_PUBLIC
+        }
+        broker = load_plugin('pubsub', defs)
+        # TODO how is topic on BROKER_PUBLIC to be defined ??
+        topic = 'xpublic/wis2box-data'
+        # publish using filename as identifier
+        broker.pub(topic, msg.dumps(identifier=self.filename))
+        LOGGER.info(f"WISNotificationMessage published for {self.filename} ")
+        return True
 
     def publish(self, notify: bool = False) -> bool:
         # save output_data to disk and send notification if requested
@@ -126,10 +144,14 @@ class BaseAbstractData:
                         LOGGER.warning('the_data is neither bytes nor str')
                     LOGGER.debug('Publishing data')
                     put_data(data_bytes, storage_path)
+                    if notify:
+                        LOGGER.debug('Notify')
+                        self.notify(storage_path)
+                    else:
+                        LOGGER.debug('Do not notify')
                 else:
                     msg = f'Empty data for {identifier}-{format_}; not publishing'  # noqa
                     LOGGER.warning(msg)
-            self.notify()
         return True
 
     # TODO: fix annotation/types
