@@ -80,17 +80,9 @@ services:
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
     ports:
       - 3000:3000
-  mqp-publisher:
-    <<: *logging
   wis2box:
     <<: *logging
-  wis2box-ui:
-    <<: *logging
   mosquitto:
-    <<: *logging
-  wis2box-api:
-    <<: *logging
-  wis2box-auth:
     <<: *logging
 
 volumes:
