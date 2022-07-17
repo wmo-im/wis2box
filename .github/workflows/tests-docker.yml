@@ -41,6 +41,7 @@ jobs:
       run: |
         python3 wis2box-ctl.py start
         python3 wis2box-ctl.py status -a
+        docker logs wis2box
     - name: Setup wis2box collections ⚙️
       run: |
         docker exec wis2box sh -c " \
@@ -60,7 +61,7 @@ jobs:
     - name: Ingest & publish data with event workflow
       if: ${{ matrix.ingest == 'event' }}
       run: |
-        python3 tests/copy_to_incoming.py tests/data/observations/* wis2box-incoming/data/core/observations-surface-land/mw/FWCL/landFixed
+        python3 tests/copy_to_incoming.py tests/data/observations/* /data/core/observations-surface-land/mw/FWCL/landFixed
     - name: run integration tests ⚙️
       run: |
         sleep 25

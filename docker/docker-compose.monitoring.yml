@@ -46,7 +46,7 @@ services:
   # prometheus to collect metrics
   prometheus:
     <<: *logging
-    image: prom/prometheus
+    image: prom/prometheus:v2.37.0
     container_name: prometheus
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
@@ -59,7 +59,7 @@ services:
     container_name: grafana
     env_file:
       - ../dev.env
-    image: grafana/grafana-oss:latest
+    image: grafana/grafana-oss:9.0.3
     volumes:
       - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/datasources:/etc/grafana/provisioning/datasources

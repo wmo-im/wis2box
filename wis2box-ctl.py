@@ -27,7 +27,6 @@ import subprocess
 DOCKER_COMPOSE_ARGS = """
     --file docker/docker-compose.yml
     --file docker/docker-compose.override.yml
-    --file docker/docker-compose.monitoring.yml
     --env-file dev.env
     --project-name wis2box_project
     """
