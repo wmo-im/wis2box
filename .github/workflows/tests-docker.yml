@@ -61,7 +61,7 @@ jobs:
     - name: Ingest & publish data with event workflow
       if: ${{ matrix.ingest == 'event' }}
       run: |
-        python3 tests/copy_to_incoming.py tests/data/observations/* /data/core/observations-surface-land/mw/FWCL/landFixed
+        python3 tests/copy_to_incoming.py "tests/data/observations/*" /data/core/observations-surface-land/mw/FWCL/landFixed
     - name: run integration tests ⚙️
       run: |
         sleep 25
