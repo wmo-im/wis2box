@@ -206,6 +206,8 @@ def ingest(ctx, topic_hierarchy, path, recursive, verbosity):
         click.echo(f'Processing {file_to_process}')
         handler = Handler(file_to_process, topic_hierarchy)
         _ = handler.handle(notify=True)
+        for filepath_out in handler.plugin.files():
+            LOGGER.debug(f'Public filepath: {filepath_out}')
     click.echo("Done")
 
 

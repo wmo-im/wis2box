@@ -192,6 +192,7 @@ class ElasticBackend(BaseBackend):
             """
 
             for feature in features:
+                LOGGER.debug(f'Feature: {feature}')
                 es_index2 = es_index
                 feature['properties']['id'] = feature['id']
                 if self._is_dataset(collection_id):

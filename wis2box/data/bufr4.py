@@ -111,6 +111,6 @@ def process_data(data: str, discovery_metadata: dict) -> bool:
     LOGGER.info('Transforming data')
     d.transform(data)
     LOGGER.info('Publishing data')
-    d.publish()
+    d.publish(notify=True)
 
     return True

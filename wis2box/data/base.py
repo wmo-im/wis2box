@@ -19,6 +19,7 @@
 #
 ###############################################################################
 
+import json
 import logging
 from typing import Iterator, Union
 
@@ -128,7 +129,7 @@ class BaseAbstractData:
         topic = f'xpublic/origin/a/wis2/{self.topic_hierarchy.dirpath}'
         # publish using filename as identifier
         broker.pub(topic, wis_message.dumps())
-        LOGGER.info(f'WISNotificationMessage published for {self.filename}')
+        LOGGER.info(f'WISNotificationMessage published for {identifier}')
 
         LOGGER.debug('Publishing to API')
         api_backend = load_backend()
@@ -148,6 +149,7 @@ class BaseAbstractData:
             for format_, the_data in item.items():
                 if format_ == '_meta':  # not data, skip
                     continue
+                LOGGER.debug(f'Processing format {format_}')
                 # check that we actually have data
                 if the_data is not None:
                     storage_path = f'{STORAGE_SOURCE}/{STORAGE_PUBLIC}/{rfp}/{identifier}.{format_}'  # noqa
@@ -167,6 +169,14 @@ class BaseAbstractData:
                                     item['_meta'].get('geometry'))
                     else:
                         LOGGER.debug('No notification sent')
+
+                    if format_ == 'geojson':  # publish to API
+                        LOGGER.debug('Publishing to API')
+                        api_backend = load_backend()
+                        api_backend.upsert_collection_items(
+                            self.topic_hierarchy.dotpath,
+                            items=[json.loads(the_data)])
+
                 else:
                     msg = f'Empty data for {identifier}-{format_}; not publishing'  # noqa
                     LOGGER.warning(msg)
