@@ -125,8 +125,7 @@ class BaseAbstractData:
             'url': BROKER_PUBLIC
         }
         broker = load_plugin('pubsub', defs)
-        # TODO how is topic on BROKER_PUBLIC to be defined ??
-        topic = 'xpublic/wis2box-data'
+        topic = f'xpublic/origin/a/wis2/{self.topic_hierarchy.dirpath}'
         # publish using filename as identifier
         broker.pub(topic, wis_message.dumps())
         LOGGER.info(f'WISNotificationMessage published for {self.filename}')
