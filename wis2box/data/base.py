@@ -20,8 +20,9 @@
 ###############################################################################
 
 import logging
-from typing import Union
+from typing import Iterator, Union
 
+from wis2box.api.backend import load_backend
 from wis2box.env import (DATADIR_INCOMING, DATADIR_PUBLIC,
                          STORAGE_PUBLIC, STORAGE_SOURCE, BROKER_PUBLIC)
 from wis2box.storage import put_data
@@ -102,11 +103,22 @@ class BaseAbstractData:
 
         raise NotImplementedError()
 
-    def notify(self, storage_path):
-        # publish filepath on public broker
-        LOGGER.info("Send out WISNotificationMessage on public broker")
+    def notify(self, identifier: str, storage_path: str,
+               geometry: dict = None) -> bool:
+        """
+        Publish data to broker
+
+        :param storage_path: path to data on storage
+        :param identifier: identifier
+        :param geometry: `dict` of GeoJSON geometry object
+
+        :returns: `bool` of result
+        """
+
+        LOGGER.info("Publishing WISNotificationMessage to public broker")
         LOGGER.debug(f"storage_path={storage_path}")
-        msg = WISNotificationMessage(storage_path)
+        wis_message = WISNotificationMessage(identifier, storage_path,
+                                             geometry)
         #  load plugin for broker
         defs = {
             'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
@@ -116,8 +128,13 @@ class BaseAbstractData:
         # TODO how is topic on BROKER_PUBLIC to be defined ??
         topic = 'xpublic/wis2box-data'
         # publish using filename as identifier
-        broker.pub(topic, msg.dumps(identifier=self.filename))
-        LOGGER.info(f"WISNotificationMessage published for {self.filename} ")
+        broker.pub(topic, wis_message.dumps())
+        LOGGER.info(f'WISNotificationMessage published for {self.filename}')
+
+        LOGGER.debug('Publishing to API')
+        api_backend = load_backend()
+        api_backend.upsert_collection_items(collection_id='messages',
+                                            items=[wis_message.message])
         return True
 
     def publish(self, notify: bool = False) -> bool:
@@ -127,6 +144,7 @@ class BaseAbstractData:
         for identifier, item in self.output_data.items():
             # get relative filepath
             rfp = item['_meta']['relative_filepath']
+
             # now iterate over formats
             for format_, the_data in item.items():
                 if format_ == '_meta':  # not data, skip
@@ -145,18 +163,23 @@ class BaseAbstractData:
                     LOGGER.debug('Publishing data')
                     put_data(data_bytes, storage_path)
                     if notify:
-                        LOGGER.debug('Notify')
-                        self.notify(storage_path)
+                        LOGGER.debug('Sending notification to broker')
+                        self.notify(item['_meta']['identifier'], storage_path,
+                                    item['_meta'].get('geometry'))
                     else:
-                        LOGGER.debug('Do not notify')
+                        LOGGER.debug('No notification sent')
                 else:
                     msg = f'Empty data for {identifier}-{format_}; not publishing'  # noqa
                     LOGGER.warning(msg)
         return True
 
-    # TODO: fix annotation/types
+    def files(self) -> Iterator[str]:
+        """
+        Provide list of files
 
-    def files(self) -> bool:
+        :returns: generator of filenames
+        """
+
         LOGGER.debug('Listing processed files')
         for identifier, item in self.output_data.items():
             rfp = item['_meta']['relative_filepath']

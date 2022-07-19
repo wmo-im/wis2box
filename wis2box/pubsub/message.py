@@ -50,18 +50,23 @@ class PubSubMessage:
     Generic message class
     """
 
-    def __init__(self, type_: str, filepath: str) -> None:
+    def __init__(self, type_: str, identifier: str, filepath: str,
+                 geometry: dict = None) -> None:
         """
         Initializer
 
         :param type_: message type
+        :param identifier: identifier
+        :param geometry: `dict` of GeoJSON geometry object
         :param filepath: `Path` of file
 
         :returns: `wis2box.pubsub.message.PubSubMessage` message object
         """
 
         self.type = type_
+        self.identifier = identifier
         self.filepath = filepath
+        self.geometry = geometry
         self.publish_datetime = datetime.now().strftime('%Y%m%dT%H%M%S.%f')
         self.checksum_type = SecureHashAlgorithms.SHA512.value
         # needs to get bytes to calc checksum and get length
@@ -73,6 +78,7 @@ class PubSubMessage:
             filebytes = get_data(filepath)
         self.length = len(filebytes)
         self.checksum_value = self._generate_checksum(filebytes, self.checksum_type) # noqa
+        self.message = {}
 
     def prepare(self):
         """
@@ -83,17 +89,15 @@ class PubSubMessage:
 
         raise NotImplementedError()
 
-    def dumps(self, dict_: dict = {}) -> str:
+    def dumps(self) -> str:
         """
         Return string representation of message
-
-        :param message: `str` of message content
 
         :returns: `str` of message content
         """
 
-        if dict_:
-            return json.dumps(dict_, default=json_serial)
+        if self.message:
+            return json.dumps(self.message, default=json_serial)
         else:
             return json.dumps(self, default=json_serial)
 
@@ -112,10 +116,9 @@ class PubSubMessage:
 
 
 class WISNotificationMessage(PubSubMessage):
-    def __init__(self, filepath):
-        super().__init__('wis2-notification-message', filepath)
-
-    def dumps(self, identifier, geometry=None):
+    def __init__(self, identifier, filepath, geometry=None):
+        super().__init__('wis2-notification-message', identifier,
+                         filepath, geometry)
 
         suffix = self.filepath.split('.')[-1]
 
@@ -125,11 +128,11 @@ class WISNotificationMessage(PubSubMessage):
             mimetype = 'application/octet-stream'
         # TODO determine how proxy serves data to outside world and fix
         public_file_url = self.filepath
-        message = {
-            'id': identifier,
+        self.message = {
+            'id': self.identifier,
             'type': 'Feature',
             'version': 'v04',
-            'geometry': geometry,
+            'geometry': self.geometry,
             'properties': {
                 'pubTime': self.publish_datetime,
                 'content': {
@@ -147,4 +150,29 @@ class WISNotificationMessage(PubSubMessage):
             }]
         }
 
-        return json.dumps(message)
+
+def generate_collection_metadata() -> dict:
+    """
+    Gets collection metadata for API provisioning
+
+    :returns: `dict` of collection metadata
+    """
+
+    return {
+        'id': 'messages',
+        'type': 'collection',
+        'title': 'Data notifications',
+        'description': 'Data notifications',
+        'keywords': ['wmo', 'wis 2.0'],
+        'extents': {
+            'spatial': {
+                'bbox': [-180, -90, 180, 90],
+                'crs': 'http://www.opengis.net/def/crs/OGC/1.3/CRS84'
+            }
+        },
+        'id_field': 'id',
+        'time_field': 'pubTime',
+        'title_field': 'id',
+        'providers': [],
+        'links': []
+    }

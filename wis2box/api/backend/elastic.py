@@ -196,7 +196,10 @@ class ElasticBackend(BaseBackend):
                 feature['properties']['id'] = feature['id']
                 if self._is_dataset(collection_id):
                     LOGGER.debug('Determinining index date from OM GeoJSON')
-                    date_ = parse_date(feature['properties']['resultTime'])
+                    try:
+                        date_ = parse_date(feature['properties']['resultTime'])
+                    except KeyError:
+                        date_ = parse_date(feature['properties']['pubTime'])
                     es_index2 = f"{es_index}.{date_.strftime('%Y-%m-%d')}"
                 yield {
                     '_index': es_index2,
@@ -252,7 +255,10 @@ class ElasticBackend(BaseBackend):
         :returns: `bool` of evaluation
         """
 
-        return '.' in collection_id
+        if '.' in collection_id or collection_id == 'messages':
+            return True
+        else:
+            return False
 
     def __repr__(self):
         return f'<ElasticBackend> (url={self.url})'
