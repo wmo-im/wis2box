@@ -52,7 +52,7 @@ def get_station_report(identifier: str) -> dict:
     :returns: `dict` of station metadata report
     """
 
-    client = OSCARClient(api_token=OSCAR_API_TOKEN)
+    client = OSCARClient(api_token=OSCAR_API_TOKEN, env='prod')
 
     LOGGER.debug(f'Fetching station report for {identifier}')
     return client.get_station_report(identifier)
