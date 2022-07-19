@@ -37,7 +37,7 @@ def upload_station_metadata(record: str) -> None:
     :returns: None
     """
 
-    client = OSCARClient(api_token=OSCAR_API_TOKEN)
+    client = OSCARClient(api_token=OSCAR_API_TOKEN, env='prod')
 
     LOGGER.debug(f'Uploading metadata to OSCAR {client.api_url}')
     return client.upload(record)
