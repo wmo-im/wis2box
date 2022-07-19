@@ -52,6 +52,14 @@ SETTINGS = {
                             }
                         }
                     },
+                    'pubTime': {
+                        'type': 'date',
+                        'fields': {
+                            'raw': {
+                                'type': 'keyword'
+                            }
+                        }
+                    },
                     'phenomenonTime': {
                         'type': 'text'
                     },
