@@ -111,25 +111,6 @@ class PubSubMessage:
         return sh.hexdigest()
 
 
-class Sarracenia_v03Message(PubSubMessage):
-    def __init__(self, filepath):
-        super().__init__('sarracenia-v03', filepath)
-
-    def dumps(self):
-        message = {
-            'relPath': self.filepath.as_posix(),
-            'baseUrl': 'file:/',
-            'pubTime': self.publish_datetime,
-            'size': self.length,
-            'integrity': {
-                'method': self.checksum_type,
-                'value': self.checksum_value
-            }
-        }
-
-        return self.dumps(message)
-
-
 class WISNotificationMessage(PubSubMessage):
     def __init__(self, filepath):
         super().__init__('wis2-notification-message', filepath)
