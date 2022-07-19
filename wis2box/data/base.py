@@ -131,7 +131,7 @@ class BaseAbstractData:
         broker.pub(topic, wis_message.dumps())
         LOGGER.info(f'WISNotificationMessage published for {identifier}')
 
-        LOGGER.debug('Publishing to API')
+        LOGGER.debug('Publishing message to API')
         api_backend = load_backend()
         api_backend.upsert_collection_items(collection_id='messages',
                                             items=[wis_message.message])
@@ -171,7 +171,7 @@ class BaseAbstractData:
                         LOGGER.debug('No notification sent')
 
                     if format_ == 'geojson':  # publish to API
-                        LOGGER.debug('Publishing to API')
+                        LOGGER.debug('Publishing data to API')
                         api_backend = load_backend()
                         api_backend.upsert_collection_items(
                             self.topic_hierarchy.dotpath,
