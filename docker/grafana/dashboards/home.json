@@ -3,7 +3,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -21,81 +24,10 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 50,
+  "id": 2,
   "links": [],
   "liveNow": false,
   "panels": [
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P55348B596EBB51C3"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "light-green",
-            "mode": "fixed"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "orange",
-                "value": 70
-              },
-              {
-                "color": "red",
-                "value": 85
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 24,
-        "x": 0,
-        "y": 0
-      },
-      "id": 4,
-      "interval": "1h",
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "sum"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": false,
-        "text": {
-          "titleSize": 13
-        }
-      },
-      "pluginVersion": "8.4.4",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "wis2box-loki"
-          },
-          "expr": "sum by (wigos_id) (count_over_time({container_name=\"data-consumer\"} |= \"file:/\" |= \"/data/incoming\" | pattern `<_>file:/<prefix>WIGOS_<wigos_id>_<timestamp>.<file_type>` [$__interval]))",
-          "legendFormat": "{{wigos_id}}",
-          "refId": "A"
-        }
-      ],
-      "title": "incoming csv-files received by wigos-id ",
-      "type": "gauge"
-    },
     {
       "datasource": {
         "type": "prometheus",
@@ -156,9 +88,9 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 15,
+        "w": 12,
         "x": 0,
-        "y": 4
+        "y": 0
       },
       "id": 2,
       "interval": "1h",
@@ -180,25 +112,25 @@
             "uid": "PABAFD29CE247021E"
           },
           "exemplar": true,
-          "expr": "delta(csv_incoming_nrfile{}[1h])",
+          "expr": "delta(minio_bucket_usage_object_total{bucket=\"wis2box-incoming\"}[1h])",
           "interval": "",
           "legendFormat": "Nr of csv-files in /data/incoming per hour",
           "refId": "A"
         }
       ],
-      "title": "csv-files per hour in /data/incoming",
+      "title": "New files per hour in wis2box-incoming",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "loki",
-        "uid": "wis2box-loki"
+        "uid": "P55348B596EBB51C3"
       },
       "gridPos": {
         "h": 18,
         "w": 9,
-        "x": 15,
-        "y": 4
+        "x": 12,
+        "y": 0
       },
       "id": 8,
       "options": {
@@ -206,7 +138,7 @@
         "enableLogDetails": false,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
-        "showLabels": true,
+        "showLabels": false,
         "showTime": true,
         "sortOrder": "Descending",
         "wrapLogMessage": true
@@ -217,30 +149,12 @@
             "type": "loki",
             "uid": "wis2box-loki"
           },
-          "expr": "{compose_service=~\"data-consumer|mqp-publisher|wis2box\"} |= \"ERROR\" | label_format container_name=\"\"",
+          "expr": "{compose_service=\"wis2box\"}",
           "hide": false,
           "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "wis2box-loki"
-          },
-          "expr": "{compose_service=~\"data-consumer|mqp-publisher|wis2box\"} |= \"Error\" | label_format container_name=\"\"",
-          "hide": false,
-          "refId": "C"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "wis2box-loki"
-          },
-          "expr": "{compose_service=~\"data-consumer|mqp-publisher|wis2box\"} |= \"Traceback\" | label_format container_name=\"\"",
-          "hide": false,
-          "refId": "D"
         }
       ],
-      "title": "ERRORs detected",
+      "title": "wis2box logging",
       "type": "logs"
     },
     {
@@ -302,9 +216,9 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 15,
+        "w": 12,
         "x": 0,
-        "y": 10
+        "y": 6
       },
       "id": 6,
       "interval": "1h",
@@ -326,13 +240,13 @@
             "uid": "PABAFD29CE247021E"
           },
           "exemplar": true,
-          "expr": "delta(bufr4_public_nrfile[1h])",
+          "expr": "delta(minio_bucket_usage_object_total{bucket=\"wis2box-public\"}[1h])",
           "interval": "",
           "legendFormat": "Nr of bufr4-files in public per hour",
           "refId": "A"
         }
       ],
-      "title": "bufr4-files per hour in /data/public",
+      "title": "New files per hour in wis2box-public",
       "type": "timeseries"
     },
     {
@@ -395,9 +309,9 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 15,
+        "w": 12,
         "x": 0,
-        "y": 16
+        "y": 12
       },
       "id": 10,
       "interval": "1h",
@@ -429,7 +343,7 @@
       "type": "timeseries"
     }
   ],
-  "schemaVersion": 35,
+  "schemaVersion": 36,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -443,6 +357,6 @@
   "timezone": "",
   "title": "wis2box workflow monitoring",
   "uid": "lIowuuP7k",
-  "version": 29,
+  "version": 1,
   "weekStart": ""
 }
