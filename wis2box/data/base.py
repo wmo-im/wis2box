@@ -117,7 +117,7 @@ class BaseAbstractData:
         """
 
         LOGGER.info("Publishing WISNotificationMessage to public broker")
-        LOGGER.debug(f"storage_path={storage_path}")
+        LOGGER.debug(f"prepare message for storage_path={storage_path}")
         wis_message = WISNotificationMessage(identifier, storage_path,
                                              geometry)
         #  load plugin for broker

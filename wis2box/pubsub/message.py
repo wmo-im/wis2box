@@ -27,7 +27,7 @@ import logging
 from pathlib import Path
 
 from wis2box.util import json_serial
-
+from wis2box.env import URL, STORAGE_SOURCE
 from wis2box.storage import get_data
 
 LOGGER = logging.getLogger(__name__)
@@ -126,8 +126,8 @@ class WISNotificationMessage(PubSubMessage):
             mimetype = DATA_OBJECT_MIMETYPES[suffix]
         except KeyError:
             mimetype = 'application/octet-stream'
-        # TODO determine how proxy serves data to outside world and fix
-        public_file_url = self.filepath
+        # replace storage-source with wis2box-url
+        public_file_url = self.filepath.replace(STORAGE_SOURCE, URL)
         self.message = {
             'id': self.identifier,
             'type': 'Feature',
