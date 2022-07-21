@@ -19,11 +19,11 @@
 #
 ###############################################################################
 
-import logging
 from pathlib import Path
-import sys
 
 import click
+
+from wis2box.log import setup_logger
 
 ARGUMENT_FILEPATH = click.argument('filepath', type=click.File())
 
@@ -41,8 +41,7 @@ def OPTION_VERBOSITY(f):
 
     def callback(ctx, param, value):
         if value is not None:
-            logging.basicConfig(stream=sys.stdout,
-                                level=getattr(logging, value))
+            setup_logger(loglevel=value)
         return True
 
     return click.option('--verbosity', '-v',
