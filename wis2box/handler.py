@@ -76,11 +76,12 @@ class Handler:
 
     def publish(self, backend) -> bool:
         index_name = self.topic_hierarchy.dotpath
-        if not self.startswith('http'):
+        if self.is_http:
+            geojson = json.load(get_data(self.filepath))
+            backend.upsert_collection_items(index_name, [geojson])
+        else:
             with Path(self.filepath).open() as fh1:
                 geojson = json.load(fh1)
                 backend.upsert_collection_items(index_name, [geojson])
-        else:
-            geojson = json.load(get_data(self.filepath))
-            backend.upsert_collection_items(index_name, [geojson])
+
         return True
