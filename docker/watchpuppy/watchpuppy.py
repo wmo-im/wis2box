@@ -62,10 +62,7 @@ class WatchpuppyMessage:
         :returns: `WatchpuppyMessage`
         """
 
-        # self.type = 'watchpuppy'
-        # pretend to be sarracenia
-
-        self.type = 'sarracenia-v03'
+        self.type = 'default-message'
         self.filepath = Path(filepath)
         self.message = {}
         self.message['relPath'] = self.filepath.as_posix()
