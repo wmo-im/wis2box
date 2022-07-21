@@ -67,7 +67,9 @@ class PubSubMessage:
         self.identifier = identifier
         self.filepath = filepath
         self.geometry = geometry
-        self.publish_datetime = datetime.now().strftime('%Y%m%dT%H%M%S.%f')
+        self.publish_datetime = datetime.utcnow().strftime(
+            '%Y-%m-%dT%H:%M:%SZ'
+        )
         self.checksum_type = SecureHashAlgorithms.SHA512.value
         # needs to get bytes to calc checksum and get length
         filebytes = None

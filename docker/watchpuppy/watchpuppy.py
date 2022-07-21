@@ -69,7 +69,9 @@ class WatchpuppyMessage:
         self.message['baseUrl'] = 'file:/'
 
     def prepare(self):
-        self.message['pubTime'] = datetime.now().strftime('%Y%m%dT%H%M%S.%f')
+        self.message['pubTime'] = datetime.utcnow().strftime(
+            '%Y-%m-%dT%H:%M:%SZ'
+        )
         self.message['size'] = self.filepath.stat().st_size
 
     def dumps(self) -> str:
