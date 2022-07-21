@@ -30,8 +30,9 @@ import click
 from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.env import (DATADIR_ARCHIVE, DATADIR_INCOMING, DATADIR_PUBLIC,
-                         DATA_RETENTION_DAYS)
+                         DATA_RETENTION_DAYS, STORAGE_INCOMING)
 from wis2box.handler import Handler
+from wis2box.storage import put_data
 from wis2box.topic_hierarchy import validate_and_load
 from wis2box.util import json_serial, older_than, walk_path
 
@@ -205,9 +206,13 @@ def ingest(ctx, topic_hierarchy, path, recursive, verbosity):
     for file_to_process in walk_path(path, '.*', recursive):
         click.echo(f'Processing {file_to_process}')
         handler = Handler(file_to_process, topic_hierarchy)
-        _ = handler.handle(notify=True)
-        for filepath_out in handler.plugin.files():
-            LOGGER.debug(f'Public filepath: {filepath_out}')
+        rfp = handler.topic_hierarchy.dirpath
+        path = f'{STORAGE_INCOMING}/{rfp}/{file_to_process.name}'
+
+        with file_to_process.open('rb') as fh:
+            data = fh.read()
+            put_data(data, path)
+
     click.echo("Done")
 
 

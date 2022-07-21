@@ -4,10 +4,6 @@ on: [ push, pull_request ]
 
 jobs:
   main:
-    strategy:
-      fail-fast: false
-      matrix:
-        ingest: [cli, event]
     runs-on: ubuntu-latest
 
     steps:
@@ -54,15 +50,10 @@ jobs:
           && wis2box metadata station cache /data/wis2box/metadata/station/station_list.csv \
           && wis2box metadata station publish-collection \
           && wis2box api add-collection -th data.core.observations-surface-land.mw.FWCL.landFixed /data/wis2box/metadata/discovery/surface-weather-observations.yml"
-    - name: Ingest & publish data from CLI
-      if: ${{ matrix.ingest == 'cli' }}
+    - name: Ingest & publish data
       run: |
         docker exec wis2box sh -c " \
           wis2box data ingest -th data.core.observations-surface-land.mw.FWCL.landFixed -p /data/wis2box/observations"
-    - name: Ingest & publish data with event workflow
-      if: ${{ matrix.ingest == 'event' }}
-      run: |
-        python3 tests/copy_to_incoming.py "tests/data/observations/*" /data/core/observations-surface-land/mw/FWCL/landFixed
     - name: run integration tests ⚙️
       run: |
         sleep 25
@@ -75,3 +66,12 @@ jobs:
       with:
         pre-build-command: "apt-get install -y pandoc && pip3 install nbsphinx ipython_genutils jinja2==3.0.3"
         docs-folder: "docs/"
+
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - name: Failed tests
+        run: |
+          docker-compose --file docker/docker-compose.yml --file docker/docker-compose.override.yml --file docker/docker-compose.monitoring.yml --env-file dev.env --project-name wis2box_project ps
+          docker-compose --file docker/docker-compose.yml --file docker/docker-compose.override.yml --file docker/docker-compose.monitoring.yml --env-file dev.env --project-name wis2box_project logs
