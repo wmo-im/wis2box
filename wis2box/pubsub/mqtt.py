@@ -45,9 +45,10 @@ class MQTTPubSubClient(BasePubSubClient):
         self.type = 'mqtt'
         self._port = self.broker_url.port
 
-        client_id = f'wis2box-mqtt-{random.randint(0, 1000)}'
-        LOGGER.debug(f'Connecting to broker {self.broker} with id {client_id}')
-        self.conn = mqtt_client.Client(client_id)
+        self.client_id = f'wis2box-mqtt-{random.randint(0, 1000)}'
+        msg = f'Connecting to broker {self.broker} with id {self.client_id}'
+        LOGGER.debug(msg)
+        self.conn = mqtt_client.Client(self.client_id)
 
         self.conn.enable_logger(logger=LOGGER)
 

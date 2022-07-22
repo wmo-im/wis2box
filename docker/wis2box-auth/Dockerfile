@@ -32,4 +32,4 @@ COPY ./entrypoint.sh /auth-entrypoint.sh
 
 WORKDIR /wis2box
 
-CMD [ "sh", "-c", "/auth-entrypoint.sh" ]
+ENTRYPOINT [ "/auth-entrypoint.sh" ]

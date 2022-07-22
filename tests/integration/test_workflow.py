@@ -24,7 +24,6 @@
 # .github/workflows/tests-docker.yml has been executed
 
 import csv
-import json
 from pathlib import Path
 
 import requests
