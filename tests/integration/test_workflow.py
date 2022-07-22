@@ -67,14 +67,18 @@ def test_metadata_discovery_publish():
 
     assert len(r['links']) == 4
 
-    spatial_extent = [
-        32.6881653175,
-        -16.8012997372,
-        35.7719047381,
-        -9.23059905359
-    ]
+    geometry = {
+        "type": "Polygon",
+        "coordinates": [[
+            [32.6881653175, -16.8012997372],
+            [32.6881653175, -9.23059905359],
+            [35.7719047381, -9.23059905359],
+            [35.7719047381, -16.8012997372],
+            [32.6881653175, -16.8012997372]
+        ]]
+    }
 
-    assert r['properties']['extent']['spatial']['bbox'][0] == spatial_extent
+    assert r['geometry'] == geometry
 
     params = {
         'q': 'temperature'
@@ -99,11 +103,6 @@ def test_data_ingest():
     assert item_waf['reportId'] == 'WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500'
     assert item_waf['properties']['resultTime'] == '2021-07-07T14:55:00Z'  # noqa
 
-    item_datadir_public = DATADIR / 'data' / 'public' / item
-    assert item_datadir_public.exists()
-
-    with item_datadir_public.open() as fh:
-        assert item_waf == json.load(fh)
 
     item_api_url = f'{API_URL}/collections/data.core.observations-surface-land.mw.FWCL.landFixed/items/{item_waf["id"]}'  # noqa
 

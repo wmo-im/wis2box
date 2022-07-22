@@ -29,7 +29,8 @@ from isodate import parse_date
 from wis2box.api.backend.base import BaseBackend
 from wis2box.util import older_than
 
-LOGGER = logging.getLogger(__name__)
+LOGGER = logging.getLogger('elasticsearch')
+LOGGER.setLevel(logging.INFO)
 
 # default index settings
 SETTINGS = {

@@ -29,8 +29,6 @@ from wis2box.pubsub.base import BasePubSubClient
 
 LOGGER = logging.getLogger(__name__)
 
-CLIENT_ID = f'wis2box-mqtt-{random.randint(0, 1000)}'
-
 
 class MQTTPubSubClient(BasePubSubClient):
     """MQTT PubSub client"""
@@ -47,8 +45,11 @@ class MQTTPubSubClient(BasePubSubClient):
         self.type = 'mqtt'
         self._port = self.broker_url.port
 
-        LOGGER.debug(f'Connecting to broker: {self.broker}')
-        self.conn = mqtt_client.Client(CLIENT_ID)
+        client_id = f'wis2box-mqtt-{random.randint(0, 1000)}'
+        LOGGER.debug(f'Connecting to broker {self.broker} with id {client_id}')
+        self.conn = mqtt_client.Client(client_id)
+
+        self.conn.enable_logger(logger=LOGGER)
 
         if None not in [self.broker_url.password, self.broker_url.password]:
             self.conn.username_pw_set(
@@ -80,9 +81,9 @@ class MQTTPubSubClient(BasePubSubClient):
 
         result = self.conn.publish(topic, message)
 
-        status = result[0]
+        result.wait_for_publish()
 
-        if status == 0:
+        if result.is_published:
             return True
         else:
             msg = 'Publishing error code: {result[1]}'
@@ -97,9 +98,11 @@ class MQTTPubSubClient(BasePubSubClient):
 
         :returns: `None`
         """
+        def on_connect(client, userdata, flags, rc):
+            client.subscribe(topic)
 
         LOGGER.debug(f'Subscribing to broker {self.broker}')
-        self.conn.subscribe(topic)
+        self.conn.on_connect = on_connect
         self.conn.loop_forever()
 
     def bind(self, event: str, function: Callable[..., Any]) -> None:
