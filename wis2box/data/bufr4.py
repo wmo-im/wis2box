@@ -34,83 +34,50 @@ LOGGER = logging.getLogger(__name__)
 class ObservationDataBUFR(BaseAbstractData):
     """Observation data"""
 
-    def __init__(self, topic_hierarchy: str) -> None:
-        """
-        Abstract data initializer
-
-        :param topic_hierarchy: `wis2box.topic_hierarchy.TopicHierarchy`
-                                object
-
-        :returns: `None`
-        """
-
-        super().__init__(topic_hierarchy)
-
-        self.mappings = {}
-        self.output_data = {}
-
     def transform(self, input_data: Union[Path, bytes],
                   filename: str = '') -> bool:
-        LOGGER.info('Processing BUFR data')
-        input_bytes = None
-        if isinstance(input_data, Path):
-            with input_data.open('rb') as fh:
-                input_bytes = fh.read()
-        elif isinstance(input_data, bytes):
-            input_bytes = input_data
-        else:
-            LOGGER.warning(f'Invalid data type {type(input_data)}')
-        if input_bytes is not None:
-            results = as_geojson(input_bytes, serialize=False)
-            LOGGER.info('Iterating over GeoJSON features')
-            # TODO: iterate over item['geojson']
-            for collection in results:  # results is an iterator
-                # for each iteration we have:
-                # - dict['id']
-                # - dict['id']['_meta']
-                # - dict['id']
-                for id, item in collection.items():
-                    data_date = item['_meta']['data_date']
+
+        LOGGER.debug('Procesing BUFR data')
+        input_bytes = self.as_bytes(input_data)
+
+        LOGGER.debug('Generating GeoJSON features')
+        results = as_geojson(input_bytes, serialize=False)
+
+        LOGGER.debug('Processing GeoJSON features')
+        for collection in results:
+            # results is an iterator, for each iteration we have:
+            # - dict['id']
+            # - dict['id']['_meta']
+            # - dict['id']
+            for id, item in collection.items():
+                LOGGER.debug(f'Processing feature: {id}')
+
+                LOGGER.debug('Parsing feature datetime')
+                data_date = item['_meta']['data_date']
+                if '/' in data_date:
                     # date is range/period, split and get end date/time
-                    if '/' in data_date:
-                        data_date = data_date.split("/")[1]
+                    data_date = data_date.split("/")[1]
 
-                    # make sure we only include those items expected
-                    items_to_remove = list()
-                    for key2 in item:
-                        if key2 not in ('geojson', '_meta'):
-                            items_to_remove.append(key2)
-                    for key2 in items_to_remove:
-                        item.pop(key2)
+                LOGGER.debug('Parsing feature fields')
+                items_to_remove = [
+                    key for key in item if key not in ('geojson', '_meta')
+                ]
+                for key in items_to_remove:
+                    LOGGER.debug(f'Removing unexpected key: {key}')
+                    item.pop(key)
 
-                    # populate output data for publication
-                    self.output_data[id] = item
-                    self.output_data[id]['geojson'] = json.dumps(
-                        self.output_data[id]['geojson'], indent=4)
-                    self.output_data[id]['_meta']['relative_filepath'] = \
-                        self.get_local_filepath(data_date)
-            return False
+                LOGGER.debug('Populating output data for publication')
+                self.output_data[id] = item
+                self.output_data[id]['geojson'] = json.dumps(
+                    self.output_data[id]['geojson'], indent=4
+                )
+                self.output_data[id]['_meta'][
+                    'relative_filepath'
+                ] = self.get_local_filepath(data_date)
+
+        LOGGER.debug('Successfully finished transforming BUFR data')
         return True
 
     def get_local_filepath(self, date_):
         yyyymmdd = date_[0:10]  # date_.strftime('%Y-%m-%d')
-        return (Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath)
-
-
-def process_data(data: str, discovery_metadata: dict) -> bool:
-    """
-    Data processing workflow for observations
-
-    :param data: `str` of data to be processed
-    :param discovery_metadata: `dict` of discovery metadata MCF
-
-    :returns: `bool` of processing result
-    """
-
-    d = ObservationDataBUFR(discovery_metadata)
-    LOGGER.info('Transforming data')
-    d.transform(data)
-    LOGGER.info('Publishing data')
-    d.publish(notify=True)
-
-    return True
+        return Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath

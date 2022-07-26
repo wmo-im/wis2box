@@ -35,21 +35,18 @@ LOGGER = logging.getLogger(__name__)
 
 class ObservationDataCSV(BaseAbstractData):
     """Observation data"""
-    def __init__(self, topic_hierarchy: str) -> None:
+    def __init__(self, defs: dict) -> None:
         """
-        Abstract data initializer
+        ObservationDataCSV data initializer
 
-        :param topic_hierarchy: `wis2box.topic_hierarchy.TopicHierarchy`
-                                object
+        :param def: `dict` object of resource mappings
 
         :returns: `None`
         """
 
-        super().__init__(topic_hierarchy)
+        super().__init__(defs)
 
         self.mappings = {}
-        self.output_data = {}
-
         mapping_bufr4 = DATADIR_CONFIG / "csv2bufr" / self.template
 
         with mapping_bufr4.open() as fh1:
@@ -57,21 +54,17 @@ class ObservationDataCSV(BaseAbstractData):
 
         self.station_metadata = None
 
-    def publish(self, notify: bool = True):
-        super().publish(notify=True)
-
     def transform(self, input_data: Union[Path, bytes],
                   filename: str = '') -> bool:
+
+        LOGGER.debug('Procesing CSV data')
 
         if isinstance(input_data, Path):
             LOGGER.debug('input_data is a Path')
             filename = input_data.name
-        elif isinstance(input_data, bytes):
-            LOGGER.debug('input_data is bytes')
 
-        LOGGER.debug('Processing data')
-        LOGGER.debug('Extracting WSI from filename')
         try:
+            LOGGER.debug('Extracting WSI from filename')
             regex = self.file_filter
             wsi = re.match(regex, filename).group(1)
         except AttributeError:
@@ -89,17 +82,10 @@ class ObservationDataCSV(BaseAbstractData):
             self.station_metadata = json.load(fh1)
 
         LOGGER.debug('Generating BUFR4')
-        input_bytes = None
-        if isinstance(input_data, Path):
-            with input_data.open() as fh1:
-                input_bytes = fh1.read()
-        elif isinstance(input_data, bytes):
-            input_bytes = input_data.decode()
-        else:
-            LOGGER.warning('csv input_data is neither bytes nor Path')
+        input_bytes = self.as_bytes(input_data)
 
         LOGGER.debug('Transforming data')
-        results = transform_csv(input_bytes,
+        results = transform_csv(input_bytes.decode(),
                                 self.station_metadata,
                                 self.mappings['bufr4'])
 
@@ -119,22 +105,3 @@ class ObservationDataCSV(BaseAbstractData):
     def get_local_filepath(self, date_):
         yyyymmdd = date_.strftime('%Y-%m-%d')
         return (Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath)
-
-
-def process_data(data: str, discovery_metadata: dict) -> bool:
-    """
-    Data processing workflow for observations
-
-    :param data: `str` of data to be processed
-    :param discovery_metadata: `dict` of discovery metadata MCF
-
-    :returns: `bool` of processing result
-    """
-
-    d = ObservationDataCSV(discovery_metadata)
-    LOGGER.info('Transforming data')
-    d.transform(data)
-    LOGGER.info('Publishing data')
-    d.publish()
-
-    return True

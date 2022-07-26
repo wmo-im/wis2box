@@ -101,8 +101,9 @@ def validate_and_load(topic_hierarchy: str, file_type: str = None,
         defs = {
             'topic_hierarchy': topic_hierarchy,
             'codepath': plugins[file_type]['plugin'],
-            'template': plugins[file_type]['template'],
             'pattern':  plugins[file_type]['file-pattern'],
+            'template': plugins[file_type].get('template'),
+            'notify': plugins[file_type].get('notify', False),
             'format': file_type
         }
         plugin = load_plugin('data', defs)
@@ -123,8 +124,9 @@ def validate_and_load(topic_hierarchy: str, file_type: str = None,
                 defs = {
                     'topic_hierarchy': key,
                     'codepath': value['plugins'][file_type]['plugin'],
-                    'template': value['plugins'][file_type]['template'],
                     'pattern': value['plugins'][file_type]['file-pattern'],
+                    'template': value['plugins'][file_type].get('template'),
+                    'notify': value['plugins'][file_type].get('notify', False),
                     'format': file_type
                 }
                 plugin = load_plugin('data', defs)

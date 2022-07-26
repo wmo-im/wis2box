@@ -59,7 +59,7 @@ class Handler:
             LOGGER.error(msg)
             raise ValueError(msg)
 
-    def handle(self, notify=False) -> bool:
+    def handle(self) -> bool:
         try:
             if self.is_http:
                 self.plugin.transform(get_data(self.filepath),
@@ -67,7 +67,7 @@ class Handler:
             else:
                 self.plugin.transform(self.filepath)
 
-            self.plugin.publish(notify)
+            self.plugin.publish()
         except Exception as err:
             msg = f'file {self.filepath} failed to transform/publish: {err}'
             LOGGER.warning(msg)

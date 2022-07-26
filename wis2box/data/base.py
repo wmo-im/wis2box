@@ -19,8 +19,8 @@
 #
 ###############################################################################
 
-import json
 import logging
+from pathlib import Path
 from typing import Iterator, Union
 
 from wis2box.api.backend import load_backend
@@ -42,17 +42,18 @@ class BaseAbstractData:
         """
         Abstract data initializer
 
-        :param topic_hierarchy: `wis2box.topic_hierarchy.TopicHierarchy`
-                                object
+        :param def: `dict` object of resource mappings
 
         :returns: `None`
         """
 
+        LOGGER.debug('Parsing resource mappings')
         self.filename = None
         self.incoming_filepath = None
         self.topic_hierarchy = TopicHierarchy(defs['topic_hierarchy'])
         self.template = defs['template']
         self.file_filter = defs['pattern']
+        self.enable_notification = defs['notify']
         self.output_data = {}
         self.discovery_metadata = {}
 
@@ -107,7 +108,7 @@ class BaseAbstractData:
     def notify(self, identifier: str, storage_path: str,
                geometry: dict = None) -> bool:
         """
-        Publish data to broker
+        Send notification of data to broker
 
         :param storage_path: path to data on storage
         :param identifier: identifier
@@ -116,70 +117,68 @@ class BaseAbstractData:
         :returns: `bool` of result
         """
 
-        LOGGER.info("Publishing WISNotificationMessage to public broker")
-        LOGGER.debug(f"prepare message for storage_path={storage_path}")
+        LOGGER.info('Publishing WISNotificationMessage to public broker')
+        LOGGER.debug(f'Prepare message for: {storage_path}')
         wis_message = WISNotificationMessage(identifier, storage_path,
                                              geometry)
-        #  load plugin for broker
+
+        # load plugin for broker
         defs = {
             'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
             'url': BROKER_PUBLIC
         }
         broker = load_plugin('pubsub', defs)
         topic = f'xpublic/origin/a/wis2/{self.topic_hierarchy.dirpath}'
+
         # publish using filename as identifier
         broker.pub(topic, wis_message.dumps())
         LOGGER.info(f'WISNotificationMessage published for {identifier}')
 
-        LOGGER.debug('Publishing message to API')
+        LOGGER.debug('Pushing message to API')
         api_backend = load_backend()
         api_backend.upsert_collection_items(collection_id='messages',
                                             items=[wis_message.message])
+
         return True
 
-    def publish(self, notify: bool = False) -> bool:
-        # save output_data to disk and send notification if requested
-        LOGGER.info('Writing output data')
-        # iterate over items to publish
+    def publish(self) -> bool:
+        """
+        Publish data
+
+        :returns: `bool` of result
+        """
+        LOGGER.info('Publishing output data')
+
         for identifier, item in self.output_data.items():
             # get relative filepath
             rfp = item['_meta']['relative_filepath']
 
             # now iterate over formats
             for format_, the_data in item.items():
-                if format_ == '_meta':  # not data, skip
+                if format_ == '_meta':
                     continue
-                LOGGER.debug(f'Processing format {format_}')
+
+                LOGGER.debug(f'Processing format: {format_}')
                 # check that we actually have data
-                if the_data is not None:
-                    storage_path = f'{STORAGE_SOURCE}/{STORAGE_PUBLIC}/{rfp}/{identifier}.{format_}'  # noqa
-                    LOGGER.info(f'Writing data to {storage_path}')
-                    data_bytes = None
-                    if isinstance(the_data, str):
-                        data_bytes = str(the_data).encode()
-                    elif isinstance(the_data, bytes):
-                        data_bytes = the_data
-                    else:
-                        LOGGER.warning('the_data is neither bytes nor str')
-                    LOGGER.debug('Publishing data')
-                    put_data(data_bytes, storage_path)
-                    if notify:
-                        LOGGER.debug('Sending notification to broker')
-                        self.notify(item['_meta']['identifier'], storage_path,
-                                    item['_meta'].get('geometry'))
-                    else:
-                        LOGGER.debug('No notification sent')
-
-                    if format_ == 'geojson':  # publish to API
-                        LOGGER.debug('Publishing data to API')
-                        api_backend = load_backend()
-                        api_backend.upsert_collection_items(
-                            self.topic_hierarchy.dotpath,
-                            items=[json.loads(the_data)])
-
-                else:
+                if the_data is None:
                     msg = f'Empty data for {identifier}-{format_}; not publishing'  # noqa
                     LOGGER.warning(msg)
+                    continue
+
+                LOGGER.debug('Publishing data')
+                data_bytes = self.as_bytes(the_data)
+                storage_path = f'{STORAGE_SOURCE}/{STORAGE_PUBLIC}/{rfp}/{identifier}.{format_}'  # noqa
+
+                LOGGER.info(f'Writing data to {storage_path}')
+                put_data(data_bytes, storage_path)
+
+                if self.enable_notification is True:
+                    LOGGER.debug('Sending notification to broker')
+                    self.notify(identifier, storage_path,
+                                item['_meta'].get('geometry'))
+                else:
+                    LOGGER.debug('No notification sent')
+
         return True
 
     def files(self) -> Iterator[str]:
@@ -217,6 +216,21 @@ class BaseAbstractData:
         """Public filepath"""
 
         raise NotImplementedError()
+
+    @staticmethod
+    def as_bytes(input_data):
+        """Get data as bytes"""
+        LOGGER.debug(f'input data is type: {type(input_data)}')
+        if isinstance(input_data, bytes):
+            return input_data
+        elif isinstance(input_data, str):
+            return str(input_data).encode()
+        elif isinstance(input_data, Path):
+            with input_data.open('rb') as fh:
+                return fh.read()
+        else:
+            LOGGER.warning('Invalid data type')
+            return None
 
     def __repr__(self):
         return '<BaseAbstractData>'
