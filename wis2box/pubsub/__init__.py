@@ -22,7 +22,6 @@
 import click
 import logging
 
-from wis2box.pubsub.watch import watch
 from wis2box.pubsub.subscribe import subscribe
 
 LOGGER = logging.getLogger(__name__)
@@ -35,4 +34,3 @@ def pubsub():
 
 
 pubsub.add_command(subscribe)
-pubsub.add_command(watch)

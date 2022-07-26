@@ -7,4 +7,3 @@ parse
 pygeometa
 pyoscar
 PyYAML
-watchdog
