@@ -1,4 +1,4 @@
-_minio
+.. _minio:
 
 Overview
 ========
@@ -28,7 +28,7 @@ Below we have documented a few basic examples on how to send data to the MinIO '
 Please check https://docs.min.io for further documentation on how to use MinIO and other MinIO SDKs
 
 upload using the Python Client API
-==================================
+----------------------------------
 
 Install the minio module for python using pip:
 
@@ -54,7 +54,7 @@ Python-example to copy a local file called 'myfile.csv' into the wis2box-incomin
     ) 
 
 upload using S3cmd
-==================
+------------------
 
 Install S3cmd from http://s3tools.org/s3cmd , on the host running wis2box-stack
 
@@ -77,7 +77,7 @@ cmd-line example to copy a local file called 'myfile.csv' into the wis2box-incom
     s3cmd myfile.csv s3://wis2box-incoming/foo/bar/baz
 
 upload using the MinIO UI
-=========================
+-------------------------
 
 Files can also be uploaded into the wis2box-incoming bucket from the MinIO UI:
 
