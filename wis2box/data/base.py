@@ -92,9 +92,7 @@ class BaseAbstractData:
     def accept_file(self, filename: str = '') -> bool:
         """
         Transform data
-
         :param filename, file path
-
         :returns: `bool` of processing result
         """
         if self.buckets == ():
