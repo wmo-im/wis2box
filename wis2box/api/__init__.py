@@ -59,11 +59,15 @@ def generate_collection_metadata(mcf: dict) -> dict:
         generated['geometry']['coordinates'][0][2][1],
     ]
 
+    kw = record['identification']['keywords']
+
+    keywords = set([k for k in kw.values() for k in kw])
+
     return {
         'type': 'collection',
         'title': generated['properties']['title'],
         'description': generated['properties']['description'],
-        'keywords': record['identification']['keywords'],
+        'keywords': keywords,
         'extents': {
             'spatial': {
                 'bbox': bbox,
