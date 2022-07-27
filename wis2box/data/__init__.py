@@ -19,79 +19,81 @@
 #
 ###############################################################################
 
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import json
 import logging
-from pathlib import Path
-import shutil
 
 import click
 
 from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
-from wis2box.env import (DATADIR_ARCHIVE, DATADIR_INCOMING, DATADIR_PUBLIC,
-                         DATA_RETENTION_DAYS, STORAGE_INCOMING)
+from wis2box.env import (STORAGE_SOURCE, STORAGE_ARCHIVE, STORAGE_PUBLIC,
+                         STORAGE_DATA_RETENTION_DAYS, STORAGE_INCOMING,
+                         LOGFILE, LOGLEVEL)
 from wis2box.handler import Handler
 from wis2box.storage import put_data
 from wis2box.topic_hierarchy import validate_and_load
 from wis2box.util import json_serial, older_than, walk_path
 
+from wis2box.storage import move_data
+from wis2box.storage import list_content
+from wis2box.storage import delete_data
+
+from wis2box.log import setup_logger
+
 LOGGER = logging.getLogger(__name__)
+setup_logger(LOGLEVEL, LOGFILE)
 
 
-def archive_data(source_directory: Path, target_directory: Path) -> None:
+def archive_data(source_path: str, archive_path: str) -> None:
     """
-    Move data into archive directory based on today's date (YYYY-MM-DD)
+    Archive data based on today's date (YYYY-MM-DD)
 
-    :param source_directory: `Path` of directory to archive
-    :param target_directory: base `Path` of archive directory
+    :param source_path: `str` of base storage-path for source
+    :param arcive_path: `str` of base storage-path for archive
 
     :returns: `None`
     """
 
-    if not target_directory.exists():
-        msg = f'Directory {target_directory} does not exist'
-        LOGGER.error(msg)
-        raise FileNotFoundError(msg)
-
-    today_dir = DATADIR_ARCHIVE / datetime.now().date().strftime('%Y-%m-%d')
-    LOGGER.debug(f'Archive directory {today_dir}')
-
-    for file in walk_path(source_directory, '.*', True):
-        LOGGER.debug(f'Moving {file} to {today_dir}')
-
-        file_rel_path = today_dir / file.relative_to(source_directory)
-        file_rel_path.parent.mkdir(parents=True, exist_ok=True)
-
-        shutil.move(file, file_rel_path)
-
-    return
+    today_dir = f"{archive_path}/{datetime.now().date().strftime('%Y-%m-%d')}"
+    LOGGER.debug(f'Archive directory={today_dir}')
+    datetime_now = datetime.now(timezone.utc)
+    LOGGER.debug(f'datetime_now={datetime_now}')
+    for object in list_content(source_path):
+        storage_path = object['fullpath']
+        archive_path = f"{today_dir}/{object['filename']}"
+        LOGGER.debug(f"filename={object['filename']}")
+        LOGGER.debug(f"last_modified={object['last_modified']}")
+        if object['last_modified'] < datetime_now - timedelta(hours=1):
+            LOGGER.debug(f'Moving {storage_path} to {archive_path}')
+            move_data(storage_path, archive_path)
+        else:
+            LOGGER.debug(f"{storage_path} created less than 1 h ago, skip")
 
 
-def clean_data(directory: Path, days: int) -> None:
+def clean_data(source_path: str, days: int) -> None:
     """
-    Remove data older than n days from public directory and API indexes')
+    Remove data older than n days from source_path and API indexes')
 
-    :param directory: directory `Path`
+    :param source_path: `str` of base storage-path to be cleaned
     :param days: Number of days of data to keep
 
     :returns: `None`
     """
 
-    LOGGER.debug(f'Cleaning directory {directory}')
-    dirs = [d for d in directory.iterdir() if d.is_dir()]
-
-    for dir_ in dirs:
-        LOGGER.debug(f'Directory {dir_}')
-        if older_than(dir_.name, days):
-            LOGGER.debug(f'Directory {dir_} is older than {days} days')
-            shutil.rmtree(dir_)
+    LOGGER.debug(f'Clean files in {source_path} older than {days} day(s)')
+    for object in list_content(source_path):
+        storage_path = object['fullpath']
+        if older_than(object['basedir'], days):
+            LOGGER.debug(f"{object['basedir']} is older than {days} days")
+            LOGGER.debug(f'Deleting {storage_path}')
+            delete_data(storage_path)
+        else:
+            LOGGER.debug(f"{object['basedir']} less than {days} days old")
 
     LOGGER.debug('Cleaning API indexes')
     backend = load_backend()
     backend.delete_collections_by_retention(days)
-
-    return
 
 
 def setup_dirs(topic_hierarchy: str) -> dict:
@@ -115,7 +117,7 @@ def show_info(topic_hierarchy: str) -> dict:
     """
     Display data properties
 
-    :param topic_hierarchy: `str` of topic hierarchy path
+    :param topic_hierarchy: `str` of topic hierarchy pathdirs
 
     :returns: `None`
     """
@@ -139,10 +141,13 @@ def data():
 @click.pass_context
 @cli_helpers.OPTION_VERBOSITY
 def archive(ctx, verbosity):
-    """Move data from incoming to Archive directory"""
+    """Move data from incoming storage to archive storage """
 
-    click.echo(f'Archiving data from {DATADIR_INCOMING} to {DATADIR_ARCHIVE}')
-    archive_data(DATADIR_INCOMING, DATADIR_ARCHIVE)
+    source_path = f'{STORAGE_SOURCE}/{STORAGE_INCOMING}'
+    archive_path = f'{STORAGE_SOURCE}/{STORAGE_ARCHIVE}'
+
+    click.echo(f'Archiving data from {source_path} to {archive_path}')
+    archive_data(source_path, archive_path)
 
 
 @click.command()
@@ -155,13 +160,14 @@ def clean(ctx, days, verbosity):
     if days is not None:
         days_ = days
     else:
-        days_ = DATA_RETENTION_DAYS
+        days_ = STORAGE_DATA_RETENTION_DAYS
 
     if days_ is None or days_ < 0:
         click.echo('No data retention set. Skipping')
     else:
-        click.echo(f'Deleting data older than {days_} day(s)')
-        clean_data(DATADIR_PUBLIC, days_)
+        storage_path = f'{STORAGE_SOURCE}/{STORAGE_PUBLIC}'
+        click.echo(f'Deleting data > {days_} day(s) old from {storage_path}')
+        clean_data(storage_path, days_)
 
 
 @click.command()

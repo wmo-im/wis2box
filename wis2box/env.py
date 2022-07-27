@@ -60,13 +60,14 @@ STORAGE_SOURCE = os.environ.get('WIS2BOX_STORAGE_SOURCE')
 STORAGE_USERNAME = os.environ.get('WIS2BOX_STORAGE_USERNAME')
 STORAGE_PASSWORD = os.environ.get('WIS2BOX_STORAGE_PASSWORD')
 STORAGE_INCOMING = os.environ.get('WIS2BOX_STORAGE_INCOMING')
+STORAGE_ARCHIVE = os.environ.get('WIS2BOX_STORAGE_ARCHIVE')
 STORAGE_PUBLIC = os.environ.get('WIS2BOX_STORAGE_PUBLIC')
 STORAGE_CONFIG = os.environ.get('WIS2BOX_STORAGE_CONFIG')
 
 try:
-    DATA_RETENTION_DAYS = int(os.environ.get('WIS2BOX_DATA_RETENTION_DAYS'))
+    STORAGE_DATA_RETENTION_DAYS = int(os.environ.get('WIS2BOX_STORAGE_DATA_RETENTION_DAYS')) # noqa
 except TypeError:
-    DATA_RETENTION_DAYS = None
+    STORAGE_DATA_RETENTION_DAYS = None
 
 LOGLEVEL = os.environ.get('WIS2BOX_LOGGING_LOGLEVEL', 'ERROR')
 LOGFILE = os.environ.get('WIS2BOX_LOGGING_LOGFILE', 'stdout')
@@ -128,9 +129,10 @@ def create(ctx, verbosity):
     }
 
     storages = {
-        'wis2box-config': 'private',
-        'wis2box-incoming': 'private',
-        'wis2box-public': 'readonly'
+        STORAGE_CONFIG: 'private',
+        STORAGE_INCOMING: 'private',
+        STORAGE_ARCHIVE: 'private',
+        STORAGE_PUBLIC: 'readonly'
     }
     for key, value in storages.items():
         storage_defs['name'] = key

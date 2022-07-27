@@ -90,7 +90,10 @@ wis2box is built on free and open source (FOSS) technology.
 .. _`Leaflet`: https://leafletjs.com
 .. _`Docker Compose`: https://docs.docker.com/compose
 .. _`OGC API`: https://ogcapi.ogc.org
+<<<<<<< Updated upstream
 .. _`MinIO`: https://min.io
+=======
+>>>>>>> Stashed changes
 .. _`ecCodes`: https://confluence.ecmwf.int/display/ECC
 .. _`csv2bufr`: https://csv2bufr.readthedocs.io
 .. _`bufr2geojson`: https://github.com/wmo-im/bufr2geojson

@@ -56,15 +56,11 @@ Cache and publish station collection and discovery metadata to the API:
     wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/surface-weather-observations.yml
     wis2box metadata station sync $WIS2BOX_DATADIR/metadata/station/station_list.csv
 
-Ingest and publish data via command-line interface (CLI) or an MQTT event-driven workflow:
+Ingest and publish data, using data ingest command to update the wis2box-incoming bucket :
 
 .. code-block:: bash
 
-    # CLI
     wis2box data ingest --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed --path $WIS2BOX_DATADIR/observations
-
-    # event-driven
-    cp $WIS2BOX_DATADIR/observations/* $WIS2BOX_DATADIR/data/incoming/data/core/observations-surface-land/mw/FWCL/landFixed
 
 Re-publish the stations collection to additionally include link relations to collections with observations published from that station:
 
@@ -82,3 +78,7 @@ Logout of wis2box container:
 From here, you can run ``python3 wis2box-ctl.py status`` to confirm that containers are running.
 
 To explore your wis2box installation and services, visit http://localhost:8999 in your web browser.
+
+To view the Minio UI to see the wis2box storage buckets, visit http://localhost:9001. 
+Minio username and password are configured throught your environment variables, see :ref:`configuration`.
+Default username/password is minio/minio123

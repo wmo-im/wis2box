@@ -108,5 +108,14 @@ class StorageBase:
 
         raise NotImplementedError()
 
+    def list_objects(self, prefix: str) -> list:
+        """
+        List objects in storage starting with prefix
+
+        :param 'str' prefix
+
+        :returns: list of 'str'-objects
+        """
+
     def __repr__(self):
         return f'<StorageBase ({self.source})>'

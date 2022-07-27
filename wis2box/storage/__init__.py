@@ -58,6 +58,35 @@ def get_data(path: str) -> Any:
     return storage.get(identifier)
 
 
+def list_content(basepath: str) -> Any:
+    """
+    List storage paths starting
+
+    :param basepath: basepath
+
+    :returns: list of 'str'-objects
+    """
+    LOGGER.debug(f'get_data from : {basepath}')
+    storage_path = basepath.replace(f'{STORAGE_SOURCE}/', '')
+    name = storage_path.split('/')[0]
+
+    defs = {
+        'storage_type': STORAGE_TYPE,
+        'source': STORAGE_SOURCE,
+        'name': name,
+        'auth': {'username': STORAGE_USERNAME, 'password': STORAGE_PASSWORD},
+        'codepath': PLUGINS['storage'][STORAGE_TYPE]['plugin']
+    }
+
+    LOGGER.debug(f'Connecting to storage: {name}')
+    storage = load_plugin('storage', defs)
+
+    prefix = storage_path.replace(name, '')
+
+    LOGGER.debug(f'List identifiers matching {prefix}')
+    return storage.list_objects(prefix)
+
+
 def put_data(data: bytes, path: str) -> Any:
     """
     Put data into storage
@@ -85,3 +114,67 @@ def put_data(data: bytes, path: str) -> Any:
 
     LOGGER.debug(f'Storing data into {identifier}')
     return storage.put(data, identifier)
+
+
+def delete_data(path: str) -> Any:
+    """
+    Delete data from storage
+
+    :param path: path of object/file
+
+    :returns: content of object/file
+    """
+
+    storage_path = path.replace(f'{STORAGE_SOURCE}/', '')
+    name = storage_path.split('/')[0]
+
+    defs = {
+        'storage_type': STORAGE_TYPE,
+        'source': STORAGE_SOURCE,
+        'name': name,
+        'auth': {'username': STORAGE_USERNAME, 'password': STORAGE_PASSWORD},
+        'codepath': PLUGINS['storage'][STORAGE_TYPE]['plugin']
+    }
+
+    LOGGER.debug(f'Connecting to storage: {name}')
+    storage = load_plugin('storage', defs)
+
+    identifier = storage_path.replace(name, '')
+
+    LOGGER.debug(f'Delete data for {identifier}')
+    return storage.delete(identifier)
+
+
+def move_data(old_path: str, path: str) -> Any:
+    """
+    Move data to a new storage-path
+
+    :param path: path of object/file
+
+    :returns: content of object/file
+    """
+
+    storage_path = path.replace(f'{STORAGE_SOURCE}/', '')
+    name = storage_path.split('/')[0]
+
+    defs = {
+        'storage_type': STORAGE_TYPE,
+        'source': STORAGE_SOURCE,
+        'name': name,
+        'auth': {'username': STORAGE_USERNAME, 'password': STORAGE_PASSWORD},
+        'codepath': PLUGINS['storage'][STORAGE_TYPE]['plugin']
+    }
+
+    LOGGER.debug(f'Connecting to storage: {name}')
+    storage = load_plugin('storage', defs)
+
+    identifier = storage_path.replace(name, '')
+
+    data = get_data(old_path)
+
+    LOGGER.debug(f'Delete data for {identifier}')
+
+    if storage.put(data, identifier):
+        return delete_data(old_path)
+    else:
+        return False

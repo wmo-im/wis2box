@@ -36,7 +36,7 @@ Sections
 
 wis2box environment variables can be categorized via the following core sections:
 
-- **Data**: locations of where data is stored as well as retention specifications
+- **Storage**: MinIO configuration
 - **API**: API configuration for provisioning the OGC API capabilities
 - **Logging**: logging configuaration for wis2box
 - **PubSub**: PubSub options
@@ -48,22 +48,21 @@ wis2box environment variables can be categorized via the following core sections
     require a restart of wis2box to take effect. See the :ref:`administration` section for information on
     managing wis2box.
 
-Data
+Storage
 ^^^^
 
-The data configurations provide control of directories on the host machine bound into the Docker volume and
-wis2box. The default relationship below resembles the directory structure within the wis2box volume.
-
-.. note::
-
-    Make sure to use **absolute paths** instead of relative paths.
+wis2box stores data in MinIO buckets. 
 
 .. code-block:: bash
 
-    WIS2BOX_HOST_DATADIR=${PWD}/wis2box-data  # wis2box host data directory
-    WIS2BOX_DATADIR=/data/wis2box  # wis2box data directory
-    WIS2BOX_DATA_RETENTION_DAYS=7  # wis2box data retention time, in days. Data older than this value is
-                                   # is deleted on a daily basis
+    WIS2BOX_STORAGE_TYPE=S3
+    WIS2BOX_STORAGE_SOURCE=http://minio:9000
+    WIS2BOX_STORAGE_USERNAME=minio # username for the storage-layer
+    WIS2BOX_STORAGE_PASSWORD=minio123 # password for the storage-layer
+    WIS2BOX_STORAGE_INCOMING=wis2box-incoming # name of the storage-bucket/folder for incoming files
+    WIS2BOX_STORAGE_PUBLIC=wis2box-public # name of the storage-bucket/folder for public files
+    WIS2BOX_STORAGE_CONFIG=wis2box-config # name of the storage-bucket/folder for configuration files
+    WIS2BOX_STORAGE_DATA_RETENTION_DAYS=7 # number of days to keep files in incoming and public
 
 API
 ^^^

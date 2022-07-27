@@ -164,9 +164,22 @@ class MinIOStorage(StorageBase):
     def delete(self, identifier: str) -> bool:
 
         LOGGER.debug(f'Deleting object {identifier}')
-        self.client.delete_object(Bucket=self.name, Key=identifier)
+        self.client.remove_object(self.name, identifier)
 
         return True
+
+    def list_objects(self, prefix: str) -> list:
+        LOGGER.debug(f'list identifiers starting with {prefix}')
+        objects = []
+        for object in self.client.list_objects(self.name, prefix, True): # noqa
+            objects.append({
+                'filename': object.object_name.split('/')[-1],
+                'fullpath': f'{self.source}/{self.name}/{object.object_name}',
+                'last_modified': object.last_modified,
+                'size': object.size,
+                'basedir': object.object_name.split('/')[0],
+            })
+        return objects
 
     def __repr__(self):
         return f'<MinioStorage ({self.source})>'
