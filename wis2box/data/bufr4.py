@@ -19,23 +19,39 @@
 #
 ###############################################################################
 
+from datetime import date, datetime
 import json
+from io import BytesIO
 import logging
 from pathlib import Path
+import tempfile
 from typing import Union
 
-from bufr2geojson import transform as as_geojson
+from bufr2geojson import BUFRParser, transform as as_geojson
+from eccodes import (
+    codes_bufr_copy_data,
+    codes_bufr_new_from_samples,
+    codes_bufr_new_from_file,
+    codes_clone,
+    codes_get_array,
+    codes_set_array,
+    codes_set,
+    codes_release,
+    codes_get,
+    codes_write
+)
 
 from wis2box.data.base import BaseAbstractData
 
 LOGGER = logging.getLogger(__name__)
 
 
-class ObservationDataBUFR(BaseAbstractData):
+class ObservationDataBUFR2GeoJSON(BaseAbstractData):
     """Observation data"""
 
-    def transform(self, input_data: Union[Path, bytes],
-                  filename: str = '') -> bool:
+    def transform(
+        self, input_data: Union[Path, bytes], filename: str = ''
+    ) -> bool:
 
         LOGGER.debug('Procesing BUFR data')
         input_bytes = self.as_bytes(input_data)
@@ -56,7 +72,7 @@ class ObservationDataBUFR(BaseAbstractData):
                 data_date = item['_meta']['data_date']
                 if '/' in data_date:
                     # date is range/period, split and get end date/time
-                    data_date = data_date.split("/")[1]
+                    data_date = data_date.split('/')[1]
 
                 LOGGER.debug('Parsing feature fields')
                 items_to_remove = [
@@ -77,6 +93,154 @@ class ObservationDataBUFR(BaseAbstractData):
 
         LOGGER.debug('Successfully finished transforming BUFR data')
         return True
+
+    def get_local_filepath(self, date_):
+        yyyymmdd = date_[0:10]  # date_.strftime('%Y-%m-%d')
+        return Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath
+
+
+class ObservationDataBUFR(BaseAbstractData):
+    """Oservation data"""
+
+    def transform(
+        self, input_data: Union[Path, bytes], filename: str = ''
+    ) -> bool:
+
+        LOGGER.debug('Procesing BUFR data')
+        input_bytes = self.as_bytes(input_data)
+
+        results = self.check_bufr_data(input_bytes)
+
+        # convert to list
+        LOGGER.debug('Iterating over BUFR messages')
+        for item in results:
+            LOGGER.debug('Setting obs date for filepath creation')
+            identifier = item['_meta']['identifier']
+            data_date = item['_meta']['data_date']
+
+            self.output_data[identifier] = item
+            self.output_data[identifier]['_meta'][
+                'relative_filepath'
+            ] = self.get_local_filepath(data_date)
+
+        return True
+
+    def check_bufr_data(self, data: bytes) -> dict:
+
+        # FIXME: figure out how to pass a bytestring to ecCodes BUFR reader
+        tmp = tempfile.NamedTemporaryFile()
+        with open(tmp.name, 'wb') as f:
+            f.write(data)
+
+        # workflow
+        # check for multiple subsets
+        # split subsets into individual messages and process
+        # foreach subset:
+        # - check for WSI
+        # - if None, set from filename regex
+        # - check location/time (TODO: how?)
+        # - write a separate BUFR
+        # - send to as_geojson
+
+        with open(tmp.name, 'rb') as fh:
+            bufr_in = codes_bufr_new_from_file(fh)
+            bufr_out = codes_bufr_new_from_samples('BUFR4')
+
+            try:
+                codes_set(bufr_in, 'unpack', True)
+            except Exception as err:
+                LOGGER.error(f'Error unpacking message: {err}')
+                raise err
+
+            num_subsets = codes_get(bufr_in, 'numberOfSubsets')
+            LOGGER.debug(f'Found {num_subsets} subsets')
+
+            table_version = max(
+                28, codes_get(bufr_in, 'masterTablesVersionNumber')
+            )
+            LOGGER.debug(f'Using masterTablesVersionNumber: {table_version}')
+
+            inUE = codes_get_array(bufr_in, 'unexpandedDescriptors')
+            outUE = inUE.tolist()
+            if 301150 not in outUE:
+                LOGGER.debug('Adding WIGOS sequence to unexpandedDescriptors')
+                outUE.insert(0, 301150)
+
+            LOGGER.debug('Preparing BUFR4 template')
+            codes_set(bufr_out, 'numberOfSubsets', num_subsets)
+            codes_set(
+                bufr_out,
+                'masterTablesVersionNumber',
+                table_version,
+            )
+            codes_set_array(bufr_out, 'unexpandedDescriptors', outUE)
+
+            LOGGER.debug('Merging BUFRs')
+            codes_bufr_copy_data(bufr_in, bufr_out)
+            codes_set(bufr_out, 'unpack', True)
+
+            for i in range(num_subsets):
+                idx = i + 1
+                LOGGER.debug(f'Processing subset {idx}')
+
+                codes_set(bufr_out, 'extractSubset', idx)
+                codes_set(bufr_out, 'doExtractSubsets', 1)
+
+                LOGGER.debug('Cloning subset to new message')
+                subset = codes_clone(bufr_out)
+
+                LOGGER.debug('Unpacking')
+                codes_set(subset, 'unpack', True)
+
+                # TODO: '#1#wigosIssueNumber' or f'#{idx}#wigosIssueNumber'
+                # TODO: Attempt to get wsi from filename
+                wsi_series = \
+                    codes_get(subset, '#1#wigosIdentifierSeries')
+                wsi_issuer = \
+                    codes_get(subset, '#1#wigosIssuerOfIdentifier')
+                wsi_number = \
+                    codes_get(subset, '#1#wigosIssueNumber')
+                wsi_local = \
+                    codes_get(subset, '#1#wigosLocalIdentifierCharacter')
+                wigosId = f'{wsi_series}-{wsi_issuer}-{wsi_number}-{wsi_local}'
+                LOGGER.debug(f'WIGOS Identifier Series: {wsi_series}')
+                LOGGER.debug(f'WIGOS Issuer of Identifier: {wsi_issuer}')
+                LOGGER.debug(f'WIGOS Issue Number: {wsi_number}')
+                LOGGER.debug(f'WIGOS Local Identifier Character: {wsi_local}')
+
+                parser = BUFRParser()
+                parser.as_geojson(subset, id='')
+
+                wsi = parser.get_wsi()
+                LOGGER.debug(f'{wsi} {type(wsi)}')
+                LOGGER.debug(f'{wigosId} {type(wigosId)}')
+
+                assert wsi == wigosId
+
+                LOGGER.info('Writing bufr4')
+                file_handle = BytesIO()
+                codes_write(subset, file_handle)
+                codes_release(subset)
+                file_handle.seek(0)
+                bufr4 = file_handle.read()
+
+                isodate = datetime.strptime(
+                    parser.get_time(), '%Y-%m-%dT%H:%M:%SZ'
+                ).strftime('%Y%m%dT%H%M%S')
+                LOGGER.info(isodate)
+                rmk = f"WIGOS_{wsi}_{isodate}"
+                LOGGER.info(rmk)
+
+                item = {
+                    'bufr4': bufr4,
+                    '_meta': {
+                        'identifier': rmk,
+                        'wigos_id': wsi,
+                        'data_date': parser.get_time()
+                    }
+                }
+                LOGGER.info(item)
+                yield item
 
     def get_local_filepath(self, date_):
         yyyymmdd = date_[0:10]  # date_.strftime('%Y-%m-%d')

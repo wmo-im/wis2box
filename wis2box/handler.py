@@ -64,9 +64,8 @@ class Handler:
         for plugin in self.plugins:
 
             if not plugin.accept_file(self.filepath):
-                msg = f'file {self.filepath} not accepted'
-                LOGGER.warning(msg)
-                return False
+                LOGGER.info(f'file {self.filepath} not accepted')
+                continue
 
             try:
                 if self.is_http:
