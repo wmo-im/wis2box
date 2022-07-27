@@ -56,10 +56,11 @@ class TopicHierarchy:
         return True
 
 
-def validate_and_load(topic_hierarchy: str, file_type: str = None,
-                      fuzzy: bool = False) -> Tuple[TopicHierarchy, Any]:
+def validate_and_load(
+    topic_hierarchy: str, file_type: str = None, fuzzy: bool = False
+) -> Tuple[TopicHierarchy, Tuple[Any]]:
     """
-    Validate topic hierarchy and load plugin
+    Validate topic hierarchy and load plugins
 
     :param topic_hierarchy: `str` of topic hierarchy path
     :param file_type: `str` the type of file we are processing, e.g. csv, bufr, xml  # noqa
@@ -68,73 +69,71 @@ def validate_and_load(topic_hierarchy: str, file_type: str = None,
                   Defaults to `False` (i.e. "foo.bar.baz")
 
     :returns: tuple of `wis2box.topic_hierarchy.TopicHierarchy` and
-              plugin object
+              list of plugins objects
     """
 
     LOGGER.debug(f'Validating topic hierarchy: {topic_hierarchy}')
 
     th = TopicHierarchy(topic_hierarchy)
+    data_mappings = DATADIR_DATA_MAPPINGS['data']
+    found = False
 
     if not th.is_valid():
         msg = 'Invalid topic hierarchy'
         LOGGER.error(msg)
         raise ValueError(msg)
 
-    if not fuzzy:
-        if th.dotpath not in DATADIR_DATA_MAPPINGS['data']:
-            msg = 'Topic hierarchy not in data mappings'
-            LOGGER.error(msg)
-            raise ValueError(msg)
-        # check if file type set, if not use first in list
-        plugins = DATADIR_DATA_MAPPINGS['data'][th.dotpath]['plugins']
-        if file_type is None:
-            file_type = list(plugins.keys()).pop(0)
-            msg = f"file type missing in call to validate_and_load, set to first type: {file_type}"  # noqa
-            LOGGER.debug(msg)
-        if file_type not in plugins:
-            msg = f'Unknown file type ({file_type}) for topic {th.dotpath} in data mappings'  # noqa
-            LOGGER.error(msg)
-            raise ValueError(msg)
+    if fuzzy:
+        LOGGER.debug('Searching data mappings for fuzzy topic match')
+        for topic, defs in data_mappings.items():
 
-        LOGGER.debug('Loading plugin')
+            pattern = f'*{topic}*'
+            LOGGER.debug(f'Attempting to fuzzy match with {pattern}')
+            if fnmatch(th.dotpath, pattern):
 
-        defs = {
-            'topic_hierarchy': topic_hierarchy,
-            'codepath': plugins[file_type]['plugin'],
-            'pattern':  plugins[file_type]['file-pattern'],
-            'template': plugins[file_type].get('template'),
-            'notify': plugins[file_type].get('notify', False),
-            'format': file_type
-        }
-        plugin = load_plugin('data', defs)
+                LOGGER.debug(f'Matched topic {th.path} on {th.dotpath}')
+                found = True
+                plugins = defs['plugins']
+
+                LOGGER.debug(f'Reloading topic to {topic}')
+                th = TopicHierarchy(topic)
 
     else:
-        LOGGER.debug('Searching filename against data mappings')
-        th = TopicHierarchy(topic_hierarchy)
-        for key, value in DATADIR_DATA_MAPPINGS['data'].items():
-            pattern = f'*{th.dirpath}*'
-            LOGGER.debug(f'topic_hierarchy: {topic_hierarchy}')
-            LOGGER.debug(f'pattern: {pattern}')
-            if fnmatch(topic_hierarchy, pattern):
-                LOGGER.debug(f'Matched {topic_hierarchy} to {pattern}')
-                if file_type not in value['plugins']:
-                    msg = f'Unknown filetype ({file_type}) for topic {key} in data mappings' # noqa
-                    LOGGER.error(msg)
-                    raise ValueError(msg)
-                defs = {
-                    'topic_hierarchy': key,
-                    'codepath': value['plugins'][file_type]['plugin'],
-                    'pattern': value['plugins'][file_type]['file-pattern'],
-                    'template': value['plugins'][file_type].get('template'),
-                    'notify': value['plugins'][file_type].get('notify', False),
-                    'format': file_type
-                }
-                plugin = load_plugin('data', defs)
-                th = TopicHierarchy(key)
-                break
-            else:
-                msg = 'No handler found'
-                LOGGER.error(msg)
-                raise ValueError(msg)
+        LOGGER.debug('Searching data mappings for exact topic match')
+        if th.dotpath in data_mappings:
 
-    return th, plugin
+            LOGGER.debug(f'Matched topic {th.path} on {th.dotpath}')
+            found = True
+            plugins = data_mappings[th.dotpath]['plugins']
+
+    if not found:
+        msg = f'No plugins for {th.path} in data mappings'
+        LOGGER.error(msg)
+        raise ValueError(msg)
+
+    if file_type is None:
+        LOGGER.warning('File type missing')
+        file_type = next(iter(plugins))
+        LOGGER.debug(f'File type set to first type: {file_type}')
+
+    if file_type not in plugins:
+        msg = f'Unknown file type ({file_type}) for topic {th.dotpath}'  # noqa
+        LOGGER.error(msg)
+        raise ValueError(msg)
+
+    LOGGER.debug(f'Adding plugin definition for {file_type}')
+
+    def data_defs(plugin):
+        return {
+            'topic_hierarchy': th.dotpath,
+            'codepath': plugin['plugin'],
+            'pattern': plugin['file-pattern'],
+            'template': plugin.get('template'),
+            'buckets': plugin.get('buckets', ()),
+            'notify': plugin.get('notify', False),
+            'format': file_type
+        }
+
+    plugins_ = [load_plugin('data', data_defs(p))
+                for p in plugins[file_type]]
+    return th, plugins_
