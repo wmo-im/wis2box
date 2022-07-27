@@ -19,12 +19,14 @@
 #
 ###############################################################################
 
+import os
 from pathlib import Path
 
 import click
 
 from wis2box.log import setup_logger
 
+LOGLEVEL = os.environ.get('WIS2BOX_LOGGING_LOGLEVEL', 'ERROR')
 ARGUMENT_FILEPATH = click.argument('filepath', type=click.File())
 
 OPTION_PATH = click.option('--path', '-p', required=True,
@@ -41,12 +43,14 @@ def OPTION_VERBOSITY(f):
 
     def callback(ctx, param, value):
         if value is not None:
+            click.echo(f'Setting up logger with level: {value}')
             setup_logger(loglevel=value)
         return True
 
     return click.option('--verbosity', '-v',
                         type=click.Choice(logging_options),
                         help='Verbosity',
+                        default=LOGLEVEL,
                         callback=callback)(f)
 
 

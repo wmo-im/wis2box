@@ -97,8 +97,6 @@ class BaseAbstractData:
 
         :returns: `bool` of processing result
         """
-        LOGGER.error(filename)
-        LOGGER.error(self.buckets)
         if self.buckets == ():
             return True
         else:
