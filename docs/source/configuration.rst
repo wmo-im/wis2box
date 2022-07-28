@@ -49,7 +49,7 @@ wis2box environment variables can be categorized via the following core sections
     managing wis2box.
 
 Storage
-^^^^
+^^^^^^^
 
 wis2box stores data in MinIO buckets. 
 

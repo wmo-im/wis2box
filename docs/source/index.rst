@@ -21,6 +21,7 @@ wis2box |release| documentation
    configuration
    administration
    running/index
+   storage
    monitoring/index
    services
    data-access/index
