@@ -32,8 +32,8 @@ services:
         condition: service_healthy
       wis2box:
         condition: service_started
-    volumes:
-      - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:ro
+    # volumes:
+    #   - api-config:/pygeoapi/pygeoapi/local.config.yml:rw
 
   minio:
     container_name: wis2box-minio
@@ -125,3 +125,4 @@ services:
 volumes:
   es-data:
   minio-data:
+  api-config:

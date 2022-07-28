@@ -20,9 +20,10 @@
 ###############################################################################
 
 import logging
+import requests
 
 from wis2box.api.config.base import BaseConfig
-from wis2box.env import API_BACKEND_TYPE, API_BACKEND_URL, API_CONFIG
+from wis2box.env import API_BACKEND_TYPE, API_BACKEND_URL, API_CONFIG, DOCKER_API_URL
 from wis2box.util import yaml_dump, yaml_load
 
 LOGGER = logging.getLogger(__name__)
@@ -39,6 +40,7 @@ class PygeoapiConfig(BaseConfig):
         """
 
         super().__init__(defs)
+        self.url = f'{DOCKER_API_URL}/admin/resources'
 
     def add_collection(self, meta: str) -> bool:
         """
@@ -94,14 +96,13 @@ class PygeoapiConfig(BaseConfig):
                     'href': link
                 })
 
-        with API_CONFIG.open() as fh:
-            yaml_config = yaml_load(fh)
+        if self.has_collection(resource_id):
+            r = requests.put(f'{self.url}/{resource_id}', json=collection)
+        else:
+            content = {resource_id: collection}
+            r = requests.post(self.url, json=content)
 
-        yaml_config['resources'][meta.get('id')] = collection
-
-        with API_CONFIG.open("w") as fh:
-            yaml_dump(fh, yaml_config)
-
+        r.raise_for_status()
         return True
 
     def delete_collection(self, name: str) -> bool:
@@ -113,15 +114,19 @@ class PygeoapiConfig(BaseConfig):
         :returns: `bool` of delete collection result
         """
 
-        with API_CONFIG.open() as fh:
-            yaml_config = yaml_load(fh)
+        r = requests.delete(f'{self.url}/{name}')
+        return r.status_code == requests.codes.ok
 
-        yaml_config['resources'].pop(name)
+    def has_collection(self, name: str) -> dict:
+        """
+        Checks a collection
 
-        with API_CONFIG.open("w") as fh:
-            yaml_dump(fh, yaml_config)
+        :param name: name of collection
 
-        return True
+        :returns: `dict` of collection result
+        """
+        r = requests.get(f'{self.url}/{name}')
+        return r.status_code == requests.codes.ok
 
     def __repr__(self):
-        return f'<BaseConfig> ({self.config})'
+        return f'<PygeoapiConfig> ({self.config})'
