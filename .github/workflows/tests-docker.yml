@@ -54,9 +54,18 @@ jobs:
           && wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOERY_METADATA \
           && wis2box data ingest -th $TOPIC_HIERARCHY -p /data/wis2box/observations/malawi \
           && wis2box metadata station sync /data/wis2box/metadata/station/station_list.csv'
+    - name: add Italy data ⚙️
+      run: |
+        docker exec wis2box sh -c ' \
+          export TOPIC_HIERARCHY=data.core.observations-surface-land.it.FWCL.landFixed \
+          && export DISCOERY_METADATA=/data/wis2box/metadata/discovery/it-surface-weather-observations.yml \
+          && wis2box data setup -th $TOPIC_HIERARCHY \
+          && wis2box data info -th $TOPIC_HIERARCHY \
+          && wis2box metadata discovery publish $DISCOERY_METADATA \
+          && wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOERY_METADATA \
+          && wis2box data ingest -th $TOPIC_HIERARCHY -p /data/wis2box/observations/italy'
     - name: run integration tests ⚙️
       run: |
-        sleep 25
         pytest -s tests/integration
     - name: run flake8 ⚙️
       run: |
