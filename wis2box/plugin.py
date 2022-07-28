@@ -88,7 +88,7 @@ def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
     valid_plugin = False
     for value in plugin_mappings[plugin_type].values():
         if 'plugins' in value:
-            for plugin in value['plugins'][fmt]:
+            for plugin in value['plugins'].get(fmt, ()):
                 if codepath == plugin['plugin']:
                     valid_plugin = True
                     break
