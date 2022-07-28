@@ -64,6 +64,16 @@ jobs:
           && wis2box metadata discovery publish $DISCOERY_METADATA \
           && wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOERY_METADATA \
           && wis2box data ingest -th $TOPIC_HIERARCHY -p /data/wis2box/observations/italy'
+    - name: add Algeria data ⚙️
+      run: |
+        docker exec wis2box sh -c ' \
+          export TOPIC_HIERARCHY=data.core.observations-surface-land.dz.FWCL.landFixed \
+          && export DISCOERY_METADATA=/data/wis2box/metadata/discovery/dz-surface-weather-observations.yml \
+          && wis2box data setup -th $TOPIC_HIERARCHY \
+          && wis2box data info -th $TOPIC_HIERARCHY \
+          && wis2box metadata discovery publish $DISCOERY_METADATA \
+          && wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOERY_METADATA \
+          && wis2box data ingest -th $TOPIC_HIERARCHY -p /data/wis2box/observations/algeria'
     - name: run integration tests ⚙️
       run: |
         pytest -s tests/integration
