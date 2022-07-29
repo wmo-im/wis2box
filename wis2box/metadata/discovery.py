@@ -28,7 +28,7 @@ from pygeometa.schemas.ogcapi_records import OGCAPIRecordOutputSchema
 from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
-from wis2box.env import API_URL, MQTT_URL
+from wis2box.env import API_URL, BROKER_PUBLIC
 from wis2box.metadata.base import BaseMetadata
 
 LOGGER = logging.getLogger(__name__)
@@ -61,7 +61,7 @@ class DiscoveryMetadata(BaseMetadata):
         }
 
         mqp_link = {
-            'url': MQTT_URL,
+            'url': BROKER_PUBLIC,
             'type': 'MQTT',
             'name': identifier,
             'description': identifier,
@@ -94,9 +94,6 @@ class DiscoveryMetadata(BaseMetadata):
             anytext_bag.extend(v['keywords']['en'])
 
         record['properties']['_metadata-anytext'] = ' '.join(anytext_bag)
-
-        if record['properties']['extent']['temporal']['interval'][-1] == 'None':  # noqa
-            record['properties']['extent']['temporal']['interval'][-1] = None
 
         return record
 

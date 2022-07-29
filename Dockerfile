@@ -19,49 +19,43 @@
 #
 ###############################################################################
 
-FROM ubuntu:focal
+FROM python:3.9.13-slim
 
-MAINTAINER "tomkralidis@gmail.com"
+LABEL maintainer="tomkralidis@gmail.com"
 
 ARG WIS2BOX_PIP3_EXTRA_PACKAGES
 ENV TZ="Etc/UTC" \
     DEBIAN_FRONTEND="noninteractive" \
-    BUILD_PACKAGES="build-essential cmake gfortran python3-wheel" \
-    DEBIAN_PACKAGES="bash vim git python3-pip python3-dev curl libffi-dev libeccodes0 python3-eccodes python3-cryptography libssl-dev libudunits2-0 python3-amqp python3-paho-mqtt python3-netifaces python3-dateparser python3-tz"
-
-COPY docker/wis2box/config /root/.config/sr3
-COPY docker/wis2box-api /wis2box-api
-
-COPY . /app
+    DEBIAN_PACKAGES="bash vim git libffi-dev libeccodes0 python3-eccodes python3-cryptography libssl-dev libudunits2-0 python3-paho-mqtt python3-dateparser python3-tz python3-setuptools"
 
 RUN if [ "$WIS2BOX_PIP3_EXTRA_PACKAGES" = "None" ]; \
     then export WIS2BOX_PIP3_EXTRA_PACKAGES=echo; \
     else export WIS2BOX_PIP3_EXTRA_PACKAGES=pip3 install ${WIS2BOX_PIP3_EXTRA_PACKAGES}; \
     fi
 
+# install dependencies
 # FIXME: install newer version of eccodes
-# FIXME: csv2bufr: remove and install from requirements.txt once we have a stable release
+# FIXME: csv2bufr/bufr2geojson: remove and install from requirements.txt once we have a stable release
 # FIXME: pygeometa: remove and install from requirements.txt once we have a stable release
-# FIXME: sarracenia: remove install from requirements.txt once we have a stable release
-# TODO: remove build packages for a smaller image
 RUN apt-get update -y \
-    && apt-get install -y ${BUILD_PACKAGES} \
     && apt-get install -y ${DEBIAN_PACKAGES} \
     # install wis2box dependencies
-    && pip3 install https://github.com/wmo-im/csv2bufr/archive/refs/tags/v0.1.2.zip \
-    && pip3 install https://github.com/wmo-im/bufr2geojson/archive/refs/tags/v0.2.0.zip \
-    && pip3 install https://github.com/geopython/pygeometa/archive/refs/tags/0.11.1.zip \
-    && pip3 install metpx-sr3 \
-    # install wis2box
-    && cd /app \
+    && pip3 install --no-cache-dir https://github.com/wmo-im/csv2bufr/archive/refs/tags/v0.1.2.zip \
+    && pip3 install --no-cache-dir https://github.com/wmo-im/bufr2geojson/archive/refs/tags/v0.2.0.zip \
+    && pip3 install --no-cache-dir https://github.com/geopython/pygeometa/archive/master.zip \
+    # cleanup
+    && apt autoremove -y  \
+    && apt-get -q clean \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY docker/wis2box-api /wis2box-api
+# copy the app
+COPY . /app
+# install wis2box
+RUN cd /app \
     && python3 setup.py install \
     # install wis2box plugins, if defined
     && $PIP_PLUGIN_PACKAGES \
-    # cleanup
-    && apt-get remove --purge -y ${BUILD_PACKAGES} \
-    && apt autoremove -y  \
-    && apt-get -q clean \
-    && rm -rf /var/lib/apt/lists/* \
     # add wis2box user
     && useradd -ms /bin/bash wis2box
 

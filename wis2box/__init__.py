@@ -19,13 +19,14 @@
 #
 ###############################################################################
 
-__version__ = '0.2.0'
+__version__ = '0.3.dev0'
 
 import click
 
 from wis2box.data import data
 from wis2box.env import environment
 from wis2box.metadata import metadata
+from wis2box.pubsub import pubsub
 from wis2box.api import api
 from wis2box.auth import auth
 
@@ -42,3 +43,4 @@ cli.add_command(data)
 cli.add_command(metadata)
 cli.add_command(api)
 cli.add_command(auth)
+cli.add_command(pubsub)

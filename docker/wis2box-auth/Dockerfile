@@ -19,33 +19,17 @@
 #
 ###############################################################################
 
-import logging
-from pathlib import Path
+FROM wis2box_project_wis2box
 
-from sarracenia.flowcb import FlowCB
-from wis2box.api.backend import load_backend
+RUN apt-get update -y \
+    && pip3 install pip -U \
+    && pip3 install gevent gunicorn flask flask-cors jinja2==3.0.3
 
-from wis2box.handler import Handler
+RUN mkdir -p /wis2box/wis2box-auth/
 
-LOGGER = logging.getLogger(__name__)
+COPY ./app.py /wis2box/wis2box-auth/app.py
+COPY ./entrypoint.sh /auth-entrypoint.sh
 
+WORKDIR /wis2box
 
-class Event(FlowCB):
-    def __init__(self, options):
-        self.options = options
-
-    def after_accept(self, worklist):
-        for incoming_message in worklist.incoming:
-            filepath = (Path('/') / incoming_message['relPath'])
-            LOGGER.debug(f'Incoming filepath: {filepath}')
-
-            # TODO: publish
-            try:
-                LOGGER.debug(f'Publishing {filepath}')
-                backend = load_backend()
-                handler = Handler(filepath)
-                handler.publish(backend)
-
-            except ValueError as err:
-                msg = f'handle() error: {err}'
-                LOGGER.error(msg)
+ENTRYPOINT [ "/auth-entrypoint.sh" ]

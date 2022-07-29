@@ -20,10 +20,17 @@
 ###############################################################################
 
 import logging
-from typing import Union
+from pathlib import Path
+from typing import Iterator, Union
 
-from wis2box.env import DATADIR_INCOMING, DATADIR_PUBLIC
+from wis2box.api.backend import load_backend
+from wis2box.env import (DATADIR_INCOMING, DATADIR_PUBLIC,
+                         STORAGE_PUBLIC, STORAGE_SOURCE, BROKER_PUBLIC)
+from wis2box.storage import put_data
 from wis2box.topic_hierarchy import TopicHierarchy
+from wis2box.plugin import load_plugin, PLUGINS
+
+from wis2box.pubsub.message import WISNotificationMessage
 
 LOGGER = logging.getLogger(__name__)
 
@@ -35,17 +42,18 @@ class BaseAbstractData:
         """
         Abstract data initializer
 
-        :param topic_hierarchy: `wis2box.topic_hierarchy.TopicHierarchy`
-                                object
+        :param def: `dict` object of resource mappings
 
         :returns: `None`
         """
 
+        LOGGER.debug('Parsing resource mappings')
         self.filename = None
         self.incoming_filepath = None
         self.topic_hierarchy = TopicHierarchy(defs['topic_hierarchy'])
         self.template = defs['template']
         self.file_filter = defs['pattern']
+        self.enable_notification = defs['notify']
         self.output_data = {}
         self.discovery_metadata = {}
 
@@ -84,54 +92,102 @@ class BaseAbstractData:
 
         return True
 
-    def transform(self, input_data: Union[bytes, str]) -> bool:
+    def transform(self, input_data: Union[bytes, str],
+                  filename: str = '') -> bool:
         """
         Transform data
 
         :param input_data: `bytes` or `str` of data payload
+        :param filename, to be used in case input_data is bytes
 
         :returns: `bool` of processing result
         """
 
         raise NotImplementedError()
 
-    def notify(self) -> bool:
-        raise NotImplementedError()
+    def notify(self, identifier: str, storage_path: str,
+               geometry: dict = None) -> bool:
+        """
+        Send notification of data to broker
 
-    def publish(self, notify: bool = False) -> bool:
-        # save output_data to disk and send notification if requested
-        LOGGER.info('Writing output data')
-        # iterate over items to publish
+        :param storage_path: path to data on storage
+        :param identifier: identifier
+        :param geometry: `dict` of GeoJSON geometry object
+
+        :returns: `bool` of result
+        """
+
+        LOGGER.info('Publishing WISNotificationMessage to public broker')
+        LOGGER.debug(f'Prepare message for: {storage_path}')
+        wis_message = WISNotificationMessage(identifier, storage_path,
+                                             geometry)
+
+        # load plugin for broker
+        defs = {
+            'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
+            'url': BROKER_PUBLIC
+        }
+        broker = load_plugin('pubsub', defs)
+        topic = f'xpublic/origin/a/wis2/{self.topic_hierarchy.dirpath}'
+
+        # publish using filename as identifier
+        broker.pub(topic, wis_message.dumps())
+        LOGGER.info(f'WISNotificationMessage published for {identifier}')
+
+        LOGGER.debug('Pushing message to API')
+        api_backend = load_backend()
+        api_backend.upsert_collection_items(collection_id='messages',
+                                            items=[wis_message.message])
+
+        return True
+
+    def publish(self) -> bool:
+        """
+        Publish data
+
+        :returns: `bool` of result
+        """
+        LOGGER.info('Publishing output data')
+
         for identifier, item in self.output_data.items():
             # get relative filepath
             rfp = item['_meta']['relative_filepath']
+
             # now iterate over formats
             for format_, the_data in item.items():
-                if format_ == '_meta':  # not data, skip
+                if format_ == '_meta':
                     continue
+
+                LOGGER.debug(f'Processing format: {format_}')
                 # check that we actually have data
                 if the_data is None:
-                    msg = f'Empty data for {identifier}-{key}; not publishing'  # noqa
+                    msg = f'Empty data for {identifier}-{format_}; not publishing'  # noqa
                     LOGGER.warning(msg)
-                filename = DATADIR_PUBLIC / (rfp) / f"{identifier}.{format_}"
-                filename = filename.with_suffix(f'.{format_}')
-                LOGGER.info(f'Writing data to {filename}')
-                # make sure directory structure exists
-                filename.parent.mkdir(parents=True, exist_ok=True)
-                # check the mode we want to write data in
-                if isinstance(the_data, bytes):
-                    mode = 'wb'
+                    continue
+
+                LOGGER.debug('Publishing data')
+                data_bytes = self.as_bytes(the_data)
+                storage_path = f'{STORAGE_SOURCE}/{STORAGE_PUBLIC}/{rfp}/{identifier}.{format_}'  # noqa
+
+                LOGGER.info(f'Writing data to {storage_path}')
+                put_data(data_bytes, storage_path)
+
+                if self.enable_notification is True:
+                    LOGGER.debug('Sending notification to broker')
+                    self.notify(identifier, storage_path,
+                                item['_meta'].get('geometry'))
                 else:
-                    mode = 'w'
-                with filename.open(mode) as fh:
-                    fh.write(item[format_])
-        if notify:
-            self.notify()
+                    LOGGER.debug('No notification sent')
+
         return True
 
-    # TODO: fix annotation/types
+    def files(self) -> Iterator[str]:
+        """
+        Provide list of files
 
-    def files(self) -> bool:
+        :returns: generator of filenames
+        """
+
         LOGGER.debug('Listing processed files')
         for identifier, item in self.output_data.items():
             rfp = item['_meta']['relative_filepath']
@@ -160,6 +216,21 @@ class BaseAbstractData:
         """Public filepath"""
 
         raise NotImplementedError()
+
+    @staticmethod
+    def as_bytes(input_data):
+        """Get data as bytes"""
+        LOGGER.debug(f'input data is type: {type(input_data)}')
+        if isinstance(input_data, bytes):
+            return input_data
+        elif isinstance(input_data, str):
+            return str(input_data).encode()
+        elif isinstance(input_data, Path):
+            with input_data.open('rb') as fh:
+                return fh.read()
+        else:
+            LOGGER.warning('Invalid data type')
+            return None
 
     def __repr__(self):
         return '<BaseAbstractData>'

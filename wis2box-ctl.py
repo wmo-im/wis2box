@@ -25,11 +25,11 @@ import os
 import subprocess
 
 DOCKER_COMPOSE_ARGS = """
-    -f docker/docker-compose.yml
-    -f docker/docker-compose.override.yml
-    -f docker/docker-compose.monitoring.yml
+    --file docker/docker-compose.yml
+    --file docker/docker-compose.override.yml
+    --file docker/docker-compose.monitoring.yml
     --env-file dev.env
-    -p wis2box_project
+    --project-name wis2box_project
     """
 
 parser = argparse.ArgumentParser(
@@ -52,6 +52,7 @@ commands = [
     'prune',
     'restart',
     'start',
+    'start-dev',
     'status',
     'stop',
     'up',
@@ -64,6 +65,7 @@ parser.add_argument('command',
     - config: validate and view Docker configuration
     - build [containers]: build all services
     - start [containers]: start system
+    - start-dev [containers]: start system in local development mode
     - login [container]: login to the container (default: wis2box)
     - login-root [container]: login to the container as root
     - stop: stop [container] system
@@ -144,13 +146,16 @@ def make(args) -> None:
     elif args.command == "build":
         run(args, split(
             f'docker-compose {DOCKER_COMPOSE_ARGS} build {containers}'))
-    elif args.command in ["up", "start"]:
+    elif args.command in ["up", "start", "start-dev"]:
         run(args, split(
             'docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions'))
         if containers:
             run(args, split(f"docker start {containers}"))
         else:
-            run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} up -d'))
+            if args.command == 'start-dev':
+                run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} --file docker/docker-compose.dev.yml up -d'))
+            else:
+                run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} up -d'))
     elif args.command == "login":
         run(args, split(f'docker exec -it {container} /bin/bash'))
     elif args.command == "login-root":

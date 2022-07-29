@@ -29,7 +29,8 @@ from isodate import parse_date
 from wis2box.api.backend.base import BaseBackend
 from wis2box.util import older_than
 
-LOGGER = logging.getLogger(__name__)
+LOGGER = logging.getLogger('elasticsearch')
+LOGGER.setLevel(logging.INFO)
 
 # default index settings
 SETTINGS = {
@@ -45,6 +46,14 @@ SETTINGS = {
             'properties': {
                 'properties': {
                     'resultTime': {
+                        'type': 'date',
+                        'fields': {
+                            'raw': {
+                                'type': 'keyword'
+                            }
+                        }
+                    },
+                    'pubTime': {
                         'type': 'date',
                         'fields': {
                             'raw': {
@@ -192,11 +201,15 @@ class ElasticBackend(BaseBackend):
             """
 
             for feature in features:
+                LOGGER.debug(f'Feature: {feature}')
                 es_index2 = es_index
                 feature['properties']['id'] = feature['id']
                 if self._is_dataset(collection_id):
                     LOGGER.debug('Determinining index date from OM GeoJSON')
-                    date_ = parse_date(feature['properties']['resultTime'])
+                    try:
+                        date_ = parse_date(feature['properties']['resultTime'])
+                    except KeyError:
+                        date_ = parse_date(feature['properties']['pubTime'])
                     es_index2 = f"{es_index}.{date_.strftime('%Y-%m-%d')}"
                 yield {
                     '_index': es_index2,
@@ -252,7 +265,10 @@ class ElasticBackend(BaseBackend):
         :returns: `bool` of evaluation
         """
 
-        return '.' in collection_id
+        if '.' in collection_id or collection_id == 'messages':
+            return True
+        else:
+            return False
 
     def __repr__(self):
         return f'<ElasticBackend> (url={self.url})'

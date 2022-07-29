@@ -21,38 +21,17 @@
 
 import logging
 
-from pyoscar import OSCARClient
-
-from ..env import OSCAR_API_TOKEN
-
 LOGGER = logging.getLogger(__name__)
 
-
-def upload_station_metadata(record: str) -> None:
-    """
-    Uploads a WIGOS Metadata Record (WMDR) to WMO OSCAR/Surface
-
-    :param record: `str` of WMDR
-
-    :returns: None
-    """
-
-    client = OSCARClient(api_token=OSCAR_API_TOKEN, env='prod')
-
-    LOGGER.debug(f'Uploading metadata to OSCAR {client.api_url}')
-    return client.upload(record)
-
-
-def get_station_report(identifier: str) -> dict:
-    """
-    Fetch OSCAR/Surface station metadata report
-
-    :param identifier: WIGOS Station Identifier (WSI)
-
-    :returns: `dict` of station metadata report
-    """
-
-    client = OSCARClient(api_token=OSCAR_API_TOKEN, env='prod')
-
-    LOGGER.debug(f'Fetching station report for {identifier}')
-    return client.get_station_report(identifier)
+TOPICS = {
+    'DATA_INCOMING': {
+        'bucket': 'incoming',
+        'topic': 'xlocal/data_incoming',
+        'handler': 'wis2box.event.data_ingest.Event'
+    },
+    'DATA_PUBLISHED': {
+        'bucket': 'public',
+        'topic': 'xlocal/data_public',
+        'handler': 'wis2box.event.data_api_publish.Event'
+    }
+}

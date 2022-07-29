@@ -25,13 +25,11 @@ import os
 from pathlib import Path
 
 from wis2box import cli_helpers
-from wis2box.util import yaml_load
 from wis2box.log import setup_logger
+from wis2box.plugin import load_plugin
+from wis2box.plugin import PLUGINS
 
 LOGGER = logging.getLogger(__name__)
-
-with (Path(__file__).parent / 'resources' / 'data-mappings.yml').open() as fh:
-    DATADIR_DATA_MAPPINGS = yaml_load(fh)
 
 try:
     DATADIR = Path(os.environ.get('WIS2BOX_DATADIR'))
@@ -55,31 +53,28 @@ OSCAR_API_TOKEN = os.environ.get('WIS2BOX_OSCAR_API_TOKEN')
 URL = os.environ.get('WIS2BOX_URL')
 
 BROKER = os.environ.get('WIS2BOX_BROKER')
-MQTT_URL = os.environ.get('WIS2BOX_MQTT_URL')
+BROKER_PUBLIC = os.environ.get('WIS2BOX_BROKER_PUBLIC')
+
+STORAGE_TYPE = os.environ.get('WIS2BOX_STORAGE_TYPE')
+STORAGE_SOURCE = os.environ.get('WIS2BOX_STORAGE_SOURCE')
+STORAGE_USERNAME = os.environ.get('WIS2BOX_STORAGE_USERNAME')
+STORAGE_PASSWORD = os.environ.get('WIS2BOX_STORAGE_PASSWORD')
+STORAGE_INCOMING = os.environ.get('WIS2BOX_STORAGE_INCOMING')
+STORAGE_ARCHIVE = os.environ.get('WIS2BOX_STORAGE_ARCHIVE')
+STORAGE_PUBLIC = os.environ.get('WIS2BOX_STORAGE_PUBLIC')
+STORAGE_CONFIG = os.environ.get('WIS2BOX_STORAGE_CONFIG')
 
 try:
-    DATA_RETENTION_DAYS = int(os.environ.get('WIS2BOX_DATA_RETENTION_DAYS'))
+    STORAGE_DATA_RETENTION_DAYS = int(os.environ.get('WIS2BOX_STORAGE_DATA_RETENTION_DAYS')) # noqa
 except TypeError:
-    DATA_RETENTION_DAYS = None
-
+    STORAGE_DATA_RETENTION_DAYS = None
 
 LOGLEVEL = os.environ.get('WIS2BOX_LOGGING_LOGLEVEL', 'ERROR')
 LOGFILE = os.environ.get('WIS2BOX_LOGGING_LOGFILE', 'stdout')
 
-if 'WIS2BOX_DATADIR_DATA_MAPPINGS' in os.environ:
-    LOGGER.debug('Overriding WIS2BOX_DATADIR_DATA_MAPPINGS')
-    try:
-        with open(os.environ.get('WIS2BOX_DATADIR_DATA_MAPPINGS')) as fh:
-            DATADIR_DATA_MAPPINGS = yaml_load(fh)
-            assert DATADIR_DATA_MAPPINGS is not None
-    except Exception as err:
-        DATADIR_DATA_MAPPINGS = None
-        msg = f'Missing data mappings: {err}'
-        LOGGER.error(msg)
-        raise EnvironmentError(msg)
+missing_environment_variables = []
 
-
-if None in [
+required_environment_variables = [
     DATADIR,
     DATADIR_INCOMING,
     DATADIR_PUBLIC,
@@ -87,10 +82,25 @@ if None in [
     OSCAR_API_TOKEN,
     API_TYPE,
     API_URL,
-    MQTT_URL,
-    URL
-]:
-    msg = 'Environment variables not set!'
+    BROKER_PUBLIC,
+    URL,
+    STORAGE_TYPE,
+    STORAGE_SOURCE,
+    STORAGE_USERNAME,
+    STORAGE_PASSWORD,
+    STORAGE_INCOMING,
+    STORAGE_PUBLIC,
+    STORAGE_CONFIG
+]
+
+for rev in required_environment_variables:
+    if rev is None:
+        envvar_name = [k for k, v in locals().items() if v is rev][0]
+        LOGGER.warning(f'Missing environment variable {envvar_name}')
+        missing_environment_variables.append(envvar_name)
+
+if missing_environment_variables:
+    msg = f'Environment variables not set! = {missing_environment_variables}'
     LOGGER.error(msg)
     raise EnvironmentError(msg)
 
@@ -110,15 +120,34 @@ def create(ctx, verbosity):
     click.echo(f'Setting up logging (loglevel={LOGLEVEL}, logfile={LOGFILE})')
     setup_logger(LOGLEVEL, LOGFILE)
 
-    click.echo(f'Creating baseline directory structure in {DATADIR}')
-    DATADIR.mkdir(parents=True, exist_ok=True)
-    DATADIR_INCOMING.mkdir(parents=True, exist_ok=True)
-    DATADIR_PUBLIC.mkdir(parents=True, exist_ok=True)
-    DATADIR_ARCHIVE.mkdir(parents=True, exist_ok=True)
-    DATADIR_CONFIG.mkdir(parents=True, exist_ok=True)
-    (DATADIR / 'cache').mkdir(parents=True, exist_ok=True)
-    (DATADIR / 'metadata' / 'discovery').mkdir(parents=True, exist_ok=True)
-    (DATADIR / 'metadata' / 'station').mkdir(parents=True, exist_ok=True)
+    click.echo('Setting up storage')
+    storage_defs = {
+        'storage_type': STORAGE_TYPE,
+        'source': STORAGE_SOURCE,
+        'auth': {'username': STORAGE_USERNAME, 'password': STORAGE_PASSWORD},
+        'codepath': PLUGINS['storage'][STORAGE_TYPE]['plugin']
+    }
+
+    storages = {
+        STORAGE_CONFIG: 'private',
+        STORAGE_INCOMING: 'private',
+        STORAGE_ARCHIVE: 'private',
+        STORAGE_PUBLIC: 'readonly'
+    }
+    for key, value in storages.items():
+        storage_defs['name'] = key
+        storage_defs['policy'] = value
+        storage = load_plugin('storage', storage_defs)
+        storage.setup()
+
+    # TODO: abstract into wis2box.storage.fs.FileSystemStorage
+    # click.echo(f'Creating baseline directory structure in {DATADIR}')
+    # DATADIR.mkdir(parents=True, exist_ok=True)
+    # DATADIR_ARCHIVE.mkdir(parents=True, exist_ok=True)
+    # DATADIR_CONFIG.mkdir(parents=True, exist_ok=True)
+    # (DATADIR / 'cache').mkdir(parents=True, exist_ok=True)
+    # (DATADIR / 'metadata' / 'discovery').mkdir(parents=True, exist_ok=True)
+    # (DATADIR / 'metadata' / 'station').mkdir(parents=True, exist_ok=True)
 
 
 @click.command()

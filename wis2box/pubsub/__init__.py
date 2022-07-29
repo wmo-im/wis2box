@@ -19,17 +19,18 @@
 #
 ###############################################################################
 
-FROM ghcr.io/wmo-im/wis2box:latest
+import click
+import logging
 
-RUN apt-get update -y \
-    && apt-get install -y gunicorn python3-pip python3-gevent python3-flask python3-flask-cors \
-    && pip3 install jinja2==3.0.3
+from wis2box.pubsub.subscribe import subscribe
 
-RUN mkdir -p /wis2box-auth/wis2box-auth/
+LOGGER = logging.getLogger(__name__)
 
-COPY ./app.py /wis2box-auth/wis2box-auth/app.py
-COPY ./entrypoint.sh /entrypoint.sh
 
-WORKDIR /wis2box-auth
+@click.group()
+def pubsub():
+    """PubSub workflow"""
+    pass
 
-CMD ["sh", "-c", "/entrypoint.sh"]
+
+pubsub.add_command(subscribe)

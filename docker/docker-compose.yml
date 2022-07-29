@@ -14,7 +14,7 @@ services:
 
   wis2box-ui:
     container_name: wis2box-ui
-    image: ghcr.io/wmo-im/wis2box-ui:0.2.0
+    image: ghcr.io/wmo-im/wis2box-ui:latest
     env_file:
       - default.env
       - ../dev.env
@@ -23,7 +23,7 @@ services:
 
   wis2box-api:
     container_name: wis2box-api
-    image: ghcr.io/wmo-im/wis2box-api:0.2.0
+    image: ghcr.io/wmo-im/wis2box-api:latest
     env_file:
       - default.env
       - ../dev.env
@@ -34,6 +34,26 @@ services:
         condition: service_started
     volumes:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:ro
+
+  minio:
+    container_name: wis2box-minio
+    image: minio/minio
+    env_file:
+      - default.env
+      - ../dev.env
+    command: server --console-address ":9001" /data
+    # in a production-setup minio needs to be
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 1s
+      retries: 3
+    depends_on:
+      mosquitto:
+        condition: service_started
+
 
   elasticsearch:
     container_name: elasticsearch
@@ -57,7 +77,7 @@ services:
     healthcheck:
       test: ["CMD", "curl", "http://localhost:9200"]
       interval: 5s
-      retries: 10
+      retries: 100
 
   mosquitto:
     container_name: mosquitto
@@ -69,66 +89,6 @@ services:
       - ../dev.env
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
-
-  data-consumer:
-    container_name: data-consumer
-    image: ghcr.io/metpx/sarracenia:latest
-    env_file:
-      - default.env
-      - ../dev.env
-    volumes:
-      - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
-      - ./sarracenia/admin.conf:/root/.config/sr3/admin.conf:rw
-      - ./sarracenia/default.conf:/root/.config/sr3/default.conf:rw
-      - ./sarracenia/incoming.conf:/root/.config/sr3/watch/incoming.conf:rw
-    depends_on:
-      - mosquitto
-    command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
-
-  mqp-publisher:
-    container_name: mqp-publisher
-    image: ghcr.io/metpx/sarracenia:latest
-    env_file:
-      - default.env
-      - ../dev.env
-    volumes:
-      - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
-      - ./sarracenia/admin.conf:/root/.config/sr3/admin.conf:rw
-      - ./sarracenia/default.conf:/root/.config/sr3/default.conf:rw
-      - ./sarracenia/public.conf:/root/.config/sr3/subscribe/public.conf:rw
-    depends_on:
-      - mosquitto
-    command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
-
-  ca-republisher:
-    container_name: ca-republisher
-    image: ghcr.io/metpx/sarracenia:latest
-    env_file:
-      - default.env
-      - ../dev.env
-    volumes:
-      - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
-      - ./sarracenia/admin.conf:/root/.config/sr3/admin.conf:rw
-      - ./sarracenia/default.conf:/root/.config/sr3/default.conf:rw
-      - ./sarracenia/subscribe/ca-republisher.conf:/root/.config/sr3/subscribe/ca-republisher.conf:rw
-    depends_on:
-      - mosquitto
-    #command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
-
-  de-republisher:
-    container_name: de-republisher
-    image: ghcr.io/metpx/sarracenia:latest
-    env_file:
-      - default.env
-      - ../dev.env
-    volumes:
-      - ${WIS2BOX_HOST_DATADIR}/data:/data/wis2box/data:rw
-      - ./sarracenia/admin.conf:/root/.config/sr3/admin.conf:rw
-      - ./sarracenia/default.conf:/root/.config/sr3/default.conf:rw
-      - ./sarracenia/subscribe/de-republisher.conf:/root/.config/sr3/subscribe/de-republisher.conf:rw
-    depends_on:
-      - mosquitto
-    # command: sh -c "whoami && sr3 --logStdout start && sleep infinity"
 
   wis2box:
     container_name: wis2box
@@ -144,12 +104,16 @@ services:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
       - ./wis2box/wis2box.cron:/etc/cron.d/wis2box:ro
     depends_on:
-      - mosquitto
+      minio:
+        condition: service_healthy
+      mosquitto:
+        condition: service_started
+    command: ["wis2box", "pubsub" , "subscribe", "--broker", "http://wis2box-minio:9000", "--topic", "wis2box-storage/#", "--verbosity", "INFO"]
 
   wis2box-auth:
     container_name: wis2box-auth
     build:
-      context: ./auth
+      context: ./wis2box-auth
     env_file:
       - default.env
       - ../dev.env
@@ -157,7 +121,7 @@ services:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
     depends_on:
       - wis2box
+
 volumes:
   es-data:
-
-
+  minio-data:

@@ -29,7 +29,8 @@ services:
       vpcbr: # this is the place where we assign the static ipv4 address
         ipv4_address: 10.5.0.2
       default:
-    # mqtt_metrics_collector, listens to mqtt-broker
+  # mqtt_metrics_collector, listens to mqtt-broker
+  # TODO: integrate this into mqp-publisher 
   mqtt_metrics_collector:
     <<: *logging
     container_name: mqtt_metrics_collector
@@ -42,24 +43,10 @@ services:
       - mosquitto
     ports:
       - 8001:8001
-  # metrics_collector, to collect metrics for wis2box-services
-  metrics_collector:
-    <<: *logging
-    container_name: metrics_collector
-    env_file:
-      - default.env
-      - ../dev.env
-    build:
-      context: ./metrics_collector
-    volumes:
-      - ${WIS2BOX_HOST_DATADIR}/data/public:/data/wis2box/data/public:ro
-      - ${WIS2BOX_HOST_DATADIR}/data/incoming:/data/wis2box/data/incoming:ro
-    ports:
-      - 8000:8000
   # prometheus to collect metrics
   prometheus:
     <<: *logging
-    image: prom/prometheus
+    image: prom/prometheus:v2.37.0
     container_name: prometheus
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
@@ -72,7 +59,7 @@ services:
     container_name: grafana
     env_file:
       - ../dev.env
-    image: grafana/grafana-oss:latest
+    image: grafana/grafana-oss:9.0.3
     volumes:
       - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/datasources:/etc/grafana/provisioning/datasources
@@ -93,19 +80,9 @@ services:
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
     ports:
       - 3000:3000
-  data-consumer:
-    <<: *logging
-  mqp-publisher:
-    <<: *logging
   wis2box:
     <<: *logging
-  wis2box-ui:
-    <<: *logging
   mosquitto:
-    <<: *logging
-  wis2box-api:
-    <<: *logging
-  wis2box-auth:
     <<: *logging
 
 volumes:

@@ -25,8 +25,9 @@ import click
 
 from wis2box import cli_helpers
 from wis2box.env import API_CONFIG
-from wis2box.handler import Handler
 from wis2box.api.backend import load_backend
+from wis2box.handler import Handler
+from wis2box.pubsub.message import generate_collection_metadata as gcm
 import wis2box.metadata.discovery as discovery_
 from wis2box.topic_hierarchy import validate_and_load
 from wis2box.util import walk_path, yaml_load, yaml_dump
@@ -51,13 +52,27 @@ def generate_collection_metadata(mcf: dict) -> dict:
 
     LOGGER.debug('Creating collection configuration')
 
+    bbox = [
+        generated['geometry']['coordinates'][0][0][0],
+        generated['geometry']['coordinates'][0][0][1],
+        generated['geometry']['coordinates'][0][2][0],
+        generated['geometry']['coordinates'][0][2][1],
+    ]
+
+    kw = record['identification']['keywords']
+
+    keywords = set([k for k in kw.values() for k in kw])
+
     return {
         'type': 'collection',
         'title': generated['properties']['title'],
         'description': generated['properties']['description'],
-        'keywords': record['identification']['keywords'],
+        'keywords': keywords,
         'extents': {
-            'spatial': generated['properties']['extent']['spatial']
+            'spatial': {
+                'bbox': bbox,
+                'crs': 'http://www.opengis.net/def/crs/OGC/1.3/CRS84'
+            }
         },
         'links': generated['links'],
         'providers': []
@@ -68,6 +83,32 @@ def generate_collection_metadata(mcf: dict) -> dict:
 def api():
     """API management"""
     pass
+
+
+@click.command()
+@click.pass_context
+@cli_helpers.OPTION_VERBOSITY
+def setup(ctx, verbosity):
+    """Add collection items to API backend"""
+
+    click.echo('Generating collection metadata for messages')
+    collection = gcm()
+
+    backend = load_backend()
+    provider_def = backend.add_collection('messages')
+    collection['providers'].append(provider_def)
+    collection['providers'][0]['time_field'] = 'pubTime'
+
+    click.echo('Adding to API configuration')
+    with API_CONFIG.open() as fh:
+        config = yaml_load(fh)
+
+    config['resources']['messages'] = collection
+
+    with API_CONFIG.open("w") as fh:
+        yaml_dump(fh, config)
+
+    click.echo("Done")
 
 
 @click.command()
@@ -159,3 +200,4 @@ def delete_collection(ctx, topic_hierarchy, verbosity):
 api.add_command(add_collection_items)
 api.add_command(add_collection)
 api.add_command(delete_collection)
+api.add_command(setup)

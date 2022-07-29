@@ -18,3 +18,16 @@
 # under the License.
 #
 ###############################################################################
+
+FROM python:3-alpine
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+	
+RUN pip install --no-cache-dir watchdog paho-mqtt
+
+COPY *.py /usr/src/app/
+	
+ENV PYTHONUNBUFFERED="true"
+	
+CMD [ "python3", "-u", "watchpuppy.py" ]

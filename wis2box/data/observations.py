@@ -19,39 +19,34 @@
 #
 ###############################################################################
 
-from datetime import datetime
 import json
 import logging
 from pathlib import Path
 import re
-from urllib.parse import urlparse
+from typing import Union
 
 from csv2bufr import transform as transform_csv
-import paho.mqtt.publish as publish
 
 from wis2box.data.base import BaseAbstractData
-from wis2box.env import DATADIR, DATADIR_CONFIG, DATADIR_PUBLIC, BROKER
+from wis2box.env import DATADIR, DATADIR_CONFIG
 
 LOGGER = logging.getLogger(__name__)
 
 
 class ObservationDataCSV(BaseAbstractData):
     """Observation data"""
-    def __init__(self, topic_hierarchy: str) -> None:
+    def __init__(self, defs: dict) -> None:
         """
-        Abstract data initializer
+        ObservationDataCSV data initializer
 
-        :param topic_hierarchy: `wis2box.topic_hierarchy.TopicHierarchy`
-                                object
+        :param def: `dict` object of resource mappings
 
         :returns: `None`
         """
 
-        super().__init__(topic_hierarchy)
+        super().__init__(defs)
 
         self.mappings = {}
-        self.output_data = {}
-
         mapping_bufr4 = DATADIR_CONFIG / "csv2bufr" / self.template
 
         with mapping_bufr4.open() as fh1:
@@ -59,14 +54,21 @@ class ObservationDataCSV(BaseAbstractData):
 
         self.station_metadata = None
 
-    def transform(self, input_data: Path) -> bool:
-        LOGGER.debug('Processing data')
-        LOGGER.debug('Extracting WSI from filename')
+    def transform(self, input_data: Union[Path, bytes],
+                  filename: str = '') -> bool:
+
+        LOGGER.debug('Procesing CSV data')
+
+        if isinstance(input_data, Path):
+            LOGGER.debug('input_data is a Path')
+            filename = input_data.name
+
         try:
+            LOGGER.debug('Extracting WSI from filename')
             regex = self.file_filter
-            wsi = re.match(regex, input_data.name).group(1)
+            wsi = re.match(regex, filename).group(1)
         except AttributeError:
-            msg = f'Invalid filename format: {input_data} ({self.file_filter})'
+            msg = f'Invalid filename format: {filename} ({self.file_filter})'
             LOGGER.error(msg)
             raise ValueError(msg)
 
@@ -80,13 +82,16 @@ class ObservationDataCSV(BaseAbstractData):
             self.station_metadata = json.load(fh1)
 
         LOGGER.debug('Generating BUFR4')
-        with input_data.open() as fh1:
-            results = transform_csv(fh1.read(),
-                                    self.station_metadata,
-                                    self.mappings['bufr4'])
+        input_bytes = self.as_bytes(input_data)
+
+        LOGGER.debug('Transforming data')
+        results = transform_csv(input_bytes.decode(),
+                                self.station_metadata,
+                                self.mappings['bufr4'])
+
         # convert to list
         LOGGER.debug('Iterating over BUFR messages')
-        for item in results:   # item = { 'bufr4': ..., '_meta': ...}
+        for item in results:
             LOGGER.debug('Setting obs date for filepath creation')
             identifier = item['_meta']['identifier']
             data_date = item['_meta']['data_date']
@@ -100,85 +105,3 @@ class ObservationDataCSV(BaseAbstractData):
     def get_local_filepath(self, date_):
         yyyymmdd = date_.strftime('%Y-%m-%d')
         return (Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath)
-
-    def notify(self):
-        for identifier, item in self.output_data.items():
-            LOGGER.debug(f'Notifying product {identifier}')
-            # get relative file path
-            rfp = item['_meta']['relative_filepath']
-            # iterate over formats
-            for format_, the_data in item.items():  # only bufr4 and _meta
-                if format_ == '_meta':  # not data, skip
-                    continue
-                filename = (rfp) / f'{identifier}'
-                filename = filename.with_suffix(f'.{format_}')
-                if the_data is None:
-                    msg = f'Empty data for {identifier}-{key}; not publishing'  # noqa
-                    LOGGER.warning(msg)
-                else:
-                    msg = {
-                        'pubTime': datetime.now().strftime('%Y%m%dT%H%M%S.00'),
-                        # noqa
-                        'baseUrl': 'file:/',
-                        'relPath': str(DATADIR_PUBLIC / filename),
-                        'integrity': {
-                            'method': 'md5',
-                            'value': item['_meta']['md5']
-                        }
-                    }
-                    msg = json.dumps(msg)
-
-                    LOGGER.debug(
-                        f'Publishing: {msg} to {self.topic_hierarchy.dirpath}')  # noqa
-
-                    # Parse BROKER into components
-                    o = urlparse(BROKER)
-
-                    # separate uid and pwd from url
-                    uidpwd, url = o.netloc.split('@')
-                    # now separate uid and pwd
-                    uid, pwd = uidpwd.split(':')
-
-                    # set topic
-                    topic = f'xlocal/v03/data/wis2box/{self.topic_hierarchy.dirpath}'  # noqa
-
-                    # set arguments for publishing
-                    pubargs = {
-                        'topic': topic,
-                        'payload': msg,
-                        'hostname': f'{url}',
-                        'auth': {'username': uid, 'password': pwd}
-                    }
-
-                    # update port if specified
-                    if o.port is not None:
-                        pubargs['port'] = o.port
-
-                    # now publish
-                    try:
-                        publish.single(**pubargs)
-
-                    except Exception as err:
-                        LOGGER.error(pubargs)
-                        raise err
-
-        return True
-
-
-def process_data(data: str, discovery_metadata: dict) -> bool:
-    """
-    Data processing workflow for observations
-
-    :param data: `str` of data to be processed
-    :param discovery_metadata: `dict` of discovery metadata MCF
-
-    :returns: `bool` of processing result
-    """
-
-    d = ObservationDataCSV(discovery_metadata)
-    LOGGER.info('Transforming data')
-    d.transform(data)
-    LOGGER.info('Publishing data')
-    d.publish()
-
-    return True

@@ -195,9 +195,9 @@ def cache(ctx, filepath, verbosity):
         except RuntimeError:
             click.echo(f'Station not found: {wsi}')
 
-        filename = f"{DATADIR}/metadata/station/{wsi}.json"
+        filename = DATADIR / 'metadata' / 'station' / f'{wsi}.json'
         LOGGER.debug(f'Writing file to {filename}')
-        with open(filename, 'w') as fh:
+        with filename.open('w') as fh:
             json.dump(station_report, fh)
 
 
@@ -209,6 +209,15 @@ def publish_collection(ctx, verbosity):
 
     publish_station_collection()
     click.echo('Done')
+
+
+@click.command()
+@click.pass_context
+@cli_helpers.OPTION_VERBOSITY
+@cli_helpers.ARGUMENT_FILEPATH
+def sync(ctx, filepath, verbosity):
+    ctx.invoke(cache, filepath=filepath, verbosity=verbosity)
+    ctx.invoke(publish_collection, verbosity=verbosity)
 
 
 @click.command()
@@ -232,3 +241,4 @@ def publish(ctx, filepath, verbosity):
 station.add_command(publish)
 station.add_command(publish_collection)
 station.add_command(cache)
+station.add_command(sync)
