@@ -101,21 +101,21 @@ def gather_mqtt_metrics():
     # explicitly set the counter to 0 at the start
     mqtt_msg_counter.inc(0)
 
-    BROKER_HOST = os.environ.get('WIS2BOX_BROKER_HOST', '')
-    BROKER_USERNAME = os.environ.get('WIS2BOX_BROKER_USERNAME', '')
-    BROKER_PASSWORD = os.environ.get('WIS2BOX_BROKER_PASSWORD', '')
+    broker_host = os.environ.get('WIS2BOX_broker_host', '')
+    broker_username = os.environ.get('WIS2BOX_broker_username', '')
+    broker_password = os.environ.get('WIS2BOX_broker_password', '')
 
     # generate a random clientId for the mqtt-session
     r = random.Random()
     client_id = f"mqtt_metrics_collector_{r.randint(1,1000):04d}"
     try:
         logger.info("setup connection")
-        logger.info(f"host={BROKER_HOST}, user={BROKER_USERNAME}")
+        logger.info(f"host={broker_host}, user={broker_username}")
         client = mqtt.Client(client_id=client_id, protocol=mqtt.MQTTv5)
         client.on_connect = sub_connect
         client.on_message = sub_mqtt_metrics
-        client.username_pw_set(BROKER_USERNAME, BROKER_PASSWORD)
-        client.connect(BROKER_HOST)
+        client.username_pw_set(broker_username, broker_password)
+        client.connect(broker_host)
         client.loop_forever()
     except Exception as e:
         logger.error(f"Failed to setup MQTT-client with error: {e}")
