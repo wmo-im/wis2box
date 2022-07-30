@@ -44,7 +44,11 @@ POLLING_INTERVAL = os.environ.get('POLLING_INTERVAL', 5)
 FILE_PATTERNS = os.environ.get('FILE_PATTERNS', '*.*')
 TOPIC_BASE = 'xlocal/v03'
 
-MQTT_BROKER = os.environ.get('WIS2BOX_BROKER', '')
+BROKER_HOST = os.environ.get('WIS2BOX_BROKER_HOST', '')
+BROKER_USERNAME = os.environ.get('WIS2BOX_BROKER_USERNAME', '')
+BROKER_PASSWORD = os.environ.get('WIS2BOX_BROKER_PASSWORD', '')
+
+BROKER = f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}'
 
 
 class NotMQTTException(Exception):
@@ -166,7 +170,7 @@ def main():
 
     LOGGER.info(f"Listening to {WATCHPATH} every {POLLING_INTERVAL} second")  # noqa
 
-    w = Watchpuppy(broker_conn_string=MQTT_BROKER)
+    w = Watchpuppy(broker_conn_string=BROKER)
     w.run(path=WATCHPATH, polling_interval=int(POLLING_INTERVAL))
     w.disconnect()
 

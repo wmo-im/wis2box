@@ -93,8 +93,9 @@ PubSub configuration provides connectivity information for the PubSub broker.
 
 .. code-block:: bash
 
-    WIS2BOX_BROKER_TYPE=mqtt
-    WIS2BOX_BROKER=mqtt://wis2box:wis2box@mosquitto/  # RFC 1738 syntax of internal broker endpoint
+    WIS2BOX_BROKER_USERNAME=wis2box
+    WIS2BOX_BROKER_PASSWORD=wis2box
+    WIS2BOX_BROKER_HOST=mosquitto
     WIS2BOX_BROKER_PUBLIC=mqtt://localhost:1883  # public MQTT url
 
 
