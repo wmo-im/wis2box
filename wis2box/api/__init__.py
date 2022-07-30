@@ -65,7 +65,7 @@ def generate_collection_metadata(mcf: dict) -> dict:
 
     return {
         'id': generated['id'],
-        'type': 'feature',
+        'type': 'collection',
         'title': generated['properties']['title'],
         'description': generated['properties']['description'],
         'keywords': list(keywords),

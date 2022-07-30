@@ -162,7 +162,7 @@ def generate_collection_metadata() -> dict:
 
     return {
         'id': 'messages',
-        'type': 'feature',
+        'type': 'collection',
         'title': 'Data notifications',
         'description': 'Data notifications',
         'keywords': ['wmo', 'wis 2.0'],

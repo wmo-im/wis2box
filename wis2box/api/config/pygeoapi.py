@@ -36,7 +36,6 @@ class PygeoapiConfig(BaseConfig):
         initializer
 
         :param defs: `dict` of connection parameters
-                     (config)
         """
 
         super().__init__(defs)
@@ -152,4 +151,4 @@ class PygeoapiConfig(BaseConfig):
         return collection
 
     def __repr__(self):
-        return f'<PygeoapiConfig> ({self.config})'
+        return '<PygeoapiConfig>'

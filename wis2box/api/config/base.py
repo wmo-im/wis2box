@@ -31,10 +31,7 @@ class BaseConfig:
         initializer
 
         :param defs: `dict` of connection parameters
-                     (config)
         """
-
-        self.config = defs.get('config')
 
     def add_collection(self, name: str, collection: dict) -> bool:
         """
@@ -82,4 +79,4 @@ class BaseConfig:
         raise NotImplementedError()
 
     def __repr__(self):
-        return f'<BaseConfig> ({self.config})'
+        return '<BaseConfig>'
