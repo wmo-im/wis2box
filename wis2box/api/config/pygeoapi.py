@@ -50,7 +50,6 @@ class PygeoapiConfig(BaseConfig):
 
         :returns: `bool` of add result
         """
-
         if self.has_collection(name):
             r = requests.put(f'{self.url}/{name}', json=collection)
         else:
@@ -93,15 +92,14 @@ class PygeoapiConfig(BaseConfig):
         :returns: `dict` of collection configuration
         """
 
+        resource_id = meta.get('id')
         type_ = meta.get('type', 'feature')
 
-        if type_ == 'feature':
-            provider_name = API_BACKEND_TYPE
-            resource_id = f'{meta.get("id")}.*'
-        elif type_ == 'record':
-            provider_name = f'{API_BACKEND_TYPE}Catalogue'
+        provider_name = API_BACKEND_TYPE
 
-        resource_id = meta.get('id')
+        if type_ == 'record':
+            provider_name = f'{provider_name}Catalogue'
+
         if is_dataset(resource_id):
             resource_id = f'{resource_id}.*'.lower()
 
