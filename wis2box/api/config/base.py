@@ -36,13 +36,14 @@ class BaseConfig:
 
         self.config = defs.get('config')
 
-    def add_collection(self, meta: dict) -> bool:
+    def add_collection(self, name: str, collection: dict) -> bool:
         """
         Add a collection
 
-        :param meta: `dict` of collection properties
+        :param name: `str` of collection name
+        :param collection: `dict` of collection properties
 
-        :returns: `bool` of add collection result
+        :returns: `bool` of add result
         """
 
         raise NotImplementedError()
@@ -54,6 +55,28 @@ class BaseConfig:
         :param name: name of collection
 
         :returns: `bool` of delete collection result
+        """
+
+        raise NotImplementedError()
+
+    def has_collection(self, name: str) -> bool:
+        """
+        Checks a collection
+
+        :param name: name of collection
+
+        :returns: `bool` of collection result
+        """
+
+        raise NotImplementedError()
+
+    def prepare_collection(self, meta: dict) -> bool:
+        """
+        Add a collection
+
+        :param meta: `dict` of collection properties
+
+        :returns: `dict` of collection configuration
         """
 
         raise NotImplementedError()

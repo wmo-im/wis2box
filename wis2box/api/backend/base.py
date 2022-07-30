@@ -40,13 +40,13 @@ class BaseBackend:
         self.username = defs.get('username')
         self.password = defs.get('password')
 
-    def add_collection(self, name: str) -> dict:
+    def add_collection(self, name: str) -> bool:
         """
         Add a collection
 
         :param name: name of collection
 
-        :returns: `dict` API provider configuration
+        :returns: `bool` of result
         """
 
         raise NotImplementedError()

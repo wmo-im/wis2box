@@ -27,9 +27,6 @@ from wis2box.util import yaml_load
 
 LOGGER = logging.getLogger(__name__)
 
-LOGLEVEL = os.environ.get('WIS2BOX_LOGGING_LOGLEVEL', 'ERROR')
-LOGFILE = os.environ.get('WIS2BOX_LOGGING_LOGFILE', 'stdout')
-
 if 'WIS2BOX_DATADIR_DATA_MAPPINGS' in os.environ:
     LOGGER.debug('Overriding WIS2BOX_DATADIR_DATA_MAPPINGS')
     try:
@@ -41,17 +38,7 @@ if 'WIS2BOX_DATADIR_DATA_MAPPINGS' in os.environ:
         msg = f'Missing data mappings: {err}'
         LOGGER.error(msg)
         raise EnvironmentError(msg)
-
-with (Path(__file__).parent / 'resources' / 'data-mappings.yml').open() as fh:
-    DATADIR_DATA_MAPPINGS = yaml_load(fh)
-try:
-    DATADIR = Path(os.environ.get('WIS2BOX_DATADIR'))
-    DATADIR_INCOMING = DATADIR / 'data' / 'incoming'
-    DATADIR_PUBLIC = DATADIR / 'data' / 'public'
-    DATADIR_ARCHIVE = DATADIR / 'data' / 'archive'
-    DATADIR_CONFIG = DATADIR / 'config'
-    API_CONFIG = Path(os.environ.get('WIS2BOX_API_CONFIG'))
-except (OSError, TypeError):
-    msg = 'Configuration filepaths do not exist!'
-    LOGGER.error(msg)
-    raise EnvironmentError(msg)
+else:
+    data_mappings = Path(__file__).parent / 'resources' / 'data-mappings.yml'
+    with (data_mappings).open() as fh:
+        DATADIR_DATA_MAPPINGS = yaml_load(fh)

@@ -162,19 +162,13 @@ def generate_collection_metadata() -> dict:
 
     return {
         'id': 'messages',
-        'type': 'collection',
+        'type': 'feature',
         'title': 'Data notifications',
         'description': 'Data notifications',
         'keywords': ['wmo', 'wis 2.0'],
-        'extents': {
-            'spatial': {
-                'bbox': [-180, -90, 180, 90],
-                'crs': 'http://www.opengis.net/def/crs/OGC/1.3/CRS84'
-            }
-        },
+        'bbox': [-180, -90, 180, 90],
+        'links': ['https://example.org'],
         'id_field': 'id',
         'time_field': 'pubTime',
-        'title_field': 'id',
-        'providers': [],
-        'links': []
+        'title_field': 'id'
     }

@@ -28,8 +28,7 @@ import click
 from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.env import (STORAGE_SOURCE, STORAGE_ARCHIVE, STORAGE_PUBLIC,
-                         STORAGE_DATA_RETENTION_DAYS, STORAGE_INCOMING,
-                         LOGFILE, LOGLEVEL)
+                         STORAGE_DATA_RETENTION_DAYS, STORAGE_INCOMING)
 from wis2box.handler import Handler
 from wis2box.storage import put_data
 from wis2box.topic_hierarchy import validate_and_load
@@ -39,10 +38,7 @@ from wis2box.storage import move_data
 from wis2box.storage import list_content
 from wis2box.storage import delete_data
 
-from wis2box.log import setup_logger
-
 LOGGER = logging.getLogger(__name__)
-setup_logger(LOGLEVEL, LOGFILE)
 
 
 def archive_data(source_path: str, archive_path: str) -> None:
@@ -94,23 +90,6 @@ def clean_data(source_path: str, days: int) -> None:
     LOGGER.debug('Cleaning API indexes')
     backend = load_backend()
     backend.delete_collections_by_retention(days)
-
-
-def setup_dirs(topic_hierarchy: str) -> dict:
-    """
-    Setup data directories
-
-    :param topic_hierarchy: `str` of topic hierarchy path
-
-    :returns: `dict` of directories created
-    """
-
-    _, plugin = validate_and_load(topic_hierarchy)
-
-    LOGGER.debug('Setting up directories')
-    plugin.setup_dirs()
-
-    return plugin.directories
 
 
 def show_info(topic_hierarchy: str) -> dict:
@@ -187,21 +166,6 @@ def info(ctx, topic_hierarchy, verbosity):
 @click.command()
 @click.pass_context
 @cli_helpers.OPTION_TOPIC_HIERARCHY
-@cli_helpers.OPTION_VERBOSITY
-def setup(ctx, topic_hierarchy, verbosity):
-    """Setup data directories"""
-
-    if topic_hierarchy is None:
-        raise click.ClickException('Missing -th/--topic-hierarchy')
-
-    result = setup_dirs(topic_hierarchy)
-    click.echo('Directories created:')
-    click.echo(json.dumps(result, default=json_serial, indent=4))
-
-
-@click.command()
-@click.pass_context
-@cli_helpers.OPTION_TOPIC_HIERARCHY
 @cli_helpers.OPTION_PATH
 @click.option('--recursive', '-r', is_flag=True, default=False,
               help='Process directory recursively')
@@ -226,4 +190,3 @@ data.add_command(archive)
 data.add_command(clean)
 data.add_command(info)
 data.add_command(ingest)
-data.add_command(setup)

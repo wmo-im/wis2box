@@ -24,13 +24,13 @@ import logging
 import click
 
 from wis2box import cli_helpers
-from wis2box.env import API_CONFIG
 from wis2box.api.backend import load_backend
+from wis2box.api.config import load_config
 from wis2box.handler import Handler
 from wis2box.pubsub.message import generate_collection_metadata as gcm
 import wis2box.metadata.discovery as discovery_
 from wis2box.topic_hierarchy import validate_and_load
-from wis2box.util import walk_path, yaml_load, yaml_dump
+from wis2box.util import walk_path
 
 LOGGER = logging.getLogger(__name__)
 
@@ -64,18 +64,16 @@ def generate_collection_metadata(mcf: dict) -> dict:
     keywords = set([k for k in kw.values() for k in kw])
 
     return {
-        'type': 'collection',
+        'id': generated['id'],
+        'type': 'feature',
         'title': generated['properties']['title'],
         'description': generated['properties']['description'],
-        'keywords': keywords,
-        'extents': {
-            'spatial': {
-                'bbox': bbox,
-                'crs': 'http://www.opengis.net/def/crs/OGC/1.3/CRS84'
-            }
-        },
+        'keywords': list(keywords),
+        'bbox': bbox,
         'links': generated['links'],
-        'providers': []
+        'id_field': 'id',
+        'time_field': 'resultTime',
+        'title_field': 'id'
     }
 
 
@@ -92,21 +90,15 @@ def setup(ctx, verbosity):
     """Add collection items to API backend"""
 
     click.echo('Generating collection metadata for messages')
-    collection = gcm()
+    meta = gcm()
 
     backend = load_backend()
-    provider_def = backend.add_collection('messages')
-    collection['providers'].append(provider_def)
-    collection['providers'][0]['time_field'] = 'pubTime'
+    backend.add_collection('messages')
 
     click.echo('Adding to API configuration')
-    with API_CONFIG.open() as fh:
-        config = yaml_load(fh)
-
-    config['resources']['messages'] = collection
-
-    with API_CONFIG.open("w") as fh:
-        yaml_dump(fh, config)
+    api_config = load_config()
+    collection = api_config.prepare_collection(meta)
+    api_config.add_collection('messages', collection)
 
     click.echo("Done")
 
@@ -145,24 +137,19 @@ def add_collection(ctx, filepath, topic_hierarchy, verbosity):
         raise click.ClickException('Missing -th/--topic-hierarchy')
 
     th, _ = validate_and_load(topic_hierarchy)
-    index_name = th.dotpath
+    name = th.dotpath
 
     click.echo('Generating collection metadata')
-    collection = generate_collection_metadata(filepath.read())
+    meta = generate_collection_metadata(filepath.read())
 
     click.echo(f'Adding collection: {topic_hierarchy}')
     backend = load_backend()
-    provider_def = backend.add_collection(index_name)
-    collection['providers'].append(provider_def)
+    backend.add_collection(name)
 
     click.echo('Adding to API configuration')
-    with API_CONFIG.open() as fh:
-        config = yaml_load(fh)
-
-    config['resources'][index_name] = collection
-
-    with API_CONFIG.open("w") as fh:
-        yaml_dump(fh, config)
+    api_config = load_config()
+    collection = api_config.prepare_collection(meta)
+    api_config.add_collection(name, collection)
 
     click.echo("Done")
 
@@ -180,19 +167,14 @@ def delete_collection(ctx, topic_hierarchy, verbosity):
     click.echo(f'Deleting collection: {topic_hierarchy}')
 
     th, _ = validate_and_load(topic_hierarchy)
-    index_name = th.dotpath
+    name = th.dotpath
 
     backend = load_backend()
-    backend.delete_collection(index_name)
+    backend.delete_collection(name)
 
     click.echo('Removing from API configuration')
-    with API_CONFIG.open() as fh:
-        config = yaml_load(fh)
-
-    config['resources'].pop(index_name)
-
-    with API_CONFIG.open() as fh:
-        yaml_dump(fh, config)
+    api_config = load_config()
+    api_config.delete_collection(name)
 
     click.echo('Done')
 

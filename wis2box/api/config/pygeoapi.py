@@ -23,8 +23,8 @@ import logging
 import requests
 
 from wis2box.api.config.base import BaseConfig
-from wis2box.env import API_BACKEND_TYPE, API_BACKEND_URL, API_CONFIG, DOCKER_API_URL
-from wis2box.util import yaml_dump, yaml_load
+from wis2box.env import API_BACKEND_TYPE, API_BACKEND_URL, DOCKER_API_URL
+from wis2box.util import is_dataset
 
 LOGGER = logging.getLogger(__name__)
 
@@ -42,68 +42,24 @@ class PygeoapiConfig(BaseConfig):
         super().__init__(defs)
         self.url = f'{DOCKER_API_URL}/admin/resources'
 
-    def add_collection(self, meta: str) -> bool:
+    def add_collection(self, name: str, collection: dict) -> bool:
         """
         Add a collection
 
-        :param meta: `dict` of collection properties
+        :param name: `str` of collection name
+        :param collection: `dict` of collection properties
 
         :returns: `bool` of add result
         """
 
-        type_ = meta.get('type', 'feature')
-
-        if type_ == 'feature':
-            provider_name = API_BACKEND_TYPE
-        elif type_ == 'record':
-            provider_name = f'{API_BACKEND_TYPE}Catalogue'
-        resource_id = meta.get('id')
-
-        collection = {
-            'type': 'collection',
-            'title': {
-                'en': meta.get('title')
-            },
-            'description': {
-                'en': meta.get('description')
-            },
-            'keywords': {
-                'en': meta.get('keywords')
-            },
-            'extents': {
-                'spatial': {
-                    'bbox': meta.get('bbox'),
-                    'crs': 'http://www.opengis.net/def/crs/OGC/1.3/CRS84'
-                }
-            },
-            'providers': [{
-                'type': type_,
-                'name': provider_name,
-                'data': f"{API_BACKEND_URL}/{resource_id}",  # noqa
-                'id_field': meta.get('id_field'),
-                'time_field': meta.get('time_field'),
-                'title_field': meta.get('title_field')
-            }]
-        }
-
-        if meta['links']:
-            collection['links'] = []
-            for link in meta['links']:
-                collection['links'].append({
-                    'type': 'text/html',
-                    'rel': 'canonical',
-                    'title': 'information',
-                    'href': link
-                })
-
-        if self.has_collection(resource_id):
-            r = requests.put(f'{self.url}/{resource_id}', json=collection)
+        if self.has_collection(name):
+            r = requests.put(f'{self.url}/{name}', json=collection)
         else:
-            content = {resource_id: collection}
+            content = {name: collection}
             r = requests.post(self.url, json=content)
 
         r.raise_for_status()
-        return True
+        return r.status_code == requests.codes.ok
 
     def delete_collection(self, name: str) -> bool:
         """
@@ -125,8 +81,75 @@ class PygeoapiConfig(BaseConfig):
 
         :returns: `dict` of collection result
         """
+
         r = requests.get(f'{self.url}/{name}')
         return r.status_code == requests.codes.ok
+
+    def prepare_collection(self, meta: dict) -> bool:
+        """
+        Add a collection
+
+        :param meta: `dict` of collection properties
+
+        :returns: `dict` of collection configuration
+        """
+
+        type_ = meta.get('type', 'feature')
+
+        if type_ == 'feature':
+            provider_name = API_BACKEND_TYPE
+            resource_id = f'{meta.get("id")}.*'
+        elif type_ == 'record':
+            provider_name = f'{API_BACKEND_TYPE}Catalogue'
+
+        resource_id = meta.get('id')
+        if is_dataset(resource_id):
+            resource_id = f'{resource_id}.*'.lower()
+
+        collection = {
+            'type': 'collection',
+            'title': {
+                'en': meta.get('title')
+            },
+            'description': {
+                'en': meta.get('description')
+            },
+            'keywords': {
+                'en': meta.get('keywords')
+            },
+            'extents': {
+                'spatial': {
+                    'bbox': meta.get('bbox'),
+                    'crs': 'http://www.opengis.net/def/crs/OGC/1.3/CRS84'
+                }
+            },
+            'providers': [{
+                'type': type_,
+                'name': provider_name,
+                'data': f'{API_BACKEND_URL}/{resource_id}',  # noqa
+                'id_field': meta.get('id_field'),
+                'time_field': meta.get('time_field'),
+                'title_field': meta.get('title_field')
+            }]
+        }
+
+        if meta.get('time_field') is None:
+            collection['providers'][0].pop('time_field')
+
+        if meta.get('links') is not None:
+            def make(link):
+                if isinstance(link, dict):
+                    return link
+                else:
+                    return {
+                        'type': 'text/html',
+                        'rel': 'canonical',
+                        'title': 'information',
+                        'href': link
+                    }
+            collection['links'] = [make(link) for link in meta['links']]
+
+        return collection
 
     def __repr__(self):
         return f'<PygeoapiConfig> ({self.config})'

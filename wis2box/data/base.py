@@ -24,8 +24,8 @@ from pathlib import Path
 from typing import Iterator, Union
 
 from wis2box.api.backend import load_backend
-from wis2box.env import (DATADIR_INCOMING, DATADIR_PUBLIC,
-                         STORAGE_PUBLIC, STORAGE_SOURCE, BROKER_PUBLIC)
+from wis2box.env import (STORAGE_INCOMING, STORAGE_PUBLIC,
+                         STORAGE_SOURCE, BROKER_PUBLIC)
 from wis2box.storage import put_data
 from wis2box.topic_hierarchy import TopicHierarchy
 from wis2box.plugin import load_plugin, PLUGINS
@@ -86,11 +86,7 @@ class BaseAbstractData:
         :returns: `bool` of result
         """
 
-        for key, value in self.directories.items():
-            LOGGER.debug(f'Creating directory {key} => {value}')
-            value.mkdir(parents=True, exist_ok=True)
-
-        return True
+        raise NotImplementedError()
 
     def transform(self, input_data: Union[bytes, str],
                   filename: str = '') -> bool:
@@ -197,9 +193,7 @@ class BaseAbstractData:
                 if the_data is None:
                     continue
 
-                filename = DATADIR_PUBLIC / (rfp) / f'{identifier}'
-                filename = filename.with_suffix(f'.{format_}')
-                yield filename
+                yield f'{STORAGE_PUBLIC}/{rfp}/{identifier}.{format_}'
 
     @property
     def directories(self):
@@ -208,8 +202,8 @@ class BaseAbstractData:
         dirpath = self.topic_hierarchy.dirpath
 
         return {
-            'incoming': DATADIR_INCOMING / dirpath
-            # 'public': DATADIR_PUBLIC / dirpath
+            'incoming': f'{STORAGE_INCOMING}/{dirpath}',
+            'public': f'{STORAGE_PUBLIC}/{dirpath}'
         }
 
     def get_public_filepath(self):

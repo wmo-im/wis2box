@@ -27,10 +27,10 @@ from parse import parse
 from isodate import parse_date
 
 from wis2box.api.backend.base import BaseBackend
-from wis2box.util import older_than
+from wis2box.util import older_than, is_dataset
 
-LOGGER = logging.getLogger('elasticsearch')
-LOGGER.setLevel(logging.INFO)
+logging.getLogger('elasticsearch').setLevel(logging.ERROR)
+LOGGER = logging.getLogger(__name__)
 
 # default index settings
 SETTINGS = {
@@ -118,7 +118,7 @@ class ElasticBackend(BaseBackend):
 
         :param collection_id: `str` name of collection
 
-        :returns: `dict` API provider configuration
+        :returns: `bool` of result
         """
 
         es_index = self.es_id(collection_id)
@@ -136,7 +136,7 @@ class ElasticBackend(BaseBackend):
 
         settings = deepcopy(SETTINGS)
 
-        if self._is_dataset(es_index):
+        if is_dataset(es_index):
             LOGGER.debug('dataset index detected')
             LOGGER.debug('creating index template')
             settings['index_patterns'] = [f'{es_template}*']
@@ -148,13 +148,7 @@ class ElasticBackend(BaseBackend):
             LOGGER.debug('metadata index detected')
             self.conn.indices.create(index=es_index, body=settings)
 
-        return {
-            'type': 'feature',
-            'name': 'Elasticsearch',
-            'data': f'{self.url}/{es_index}.*',
-            'id_field': 'id',
-            'time_field': 'resultTime'
-        }
+        return self.conn.indices.exists(es_index)
 
     def delete_collection(self, collection_id: str) -> None:
         """
@@ -190,7 +184,7 @@ class ElasticBackend(BaseBackend):
 
         es_index = self.es_id(collection_id)
 
-        if (not self._is_dataset(es_index) and
+        if (not is_dataset(es_index) and
                 not self.conn.indices.exists(es_index)):
             LOGGER.debug('Index {es_index} does not exist.  Creating')
             self.add_collection(es_index)
@@ -204,7 +198,7 @@ class ElasticBackend(BaseBackend):
                 LOGGER.debug(f'Feature: {feature}')
                 es_index2 = es_index
                 feature['properties']['id'] = feature['id']
-                if self._is_dataset(collection_id):
+                if is_dataset(collection_id):
                     LOGGER.debug('Determinining index date from OM GeoJSON')
                     try:
                         date_ = parse_date(feature['properties']['resultTime'])
@@ -254,21 +248,6 @@ class ElasticBackend(BaseBackend):
                     self.delete_collection(index)
 
         return
-
-    def _is_dataset(self, collection_id) -> bool:
-        """
-        Check whether the index is a dataset (and thus
-        needs daily index management)
-
-        :param collection_id: name of collection
-
-        :returns: `bool` of evaluation
-        """
-
-        if '.' in collection_id or collection_id == 'messages':
-            return True
-        else:
-            return False
 
     def __repr__(self):
         return f'<ElasticBackend> (url={self.url})'

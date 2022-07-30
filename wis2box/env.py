@@ -33,11 +33,7 @@ LOGGER = logging.getLogger(__name__)
 
 try:
     DATADIR = Path(os.environ.get('WIS2BOX_DATADIR'))
-    DATADIR_INCOMING = DATADIR / 'data' / 'incoming'
-    DATADIR_PUBLIC = DATADIR / 'data' / 'public'
-    DATADIR_ARCHIVE = DATADIR / 'data' / 'archive'
     DATADIR_CONFIG = DATADIR / 'config'
-    API_CONFIG = Path(os.environ.get('WIS2BOX_API_CONFIG'))
 except (OSError, TypeError):
     msg = 'Configuration filepaths do not exist!'
     LOGGER.error(msg)
@@ -76,12 +72,9 @@ missing_environment_variables = []
 
 required_environment_variables = [
     DATADIR,
-    DATADIR_INCOMING,
-    DATADIR_PUBLIC,
     DOCKER_API_URL,
     OSCAR_API_TOKEN,
     API_TYPE,
-    API_URL,
     BROKER_PUBLIC,
     URL,
     STORAGE_TYPE,
