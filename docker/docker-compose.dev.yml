@@ -4,7 +4,11 @@ services:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
       - ./wis2box/wis2box.cron:/etc/cron.d/wis2box:ro
       - ../wis2box:/usr/local/lib/python3.9/site-packages/wis2box-0.3.dev0-py3.9.egg/wis2box
-    command: ["wis2box", "pubsub" , "subscribe", "--broker", "http://wis2box-minio:9000", "--topic", "wis2box-storage/#", "--verbosity", "DEBUG"]
+    command: ["wis2box", "pubsub" , "subscribe", "--broker", "http://wis2box-minio:9000", "--topic", "wis2box-storage/#", "--verbosity", "INFO"]
+
+#  wis2box-api:
+#    volumes:
+#      - ../../wis2box-api/wis2box_api:/usr/local/lib/python3.8/dist-packages/wis2box_api-0.3.dev0-py3.8.egg/wis2box_api
 
   wis2box-auth:
     volumes:
