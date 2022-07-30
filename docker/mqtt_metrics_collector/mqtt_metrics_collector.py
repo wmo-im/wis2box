@@ -101,6 +101,12 @@ def gather_mqtt_metrics():
     # explicitly set the counter to 0 at the start
     mqtt_msg_counter.inc(0)
 
+    BROKER_HOST = os.environ.get('WIS2BOX_BROKER_HOST', '')
+    BROKER_USERNAME = os.environ.get('WIS2BOX_BROKER_USERNAME', '')
+    BROKER_PASSWORD = os.environ.get('WIS2BOX_BROKER_PASSWORD', '')
+
+    BROKER = f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}'
+
     # parse username and password out of the WIS2BOX_BROKER variable
     BROKER = os.environ.get('WIS2BOX_BROKER')
 
@@ -109,18 +115,13 @@ def gather_mqtt_metrics():
     client_id = f"mqtt_metrics_collector_{r.randint(1,1000):04d}"
     logger.info(BROKER)
     try:
-        broker_arr = BROKER.replace('mqtt://', '').split(':')
-        logger.info(f"{broker_arr[0]}")
-        mqtt_username = broker_arr[0]
-        mqtt_pwd = str(broker_arr[1]).split('@')[0]
-        mqtt_host = str(broker_arr[1]).split('@')[1]
         logger.info("setup connection")
-        logger.info(f"host={mqtt_host}, user={mqtt_username}")
+        logger.info(f"host={BROKER_HOST}, user={BROKER_USERNAME}")
         client = mqtt.Client(client_id=client_id, protocol=mqtt.MQTTv5)
         client.on_connect = sub_connect
         client.on_message = sub_mqtt_metrics
-        client.username_pw_set(mqtt_username, mqtt_pwd)
-        client.connect(mqtt_host)
+        client.username_pw_set(BROKER_USERNAME, BROKER_PASSWORD)
+        client.connect(BROKER_HOST)
         client.loop_forever()
     except Exception as e:
         logger.error(f"Failed to setup MQTT-client with error: {e}")

@@ -24,12 +24,12 @@ import logging
 LOGGER = logging.getLogger(__name__)
 
 TOPICS = {
-    'DATA_INCOMING': {
+    'STORAGE_INCOMING': {
         'bucket': 'incoming',
         'topic': 'xlocal/data_incoming',
         'handler': 'wis2box.event.data_ingest.Event'
     },
-    'DATA_PUBLISHED': {
+    'STORAGE_PUBLIC': {
         'bucket': 'public',
         'topic': 'xlocal/data_public',
         'handler': 'wis2box.event.data_api_publish.Event'
