@@ -44,7 +44,7 @@ jobs:
           wis2box environment create \
           && wis2box environment show \
           && wis2box api setup"
-    - name: add Malawi data ⚙️
+    - name: add Malawi data 🇲🇼
       run: |
         docker exec wis2box sh -c ' \
           export TOPIC_HIERARCHY=data.core.observations-surface-land.mw.FWCL.landFixed \
@@ -53,7 +53,7 @@ jobs:
           && wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOERY_METADATA \
           && wis2box data ingest -th $TOPIC_HIERARCHY -p /data/wis2box/observations/malawi \
           && wis2box metadata station sync /data/wis2box/metadata/station/station_list.csv'
-    - name: add Italy data ⚙️
+    - name: add Italy data 🇮🇹
       run: |
         docker exec wis2box sh -c ' \
           export TOPIC_HIERARCHY=data.core.observations-surface-land.it.FWCL.landFixed \
@@ -62,7 +62,7 @@ jobs:
           && wis2box metadata discovery publish $DISCOERY_METADATA \
           && wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOERY_METADATA \
           && wis2box data ingest -th $TOPIC_HIERARCHY -p /data/wis2box/observations/italy'
-    - name: add Algeria data ⚙️
+    - name: add Algeria data 🇩🇿
       run: |
         docker exec wis2box sh -c ' \
           export TOPIC_HIERARCHY=data.core.observations-surface-land.dz.FWCL.landFixed \
