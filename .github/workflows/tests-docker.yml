@@ -49,7 +49,6 @@ jobs:
         docker exec wis2box sh -c ' \
           export TOPIC_HIERARCHY=data.core.observations-surface-land.mw.FWCL.landFixed \
           && export DISCOERY_METADATA=/data/wis2box/metadata/discovery/mw-surface-weather-observations.yml \
-          && wis2box data info -th $TOPIC_HIERARCHY \
           && wis2box metadata discovery publish $DISCOERY_METADATA \
           && wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOERY_METADATA \
           && wis2box data ingest -th $TOPIC_HIERARCHY -p /data/wis2box/observations/malawi \
