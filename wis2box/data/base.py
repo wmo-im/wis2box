@@ -80,18 +80,10 @@ class BaseAbstractData:
         self.country_code = discovery_metadata['wis2box']['country_code']
         self.representation = None
 
-    def setup_dirs(self) -> bool:
-        """
-        Create directory structure
-
-        :returns: `bool` of result
-        """
-
-        raise NotImplementedError()
-
     def accept_file(self, filename: str = '') -> bool:
         """
         Transform data
+
         :param filename, file path
         :returns: `bool` of processing result
         """
