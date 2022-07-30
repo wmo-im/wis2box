@@ -153,7 +153,7 @@ def make(args) -> None:
             run(args, split(f"docker start {containers}"))
         else:
             if args.command == 'start-dev':
-                run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} --file docker/docker-compose.dev.yml up -d'))
+                run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} --file docker/docker-compose.dev.yml up'))
             else:
                 run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} up -d'))
     elif args.command == "login":

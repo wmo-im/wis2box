@@ -105,15 +105,9 @@ def gather_mqtt_metrics():
     BROKER_USERNAME = os.environ.get('WIS2BOX_BROKER_USERNAME', '')
     BROKER_PASSWORD = os.environ.get('WIS2BOX_BROKER_PASSWORD', '')
 
-    BROKER = f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}'
-
-    # parse username and password out of the WIS2BOX_BROKER variable
-    BROKER = os.environ.get('WIS2BOX_BROKER')
-
     # generate a random clientId for the mqtt-session
     r = random.Random()
     client_id = f"mqtt_metrics_collector_{r.randint(1,1000):04d}"
-    logger.info(BROKER)
     try:
         logger.info("setup connection")
         logger.info(f"host={BROKER_HOST}, user={BROKER_USERNAME}")
