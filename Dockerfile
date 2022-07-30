@@ -48,7 +48,6 @@ RUN apt-get update -y \
     && apt-get -q clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY docker/wis2box-api /wis2box-api
 # copy the app
 COPY . /app
 # install wis2box

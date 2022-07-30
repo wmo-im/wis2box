@@ -169,3 +169,19 @@ def older_than(datetime_: str, days: int) -> bool:
     delta = today - timedelta(days=days)
 
     return dt < delta
+
+
+def is_dataset(collection_id) -> bool:
+    """
+    Check whether the index is a dataset (and thus
+    needs daily index management)
+
+    :param collection_id: name of collection
+
+    :returns: `bool` of evaluation
+    """
+
+    if '.' in collection_id or collection_id == 'messages':
+        return True
+    else:
+        return False

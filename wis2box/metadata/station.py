@@ -160,7 +160,7 @@ def publish_station_collection() -> None:
         backend.upsert_collection_items('stations', [feature])
 
     click.echo('Adding to API configuration')
-    collection = {
+    meta = {
         'id': 'stations',
         'title': 'Stations',
         'description': 'Stations',
@@ -172,7 +172,8 @@ def publish_station_collection() -> None:
     }
 
     api_config = load_config()
-    api_config.add_collection(collection)
+    collection = api_config.prepare_collection(meta)
+    api_config.add_collection('stations', collection)
 
     return
 

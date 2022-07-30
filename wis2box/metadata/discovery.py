@@ -107,7 +107,7 @@ def publish_collection() -> bool:
 
     LOGGER.debug('Adding to API configuration')
 
-    collection = {
+    meta = {
         'id': 'discovery-metadata',
         'type': 'record',
         'title': 'Discovery metadata',
@@ -121,7 +121,8 @@ def publish_collection() -> bool:
     }
 
     api_config = load_config()
-    api_config.add_collection(collection)
+    collection = api_config.prepare_collection(meta)
+    api_config.add_collection(meta['id'], collection)
 
     return True
 

@@ -31,18 +31,16 @@ class BaseConfig:
         initializer
 
         :param defs: `dict` of connection parameters
-                     (config)
         """
 
-        self.config = defs.get('config')
-
-    def add_collection(self, meta: dict) -> bool:
+    def add_collection(self, name: str, collection: dict) -> bool:
         """
         Add a collection
 
-        :param meta: `dict` of collection properties
+        :param name: `str` of collection name
+        :param collection: `dict` of collection properties
 
-        :returns: `bool` of add collection result
+        :returns: `bool` of add result
         """
 
         raise NotImplementedError()
@@ -58,5 +56,27 @@ class BaseConfig:
 
         raise NotImplementedError()
 
+    def has_collection(self, name: str) -> bool:
+        """
+        Checks a collection
+
+        :param name: name of collection
+
+        :returns: `bool` of collection result
+        """
+
+        raise NotImplementedError()
+
+    def prepare_collection(self, meta: dict) -> bool:
+        """
+        Add a collection
+
+        :param meta: `dict` of collection properties
+
+        :returns: `dict` of collection configuration
+        """
+
+        raise NotImplementedError()
+
     def __repr__(self):
-        return f'<BaseConfig> ({self.config})'
+        return '<BaseConfig>'

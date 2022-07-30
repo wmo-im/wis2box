@@ -20,10 +20,11 @@
 ###############################################################################
 
 import logging
+import requests
 
 from wis2box.api.config.base import BaseConfig
-from wis2box.env import API_BACKEND_TYPE, API_BACKEND_URL, API_CONFIG
-from wis2box.util import yaml_dump, yaml_load
+from wis2box.env import API_BACKEND_TYPE, API_BACKEND_URL, DOCKER_API_URL
+from wis2box.util import is_dataset
 
 LOGGER = logging.getLogger(__name__)
 
@@ -35,27 +36,72 @@ class PygeoapiConfig(BaseConfig):
         initializer
 
         :param defs: `dict` of connection parameters
-                     (config)
         """
 
         super().__init__(defs)
+        self.url = f'{DOCKER_API_URL}/admin/resources'
 
-    def add_collection(self, meta: str) -> bool:
+    def add_collection(self, name: str, collection: dict) -> bool:
+        """
+        Add a collection
+
+        :param name: `str` of collection name
+        :param collection: `dict` of collection properties
+
+        :returns: `bool` of add result
+        """
+        if self.has_collection(name):
+            r = requests.put(f'{self.url}/{name}', json=collection)
+        else:
+            content = {name: collection}
+            r = requests.post(self.url, json=content)
+
+        r.raise_for_status()
+        return r.status_code == requests.codes.ok
+
+    def delete_collection(self, name: str) -> bool:
+        """
+        Delete a collection
+
+        :param name: name of collection
+
+        :returns: `bool` of delete collection result
+        """
+
+        r = requests.delete(f'{self.url}/{name}')
+        return r.status_code == requests.codes.ok
+
+    def has_collection(self, name: str) -> dict:
+        """
+        Checks a collection
+
+        :param name: name of collection
+
+        :returns: `dict` of collection result
+        """
+
+        r = requests.get(f'{self.url}/{name}')
+        return r.status_code == requests.codes.ok
+
+    def prepare_collection(self, meta: dict) -> bool:
         """
         Add a collection
 
         :param meta: `dict` of collection properties
 
-        :returns: `bool` of add result
+        :returns: `dict` of collection configuration
         """
 
+        resource_id = meta.get('id')
         type_ = meta.get('type', 'feature')
 
-        if type_ == 'feature':
-            provider_name = API_BACKEND_TYPE
-        elif type_ == 'record':
-            provider_name = f'{API_BACKEND_TYPE}Catalogue'
-        resource_id = meta.get('id')
+        provider_name = API_BACKEND_TYPE
+
+        if type_ == 'record':
+            provider_name = f'{provider_name}Catalogue'
+
+        if is_dataset(resource_id):
+            resource_id = f'{resource_id}.*'.lower()
 
         collection = {
             'type': 'collection',
@@ -77,51 +123,30 @@ class PygeoapiConfig(BaseConfig):
             'providers': [{
                 'type': type_,
                 'name': provider_name,
-                'data': f"{API_BACKEND_URL}/{resource_id}",  # noqa
+                'data': f'{API_BACKEND_URL}/{resource_id}',  # noqa
                 'id_field': meta.get('id_field'),
                 'time_field': meta.get('time_field'),
                 'title_field': meta.get('title_field')
             }]
         }
 
-        if meta['links']:
-            collection['links'] = []
-            for link in meta['links']:
-                collection['links'].append({
-                    'type': 'text/html',
-                    'rel': 'canonical',
-                    'title': 'information',
-                    'href': link
-                })
+        if meta.get('time_field') is None:
+            collection['providers'][0].pop('time_field')
 
-        with API_CONFIG.open() as fh:
-            yaml_config = yaml_load(fh)
+        if meta.get('links') is not None:
+            def make(link):
+                if isinstance(link, dict):
+                    return link
+                else:
+                    return {
+                        'type': 'text/html',
+                        'rel': 'canonical',
+                        'title': 'information',
+                        'href': link
+                    }
+            collection['links'] = [make(link) for link in meta['links']]
 
-        yaml_config['resources'][meta.get('id')] = collection
-
-        with API_CONFIG.open("w") as fh:
-            yaml_dump(fh, yaml_config)
-
-        return True
-
-    def delete_collection(self, name: str) -> bool:
-        """
-        Delete a collection
-
-        :param name: name of collection
-
-        :returns: `bool` of delete collection result
-        """
-
-        with API_CONFIG.open() as fh:
-            yaml_config = yaml_load(fh)
-
-        yaml_config['resources'].pop(name)
-
-        with API_CONFIG.open("w") as fh:
-            yaml_dump(fh, yaml_config)
-
-        return True
+        return collection
 
     def __repr__(self):
-        return f'<BaseConfig> ({self.config})'
+        return '<PygeoapiConfig>'

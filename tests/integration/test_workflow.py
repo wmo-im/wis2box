@@ -64,7 +64,7 @@ def test_metadata_discovery_publish():
     assert r['id'] == 'data.core.observations-surface-land.mw.FWCL.landFixed'
     assert r['properties']['title'] == 'Surface weather observations (hourly)'
 
-    assert len(r['links']) == 4
+    assert len(r['links']) == 7
 
     geometry = {
         "type": "Polygon",

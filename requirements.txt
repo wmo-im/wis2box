@@ -7,3 +7,4 @@ parse
 pygeometa
 pyoscar
 PyYAML
+requests
