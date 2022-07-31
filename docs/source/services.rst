@@ -69,6 +69,12 @@ Below are some examples of working with the discovery catalogue.
 .. seealso:: :ref:`data-access`
 
 
+Management API
+^^^^^^^^^^^^^^
+
+The Data API also provides a management API to manage resources in alignment with `OGC API - Features - Part 4: Create, Replace, Update and Delete`_.
+
+
 SpatioTemporal Asset Catalog (STAC)
 -----------------------------------
 
@@ -116,3 +122,4 @@ Examples of additional services can be found in ``docker/extras``.
 .. _`OGC API - Records`: https://ogcapi.ogc.org/records
 .. _`SpatioTemporal Asset Catalog (STAC)`: https://stacspec.org
 .. _`MQTT`: https://mqtt.org
+.. _`OGC API - Features - Part 4: Create, Replace, Update and Delete`: https://docs.ogc.org/DRAFTS/20-002.html

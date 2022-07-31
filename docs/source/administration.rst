@@ -66,3 +66,12 @@ Changing default ports
 
 The ``docker/docker-compose.override.yml`` file provides definitions on utilized ports.  To change default
 ports, edit this file and ``docker/default.env``  before stopping and starting wis2box for changes to take effect.
+
+
+MQTT Quality of Service (QoS)
+-----------------------------
+
+The `quality of service`_ level of all wis2box powered brokers is always ``1`` by default.
+
+
+.. _`quality of service`: https://www.hivemq.com/blog/mqtt-essentials-part-6-mqtt-quality-of-service-levels
