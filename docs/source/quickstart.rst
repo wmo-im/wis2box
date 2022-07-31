@@ -77,7 +77,3 @@ Logout of wis2box container:
 From here, you can run ``python3 wis2box-ctl.py status`` to confirm that containers are running.
 
 To explore your wis2box installation and services, visit http://localhost:8999 in your web browser.
-
-To view the Minio UI to see the wis2box storage buckets, visit http://localhost:9001. 
-Minio username and password are configured throught your environment variables, see :ref:`configuration`.
-Default username/password is minio/minio123

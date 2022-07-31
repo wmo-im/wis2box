@@ -3,14 +3,8 @@
 Environment
 ===========
 
-wis2box requires the environment to be initialized before data processing or publishing.
-
-.. code-block:: bash
-
-   wis2box environment create
-
-This command will create all the directories required. You can check the environment at
-any time with:
+wis2box initializes the environment when starting, before data processing or publishing. To
+view the environment, run the following command:
 
 .. code-block:: bash
 

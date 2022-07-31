@@ -11,9 +11,15 @@ configuration. wis2box provides a default data mapping (in YAML format):
 
 The data mappings are indicated by the ``data`` keyword, with each topic having a separate entry specifying:
 
-- ``plugin``: the codepath of the plugin.
-- ``template``: additional argument allowing a mapping template name to be passed to the plugin.
-- ``file-pattern``: additional argument allowing a file pattern to be passed to the plugin.
+- ``plugins``: all plugin objects associated with the topic, by file type/extension
+
+Each plugin is based on the file extension to be detected and processed, with the following configuration:
+
+- ``plugin``: the codepath of the plugin
+- ``notify``: whether the plugin should publish a data notification
+- ``template``: additional argument allowing a mapping template name to be passed to the plugin
+- ``file-pattern``: additional argument allowing a file pattern to be passed to the plugin
+- ``buckets``: the name(s) of the storage bucket(s) that data should be saved to (See :ref:`configuration` for more informaiton on buckets)
 
 The default data mapping can be overriden by user-defined data mappings with the following steps:
 

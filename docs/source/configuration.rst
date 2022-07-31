@@ -57,12 +57,13 @@ wis2box stores data in MinIO buckets.
 
     WIS2BOX_STORAGE_TYPE=S3
     WIS2BOX_STORAGE_SOURCE=http://minio:9000
-    WIS2BOX_STORAGE_USERNAME=minio # username for the storage-layer
-    WIS2BOX_STORAGE_PASSWORD=minio123 # password for the storage-layer
-    WIS2BOX_STORAGE_INCOMING=wis2box-incoming # name of the storage-bucket/folder for incoming files
-    WIS2BOX_STORAGE_PUBLIC=wis2box-public # name of the storage-bucket/folder for public files
-    WIS2BOX_STORAGE_CONFIG=wis2box-config # name of the storage-bucket/folder for configuration files
-    WIS2BOX_STORAGE_DATA_RETENTION_DAYS=7 # number of days to keep files in incoming and public
+    WIS2BOX_STORAGE_USERNAME=minio  # username for the storage-layer
+    WIS2BOX_STORAGE_PASSWORD=minio123  # password for the storage-layer
+    WIS2BOX_STORAGE_INCOMING=wis2box-incoming  # name of the storage-bucket/folder for incoming files
+    WIS2BOX_STORAGE_PUBLIC=wis2box-public  # name of the storage-bucket/folder for public files
+    WIS2BOX_STORAGE_ARCHIVE=wis2box-archive  # name of the storage-bucket/folder for archived data
+    WIS2BOX_STORAGE_CONFIG=wis2box-config  # name of the storage-bucket/folder for configuration files
+    WIS2BOX_STORAGE_DATA_RETENTION_DAYS=7  # number of days to keep files in incoming and public
 
 API
 ^^^
@@ -75,6 +76,7 @@ API configurations drive control of the OGC API setup.
     WIS2BOX_API_URL=http://localhost:8999/pygeoapi  # public landing page endpoint
     WIS2BOX_API_BACKEND_TYPE=Elasticsearch  # backend provider type
     WIS2BOX_API_BACKEND_URL=http://elasticsearch:9200  # internal backend connection URL
+    WIS2BOX_DOCKER_API_URL  # container name of API container (for internal communications/workflow)
 
 Logging
 ^^^^^^^
@@ -93,10 +95,11 @@ PubSub configuration provides connectivity information for the PubSub broker.
 
 .. code-block:: bash
 
-    WIS2BOX_BROKER_USERNAME=wis2box
-    WIS2BOX_BROKER_PASSWORD=wis2box
-    WIS2BOX_BROKER_HOST=mosquitto
-    WIS2BOX_BROKER_PUBLIC=mqtt://localhost:1883  # public MQTT url
+    WIS2BOX_BROKER_HOST=mosquitto  # the hostname of the internal broker
+    WIS2BOX_BROKER_PORT=1883  # the port of the internal broker
+    WIS2BOX_BROKER_USERNAME=wis2box  # the username of the internal broker
+    WIS2BOX_BROKER_PASSWORD=wis2box  # the password of the internal broker
+    WIS2BOX_BROKER_PUBLIC=mqtt://foo:bar@localhost:1883  # RFC 1738 URL of public broker endpoint
 
 
 Other

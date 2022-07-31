@@ -17,7 +17,7 @@ Design time
 Runtime
 -------
 
-- automated data processing and API/PubSub publishing
+- automated data processing and publishing
 
 Running topics
 --------------

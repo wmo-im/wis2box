@@ -25,7 +25,7 @@ Features
 * event driven or interactive data ingest/process/publishing pipeline
 * visualization of stations/data on interactive maps
 * discovery metadata management and publishing
-* download/access of data from WIS 2.0 network to your local environment
+* download/access of data from the WIS 2.0 network to your local environment
 * standards-based data services and access mechanisms:
 
   * Data formats
@@ -35,7 +35,7 @@ Features
 
   * Message formats
 
-    * `GeoJSON`_
+    * `WIS2 Notification Message Format`_
 
   * Access and notification protocols
 
@@ -49,7 +49,7 @@ Features
 * robust and extensible plugin framework. Write your own data processing engines and integrate
   seamlessly into wis2box!
 * free and open source (FOSS)
-* containerized: use of Docker, enabling easy deployment
+* containerized: use of Docker, enabling easy deployment to cloud or on-premises infrastructure
 
 
 .. _`WIS 2.0 principles`: https://community.wmo.int/activity-areas/wis/wis2-implementation
@@ -60,3 +60,4 @@ Features
 .. _`STAC`: https://stacspec.org
 .. _`BUFR`: https://en.wikipedia.org/wiki/BUFR
 .. _`GeoJSON`: https://datatracker.ietf.org/doc/html/rfc7946
+.. _`WIS2 Notification Message Format`: https://github.com/wmo-im/wis2-notification-message/blob/main/WIS2_Message_Format_README.adoc

@@ -23,6 +23,13 @@ Resulting station metadata files (JSON) are stored in ``WIS2BOX_DATADIR/data/met
 can be used by wis2box data processing pipelines. These data are required before starting automated
 processing.
 
+.. note:: run the command ``wis2box metadata station sync /path/to/station_list.csv`` to both
+          cache stations form OSCAR/Surface and publish station as a collection to the wis2box API
+
+
+.. seealso:: :ref:`api-publishing`
+
+
 Summary
 -------
 

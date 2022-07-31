@@ -33,6 +33,14 @@ will generate local station collection GeoJSON for pygeoapi publication.
    wis2box metadata station publish-collection
 
 
+.. note:: run the command ``wis2box metadata station sync /path/to/station_list.csv`` to both
+          cache stations form OSCAR/Surface and publish station as a collection to the wis2box API 
+
+
+.. seealso:: :ref:`station-metadata`
+
+
+
 Discovery metadata API publishing
 ---------------------------------
 

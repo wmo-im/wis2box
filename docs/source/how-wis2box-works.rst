@@ -6,9 +6,8 @@ How wis2box works
 wis2box is implemented in the spirit of the `Twelve-Factor App methodology`_.
 
 wis2box is a `Docker`_ and `Python`_-based platform with the capabilities
-for centres to integrate their data holdings and publish them to
-the WMO Information System with a plug and play capability supporting
-data publishing, discovery and access.
+for centres to publish their data holdings to the WMO Information System with
+a plug and play capability supporting data publishing, discovery and access.
 
 High level system context
 --------------------------
@@ -53,11 +52,13 @@ wis2box containers:
 
 Container functionality can be described as follows:
 
-* **Data Consumer**: the data entry point of wis2box. Data pipelines and
-  workflow begins here
+* **Storage**: core data and metadata persistence, the initial data entry
+  point of wis2box. Data pipelines and workflow are triggered from here
+* **Internal Message Broker**: internal message bus
+* **Public Message Broker**: public facing broker. Provides data and metadata
+  notifications
 * **Data Management**: the epicentre of wis2box. Provides core wis2box
   administration and data/workflow/publishing utilities
-* **Storage**: core data persistence
 * **API Application**: OGC APIs providing geospatial web services
 * **Web Application**: user interface
 
@@ -70,9 +71,11 @@ wis2box is built on free and open source (FOSS) technology.
    :header: Container, Function, Technology, Standards
    :align: left
 
-   Data Consumer,PubSub,`mosquitto`_ `MinIO`_, `MQTT`_
+   Storage,data and metadata storage,`MinIO`_ `Elasticsearch`_,`S3`_
+   Internal Message Broker,PubSub,`mosquitto`_, `MQTT`_
+   Public Message Broker,PubSub,`mosquitto`_, `MQTT`_
    Data Management,data processing and publishing,`ecCodes`_ `csv2bufr`_ `bufr2geojson`_ `pygeometa`_ `pyoscar`_,:abbr:`WCMP (WMO Core Metadata Profile)` :abbr:`WMDR (WIGOS Metadata Record)`
-   API Application,data discovery and access, `pygeoapi`_ `Elasticsearch`_,`OGC API`_
+   API Application,data discovery and access, `pygeoapi`_,`OGC API`_
    Web Application,data discovery and visualization,`Vue.js`_ `Leaflet`_,`OGC API`_
 
 
@@ -94,3 +97,4 @@ wis2box is built on free and open source (FOSS) technology.
 .. _`csv2bufr`: https://csv2bufr.readthedocs.io
 .. _`bufr2geojson`: https://github.com/wmo-im/bufr2geojson
 .. _`MinIO`: https://dosc.min.io
+.. _`S3`: https://en.wikipedia.org/wiki/Object_storage
