@@ -71,7 +71,7 @@ jobs:
           && wis2box data ingest -th $TOPIC_HIERARCHY -p /data/wis2box/observations/algeria'
     - name: run integration tests ⚙️
       run: |
-        sleep 10
+        sleep 25
         pytest -s tests/integration
     - name: run flake8 ⚙️
       run: |
