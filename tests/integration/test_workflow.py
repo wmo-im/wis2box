@@ -57,7 +57,7 @@ def test_metadata_discovery_publish():
     """Test discovery metadata publishing"""
 
     r = requests.get(f'{API_URL}/collections/discovery-metadata/items').json()
-    assert r['numberMatched'] == 1
+    assert r['numberMatched'] == 3
 
     r = requests.get(f'{API_URL}/collections/discovery-metadata/items/data.core.observations-surface-land.mw.FWCL.landFixed').json()  # noqa
 
@@ -86,7 +86,7 @@ def test_metadata_discovery_publish():
     r = requests.get(f'{API_URL}/collections/discovery-metadata/items',
                      params=params).json()
 
-    assert r['numberMatched'] == 1
+    assert r['numberMatched'] == 3
 
 
 def test_data_ingest():
@@ -173,3 +173,29 @@ def test_data_api():
     r = requests.get(url, params=params).json()
 
     assert r['numberMatched'] == 283
+
+
+def test_message_api():
+    """Test message API collection queries"""
+
+    url = f'{API_URL}/collections/messages/items'
+    r = requests.get(url).json()
+
+    assert r['numberMatched'] == 45
+
+    msg = r['features'][0]
+    props = msg['properties']
+
+    assert props['integrity']['method'] == 'sha512'
+
+    link_rel = msg['links'][0]
+
+    assert link_rel['type'] == 'application/x-bufr'
+
+    r = requests.get(link_rel['href'])
+
+    assert r.status_code == requests.codes.ok
+
+    assert str(r.headers['Content-Length']) == str(props['content']['length'])
+
+    assert b'BUFR' in r.content

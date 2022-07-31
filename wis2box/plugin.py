@@ -86,11 +86,12 @@ def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
         raise InvalidPluginError(msg)
 
     valid_plugin = False
-    for key, value in plugin_mappings[plugin_type].items():
+    for value in plugin_mappings[plugin_type].values():
         if 'plugins' in value:
-            if codepath == value['plugins'][fmt]['plugin']:
-                valid_plugin = True
-                break
+            for plugin in value['plugins'].get(fmt, ()):
+                if codepath == plugin['plugin']:
+                    valid_plugin = True
+                    break
         else:
             if codepath == value['plugin']:
                 valid_plugin = True

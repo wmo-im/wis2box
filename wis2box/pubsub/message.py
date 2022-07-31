@@ -27,7 +27,7 @@ import logging
 from pathlib import Path
 
 from wis2box.util import json_serial
-from wis2box.env import URL, STORAGE_SOURCE
+from wis2box.env import STORAGE_PUBLIC, URL, STORAGE_SOURCE
 from wis2box.storage import get_data
 
 LOGGER = logging.getLogger(__name__)
@@ -129,7 +129,9 @@ class WISNotificationMessage(PubSubMessage):
         except KeyError:
             mimetype = 'application/octet-stream'
         # replace storage-source with wis2box-url
-        public_file_url = self.filepath.replace(STORAGE_SOURCE, URL)
+        public_file_url = self.filepath.replace(
+            f'{STORAGE_SOURCE}/{STORAGE_PUBLIC}', f'{URL}/data'
+        )
         self.message = {
             'id': self.identifier,
             'type': 'Feature',

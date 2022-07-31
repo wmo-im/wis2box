@@ -51,6 +51,7 @@ URL = os.environ.get('WIS2BOX_URL')
 BROKER_USERNAME = os.environ.get('WIS2BOX_BROKER_USERNAME')
 BROKER_PASSWORD = os.environ.get('WIS2BOX_BROKER_PASSWORD')
 BROKER_HOST = os.environ.get('WIS2BOX_BROKER_HOST')
+BROKER_PORT = os.environ.get('WIS2BOX_BROKER_PORT')
 BROKER_PUBLIC = os.environ.get('WIS2BOX_BROKER_PUBLIC')
 
 STORAGE_TYPE = os.environ.get('WIS2BOX_STORAGE_TYPE')
@@ -77,6 +78,10 @@ required_environment_variables = [
     DOCKER_API_URL,
     OSCAR_API_TOKEN,
     API_TYPE,
+    BROKER_HOST,
+    BROKER_PORT,
+    BROKER_USERNAME,
+    BROKER_PASSWORD,
     BROKER_PUBLIC,
     URL,
     STORAGE_TYPE,

@@ -54,6 +54,7 @@ class BaseAbstractData:
         self.template = defs['template']
         self.file_filter = defs['pattern']
         self.enable_notification = defs['notify']
+        self.buckets = defs['buckets']
         self.output_data = {}
         self.discovery_metadata = {}
 
@@ -79,14 +80,20 @@ class BaseAbstractData:
         self.country_code = discovery_metadata['wis2box']['country_code']
         self.representation = None
 
-    def setup_dirs(self) -> bool:
+    def accept_file(self, filename: str = '') -> bool:
         """
-        Create directory structure
+        Transform data
 
-        :returns: `bool` of result
+        :param filename, file path
+        :returns: `bool` of processing result
         """
-
-        raise NotImplementedError()
+        if self.buckets == ():
+            return True
+        else:
+            for b in self.buckets:
+                if b in str(filename):
+                    return True
+        return False
 
     def transform(self, input_data: Union[bytes, str],
                   filename: str = '') -> bool:

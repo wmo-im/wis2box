@@ -20,7 +20,6 @@
 ###############################################################################
 
 from datetime import datetime, timedelta, timezone
-import json
 import logging
 
 import click
@@ -31,8 +30,7 @@ from wis2box.env import (STORAGE_SOURCE, STORAGE_ARCHIVE, STORAGE_PUBLIC,
                          STORAGE_DATA_RETENTION_DAYS, STORAGE_INCOMING)
 from wis2box.handler import Handler
 from wis2box.storage import put_data
-from wis2box.topic_hierarchy import validate_and_load
-from wis2box.util import json_serial, older_than, walk_path
+from wis2box.util import older_than, walk_path
 
 from wis2box.storage import move_data
 from wis2box.storage import list_content
@@ -92,24 +90,6 @@ def clean_data(source_path: str, days: int) -> None:
     backend.delete_collections_by_retention(days)
 
 
-def show_info(topic_hierarchy: str) -> dict:
-    """
-    Display data properties
-
-    :param topic_hierarchy: `str` of topic hierarchy pathdirs
-
-    :returns: `None`
-    """
-
-    th, plugin = validate_and_load(topic_hierarchy)
-
-    LOGGER.debug('Getting directories')
-    return {
-        'topic_hierarchy': th.dotpath,
-        'directories': plugin.directories
-    }
-
-
 @click.group()
 def data():
     """Data workflow"""
@@ -152,20 +132,6 @@ def clean(ctx, days, verbosity):
 @click.command()
 @click.pass_context
 @cli_helpers.OPTION_TOPIC_HIERARCHY
-@cli_helpers.OPTION_VERBOSITY
-def info(ctx, topic_hierarchy, verbosity):
-    """Display data properties"""
-
-    if topic_hierarchy is None:
-        raise click.ClickException('Missing -th/--topic-hierarchy')
-
-    result = show_info(topic_hierarchy)
-    click.echo(json.dumps(result, default=json_serial, indent=4))
-
-
-@click.command()
-@click.pass_context
-@cli_helpers.OPTION_TOPIC_HIERARCHY
 @cli_helpers.OPTION_PATH
 @click.option('--recursive', '-r', is_flag=True, default=False,
               help='Process directory recursively')
@@ -188,5 +154,4 @@ def ingest(ctx, topic_hierarchy, path, recursive, verbosity):
 
 data.add_command(archive)
 data.add_command(clean)
-data.add_command(info)
 data.add_command(ingest)

@@ -101,9 +101,9 @@ def gather_mqtt_metrics():
     # explicitly set the counter to 0 at the start
     mqtt_msg_counter.inc(0)
 
-    broker_host = os.environ.get('WIS2BOX_broker_host', '')
-    broker_username = os.environ.get('WIS2BOX_broker_username', '')
-    broker_password = os.environ.get('WIS2BOX_broker_password', '')
+    broker_host = os.environ.get('WIS2BOX_BROKER_HOST', '')
+    broker_username = os.environ.get('WIS2BOX_BROKER_USERNAME', '')
+    broker_password = os.environ.get('WIS2BOX_BROKER_PASSWORD', '')
 
     # generate a random clientId for the mqtt-session
     r = random.Random()
