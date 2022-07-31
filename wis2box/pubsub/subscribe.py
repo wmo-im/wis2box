@@ -26,8 +26,8 @@ from pathlib import Path
 import click
 
 from wis2box import cli_helpers
-from wis2box.env import (BROKER_HOST, BROKER_USERNAME, BROKER_PASSWORD,
-                         STORAGE_SOURCE)
+from wis2box.env import (BROKER_HOST, BROKER_PORT, BROKER_USERNAME,
+                         BROKER_PASSWORD, STORAGE_SOURCE)
 from wis2box.handler import Handler
 from wis2box.plugin import load_plugin, PLUGINS
 
@@ -76,7 +76,7 @@ def subscribe(ctx, broker, topic, verbosity):
 
     defs = {
         'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-        'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}'
+        'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}'  # noqa
     }
 
     broker = load_plugin('pubsub', defs)
