@@ -45,21 +45,21 @@ Setup observation data processing and API publication:
 .. code-block:: bash
 
     wis2box api setup
-    wis2box api add-collection --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed $WIS2BOX_DATADIR/metadata/discovery/surface-weather-observations.yml
+    wis2box api add-collection --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed $WIS2BOX_DATADIR/metadata/discovery/mw-surface-weather-observations.yml
 
 
 Cache and publish station collection and discovery metadata to the API:
 
 .. code-block:: bash
 
-    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/surface-weather-observations.yml
+    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/mw-surface-weather-observations.yml
     wis2box metadata station sync $WIS2BOX_DATADIR/metadata/station/station_list.csv
 
 Ingest and publish data, using data ingest command to update the wis2box-incoming bucket :
 
 .. code-block:: bash
 
-    wis2box data ingest --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed --path $WIS2BOX_DATADIR/observations
+    wis2box data ingest --topic-hierarchy data.core.observations-surface-land.mw-FWCL.landFixed --path $WIS2BOX_DATADIR/observations
 
 Re-publish the stations collection to additionally include link relations to collections with observations published from that station:
 
