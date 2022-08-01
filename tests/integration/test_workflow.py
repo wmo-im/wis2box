@@ -191,8 +191,9 @@ def test_message_api():
     assert r['numberMatched'] == 45
 
     msg = r['features'][0]
-    props = msg['properties']
+    assert msg['geometry'] is not None
 
+    props = msg['properties']
     assert props['integrity']['method'] == 'sha512'
 
     link_rel = msg['links'][0]
