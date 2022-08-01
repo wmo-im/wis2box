@@ -75,6 +75,7 @@ jobs:
           wis2box metadata station sync /data/wis2box/metadata/station/station_list.csv'
     - name: run integration tests ⚙️
       run: |
+        sleep 5
         pytest -s tests/integration
     - name: run flake8 ⚙️
       run: |
