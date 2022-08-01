@@ -3,17 +3,9 @@
 API publishing
 ==============
 
-The first step to API publishing is to ensure the API provisioning environment is
-initialized:
+When wis2box starts, the API provisioning environment is initialized.  At this stage,
+the following steps are required:
 
-.. code-block:: bash
-
-   wis2box api setup
-
-
-At this stage:
-
-- the API environment is setup
 - station metadata has been configured
 - discovery metadata has been created
 - data pipelines are configured and running
