@@ -197,7 +197,8 @@ class ObservationDataBUFR(BaseAbstractData):
                     '_meta': {
                         'identifier': rmk,
                         'wigos_id': wsi,
-                        'data_date': parser.get_time()
+                        'data_date': parser.get_time(),
+                        'geometry': parser.get_location()
                     }
                 }
                 yield item

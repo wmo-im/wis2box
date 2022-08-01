@@ -33,6 +33,9 @@ DATADIR = Path('.').parent.absolute() / 'tests/data'
 URL = 'http://localhost:8999'
 API_URL = f'{URL}/oapi'
 SESSION = Session()
+SESSION.hooks = {
+   'response': lambda r, *args, **kwargs: r.raise_for_status()
+}
 
 
 def test_metadata_station_cache():
@@ -42,8 +45,13 @@ def test_metadata_station_cache():
         reader = csv.DictReader(fh)
         for row in reader:
             wsi = row['wigos_station_identifier']
-            path = DATADIR / 'metadata' / 'station' / f'{wsi}.json'
-            assert path.exists()
+            r = SESSION.get(f'{API_URL}/collections/stations/items/{wsi}')
+
+            assert r.status_code == codes.ok
+
+            station = r.json()
+
+            assert station['properties']['wigos_id'] == wsi
 
 
 def test_metadata_station_publish():
@@ -55,9 +63,8 @@ def test_metadata_station_publish():
 
     stations = r.json()
 
-    assert len(stations['features']) == 7
-    assert stations['numberReturned'] == 7
-    assert stations['numberMatched'] == 7
+    assert stations['numberReturned'] == 10
+    assert stations['numberMatched'] == 19
 
 
 def test_metadata_discovery_publish():
@@ -191,8 +198,9 @@ def test_message_api():
     assert r['numberMatched'] == 45
 
     msg = r['features'][0]
-    props = msg['properties']
+    assert msg['geometry'] is not None
 
+    props = msg['properties']
     assert props['integrity']['method'] == 'sha512'
 
     link_rel = msg['links'][0]
