@@ -45,29 +45,35 @@ jobs:
           && wis2box environment show \
           && wis2box api setup"
     - name: add Malawi data 🇲🇼
+      env:
+        TOPIC_HIERARCHY: data.core.observations-surface-land.mw.FWCL.landFixed
+        DISCOERY_METADATA: /data/wis2box/metadata/discovery/mw-surface-weather-observations.yml
+        TEST_DATA: /data/wis2box/observations/malawi
       run: |
-        docker exec wis2box sh -c ' \
-          export TOPIC_HIERARCHY=data.core.observations-surface-land.mw.FWCL.landFixed \
-          && export DISCOERY_METADATA=/data/wis2box/metadata/discovery/mw-surface-weather-observations.yml \
-          && wis2box metadata discovery publish $DISCOERY_METADATA \
+        docker exec wis2box sh -c " \
+          wis2box metadata discovery publish $DISCOERY_METADATA \
           && wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOERY_METADATA \
-          && wis2box data ingest -th $TOPIC_HIERARCHY -p /data/wis2box/observations/malawi'
+          && wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA"
     - name: add Italy data 🇮🇹
+      env:
+        TOPIC_HIERARCHY: data.core.observations-surface-land.it.FWCL.landFixed
+        DISCOERY_METADATA: /data/wis2box/metadata/discovery/it-surface-weather-observations.yml
+        TEST_DATA: /data/wis2box/observations/italy
       run: |
-        docker exec wis2box sh -c ' \
-          export TOPIC_HIERARCHY=data.core.observations-surface-land.it.FWCL.landFixed \
-          && export DISCOERY_METADATA=/data/wis2box/metadata/discovery/it-surface-weather-observations.yml \
-          && wis2box metadata discovery publish $DISCOERY_METADATA \
+        docker exec wis2box sh -c " \
+          wis2box metadata discovery publish $DISCOERY_METADATA \
           && wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOERY_METADATA \
-          && wis2box data ingest -th $TOPIC_HIERARCHY -p /data/wis2box/observations/italy'
+          && wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA"
     - name: add Algeria data 🇩🇿
+      env:
+        TOPIC_HIERARCHY: data.core.observations-surface-land.dz.FWCL.landFixed
+        DISCOERY_METADATA: /data/wis2box/metadata/discovery/dz-surface-weather-observations.yml
+        TEST_DATA: /data/wis2box/observations/algeria
       run: |
-        docker exec wis2box sh -c ' \
-          export TOPIC_HIERARCHY=data.core.observations-surface-land.dz.FWCL.landFixed \
-          && export DISCOERY_METADATA=/data/wis2box/metadata/discovery/dz-surface-weather-observations.yml \
-          && wis2box metadata discovery publish $DISCOERY_METADATA \
+        docker exec wis2box sh -c " \
+          wis2box metadata discovery publish $DISCOERY_METADATA \
           && wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOERY_METADATA \
-          && wis2box data ingest -th $TOPIC_HIERARCHY -p /data/wis2box/observations/algeria'
+          && wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA"
     - name: sync stations 🔄
       run: |
         sleep 30
