@@ -44,7 +44,6 @@ Setup observation data processing and API publication:
 
 .. code-block:: bash
 
-    wis2box api setup
     wis2box api add-collection --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed $WIS2BOX_DATADIR/metadata/discovery/mw-surface-weather-observations.yml
 
 
