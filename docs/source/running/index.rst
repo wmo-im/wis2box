@@ -32,5 +32,6 @@ Running topics
    station-metadata
    discovery-metadata
    data-ingest-processing-and-publishing
+   data-pipeline-plugins
    api-publishing
    data-retention
