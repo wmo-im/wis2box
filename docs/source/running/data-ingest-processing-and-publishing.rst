@@ -49,8 +49,8 @@ Implicit topic hierarchy workflow
 Event driven ingest, processing and publishing
 ----------------------------------------------
 
-One all metadata, topic hierarchies, and data configurations are setup, event driven workflow
-will immediately start to listen on files in ``WIS2BOX_DATADIR/data/incoming`` as they are
+Once all metadata and topic hierarchies are setup, event driven workflow
+will immediately start to listen on files in the ``wis2box-incoming`` storage bucket as they are
 placed in the appropriate topic hierarchy directory.
 
 .. note::

@@ -9,18 +9,25 @@ codebase can be found at https://github.com/wmo-im/wis2box.
 Testing
 -------
 
+wis2box continuous integration (CI) testing is managed by GitHub Actions. All commits and
+pull requests to wis2box trigger continuous integration (CI) testing on `GitHub Actions`_.
+
+GitHub Actions invokes functional testing as well as integration testing to ensure regressions.
+
 Unit testing
 ^^^^^^^^^^^^
-TODO
+
+Unit tests are in ``tests/unit``.
 
 Integration testing
 ^^^^^^^^^^^^^^^^^^^
-TODO
+
+Integration tests are in ``tests/integration/integration.py``.
 
 Functional testing
 ^^^^^^^^^^^^^^^^^^
 
-All commits and pull requests to wis2box trigger continuous integration (CI) testing on `GitHub Actions`_.
+Functional tests are defined as part of GitHub Actions in ``.github/workflows/tests-docker.yml``.
 
 Versioning
 ----------

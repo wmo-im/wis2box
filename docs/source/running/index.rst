@@ -17,7 +17,7 @@ Design time
 Runtime
 -------
 
-- automated data processing and API/PubSub publishing
+- automated data processing and publishing
 
 Running topics
 --------------
@@ -32,5 +32,6 @@ Running topics
    station-metadata
    discovery-metadata
    data-ingest-processing-and-publishing
+   data-pipeline-plugins
    api-publishing
    data-retention

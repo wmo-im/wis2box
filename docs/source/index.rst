@@ -9,7 +9,7 @@ wis2box |release| documentation
 :Date: |today|
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
    :caption: Table of contents:
    :name: toc
 

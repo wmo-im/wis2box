@@ -40,3 +40,38 @@ With wis2box now installed and started, it's time to start up the box and login 
 
 Now that you are logged into the wis2box container, it's now time to manage station metadata, discovery metadata
 and data processing pipelines.
+
+Default service ports
+---------------------
+
+A default wis2box installation utilizes the following ports for public services:
+
+Public services
+^^^^^^^^^^^^^^^
+
+- 8999: Web application, API application, storage
+- 1883: Message broker
+
+
+Internal services
+^^^^^^^^^^^^^^^^^
+
+- 1883: Message broker
+- 9200: Elasticsearch
+- 9000: MinIO
+- 9001: MinIO admin UI
+
+Changing default ports
+^^^^^^^^^^^^^^^^^^^^^^
+
+The ``docker/docker-compose.override.yml`` file provides definitions on utilized ports.  To change default
+ports, edit this file and ``docker/default.env``  before stopping and starting wis2box for changes to take effect.
+
+
+MQTT Quality of Service (QoS)
+-----------------------------
+
+The `quality of service`_ level of all wis2box powered brokers is always ``1`` by default.
+
+
+.. _`quality of service`: https://www.hivemq.com/blog/mqtt-essentials-part-6-mqtt-quality-of-service-levels
