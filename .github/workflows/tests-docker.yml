@@ -51,8 +51,7 @@ jobs:
           && export DISCOERY_METADATA=/data/wis2box/metadata/discovery/mw-surface-weather-observations.yml \
           && wis2box metadata discovery publish $DISCOERY_METADATA \
           && wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOERY_METADATA \
-          && wis2box data ingest -th $TOPIC_HIERARCHY -p /data/wis2box/observations/malawi \
-          && wis2box metadata station sync /data/wis2box/metadata/station/station_list.csv'
+          && wis2box data ingest -th $TOPIC_HIERARCHY -p /data/wis2box/observations/malawi'
     - name: add Italy data 🇮🇹
       run: |
         docker exec wis2box sh -c ' \
@@ -69,9 +68,13 @@ jobs:
           && wis2box metadata discovery publish $DISCOERY_METADATA \
           && wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOERY_METADATA \
           && wis2box data ingest -th $TOPIC_HIERARCHY -p /data/wis2box/observations/algeria'
+    - name: sync stations 🔄
+      run: |
+        sleep 30
+        docker exec wis2box sh -c ' \
+          wis2box metadata station sync /data/wis2box/metadata/station/station_list.csv'
     - name: run integration tests ⚙️
       run: |
-        sleep 25
         pytest -s tests/integration
     - name: run flake8 ⚙️
       run: |
@@ -81,7 +84,7 @@ jobs:
       with:
         pre-build-command: "apt-get install -y pandoc && pip3 install nbsphinx ipython_genutils jinja2==3.0.3"
         docs-folder: "docs/"
-    - name: Failed tests
+    - name: failed tests 🚩
       if: ${{ failure() }}
       run: |
         docker-compose --file docker/docker-compose.yml --file docker/docker-compose.override.yml --file docker/docker-compose.monitoring.yml --env-file dev.env --project-name wis2box_project ps
