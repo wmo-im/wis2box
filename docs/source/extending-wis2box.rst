@@ -24,8 +24,8 @@ located in ``wis2box/data/base.py``. Any wis2box plugin needs to inherit from
 
     class MyCoolData(BaseAbstractData):
         """Observation data"""
-        def __init__(self, topic_hierarchy: str) -> None:
-            super().__init__(topic_hierarchy)
+        def __init__(self, defs: dict) -> None:
+            super().__init__(defs)
 
         def transform(self, input_data: Path) -> bool:
             # transform data
@@ -34,6 +34,7 @@ located in ``wis2box/data/base.py``. Any wis2box plugin needs to inherit from
                 'c123': {
                     '_meta': {
                         'identifier': 'c123'
+                        'relative_filepath': '/path/to/item/',
                         'data_date': datetime_object
                     },
                     'bufr4': bytes(12356),
@@ -47,10 +48,19 @@ The key function that plugin needs to implement is the ``transform`` function. T
 should return a ``True`` or ``False`` of the result of the processing, as well as populate
 the ``output_data`` property.
 
-The ``output_data`` property should provide a ``dict`` of keys/values.  Each key should be the identifier
+The ``output_data`` property is a ``dict`` of keys/values.  Each key should be the identifier
 of the item, with the following values ``dict``:
 
-- ``_meta``: object with ``identifier`` and ``data_date`` (as Python `datetime`_ objects) based on the observed datetime of the data
+The ``_meta`` element can include the following:
+    - ``identifier``: identifier for report (WIGOS_<WSI>_<ISO8601>)
+    - ``relative_filepath``: path to data, required to publish data with ``BaseAbstractData.publish``
+    - ``geometry``: GeoJSON geometry object, required to send geometry with WIS2.0 notification
+    - ``md5``: md5 checksum of encoded data
+    - ``wigos_id``: WIGOS identifier
+    - ``data_date``: (as Python `datetime`_ objects) based on the observed datetime
+    - ``originating_centre``: Originating centre (see Common code table C11)
+    - ``data_category``: Category of data, see BUFR Table A
+
 - ``<format-extension>``: 1..n properties for each format representation, with the key being the filename
   extension. The value of this property can be a string or bytes, depending on whether the underlying data
   is ASCII or binary, for example
