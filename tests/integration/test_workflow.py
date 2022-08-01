@@ -32,7 +32,7 @@ DATADIR = Path('.').parent.absolute() / 'tests/data'
 
 URL = 'http://localhost:8999'
 API_URL = f'{URL}/oapi'
-session = Session()
+SESSION = Session()
 
 
 def test_metadata_station_cache():
@@ -49,7 +49,7 @@ def test_metadata_station_cache():
 def test_metadata_station_publish():
     """Test discovery metadata publishing"""
 
-    r = session.get(f'{API_URL}/collections/stations/items')
+    r = SESSION.get(f'{API_URL}/collections/stations/items')
 
     assert r.status_code == codes.ok
 
@@ -63,10 +63,10 @@ def test_metadata_station_publish():
 def test_metadata_discovery_publish():
     """Test discovery metadata publishing"""
 
-    r = session.get(f'{API_URL}/collections/discovery-metadata/items').json()
+    r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items').json()
     assert r['numberMatched'] == 3
 
-    r = session.get(f'{API_URL}/collections/discovery-metadata/items/data.core.observations-surface-land.mw.FWCL.landFixed').json()  # noqa
+    r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/data.core.observations-surface-land.mw.FWCL.landFixed').json()  # noqa
 
     assert r['id'] == 'data.core.observations-surface-land.mw.FWCL.landFixed'
     assert r['properties']['title'] == 'Surface weather observations (hourly)'
@@ -90,7 +90,7 @@ def test_metadata_discovery_publish():
         'q': 'temperature'
     }
 
-    r = session.get(f'{API_URL}/collections/discovery-metadata/items',
+    r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items',
                     params=params).json()
 
     assert r['numberMatched'] == 3
@@ -101,7 +101,7 @@ def test_data_ingest():
 
     item = '2021-07-07/wis/data/core/observations-surface-land/mw/FWCL/landFixed/WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500-82.geojson'  # noqa
 
-    r = session.get(f'{URL}/data/{item}')  # noqa
+    r = SESSION.get(f'{URL}/data/{item}')  # noqa
     assert r.status_code == codes.ok
 
     item_waf = r.json()
@@ -112,7 +112,7 @@ def test_data_ingest():
 
     item_api_url = f'{API_URL}/collections/data.core.observations-surface-land.mw.FWCL.landFixed/items/{item_waf["id"]}'  # noqa
 
-    item_api = session.get(item_api_url).json()
+    item_api = SESSION.get(item_api_url).json()
 
     # make minor adjustments to payload to normalize API additions
     item_api.pop('links')
@@ -131,7 +131,7 @@ def test_data_api():
         'wigos_station_identifier': '0-454-2-AWSLOBI'
     }
 
-    r = session.get(url, params=params).json()
+    r = SESSION.get(url, params=params).json()
 
     assert r['numberMatched'] == 17
 
@@ -140,7 +140,7 @@ def test_data_api():
         'datetime': '2021-07-08'
     }
 
-    r = session.get(url, params=params).json()
+    r = SESSION.get(url, params=params).json()
 
     assert r['numberMatched'] == 99
 
@@ -149,7 +149,7 @@ def test_data_api():
         'datetime': '2021-07-08/..'
     }
 
-    r = session.get(url, params=params).json()
+    r = SESSION.get(url, params=params).json()
 
     assert r['numberMatched'] == 218
 
@@ -158,7 +158,7 @@ def test_data_api():
         'datetime': '../2022-01-01'
     }
 
-    r = session.get(url, params=params).json()
+    r = SESSION.get(url, params=params).json()
 
     assert r['numberMatched'] == 385
 
@@ -167,7 +167,7 @@ def test_data_api():
         'datetime': '../2022'
     }
 
-    r = session.get(url, params=params).json()
+    r = SESSION.get(url, params=params).json()
 
     assert r['numberMatched'] == 385
 
@@ -177,7 +177,7 @@ def test_data_api():
         'bbox': ','.join(list(map(str, bbox)))
     }
 
-    r = session.get(url, params=params).json()
+    r = SESSION.get(url, params=params).json()
 
     assert r['numberMatched'] == 283
 
@@ -186,7 +186,7 @@ def test_message_api():
     """Test message API collection queries"""
 
     url = f'{API_URL}/collections/messages/items'
-    r = session.get(url).json()
+    r = SESSION.get(url).json()
 
     assert r['numberMatched'] == 45
 
@@ -199,7 +199,7 @@ def test_message_api():
 
     assert link_rel['type'] == 'application/x-bufr'
 
-    r = session.get(link_rel['href'])
+    r = SESSION.get(link_rel['href'])
 
     assert r.status_code == codes.ok
 
