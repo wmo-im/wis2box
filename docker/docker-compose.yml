@@ -29,8 +29,6 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
-      wis2box:
-        condition: service_started
     volumes:
       - api-config:/pygeoapi/pygeoapi/local.config.yml:rw
 
@@ -103,6 +101,8 @@ services:
       minio:
         condition: service_healthy
       mosquitto:
+        condition: service_started
+      wis2box-api:
         condition: service_started
     command: ["wis2box", "pubsub" , "subscribe", "--broker", "http://wis2box-minio:9000", "--topic", "wis2box-storage/#"]
 
