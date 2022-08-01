@@ -52,14 +52,14 @@ The ``output_data`` property is a ``dict`` of keys/values.  Each key should be t
 of the item, with the following values ``dict``:
 
 The ``_meta`` element can include the following:
-    - ``identifier``: identifier for report (WIGOS_<WSI>_<ISO8601>);
-    - ``relative_filepath``: path to data, required to publish data with ``BaseAbstractData.publish``;
-    - ``geometry`` = GeoJSON geometry object, required to send geometry with WIS2.0 notification;
-    - ``md5`` = md5 checksum of encoded data;
-    - ``wigos_id`` = WIGOS identifier;
-    - ``data_date`` =  (as Python `datetime`_ objects) based on the observed datetime;
-    - ``originating_centre`` = Originating centre (see Common code table C11);
-    - ``data_category`` = Category of data, see BUFR Table A;
+    - ``identifier``: identifier for report (WIGOS_<WSI>_<ISO8601>)
+    - ``relative_filepath``: path to data, required to publish data with ``BaseAbstractData.publish``
+    - ``geometry``: GeoJSON geometry object, required to send geometry with WIS2.0 notification
+    - ``md5``: md5 checksum of encoded data
+    - ``wigos_id``: WIGOS identifier
+    - ``data_date``: (as Python `datetime`_ objects) based on the observed datetime
+    - ``originating_centre``: Originating centre (see Common code table C11)
+    - ``data_category``: Category of data, see BUFR Table A
 
 - ``<format-extension>``: 1..n properties for each format representation, with the key being the filename
   extension. The value of this property can be a string or bytes, depending on whether the underlying data
