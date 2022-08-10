@@ -34,6 +34,7 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+.DS_Store
 
 # local
 wis2box-data
