@@ -19,7 +19,7 @@ jobs:
     - name: software running on 📦
       run: |
         docker version
-        docker compose version
+        docker-compose version
         python3 -V
     - name: run unit tests ⚙️
       run: |
