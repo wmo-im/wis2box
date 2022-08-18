@@ -110,7 +110,7 @@ class ObservationDataBUFR(BaseAbstractData):
         # convert to list
         LOGGER.debug('Iterating over BUFR messages')
         for item in results:
-            LOGGER.debug('Setting obs date for filepath creation')
+            LOGGER.debug('Parsing feature datetime')
             identifier = item['_meta']['identifier']
             data_date = item['_meta']['data_date']
 
@@ -190,7 +190,7 @@ class ObservationDataBUFR(BaseAbstractData):
                     data_date, '%Y-%m-%dT%H:%M:%SZ'
                 ).strftime('%Y%m%dT%H%M%S')
                 rmk = f"WIGOS_{wsi}_{isodate}"
-                LOGGER.info(f'Pubslishing with idenifier: {rmk}')
+                LOGGER.info(f'Publishing with identifier: {rmk}')
 
                 item = {
                     'bufr4': bufr4,
