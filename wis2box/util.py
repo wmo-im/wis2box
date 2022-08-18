@@ -28,6 +28,7 @@ import os
 from pathlib import Path
 import re
 from typing import Iterator, Union
+from urllib.parse import urlparse
 import yaml
 
 LOGGER = logging.getLogger(__name__)
@@ -171,7 +172,7 @@ def older_than(datetime_: str, days: int) -> bool:
     return dt < delta
 
 
-def is_dataset(collection_id) -> bool:
+def is_dataset(collection_id: str) -> bool:
     """
     Check whether the index is a dataset (and thus
     needs daily index management)
@@ -185,3 +186,18 @@ def is_dataset(collection_id) -> bool:
         return True
     else:
         return False
+
+
+def remove_auth_from_url(url: str) -> str:
+    """
+    Removes embedded auth from an RFC 1738 URL
+
+    :param url: string of URL
+
+    :returns: URL with embedded auth removed
+    """
+
+    u = urlparse(url)
+    auth = f'{u.username}:{u.password}@'
+
+    return u.replace(auth, '')

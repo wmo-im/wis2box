@@ -30,6 +30,7 @@ from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
 from wis2box.env import API_URL, BROKER_PUBLIC
 from wis2box.metadata.base import BaseMetadata
+from wis2box.util import remove_auth_from_url
 
 LOGGER = logging.getLogger(__name__)
 
@@ -61,7 +62,7 @@ class DiscoveryMetadata(BaseMetadata):
         }
 
         mqp_link = {
-            'url': BROKER_PUBLIC,
+            'url': remove_auth_from_url(BROKER_PUBLIC),
             'type': 'MQTT',
             'name': identifier,
             'description': identifier,
