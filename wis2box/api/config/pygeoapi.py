@@ -20,7 +20,7 @@
 ###############################################################################
 
 import logging
-import requests
+from requests import Session, codes
 
 from wis2box.api.config.base import BaseConfig
 from wis2box.env import API_BACKEND_TYPE, API_BACKEND_URL, DOCKER_API_URL
@@ -40,6 +40,7 @@ class PygeoapiConfig(BaseConfig):
 
         super().__init__(defs)
         self.url = f'{DOCKER_API_URL}/admin/resources'
+        self.session = Session()
 
     def add_collection(self, name: str, collection: dict) -> bool:
         """
@@ -51,13 +52,13 @@ class PygeoapiConfig(BaseConfig):
         :returns: `bool` of add result
         """
         if self.has_collection(name):
-            r = requests.put(f'{self.url}/{name}', json=collection)
+            r = self.session.put(f'{self.url}/{name}', json=collection)
         else:
             content = {name: collection}
-            r = requests.post(self.url, json=content)
+            r = self.session.post(self.url, json=content)
 
         r.raise_for_status()
-        return r.status_code == requests.codes.ok
+        return r.status_code == codes.ok
 
     def delete_collection(self, name: str) -> bool:
         """
@@ -68,8 +69,8 @@ class PygeoapiConfig(BaseConfig):
         :returns: `bool` of delete collection result
         """
 
-        r = requests.delete(f'{self.url}/{name}')
-        return r.status_code == requests.codes.ok
+        r = self.session.delete(f'{self.url}/{name}')
+        return r.status_code == codes.ok
 
     def has_collection(self, name: str) -> dict:
         """
@@ -80,8 +81,8 @@ class PygeoapiConfig(BaseConfig):
         :returns: `dict` of collection result
         """
 
-        r = requests.get(f'{self.url}/{name}')
-        return r.status_code == requests.codes.ok
+        r = self.session.get(f'{self.url}/{name}')
+        return r.status_code == codes.ok
 
     def prepare_collection(self, meta: dict) -> bool:
         """

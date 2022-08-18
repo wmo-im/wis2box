@@ -63,8 +63,8 @@ def test_metadata_station_publish():
 
     stations = r.json()
 
-    assert stations['numberReturned'] == 10
-    assert stations['numberMatched'] == 19
+    assert stations['numberReturned'] == 55
+    assert stations['numberMatched'] == 55
 
 
 def test_metadata_discovery_publish():
@@ -195,7 +195,7 @@ def test_message_api():
     url = f'{API_URL}/collections/messages/items'
     r = SESSION.get(url).json()
 
-    assert r['numberMatched'] == 45
+    assert r['numberMatched'] == 88
 
     msg = r['features'][0]
     assert msg['geometry'] is not None

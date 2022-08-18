@@ -100,7 +100,8 @@ def check_station_datasets(datasets: list, wigos_id: str) -> Iterator[dict]:
 
         try:
             obs = oaf.collection_items(
-                topic['title'], wigos_station_identifier=wigos_id)
+                topic['title'], wigos_station_identifier=wigos_id
+            )
         except RuntimeError as err:
             LOGGER.warning(f'Warning from topic {topic["title"]}: {err}')
             continue
@@ -134,27 +135,21 @@ def publish_station_collection() -> None:
         with f.open() as fh:
             d = json.load(fh)
             wigos_id = d['wigosIds'][0]['wid']
-            station_topics = check_station_datasets(topics, wigos_id)
-            feature = {
-                'id': d['id'],
-                'type': 'Feature',
-                'geometry': {
-                    'type': 'Point',
-                    'coordinates': [
-                        d['locations'][0]['longitude'],
-                        d['locations'][0]['latitude'],
-                        d['locations'][0]['elevation']
-                    ]
-                },
-                'properties': {
-                    'wigos_id': wigos_id,
-                    'name': d['name'],
-                    'url': f"{oscar_baseurl}/{wigos_id}",
-                    # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
-                    'status': 'operational'
-                },
-                'links': list(station_topics)
-            }
+
+        station_topics = check_station_datasets(topics, wigos_id)
+        feature = {
+            'id': d['id'],
+            'type': 'Feature',
+            'geometry': get_geometry(wigos_id),
+            'properties': {
+                'wigos_id': wigos_id,
+                'name': d['name'],
+                'url': f"{oscar_baseurl}/{wigos_id}",
+                # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
+                'status': 'operational',
+            },
+            'links': list(station_topics),
+        }
 
         LOGGER.debug('Publishing to backend')
         backend.upsert_collection_items('stations', [feature])
@@ -168,7 +163,7 @@ def publish_station_collection() -> None:
         'links': ['https://oscar.wmo.int/surface'],
         'bbox': [-180, -90, 180, 90],
         'id_field': 'wigos_id',
-        'title_field': 'wigos_id'
+        'title_field': 'wigos_id',
     }
 
     api_config = load_config()
@@ -176,6 +171,67 @@ def publish_station_collection() -> None:
     api_config.add_collection('stations', collection)
 
     return
+
+
+def validate_wsi(wsi):
+    """Validates and caches WSI from WMO OSCAR/Surface"""
+    stations = DATADIR / 'metadata' / 'station' / 'station_list.csv'
+
+    LOGGER.info(f'Validating WIGOS Station Identifier: {wsi}')
+    with stations.open('r', newline='') as fh:
+        reader = csv.DictReader(fh)
+        for row in reader:
+            if wsi == row['wigos_station_identifier']:
+                return True
+
+    LOGGER.debug('Validating WSI with OSCAR/Surface')
+    try:
+        station_report = get_station_report(wsi)
+        station_name = station_report['name']
+    except RuntimeError:
+        LOGGER.warning(f'Station not found: {wsi}')
+        return False
+
+    LOGGER.debug('WSI valid, caching...')
+    with stations.open('a', newline='') as fh:
+        writer = csv.writer(fh)
+        writer.writerow([station_name, wsi])
+
+    filename = DATADIR / 'metadata' / 'station' / f'{wsi}.json'
+    LOGGER.debug(f'Caching station report to {filename}')
+    with filename.open('w') as fh:
+        json.dump(station_report, fh)
+
+    return True
+
+
+def get_geometry(wsi):
+    """Validates and caches station geometry from WMO OSCAR/Surface"""
+    geom = {
+        'type': 'Point',
+        'coordinates': [],
+    }
+    if validate_wsi(wsi) is False:
+        return geom
+
+    filename = DATADIR / 'metadata' / 'station' / f'{wsi}.json'
+
+    if filename.exists():
+        with filename.open() as fh:
+            station_report = json.load(fh)
+    else:
+        LOGGER.debug(f'Caching station report to {filename}')
+        station_report = get_station_report(wsi)
+        with filename.open('w') as fh:
+            json.dump(station_report, fh)
+
+    geom['coordinates'] = [
+        station_report['locations'][0]['longitude'],
+        station_report['locations'][0]['latitude'],
+        station_report['locations'][0]['elevation'],
+    ]
+
+    return geom
 
 
 @click.command()
