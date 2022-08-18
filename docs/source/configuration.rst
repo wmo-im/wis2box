@@ -51,7 +51,11 @@ wis2box environment variables can be categorized via the following core sections
 Storage
 ^^^^^^^
 
-wis2box stores data in MinIO buckets. 
+wis2box currently only supports S3-compatible storage (MinIO or S3 by AWS). Other storage-types are to be implemented in future release of wis2box.
+
+The following environment-variables can be used to configure WIS2BOX_STORAGE. 
+
+**When using wis2box in production and using the default MinIO-container, please specify a unique WIS2BOX_STORAGE_PASSWORD**
 
 .. code-block:: bash
 
@@ -64,6 +68,20 @@ wis2box stores data in MinIO buckets.
     WIS2BOX_STORAGE_ARCHIVE=wis2box-archive  # name of the storage-bucket/folder for archived data
     WIS2BOX_STORAGE_CONFIG=wis2box-config  # name of the storage-bucket/folder for configuration files
     WIS2BOX_STORAGE_DATA_RETENTION_DAYS=7  # number of days to keep files in incoming and public
+
+MinIO
+^^^^^
+
+The wis2box-docker-stack used by default a local MinIO-container to offer S3-compatible storage. 
+When overriding the default storage env variables please redefine the MINIO env variables to match storage-config:
+
+.. code-block:: bash
+
+    MINIO_ROOT_USER=${WIS2BOX_STORAGE_USERNAME}
+    MINIO_ROOT_PASSWORD=${WIS2BOX_STORAGE_PASSWORD}
+    MINIO_NOTIFY_MQTT_USERNAME_WIS2BOX=${WIS2BOX_BROKER_USERNAME}
+    MINIO_NOTIFY_MQTT_PASSWORD_WIS2BOX=${WIS2BOX_BROKER_PASSWORD}
+    MINIO_NOTIFY_MQTT_BROKER_WIS2BOX=tcp://${WIS2BOX_BROKER_HOST}:${WIS2BOX_BROKER_PORT}
 
 API
 ^^^
