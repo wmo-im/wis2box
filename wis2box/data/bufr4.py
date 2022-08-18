@@ -38,6 +38,7 @@ from eccodes import (
 )
 
 from wis2box.data.base import BaseAbstractData
+from wis2box.metadata.station import get_geometry, validate_wsi
 
 LOGGER = logging.getLogger(__name__)
 
@@ -167,38 +168,71 @@ class ObservationDataBUFR(BaseAbstractData):
                     LOGGER.error(f'Error unpacking message: {err}')
                     raise err
 
-                LOGGER.debug('Parsing as geoJSON')
+                LOGGER.debug('Parsing subset')
+
                 parser = BUFRParser()
-                parser.as_geojson(subset, id='')
+
+                try:
+                    parser.as_geojson(subset, id='')
+                except Exception as err:
+                    LOGGER.info(err)
 
                 wsi = parser.get_wsi()
-                # TODO: Validate wsi from BUFR parser.
+                LOGGER.debug(f'Processing wsi: {wsi}')
 
-                LOGGER.info('Writing bufr4')
-                file_handle = BytesIO()
-                codes_write(subset, file_handle)
-                codes_release(subset)
-                file_handle.seek(0)
-                bufr4 = file_handle.read()
+                if validate_wsi(wsi) is False:
+                    LOGGER.warning(f'Invalid wsi: {wsi}')
+                    LOGGER.error(f'Failed to publish: {wsi}')
+                    continue
 
-                data_date = parser.get_time()
-                if "/" in data_date:
-                    data_date = data_date.split("/")
-                    data_date = data_date[1]
+                try:
+                    location = parser.get_location()
+                except Exception as err:
+                    LOGGER.info(err)
 
-                isodate = datetime.strptime(
-                    data_date, '%Y-%m-%dT%H:%M:%SZ'
-                ).strftime('%Y%m%dT%H%M%S')
+                if None in location['coordinates']:
+                    LOGGER.debug('Setting coordinates from station report')
+                    long, lat, elev = get_geometry(wsi).get('coordinates')
+                    codes_set(subset, '#1#latitude', lat)
+                    codes_set(subset, '#1#longitude', long)
+                    codes_set(subset, '#1#heightOfStationGroundAboveMeanSeaLevel', elev) # noqa
+                    parser.as_geojson(subset, id='')
+                    location = parser.get_location()
+
+                try:
+                    data_date = parser.get_time()
+                except Exception as err:
+                    LOGGER.info(err)
+
+                try:
+                    if '/' in data_date:
+                        data_date = data_date.split('/')
+                        data_date = data_date[1]
+                    isodate = datetime.strptime(
+                        data_date, '%Y-%m-%dT%H:%M:%SZ'
+                    ).strftime('%Y%m%dT%H%M%S')
+                except Exception as err:
+                    LOGGER.warning(f'Invalid time: {data_date} {err}')
+                    LOGGER.error(f'Failed to publish: {wsi}')
+                    continue
+
                 rmk = f"WIGOS_{wsi}_{isodate}"
                 LOGGER.info(f'Publishing with identifier: {rmk}')
+
+                LOGGER.debug('Writing bufr4')
+                with BytesIO() as file_handle:
+                    codes_write(subset, file_handle)
+                    codes_release(subset)
+                    file_handle.seek(0)
+                    bufr4 = file_handle.read()
 
                 item = {
                     'bufr4': bufr4,
                     '_meta': {
                         'identifier': rmk,
                         'wigos_id': wsi,
-                        'data_date': parser.get_time(),
-                        'geometry': parser.get_location()
+                        'data_date': data_date,
+                        'geometry': location
                     }
                 }
                 yield item
