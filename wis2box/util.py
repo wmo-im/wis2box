@@ -200,4 +200,4 @@ def remove_auth_from_url(url: str) -> str:
     u = urlparse(url)
     auth = f'{u.username}:{u.password}@'
 
-    return u.replace(auth, '')
+    return url.replace(auth, '')
