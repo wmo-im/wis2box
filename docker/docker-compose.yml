@@ -30,7 +30,7 @@ services:
       elasticsearch:
         condition: service_healthy
     volumes:
-      - api-config:/pygeoapi/pygeoapi/local.config.yml:rw
+      - api-config:/data/wis2box/config/pygeoapi/:rw
 
   minio:
     container_name: wis2box-minio

@@ -4,3 +4,4 @@ tests/data/incoming
 docs
 examples
 .git
+.DS_Store
