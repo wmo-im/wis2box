@@ -27,12 +27,53 @@ from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
 from wis2box.handler import Handler
-from wis2box.pubsub.message import generate_collection_metadata as gcm
 import wis2box.metadata.discovery as discovery_
 from wis2box.topic_hierarchy import validate_and_load
 from wis2box.util import walk_path
 
 LOGGER = logging.getLogger(__name__)
+
+
+def setup_collection(name: str, meta: dict = {}) -> bool:
+    """
+    Add collection to api backend and mcf or collection configuration
+
+    :param name: `str` of collection name
+    :param meta: `dict` of collection metadata
+
+
+    :returns: `bool` of API collection metadata
+    """
+    if meta == {}:
+        LOGGER.error(f'Invalid configuration for: {name}')
+        return False
+
+    backend = load_backend()
+    backend.add_collection(name)
+
+    api_config = load_config()
+    collection = api_config.prepare_collection(meta)
+    api_config.add_collection(name, collection)
+
+    return True
+
+
+def remove_collection(name: str) -> bool:
+    """
+    Add collection to api backend and mcf or collection configuration
+
+    :param name: `str` of collection name
+
+    :returns: `bool` of API collection metadata
+    """
+
+    backend = load_backend()
+    backend.delete_collection(name)
+
+    api_config = load_config()
+    api_config.delete_add_collection(name)
+
+    return True
 
 
 def generate_collection_metadata(mcf: dict) -> dict:
@@ -85,26 +126,6 @@ def api():
 
 @click.command()
 @click.pass_context
-@cli_helpers.OPTION_VERBOSITY
-def setup(ctx, verbosity):
-    """Add collection items to API backend"""
-
-    click.echo('Generating collection metadata for messages')
-    meta = gcm()
-
-    backend = load_backend()
-    backend.add_collection('messages')
-
-    click.echo('Adding to API configuration')
-    api_config = load_config()
-    collection = api_config.prepare_collection(meta)
-    api_config.add_collection('messages', collection)
-
-    click.echo("Done")
-
-
-@click.command()
-@click.pass_context
 @cli_helpers.OPTION_TOPIC_HIERARCHY
 @cli_helpers.OPTION_PATH
 @cli_helpers.OPTION_RECURSIVE
@@ -135,20 +156,12 @@ def add_collection(ctx, filepath, topic_hierarchy, verbosity):
     if topic_hierarchy is None:
         raise click.ClickException('Missing -th/--topic-hierarchy')
 
-    th, _ = validate_and_load(topic_hierarchy)
-    name = th.dotpath
-
     click.echo('Generating collection metadata')
     meta = generate_collection_metadata(filepath.read())
 
-    click.echo(f'Adding collection: {topic_hierarchy}')
-    backend = load_backend()
-    backend.add_collection(name)
-
-    click.echo('Adding to API configuration')
-    api_config = load_config()
-    collection = api_config.prepare_collection(meta)
-    api_config.add_collection(name, collection)
+    th, _ = validate_and_load(topic_hierarchy)
+    click.echo(f'Adding collection: {th.dotpath}')
+    setup_collection(th.dotpath, meta=meta)
 
     click.echo("Done")
 
@@ -166,14 +179,7 @@ def delete_collection(ctx, topic_hierarchy, verbosity):
     click.echo(f'Deleting collection: {topic_hierarchy}')
 
     th, _ = validate_and_load(topic_hierarchy)
-    name = th.dotpath
-
-    backend = load_backend()
-    backend.delete_collection(name)
-
-    click.echo('Removing from API configuration')
-    api_config = load_config()
-    api_config.delete_collection(name)
+    remove_collection(th.dotpath)
 
     click.echo('Done')
 
@@ -181,4 +187,3 @@ def delete_collection(ctx, topic_hierarchy, verbosity):
 api.add_command(add_collection_items)
 api.add_command(add_collection)
 api.add_command(delete_collection)
-api.add_command(setup)

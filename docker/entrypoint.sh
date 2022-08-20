@@ -26,8 +26,6 @@ echo "START /entrypoint.sh"
 
 set -e
 
-env
-
 if [ ! -d "$WIS2BOX_DATADIR/config/csv2bufr" ]; then
   git clone https://github.com/wmo-im/csv2bufr-templates.git $WIS2BOX_DATADIR/config/csv2bufr
 fi
@@ -39,6 +37,5 @@ service cron status
 # wis2box commands
 wis2box environment create
 wis2box environment show
-wis2box api setup
 echo "END /entrypoint.sh"
 exec "$@"
