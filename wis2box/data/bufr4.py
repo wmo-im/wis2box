@@ -133,11 +133,15 @@ class ObservationDataBUFR(BaseAbstractData):
         # check for multiple subsets
         # split subsets into individual messages and process
         # foreach subset:
-        # - check for WSI
-        # - if None, set from filename regex
-        # - check location/time (TODO: how?)
+        # - check for WSI,
+        #   - TODO: if None, lookup using information in station report
+        #   - validate against OSCAR surface
+        # - check for location,
+        #   - if None, use geometry from station report
+        # - check for time,
+        #   - if temporal extent, use end time
+        #   - TODO: if None, fix (use processing datetime?)
         # - write a separate BUFR
-        # - send to as_geojson
 
         with open(tmp.name, 'rb') as fh:
             bufr_in = codes_bufr_new_from_file(fh)
@@ -175,7 +179,7 @@ class ObservationDataBUFR(BaseAbstractData):
                 try:
                     parser.as_geojson(subset, id='')
                 except Exception as err:
-                    LOGGER.info(err)
+                    LOGGER.warning(err)
 
                 wsi = parser.get_wsi()
                 LOGGER.debug(f'Processing wsi: {wsi}')
@@ -188,7 +192,7 @@ class ObservationDataBUFR(BaseAbstractData):
                 try:
                     location = parser.get_location()
                 except Exception as err:
-                    LOGGER.info(err)
+                    LOGGER.warning(err)
 
                 if None in location['coordinates']:
                     LOGGER.debug('Setting coordinates from station report')
@@ -226,7 +230,7 @@ class ObservationDataBUFR(BaseAbstractData):
                     file_handle.seek(0)
                     bufr4 = file_handle.read()
 
-                item = {
+                yield {
                     'bufr4': bufr4,
                     '_meta': {
                         'identifier': rmk,
@@ -235,44 +239,6 @@ class ObservationDataBUFR(BaseAbstractData):
                         'geometry': location
                     }
                 }
-                yield item
-
-    # def set_wigos_id(self, filename):
-    #     table_version = max(
-    #         28, codes_get(bufr_in, 'masterTablesVersionNumber')
-    #     )
-    #     LOGGER.debug(f'Using masterTablesVersionNumber: {table_version}')
-
-    #     inUE = codes_get_array(bufr_in, 'unexpandedDescriptors')
-    #     outUE = inUE.tolist()
-    #     if 301150 not in outUE:
-    #         LOGGER.debug('Adding WIGOS sequence to unexpandedDescriptors')
-    #         outUE.insert(0, 301150)
-
-    #     LOGGER.debug('Preparing BUFR4 template')
-    #     codes_set(bufr_out, 'numberOfSubsets', num_subsets)
-    #     codes_set(
-    #         bufr_out,
-    #         'masterTablesVersionNumber',
-    #         table_version,
-    #     )
-    #     codes_set_array(bufr_out, 'unexpandedDescriptors', outUE)
-
-    #             # TODO: '#1#wigosIssueNumber' or f'#{idx}#wigosIssueNumber'
-    #     # TODO: Attempt to get wsi from filename
-    #     wsi_series = \
-    #         codes_get(subset, '#1#wigosIdentifierSeries')
-    #     wsi_issuer = \
-    #         codes_get(subset, '#1#wigosIssuerOfIdentifier')
-    #     wsi_number = \
-    #         codes_get(subset, '#1#wigosIssueNumber')
-    #     wsi_local = \
-    #         codes_get(subset, '#1#wigosLocalIdentifierCharacter')
-    #     wigosId = f'{wsi_series}-{wsi_issuer}-{wsi_number}-{wsi_local}'
-    #     LOGGER.debug(f'WIGOS Identifier Series: {wsi_series}')
-    #     LOGGER.debug(f'WIGOS Issuer of Identifier: {wsi_issuer}')
-    #     LOGGER.debug(f'WIGOS Issue Number: {wsi_number}')
-    #     LOGGER.debug(f'WIGOS Local Identifier Character: {wsi_local}')
 
     def get_local_filepath(self, date_):
         yyyymmdd = date_[0:10]  # date_.strftime('%Y-%m-%d')
