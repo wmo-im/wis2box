@@ -21,44 +21,39 @@
 
 import logging
 
-import click
-
-from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
-from wis2box.handler import Handler
-import wis2box.metadata.discovery as discovery_
-from wis2box.topic_hierarchy import validate_and_load
-from wis2box.util import walk_path
 
 LOGGER = logging.getLogger(__name__)
 
 
-def setup_collection(name: str, meta: dict = {}) -> bool:
+def setup_collection(collection: str, meta: dict = {}) -> bool:
     """
     Add collection to api backend and mcf or collection configuration
 
-    :param name: `str` of collection name
+    :param collection: `str` of collection name
     :param meta: `dict` of collection metadata
 
 
     :returns: `bool` of API collection metadata
     """
     if meta == {}:
-        LOGGER.error(f'Invalid configuration for: {name}')
+        LOGGER.error(f'Invalid configuration for: {collection}')
         return False
 
     backend = load_backend()
-    backend.add_collection(name)
+    if backend.has_collection(collection) is False:
+        backend.add_collection(collection)
 
     api_config = load_config()
-    collection = api_config.prepare_collection(meta)
-    api_config.add_collection(name, collection)
+    if api_config.has_collection(collection) is False:
+        collection = api_config.prepare_collection(meta)
+        api_config.add_collection(collection, collection)
 
     return True
 
 
-def remove_collection(name: str) -> bool:
+def remove_collection(collection: str) -> bool:
     """
     Add collection to api backend and mcf or collection configuration
 
@@ -68,122 +63,51 @@ def remove_collection(name: str) -> bool:
     """
 
     backend = load_backend()
-    backend.delete_collection(name)
+    if backend.has_collection(collection) is True:
+        backend.delete_collection(collection)
 
     api_config = load_config()
-    api_config.delete_add_collection(name)
+    if api_config.has_collection(collection) is True:
+        api_config.delete_add_collection(collection)
 
     return True
 
 
-def generate_collection_metadata(mcf: dict) -> dict:
+def upsert_collection_item(collection: str, item: dict) -> str:
     """
-    Generate collection metadata from metadata control file
+    Add or update a collection item
 
-    :param mcf: `dict` of MCF file
+    :param collection: name of collection
+    :param item: `dict` of GeoJSON item data
 
-    :returns: `dict` of API collection metadata
+    :returns: `str` identifier of added item
     """
-
-    LOGGER.debug('Parsing discovery metadata')
-
-    dm = discovery_.DiscoveryMetadata()
-    record = dm.parse_record(mcf)
-    generated = dm.generate(record)
-
-    LOGGER.debug('Creating collection configuration')
-
-    bbox = [
-        generated['geometry']['coordinates'][0][0][0],
-        generated['geometry']['coordinates'][0][0][1],
-        generated['geometry']['coordinates'][0][2][0],
-        generated['geometry']['coordinates'][0][2][1],
-    ]
-
-    kw = record['identification']['keywords']
-
-    keywords = set([k for k in kw.values() for k in kw])
-
-    return {
-        'id': generated['id'],
-        'type': 'feature',
-        'title': generated['properties']['title'],
-        'description': generated['properties']['description'],
-        'keywords': list(keywords),
-        'bbox': bbox,
-        'links': generated['links'],
-        'id_field': 'id',
-        'time_field': 'resultTime',
-        'title_field': 'id'
-    }
-
-
-@click.group()
-def api():
-    """API management"""
-    pass
-
-
-@click.command()
-@click.pass_context
-@cli_helpers.OPTION_TOPIC_HIERARCHY
-@cli_helpers.OPTION_PATH
-@cli_helpers.OPTION_RECURSIVE
-@cli_helpers.OPTION_VERBOSITY
-def add_collection_items(ctx, topic_hierarchy, path, recursive, verbosity):
-    """Add collection items to API backend"""
-
-    click.echo('Loading Backend')
     backend = load_backend()
+    backend.upsert_collection_items(collection, [item])
 
-    click.echo(f'Adding GeoJSON files to collection: {topic_hierarchy}')
-    for file_to_process in walk_path(path, '.*.geojson$', recursive):
-        click.echo(f'Adding {file_to_process}')
-        handler = Handler(file_to_process, topic_hierarchy)
-        handler.publish(backend)
-
-    click.echo('Done')
+    return True
 
 
-@click.command()
-@click.pass_context
-@cli_helpers.ARGUMENT_FILEPATH
-@cli_helpers.OPTION_TOPIC_HIERARCHY
-@cli_helpers.OPTION_VERBOSITY
-def add_collection(ctx, filepath, topic_hierarchy, verbosity):
-    """Add collection index to API backend"""
+def delete_collection_item(collection: str, item_id: str) -> str:
+    """
+    Delete an item from a collection
 
-    if topic_hierarchy is None:
-        raise click.ClickException('Missing -th/--topic-hierarchy')
+    :param collection: name of collection
+    :param item_id: `str` of item identifier
 
-    click.echo('Generating collection metadata')
-    meta = generate_collection_metadata(filepath.read())
-
-    th, _ = validate_and_load(topic_hierarchy)
-    click.echo(f'Adding collection: {th.dotpath}')
-    setup_collection(th.dotpath, meta=meta)
-
-    click.echo("Done")
+    :returns: `str` identifier of added item
+    """
+    backend = load_backend()
+    backend.delete_collection_item(collection, item_id)
 
 
-@click.command()
-@click.pass_context
-@cli_helpers.OPTION_TOPIC_HIERARCHY
-@cli_helpers.OPTION_VERBOSITY
-def delete_collection(ctx, topic_hierarchy, verbosity):
-    """Delete collection from api backend"""
+def delete_collections_by_retention(days: int) -> None:
+    """
+    Delete collections by retention date
 
-    if topic_hierarchy is None:
-        raise click.ClickException('Missing -th/--topic-hierarchy')
+    :param days: `int` of number of days
 
-    click.echo(f'Deleting collection: {topic_hierarchy}')
-
-    th, _ = validate_and_load(topic_hierarchy)
-    remove_collection(th.dotpath)
-
-    click.echo('Done')
-
-
-api.add_command(add_collection_items)
-api.add_command(add_collection)
-api.add_command(delete_collection)
+    :returns: `None`
+    """
+    backend = load_backend()
+    backend.delete_collections_by_retention(days)
