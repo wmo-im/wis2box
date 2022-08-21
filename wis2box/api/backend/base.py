@@ -62,6 +62,17 @@ class BaseBackend:
 
         raise NotImplementedError()
 
+    def has_collection(self, name: str) -> bool:
+        """
+        Checks a collection
+
+        :param name: name of collection
+
+        :returns: `bool` of collection result
+        """
+
+        raise NotImplementedError()
+
     def upsert_collection_item(self, collection: str, item: dict) -> str:
         """
         Add or update a collection item
