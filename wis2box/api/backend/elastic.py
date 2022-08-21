@@ -150,13 +150,13 @@ class ElasticBackend(BaseBackend):
 
         return self.conn.indices.exists(es_index)
 
-    def delete_collection(self, collection_id: str) -> None:
+    def delete_collection(self, collection_id: str) -> bool:
         """
         Delete a collection
 
         :param collection_id: name of collection
 
-        :returns: `None`
+        :returns: `bool` of delete result
         """
 
         es_index = self.es_id(collection_id)
@@ -171,6 +171,17 @@ class ElasticBackend(BaseBackend):
 
         if self.conn.indices.exists_template(es_template):
             self.conn.indices.delete_template(es_template)
+
+    def has_collection(self, collection_id: str) -> bool:
+        """
+        Checks a collection
+
+        :param collection_id: name of collection
+
+        :returns: `bool` of collection result
+        """
+        es_index = self.es_id(collection_id)
+        return self.conn.indices.exists(es_index)
 
     def upsert_collection_items(self, collection_id: str, items: list) -> str:
         """

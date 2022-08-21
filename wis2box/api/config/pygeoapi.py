@@ -71,13 +71,13 @@ class PygeoapiConfig(BaseConfig):
         r = requests.delete(f'{self.url}/{name}')
         return r.status_code == requests.codes.ok
 
-    def has_collection(self, name: str) -> dict:
+    def has_collection(self, name: str) -> bool:
         """
         Checks a collection
 
         :param name: name of collection
 
-        :returns: `dict` of collection result
+        :returns: `bool` of collection result
         """
 
         r = requests.get(f'{self.url}/{name}')
