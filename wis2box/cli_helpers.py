@@ -37,6 +37,10 @@ OPTION_PATH = click.option('--path', '-p', required=True,
 OPTION_TOPIC_HIERARCHY = click.option('--topic-hierarchy', '-th',
                                       help='Topic hierarchy')
 
+OPTION_RECURSIVE = click.option('--recursive', '-r', default=False,
+                                is_flag=True,
+                                help='Process directory recursively')
+
 
 def OPTION_VERBOSITY(f):
     logging_options = ['ERROR', 'WARNING', 'INFO', 'DEBUG']
