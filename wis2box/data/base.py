@@ -23,7 +23,7 @@ import logging
 from pathlib import Path
 from typing import Iterator, Union
 
-from wis2box.api.backend import load_backend
+from wis2box.api import upsert_collection_item
 from wis2box.env import (STORAGE_INCOMING, STORAGE_PUBLIC,
                          STORAGE_SOURCE, BROKER_PUBLIC)
 from wis2box.storage import put_data
@@ -138,9 +138,7 @@ class BaseAbstractData:
         LOGGER.info(f'WISNotificationMessage published for {identifier}')
 
         LOGGER.debug('Pushing message to API')
-        api_backend = load_backend()
-        api_backend.upsert_collection_items(collection_id='messages',
-                                            items=[wis_message.message])
+        upsert_collection_item('messages', wis_message.message)
 
         return True
 
