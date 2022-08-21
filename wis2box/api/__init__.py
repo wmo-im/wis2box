@@ -27,78 +27,78 @@ from wis2box.api.config import load_config
 LOGGER = logging.getLogger(__name__)
 
 
-def setup_collection(collection: str, meta: dict = {}) -> bool:
+def setup_collection(collection_id: str, meta: dict = {}) -> bool:
     """
     Add collection to api backend and mcf or collection configuration
 
-    :param collection: `str` of collection name
+    :param collection_id: `str` of collection name
     :param meta: `dict` of collection metadata
 
 
     :returns: `bool` of API collection metadata
     """
     if meta == {}:
-        LOGGER.error(f'Invalid configuration for: {collection}')
+        LOGGER.error(f'Invalid configuration for: {collection_id}')
         return False
 
     backend = load_backend()
-    if backend.has_collection(collection) is False:
-        backend.add_collection(collection)
+    if backend.has_collection(collection_id) is False:
+        backend.add_collection(collection_id)
 
     api_config = load_config()
-    if api_config.has_collection(collection) is False:
+    if api_config.has_collection(collection_id) is False:
         collection = api_config.prepare_collection(meta)
-        api_config.add_collection(collection, collection)
+        api_config.add_collection(collection_id, collection)
 
     return True
 
 
-def remove_collection(collection: str) -> bool:
+def remove_collection(collection_id: str) -> bool:
     """
     Add collection to api backend and mcf or collection configuration
 
-    :param name: `str` of collection name
+    :param collection_id: `str` of collection name
 
     :returns: `bool` of API collection metadata
     """
 
     backend = load_backend()
-    if backend.has_collection(collection) is True:
-        backend.delete_collection(collection)
+    if backend.has_collection(collection_id) is True:
+        backend.delete_collection(collection_id)
 
     api_config = load_config()
-    if api_config.has_collection(collection) is True:
-        api_config.delete_add_collection(collection)
+    if api_config.has_collection(collection_id) is True:
+        api_config.delete_add_collection(collection_id)
 
     return True
 
 
-def upsert_collection_item(collection: str, item: dict) -> str:
+def upsert_collection_item(collection_id: str, item: dict) -> str:
     """
     Add or update a collection item
 
-    :param collection: name of collection
+    :param collection_id: name of collection
     :param item: `dict` of GeoJSON item data
 
     :returns: `str` identifier of added item
     """
     backend = load_backend()
-    backend.upsert_collection_items(collection, [item])
+    backend.upsert_collection_items(collection_id, [item])
 
     return True
 
 
-def delete_collection_item(collection: str, item_id: str) -> str:
+def delete_collection_item(collection_id: str, item_id: str) -> str:
     """
     Delete an item from a collection
 
-    :param collection: name of collection
+    :param collection_id: name of collection
     :param item_id: `str` of item identifier
 
     :returns: `str` identifier of added item
     """
     backend = load_backend()
-    backend.delete_collection_item(collection, item_id)
+    backend.delete_collection_item(collection_id, item_id)
 
 
 def delete_collections_by_retention(days: int) -> None:

@@ -20,7 +20,9 @@
 ###############################################################################
 
 import logging
-import requests
+from requests import Session, codes
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 from wis2box.api.config.base import BaseConfig
 from wis2box.env import API_BACKEND_TYPE, API_BACKEND_URL, DOCKER_API_URL
@@ -40,6 +42,16 @@ class PygeoapiConfig(BaseConfig):
 
         super().__init__(defs)
         self.url = f'{DOCKER_API_URL}/admin/resources'
+        self.http = Session()
+        retry_strategy = Retry(
+            total=3,
+            status_forcelist=[429, 500, 502, 503, 504],
+            backoff_factor=1,
+            method_whitelist=["GET"]
+        )
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        self.http.mount("https://", adapter)
+        self.http.mount("http://", adapter)
 
     def add_collection(self, name: str, collection: dict) -> bool:
         """
@@ -51,13 +63,13 @@ class PygeoapiConfig(BaseConfig):
         :returns: `bool` of add result
         """
         if self.has_collection(name):
-            r = requests.put(f'{self.url}/{name}', json=collection)
+            r = self.http.put(f'{self.url}/{name}', json=collection)
         else:
             content = {name: collection}
-            r = requests.post(self.url, json=content)
+            r = self.http.post(self.url, json=content)
 
         r.raise_for_status()
-        return r.status_code == requests.codes.ok
+        return r.status_code == codes.ok
 
     def delete_collection(self, name: str) -> bool:
         """
@@ -68,8 +80,8 @@ class PygeoapiConfig(BaseConfig):
         :returns: `bool` of delete collection result
         """
 
-        r = requests.delete(f'{self.url}/{name}')
-        return r.status_code == requests.codes.ok
+        r = self.http.delete(f'{self.url}/{name}')
+        return r.status_code == codes.ok
 
     def has_collection(self, name: str) -> bool:
         """
@@ -80,8 +92,8 @@ class PygeoapiConfig(BaseConfig):
         :returns: `bool` of collection result
         """
 
-        r = requests.get(f'{self.url}/{name}')
-        return r.status_code == requests.codes.ok
+        r = self.http.get(f'{self.url}/{name}')
+        return r.status_code == codes.ok
 
     def prepare_collection(self, meta: dict) -> bool:
         """
