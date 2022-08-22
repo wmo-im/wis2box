@@ -63,7 +63,7 @@ def test_metadata_station_publish():
 
     stations = r.json()
 
-    assert stations['numberReturned'] == 10
+    assert stations['numberReturned'] == 19
     assert stations['numberMatched'] == 19
 
 
