@@ -47,11 +47,11 @@ class PygeoapiConfig(BaseConfig):
             total=3,
             status_forcelist=[429, 500, 502, 503, 504],
             backoff_factor=1,
-            method_whitelist=["GET"]
+            method_whitelist=['GET', 'PUT', 'DELETE']
         )
         adapter = HTTPAdapter(max_retries=retry_strategy)
-        self.http.mount("https://", adapter)
-        self.http.mount("http://", adapter)
+        self.http.mount('https://', adapter)
+        self.http.mount('http://', adapter)
 
     def add_collection(self, name: str, collection: dict) -> bool:
         """
