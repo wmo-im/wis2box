@@ -81,7 +81,7 @@ def load_datasets() -> Iterator[dict]:
         yield {}
 
 
-def check_station_datasets(datasets: list, wigos_id: str) -> Iterator[dict]:
+def check_station_datasets(wigos_id: str) -> Iterator[dict]:
     """
     Filter datasets for topics with observations from station
 
@@ -94,7 +94,7 @@ def check_station_datasets(datasets: list, wigos_id: str) -> Iterator[dict]:
 
     oaf = Features(DOCKER_API_URL)
 
-    for topic in datasets:
+    for topic in load_datasets():
         if not topic:
             continue
 
@@ -127,28 +127,27 @@ def publish_station_collection() -> None:
 
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
-    topics = list(load_datasets())
-
     for f in STATION_METADATA.glob('*.json'):
         LOGGER.debug(f'Adding station metadata from {f.name}')
         with f.open() as fh:
             d = json.load(fh)
             wigos_id = d['wigosIds'][0]['wid']
-
-        station_topics = check_station_datasets(topics, wigos_id)
-        feature = {
-            'id': d['id'],
-            'type': 'Feature',
-            'geometry': get_geometry(wigos_id),
-            'properties': {
-                'wigos_id': wigos_id,
-                'name': d['name'],
-                'url': f"{oscar_baseurl}/{wigos_id}",
-                # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
-                'status': 'operational',
-            },
-            'links': list(station_topics),
-        }
+            topics = list(check_station_datasets(wigos_id))
+            topic = None if len(topics) == 0 else topics[0]['title']
+            feature = {
+                'id': d['id'],
+                'type': 'Feature',
+                'geometry': get_geometry(wigos_id),
+                'properties': {
+                    'wigos_id': wigos_id,
+                    'name': d['name'],
+                    'url': f"{oscar_baseurl}/{wigos_id}",
+                    'topic': topic,
+                    # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
+                    'status': 'operational'
+                },
+                'links': topics
+            }
 
         LOGGER.debug('Publishing to backend')
         backend.upsert_collection_items('stations', [feature])
