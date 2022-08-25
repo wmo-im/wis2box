@@ -12,19 +12,19 @@ data:
             geojson:
                 - plugin: wis2box.data.geojson.ObservationDataGeoJSON
                   file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.geojson$'
-    data.core.observations-surface-land.it.FWCL.landFixed:
+    data.core.observations-surface-land.it.LIIB.landFixed:
         plugins:
             bin:
                 - plugin: wis2box.data.bufr4.ObservationDataBUFR
                   notify: true
-                  file-pattern: '^.*\.bin$'
+                  file-pattern: '^.*\.bin$
             bufr4:
                 - plugin: wis2box.data.bufr4.ObservationDataBUFR2GeoJSON
                   file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
             geojson:
                 - plugin: wis2box.data.geojson.ObservationDataGeoJSON
                   file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.geojson$'
-    data.core.observations-surface-land.dz.FWCL.landFixed:
+    data.core.observations-surface-land.dz.DAMM.landFixed:
         plugins:
             bufr4:
                 - plugin: wis2box.data.bufr4.ObservationDataBUFR
