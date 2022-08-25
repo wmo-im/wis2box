@@ -217,15 +217,15 @@ def get_geometry(wsi: str = '', tsi: str = '') -> bool:
         'coordinates': [],
     }
 
-    station_report = STATION_METADATA / f'{wsi}.json'
+    filename = STATION_METADATA / f'{wsi}.json'
 
-    if station_report.exists():
-        with station_report.open() as fh:
+    if filename.exists():
+        with filename.open() as fh:
             station_report = json.load(fh)
     else:
-        LOGGER.debug(f'Caching station report to {station_report}')
+        LOGGER.debug(f'Caching station report to {filename}')
         station_report = get_station_report(wsi)
-        with station_report.open('w') as fh:
+        with filename.open('w') as fh:
             json.dump(station_report, fh)
 
     geom['coordinates'] = [
