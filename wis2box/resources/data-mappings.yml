@@ -17,7 +17,7 @@ data:
             bin:
                 - plugin: wis2box.data.bufr4.ObservationDataBUFR
                   notify: true
-                  file-pattern: '^.*\.bin$
+                  file-pattern: '^.*\.bin$'
             bufr4:
                 - plugin: wis2box.data.bufr4.ObservationDataBUFR2GeoJSON
                   file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
