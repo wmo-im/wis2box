@@ -76,7 +76,7 @@ def test_metadata_discovery_publish():
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/data.core.observations-surface-land.mw.FWCL.landFixed').json()  # noqa
 
     assert r['id'] == 'data.core.observations-surface-land.mw.FWCL.landFixed'
-    assert r['properties']['title'] == 'Surface weather observations (hourly)'
+    assert r['properties']['title'] == 'Surface weather observations from Malawi'
 
     assert len(r['links']) == 7
 
