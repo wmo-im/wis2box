@@ -27,7 +27,7 @@ import click
 
 from wis2box import cli_helpers
 from wis2box.env import (BROKER_HOST, BROKER_PORT, BROKER_USERNAME,
-                         BROKER_PASSWORD, STORAGE_SOURCE)
+                         BROKER_PASSWORD, STORAGE_SOURCE, STORAGE_ARCHIVE)
 from wis2box.handler import Handler
 from wis2box.plugin import load_plugin, PLUGINS
 
@@ -42,6 +42,9 @@ def on_message_handler(client, userdata, msg):
     if message.get('EventName') == 's3:ObjectCreated:Put':
         LOGGER.debug('Incoming data is an s3 data object')
         filepath = f'{STORAGE_SOURCE}/{message["Key"]}'
+        if str(message["Key"]).startswith(STORAGE_ARCHIVE):
+            LOGGER.info(f'Do not process archived-data: {message["Key"]}')
+            return
     elif 'relPath' in message:
         LOGGER.debug('Incoming data is a filesystem path')
         filepath = Path(message['relPath'])
