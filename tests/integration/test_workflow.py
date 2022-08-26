@@ -63,8 +63,8 @@ def test_metadata_station_publish():
 
     stations = r.json()
 
-    assert stations['numberReturned'] == 55
-    assert stations['numberMatched'] == 55
+    assert stations['numberReturned'] == 56
+    assert stations['numberMatched'] == 56
 
 
 def test_metadata_discovery_publish():
@@ -76,7 +76,7 @@ def test_metadata_discovery_publish():
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/data.core.observations-surface-land.mw.FWCL.landFixed').json()  # noqa
 
     assert r['id'] == 'data.core.observations-surface-land.mw.FWCL.landFixed'
-    assert r['properties']['title'] == 'Surface weather observations (hourly)'
+    assert r['properties']['title'] == 'Surface weather observations from Malawi' # noqa
 
     assert len(r['links']) == 7
 
@@ -195,7 +195,7 @@ def test_message_api():
     url = f'{API_URL}/collections/messages/items'
     r = SESSION.get(url).json()
 
-    assert r['numberMatched'] == 88
+    assert r['numberMatched'] == 89
 
     msg = r['features'][0]
     assert msg['geometry'] is not None

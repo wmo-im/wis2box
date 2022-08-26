@@ -29,16 +29,20 @@ from typing import Union
 
 from bufr2geojson import BUFRParser, transform as as_geojson
 from eccodes import (
+    codes_bufr_copy_data,
+    codes_bufr_new_from_samples,
     codes_bufr_new_from_file,
     codes_clone,
     codes_set,
+    codes_set_array,
     codes_release,
     codes_get,
-    codes_write
+    codes_get_array,
+    codes_write,
 )
 
 from wis2box.data.base import BaseAbstractData
-from wis2box.metadata.station import get_geometry, validate_wsi
+from wis2box.metadata.station import get_geometry, get_valid_wsi
 
 LOGGER = logging.getLogger(__name__)
 
@@ -134,8 +138,7 @@ class ObservationDataBUFR(BaseAbstractData):
         # split subsets into individual messages and process
         # foreach subset:
         # - check for WSI,
-        #   - TODO: if None, lookup using information in station report
-        #   - validate against OSCAR surface
+        #   - if None, lookup using tsi
         # - check for location,
         #   - if None, use geometry from station report
         # - check for time,
@@ -155,6 +158,14 @@ class ObservationDataBUFR(BaseAbstractData):
             num_subsets = codes_get(bufr_in, 'numberOfSubsets')
             LOGGER.debug(f'Found {num_subsets} subsets')
 
+            table_version = max(
+                28, codes_get(bufr_in, 'masterTablesVersionNumber')
+            )
+            inUE = codes_get_array(bufr_in, 'unexpandedDescriptors')
+            outUE = inUE.tolist()
+            if 301150 not in outUE:
+                outUE.insert(0, 301150)
+
             for i in range(num_subsets):
                 idx = i + 1
                 LOGGER.debug(f'Processing subset {idx}')
@@ -165,29 +176,44 @@ class ObservationDataBUFR(BaseAbstractData):
                 LOGGER.debug('Cloning subset to new message')
                 subset = codes_clone(bufr_in)
 
-                LOGGER.debug('Unpacking')
                 try:
+                    LOGGER.debug('Unpacking')
                     codes_set(subset, 'unpack', True)
                 except Exception as err:
                     LOGGER.error(f'Error unpacking message: {err}')
                     raise err
 
-                LOGGER.debug('Parsing subset')
-
-                parser = BUFRParser()
-
                 try:
+                    LOGGER.debug('Parsing subset')
+                    parser = BUFRParser()
                     parser.as_geojson(subset, id='')
                 except Exception as err:
                     LOGGER.warning(err)
 
-                wsi = parser.get_wsi()
-                LOGGER.debug(f'Processing wsi: {wsi}')
+                temp_wsi = parser.get_wsi()
+                tsi = temp_wsi.split('-')[-1]
+                LOGGER.debug(f'Processing wsi: {temp_wsi}, tsi: {tsi}')
 
-                if validate_wsi(wsi) is False:
-                    LOGGER.warning(f'Invalid wsi: {wsi}')
+                wsi = get_valid_wsi(wsi=temp_wsi, tsi=tsi)
+                if wsi is None:
+                    msg = f'Invalid station, wsi: {temp_wsi}, tsi: {tsi}'
+                    LOGGER.warning(msg)
                     LOGGER.error(f'Failed to publish: {wsi}')
                     continue
+
+                LOGGER.debug('Creating template BUFR')
+                template = codes_bufr_new_from_samples("BUFR4")
+                codes_set(template, 'masterTablesVersionNumber', table_version) # noqa
+                codes_set_array(template, 'unexpandedDescriptors', outUE)
+
+                LOGGER.debug('Copying wsi to BUFR')
+                [series, issuer, number, tsi] = wsi.split('-')
+                codes_set(template, '#1#wigosIdentifierSeries', int(series)) # noqa
+                codes_set(template, '#1#wigosIssuerOfIdentifier', int(issuer)) # noqa
+                codes_set(template, '#1#wigosIssueNumber', int(number)) # noqa
+                codes_set(template, '#1#wigosLocalIdentifierCharacter', tsi) # noqa
+                codes_bufr_copy_data(subset, template)
+                codes_release(subset)
 
                 try:
                     location = parser.get_location()
@@ -196,12 +222,11 @@ class ObservationDataBUFR(BaseAbstractData):
 
                 if None in location['coordinates']:
                     LOGGER.debug('Setting coordinates from station report')
-                    long, lat, elev = get_geometry(wsi).get('coordinates')
-                    codes_set(subset, '#1#latitude', lat)
-                    codes_set(subset, '#1#longitude', long)
-                    codes_set(subset, '#1#heightOfStationGroundAboveMeanSeaLevel', elev) # noqa
-                    parser.as_geojson(subset, id='')
-                    location = parser.get_location()
+                    location = get_geometry(wsi)
+                    long, lat, elev = location.get('coordinates')
+                    codes_set(template, '#1#longitude', long)
+                    codes_set(template, '#1#latitude', lat)
+                    codes_set(template, '#1#heightOfStationGroundAboveMeanSeaLevel', elev) # noqa
 
                 try:
                     data_date = parser.get_time()
@@ -225,8 +250,9 @@ class ObservationDataBUFR(BaseAbstractData):
 
                 LOGGER.debug('Writing bufr4')
                 with BytesIO() as file_handle:
-                    codes_write(subset, file_handle)
-                    codes_release(subset)
+                    codes_set(template, "pack", True)
+                    codes_write(template, file_handle)
+                    codes_release(template)
                     file_handle.seek(0)
                     bufr4 = file_handle.read()
 

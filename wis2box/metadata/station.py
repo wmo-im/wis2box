@@ -36,7 +36,20 @@ from wis2box.metadata.base import BaseMetadata
 from wis2box.metadata.oscar import get_station_report, upload_station_metadata
 
 LOGGER = logging.getLogger(__name__)
+
 STATION_METADATA = DATADIR / 'metadata' / 'station'
+STATIONS = STATION_METADATA / 'station_list.csv'
+
+if STATIONS.exists() is False:
+    with STATIONS.open('w', newline='') as fh:
+        writer = csv.writer(fh)
+        writer.writerow(
+            [
+                'station_name',
+                'wigos_station_identifier',
+                'traditional_station_identifier',
+            ]
+        )
 
 
 class StationMetadata(BaseMetadata):
@@ -171,54 +184,31 @@ def publish_station_collection() -> None:
     return
 
 
-def validate_wsi(wsi: str) -> bool:
+def get_valid_wsi(wsi: str = '', tsi: str = '') -> str:
+    """
+    Validates and returns WSI from WMO OSCAR/Surface
+
+    :param wsi: `str` WIGOS Station identifier
+    :param tsi: `str` Traditional Station identifier
+
+    :returns: `str`, of valid wsi
+    """
+
+    LOGGER.info(f'Validating WIGOS Station Identifier: {wsi}')
+    with STATIONS.open(newline='') as fh:
+        reader = csv.DictReader(fh)
+        for row in reader:
+            if wsi == row['wigos_station_identifier'] or \
+               tsi == row['traditional_station_identifier']:
+                return row['wigos_station_identifier']
+
+
+def get_geometry(wsi: str = '', tsi: str = '') -> bool:
     """
     Validates and caches WSI from WMO OSCAR/Surface
 
     :param wsi: `str` WIGOS Station identifier
-
-    :returns: `bool`, of wsi validity
-    """
-    stations = STATION_METADATA / 'station_list.csv'
-
-    if stations.exists() is False:
-        with stations.open('w', newline='') as fh:
-            writer = csv.writer(fh)
-            writer.writerow(['station_name', 'wigos_station_identifier'])
-
-    LOGGER.info(f'Validating WIGOS Station Identifier: {wsi}')
-    with stations.open(newline='') as fh:
-        reader = csv.DictReader(fh)
-        for row in reader:
-            if wsi == row['wigos_station_identifier']:
-                return True
-
-    LOGGER.debug('Validating WSI with OSCAR/Surface')
-    try:
-        station_report = get_station_report(wsi)
-        station_name = station_report['name']
-    except RuntimeError:
-        LOGGER.warning(f'Station not found: {wsi}')
-        return False
-
-    LOGGER.debug('WSI valid, caching...')
-    with stations.open('a', newline='') as fh:
-        writer = csv.writer(fh)
-        writer.writerow([station_name, wsi])
-
-    filename = STATION_METADATA / f'{wsi}.json'
-    LOGGER.debug(f'Caching station report to {filename}')
-    with filename.open('w') as fh:
-        json.dump(station_report, fh)
-
-    return True
-
-
-def get_geometry(wsi: str) -> dict:
-    """
-    Validates and caches station geometry from WMO OSCAR/Surface
-
-    :param wsi: `str` WIGOS Station identifier
+    :param tsi: `str` Traditional Station identifier
 
     :returns: `dict`, of station geometr
     """
@@ -226,8 +216,6 @@ def get_geometry(wsi: str) -> dict:
         'type': 'Point',
         'coordinates': [],
     }
-    if validate_wsi(wsi) is False:
-        return geom
 
     filename = STATION_METADATA / f'{wsi}.json'
 
@@ -261,6 +249,12 @@ def cache(ctx, filepath, verbosity):
 
     for row in reader:
         wsi = row['wigos_station_identifier']
+
+        if get_valid_wsi(wsi=wsi) is None:
+            with STATIONS.open('a', newline='') as fh:
+                writer = csv.DictWriter(fh, fieldnames=row.keys())
+                writer.writerow(row)
+
         click.echo(f"Caching station metadata for {wsi}")
         try:
             station_report = get_station_report(wsi)
