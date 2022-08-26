@@ -184,6 +184,30 @@ def publish_station_collection() -> None:
     return
 
 
+def cache_station(wsi: str = '') -> bool:
+    """
+    Caches station locally WMO OSCAR/Surface
+
+    :param wsi: `str` WIGOS Station identifier
+
+    :returns: `bool`, of cache result
+    """
+    try:
+        station_report = get_station_report(wsi)
+    except RuntimeError:
+        LOGGER.error(f'Station not found: {wsi}')
+        return False
+
+    if station_report == {}:
+        LOGGER.error(f'Station report empty: {wsi}')
+        return False
+
+    filename = STATION_METADATA / f'{wsi}.json'
+    LOGGER.debug(f'Writing file to {filename}')
+    with filename.open('w') as fh:
+        json.dump(station_report, fh)
+
+
 def get_valid_wsi(wsi: str = '', tsi: str = '') -> str:
     """
     Validates and returns WSI from WMO OSCAR/Surface
@@ -203,19 +227,14 @@ def get_valid_wsi(wsi: str = '', tsi: str = '') -> str:
                 return row['wigos_station_identifier']
 
 
-def get_geometry(wsi: str = '', tsi: str = '') -> bool:
+def get_geometry(wsi: str = '') -> dict:
     """
     Validates and caches WSI from WMO OSCAR/Surface
 
     :param wsi: `str` WIGOS Station identifier
-    :param tsi: `str` Traditional Station identifier
 
     :returns: `dict`, of station geometr
     """
-    geom = {
-        'type': 'Point',
-        'coordinates': [],
-    }
 
     filename = STATION_METADATA / f'{wsi}.json'
 
@@ -223,18 +242,27 @@ def get_geometry(wsi: str = '', tsi: str = '') -> bool:
         with filename.open() as fh:
             station_report = json.load(fh)
     else:
-        LOGGER.debug(f'Caching station report to {filename}')
-        station_report = get_station_report(wsi)
-        with filename.open('w') as fh:
-            json.dump(station_report, fh)
+        cache_station(wsi)
+        with filename.open() as fh:
+            station_report = json.load(fh)
 
-    geom['coordinates'] = [
-        station_report['locations'][0]['longitude'],
-        station_report['locations'][0]['latitude'],
-        station_report['locations'][0]['elevation'],
-    ]
+    try:
+        location = station_report['locations'][0]
+    except IndexError:
+        LOGGER.debug(f'No geometry found for {wsi}, returning None')
+        return None
+    except KeyError:
+        LOGGER.debug(f'Invalid station report for {wsi}')
+        return None
 
-    return geom
+    return {
+        'type': 'Point',
+        'coordinates': [
+            location['longitude'],
+            location['latitude'],
+            location['elevation']
+        ]
+    }
 
 
 @click.command()
@@ -256,15 +284,7 @@ def cache(ctx, filepath, verbosity):
                 writer.writerow(row)
 
         click.echo(f"Caching station metadata for {wsi}")
-        try:
-            station_report = get_station_report(wsi)
-        except RuntimeError:
-            click.echo(f'Station not found: {wsi}')
-
-        filename = STATION_METADATA / f'{wsi}.json'
-        LOGGER.debug(f'Writing file to {filename}')
-        with filename.open('w') as fh:
-            json.dump(station_report, fh)
+        cache_station(wsi)
 
 
 @click.command()
