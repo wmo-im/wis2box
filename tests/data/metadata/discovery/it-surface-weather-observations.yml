@@ -1,16 +1,16 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: data.core.observations-surface-land.it.FWCL.landFixed
+    topic_hierarchy: data.core.observations-surface-land.it.LIIB.landFixed
     data_category: observationsSurfaceLand
     country_code: it
-    originator: FWCL
+    originator: LIIB
     station_type: landFixed
 
 mcf:
     version: 1.0
 
 metadata:
-    identifier: data.core.observations-surface-land.it.FWCL.landFixed
+    identifier: data.core.observations-surface-land.it.LIIB.landFixed
     language: en
     language_alternate: fr
     charset: utf8
@@ -25,9 +25,9 @@ identification:
     language: en
     charset: utf8
     title:
-        en: Surface weather observations (hourly)
+        en: Surface weather observations from Italy
     abstract:
-        en: Surface weather observations (hourly) from Italy
+        en: Surface weather observations from Italy
     dates:
         creation: 2021-11-29
         publication: 2021-11-29
