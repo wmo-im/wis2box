@@ -207,6 +207,8 @@ def cache_station(wsi: str = '') -> bool:
     with filename.open('w') as fh:
         json.dump(station_report, fh)
 
+    return True
+
 
 def get_valid_wsi(wsi: str = '', tsi: str = '') -> str:
     """
@@ -238,13 +240,16 @@ def get_geometry(wsi: str = '') -> dict:
 
     filename = STATION_METADATA / f'{wsi}.json'
 
-    if filename.exists():
-        with filename.open() as fh:
-            station_report = json.load(fh)
-    else:
-        cache_station(wsi)
-        with filename.open() as fh:
-            station_report = json.load(fh)
+    if not filename.exists():
+        if get_valid_wsi(wsi=wsi) is None:
+            LOGGER.info(f'Invalid wigos identifer: {wsi}, returning None')
+            return None
+        if cache_station(wsi) is False:
+            LOGGER.info(f'Unable to cache {wsi}, returning None')
+            return None
+
+    with filename.open() as fh:
+        station_report = json.load(fh)
 
     try:
         location = station_report['locations'][0]

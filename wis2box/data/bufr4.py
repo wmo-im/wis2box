@@ -256,6 +256,7 @@ class ObservationDataBUFR(BaseAbstractData):
                     file_handle.seek(0)
                     bufr4 = file_handle.read()
 
+                del parser
                 yield {
                     'bufr4': bufr4,
                     '_meta': {
