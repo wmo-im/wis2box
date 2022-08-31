@@ -3,7 +3,7 @@
 Grafana dashboards
 ==================
 
-Grafana is exposed on port 3000 on the localhost running wis2box.
+wis2box provides a Grafana dashboard in order to visualize and analyze various metrics.
 
 Go to http://localhost:3000 to see the home dashboard of wis2box once the stack is running. 
 
@@ -12,5 +12,7 @@ Go to http://localhost:3000 to see the home dashboard of wis2box once the stack 
    :alt: Grafana Home dashboard 
    :align: center
 
-The home dashboard is defined in the source code in ``docker/grafana/dashboards/home.json``.
+.. note::
+
+   The dashboard configuration can be found in ``docker/grafana/dashboards/home.json``.
 

@@ -35,10 +35,11 @@ which is received by wis2box.
 Below are basic examples on sending data to the MinIO ``wis2box-incoming`` bucket.  For more information and additional
 examples, consult the `official MinIO documentation`_.
 
+
 Using the boto3 Python Client
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Install the Python boto3 module via `pip`_:
+Install the Python boto3 package via `pip`_:
 
 .. code-block:: bash
 
@@ -46,40 +47,47 @@ Install the Python boto3 module via `pip`_:
 
 The below example copies a local file (``myfile.csv``) to the ``wis2box-incoming`` bucket with topic ``foo.bar.baz``:
 
+
 .. code-block:: python
 
     import boto3
+
+    endpoint_url = 'http://localhost:9000'
+    filename = 'myfile.csv'
 
     session = boto3.Session(
         aws_access_key_id='wis2box',
         aws_secret_access_key='Wh00data!'
     )
 
-    s3client = session.client('s3',endpoint_url='http://localhost:9000')
+    s3client = session.client('s3', endpoint_url=endpoint_url)
 
-    filename='myfile.csv'
+    with open(filename, 'rb') as fh:
+        s3client.upload_fileobj(fh, 'wis2box-incoming', f'foo/bar/baz/{filename}')
 
-    with open(filename, "rb") as f:
-        s3client.upload_fileobj(f, "wis2box-incoming", f'foo/bar/baz/{filename}')
 
-To allow uploading files into MinIO remotely, "wis2box-incoming"-bucket is proxied via Nginx. 
-For example to upload the local file (``WIGOS_0-454-2-AWSNAMITAMBO_2021-11-18T0955.csv with topic``) with topic ``data.core.observations-surface-land.mw.FWCL.landFixed`` with the nginx-service accessible at http://wis2box.public.address:
+To allow uploading files into MinIO remotely, the ``wis2box-incoming`` bucket is proxied via Nginx. 
+
+For example, to upload the local file (``WIGOS_0-454-2-AWSNAMITAMBO_2021-11-18T0955.csv with topic``) with topic ``data.core.observations-surface-land.mw.FWCL.landFixed`` via the Nbinx proxy:
 
 .. code-block:: python
 
     import boto3
+
+    endpoint_url = 'http://localhost:9000'
+    filename = 'myfile.csv'
 
     session = boto3.Session(
         aws_access_key_id='wis2box',
         aws_secret_access_key='Wh00data!'
     )
 
-    s3client = session.client('s3',endpoint_url='http://wis2box.public.address>')
+    s3client = session.client('s3', endpoint_url=endpoint_url)
 
-    filename='WIGOS_0-454-2-AWSNAMITAMBO_2021-11-18T0955.csv'
+    filename = 'WIGOS_0-454-2-AWSNAMITAMBO_2021-11-18T0955.csv'
 
-    with open(filename, "rb") as f:
-        s3client.upload_fileobj(f, "wis2box-incoming", f'data/core/observations-surface-land/mw/FWCL/landFixed/{filename}')
+    with open(filename, 'rb') as f:
+        s3client.upload_fileobj(f, 'wis2box-incoming', f'data/core/observations-surface-land/mw/FWCL/landFixed/{filename}')
 
 
 Using the MinIO Python Client
