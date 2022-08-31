@@ -25,9 +25,9 @@ identification:
     language: en
     charset: utf8
     title:
-        en: Surface weather observations (hourly)
+        en: Surface weather observations from Malawi
     abstract:
-        en: Surface weather observations (hourly) from Malawi
+        en: Surface weather observations from Malawi
     dates:
         creation: 2021-11-29
         publication: 2021-11-29
