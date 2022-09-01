@@ -107,8 +107,7 @@ def setup(ctx, verbosity):
 @click.pass_context
 @cli_helpers.OPTION_TOPIC_HIERARCHY
 @cli_helpers.OPTION_PATH
-@click.option('--recursive', '-r', is_flag=True, default=False,
-              help='Process directory recursively')
+@cli_helpers.OPTION_RECURSIVE
 @cli_helpers.OPTION_VERBOSITY
 def add_collection_items(ctx, topic_hierarchy, path, recursive, verbosity):
     """Add collection items to API backend"""
