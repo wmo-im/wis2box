@@ -23,7 +23,7 @@ wis2box also analyzes prometheus metrics from MinIO.
 
 .. note::
 
-   For more information see the `list of supported MinIO metrics <https://github.com/minio/minio/blob/master/docs/metrics/prometheus/list.md>`_).
+   For more information see the `list of supported MinIO metrics <https://github.com/minio/minio/blob/master/docs/metrics/prometheus/list.md>`_
 
 Loki logging
 ------------

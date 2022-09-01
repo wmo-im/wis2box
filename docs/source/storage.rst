@@ -52,7 +52,7 @@ The below example copies a local file (``myfile.csv``) to the ``wis2box-incoming
 
     import boto3
 
-    endpoint_url = 'http://localhost:9000'
+    endpoint_url = '<your-wis2box-url>'
     filename = 'myfile.csv'
 
     session = boto3.Session(
@@ -108,7 +108,7 @@ The below example copies a local file (``myfile.csv``) to the ``wis2box-incoming
     from minio import Minio
 
     client = Minio(
-        'localhost:3000',
+        'localhost:9000',
         access_key='minio',
         secret_key='minio123',
         secure=False
