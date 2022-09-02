@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 1,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -70,6 +70,7 @@
           },
           "decimals": 0,
           "mappings": [],
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -93,7 +94,7 @@
         "y": 0
       },
       "id": 2,
-      "interval": "1h",
+      "interval": "1m",
       "options": {
         "legend": {
           "calcs": [],
@@ -111,14 +112,16 @@
             "type": "prometheus",
             "uid": "PABAFD29CE247021E"
           },
+          "editorMode": "code",
           "exemplar": true,
           "expr": "delta(minio_bucket_usage_object_total{bucket=\"wis2box-incoming\"}[1h])",
           "interval": "",
-          "legendFormat": "Nr of csv-files in /data/incoming per hour",
+          "legendFormat": "Received files per hour in wis2box-incoming",
+          "range": true,
           "refId": "A"
         }
       ],
-      "title": "New files per hour in wis2box-incoming",
+      "title": "Received files per hour in wis2box-incoming",
       "type": "timeseries"
     },
     {
@@ -198,6 +201,7 @@
           },
           "decimals": 0,
           "mappings": [],
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -221,7 +225,7 @@
         "y": 6
       },
       "id": 6,
-      "interval": "1h",
+      "interval": "1m",
       "options": {
         "legend": {
           "calcs": [],
@@ -239,10 +243,12 @@
             "type": "prometheus",
             "uid": "PABAFD29CE247021E"
           },
+          "editorMode": "code",
           "exemplar": true,
           "expr": "delta(minio_bucket_usage_object_total{bucket=\"wis2box-public\"}[1h])",
           "interval": "",
-          "legendFormat": "Nr of bufr4-files in public per hour",
+          "legendFormat": "New files per hour in wis2box-public",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -314,7 +320,7 @@
         "y": 12
       },
       "id": 10,
-      "interval": "1h",
+      "interval": "1m",
       "options": {
         "legend": {
           "calcs": [],
@@ -332,14 +338,16 @@
             "type": "prometheus",
             "uid": "PABAFD29CE247021E"
           },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "delta(mqtt_msg_count_total[$__interval])",
+          "expr": "delta(mqtt_msg_count_total[1h])",
           "interval": "",
-          "legendFormat": "mqtt-messages per hour on xpublic/#",
+          "legendFormat": "mqtt messages published per hour",
+          "range": true,
           "refId": "A"
         }
       ],
-      "title": "mqtt messages per hour on xpublic/#",
+      "title": "mqtt messages published per hour",
       "type": "timeseries"
     }
   ],

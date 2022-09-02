@@ -17,8 +17,13 @@ Prometheus exporters for wis2box
 
 The exporters for wis2box are based on the `Prometheus Python Client <https://github.com/prometheus/client_python>`_
 
-- metrics_collector: collects data on filesystem
 - mqtt_metric_collector: collects data on messages published, using an mqtt-session subscribed to the wis2box-broker
+
+wis2box also analyzes prometheus metrics from MinIO.
+
+.. note::
+
+   For more information see the `list of supported MinIO metrics <https://github.com/minio/minio/blob/master/docs/metrics/prometheus/list.md>`_
 
 Loki logging
 ------------
