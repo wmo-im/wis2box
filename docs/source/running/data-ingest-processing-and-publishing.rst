@@ -53,11 +53,6 @@ Once all metadata and topic hierarchies are setup, event driven workflow
 will immediately start to listen on files in the ``wis2box-incoming`` storage bucket as they are
 placed in the appropriate topic hierarchy directory.
 
-.. note::
-
-    wis2box can make ``WIS2BOX/data/incoming`` accessible via WebDAV by enabling ``docker/extras/docker-compose.webdav.yml``.
-
-
 Summary
 -------
 
