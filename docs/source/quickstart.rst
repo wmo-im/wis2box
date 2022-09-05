@@ -12,9 +12,9 @@ wis2box requires the following prior to installation:
    :header: Requirement,Version
    :align: left
 
-   `Python`_,3.8
-   `Docker Engine`_, 20.10.14
-   `Docker Compose`_,2.4.1
+   `Python`_,3.8 (or greater)
+   `Docker Engine`_, 20.10.14 (or greater)
+   `Docker Compose`_1.29.2 (or greater)
 
 If these are already installed, you can skip to installing wis2box.
 
@@ -27,7 +27,7 @@ Successful installation can be confirmed by inspecting the versions on your syst
 .. code-block:: bash
 
     docker version
-    docker compose version
+    docker-compose version
     python3 -V
 
 .. code-block:: bash
@@ -69,9 +69,24 @@ Copy this file in the directory you defined for /your/data/directory/
 
 And update the file for your stations.
 
-.. note::
+To enable the wis2box-api and wis2box-ui to show your data disovery-metadata needs to be setup. You can setup a metadata-discovery file from the example
 
-    For more information on configuration, see :ref:`configuration`
+.. code-bloc:: bash
+
+    cp config_examples/surface-weather-observations.yml /your/data/directory/surface-weather-observations.yml
+
+And edit the file to provide the correct metadata for your dataset.
+* replace 'member_code3.center_id.data.core.weather.surface-based-observations.SYNOP' with the topic you used in data-mappings.yml previously*
+
+wis2box build
+-------------
+
+Please run the 'build'-command when setting up wis2box for the first time. This will start the process of building the wis2box containers from source.
+
+.. code-block:: bash
+    python3 wis2box-ctl.py build
+
+This might take a while. 
 
 wis2box start
 -------------
@@ -81,38 +96,24 @@ Start wis2box with Docker Compose and login to the wis2box container:
 .. code-block:: bash
 
     python3 wis2box-ctl.py start
-    python3 wis2box-ctl.py status --all # The --all flag shows all containers, even ones that are down.
+    python3 wis2box-ctl.py status
     
-python3 wis2box-ctl.py login
+Check that all services are running (and not unhealthy). If neccessary repeat the command until all services are up and running.
 
-Once logged in, verify the enviroment:
+setup api publication
+---------------------
 
-.. code-block:: bash
-
-    wis2box environment show
-
-setup processing and api publication
-------------------------------------
-
-First login
+Login to the wis2box-container
 
 .. code-block:: bash
     python3 wis2box-ctl.py login
 
-Once logged in, verify the enviroment:
-
-.. code-block:: bash
-
-    wis2box environment show
-
 Setup observation data processing and API publication:
-
-* Remember to replace 'member_code3.center_id.data.core.weather.surface-based-observations.SYNOP' with the topic you used in data-mappings.yml previously*
+Note: $WIS2BOX_DATADIR binds to the $WIS2BOX_HOST_DATADIR sets up previously, allowing this commands to access the 'surface-weather-observations.yml' you've prepared.
 
 .. code-block:: bash
 
     wis2box api add-collection --topic-hierarchy member_code3.center_id.data.core.weather.surface-based-observations.SYNOP $WIS2BOX_DATADIR/surface-weather-observations.yml
-
 
 Cache and publish station collection and discovery metadata to the API:
 
@@ -120,6 +121,22 @@ Cache and publish station collection and discovery metadata to the API:
 
     wis2box metadata discovery publish $WIS2BOX_DATADIR/surface-weather-observations.yml
     wis2box metadata station sync $WIS2BOX_DATADIR/station_list.csv
+
+Logout of wis2box container:
+
+.. code-block:: bash
+
+    exit
+
+test data ingestion
+-------------------
+
+Prepare a set of data to ingest in a folder called 'observations' in your '/your/data/directory'
+
+Login to the wis2box-container
+
+.. code-block:: bash
+    python3 wis2box-ctl.py login
 
 Ingest and publish data, using data ingest command to update the wis2box-incoming bucket :
 
