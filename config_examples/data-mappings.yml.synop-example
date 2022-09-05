@@ -1,0 +1,16 @@
+data:
+    member_code3.center_id.data.core.weather.surface-based-observations.SYNOP:
+        plugins:
+            bufr4:
+                - plugin: wis2box.data.bufr4.ObservationDataBUFR
+                  notify: true
+                  buckets:
+                    - ${WIS2BOX_STORAGE_INCOMING}
+                  file-pattern: '^.*\.bufr4$'
+                - plugin: wis2box.data.bufr4.ObservationDataBUFR2GeoJSON
+                  buckets:
+                    - ${WIS2BOX_STORAGE_PUBLIC}
+                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
+            geojson:
+                - plugin: wis2box.data.geojson.ObservationDataGeoJSON
+                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.geojson$'
