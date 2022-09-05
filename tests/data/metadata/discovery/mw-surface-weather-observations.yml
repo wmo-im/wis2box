@@ -1,6 +1,6 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: data.core.observations-surface-land.mw.FWCL.landFixed
+    topic_hierarchy: mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP
     data_category: observationsSurfaceLand
     country_code: mw
     originator: FWCL
@@ -10,7 +10,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: data.core.observations-surface-land.mw.FWCL.landFixed
+    identifier: mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP
     language: en
     language_alternate: fr
     charset: utf8

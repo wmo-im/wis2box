@@ -44,7 +44,7 @@ Setup observation data processing and API publication:
 
 .. code-block:: bash
 
-    wis2box api add-collection --topic-hierarchy data.core.observations-surface-land.mw.FWCL.landFixed $WIS2BOX_DATADIR/metadata/discovery/mw-surface-weather-observations.yml
+    wis2box api add-collection --topic-hierarchy mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP $WIS2BOX_DATADIR/metadata/discovery/mw-surface-weather-observations.yml
 
 
 Cache and publish station collection and discovery metadata to the API:

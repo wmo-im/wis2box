@@ -1,6 +1,6 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: data.core.observations-surface-land.dz.DAMM.landFixed
+    topic_hierarchy: dza.alger_met_centre.data.core.weather.surface-based-observations.SYNOP
     data_category: observationsSurfaceLand
     country_code: dz
     originator: DAMM
@@ -10,7 +10,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: data.core.observations-surface-land.dz.DAMM.landFixed
+    identifier: dza.alger_met_centre.data.core.weather.surface-based-observations.SYNOP
     language: en
     language_alternate: fr
     charset: utf8
