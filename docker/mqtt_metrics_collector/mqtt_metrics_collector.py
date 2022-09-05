@@ -52,7 +52,7 @@ INTERRUPT = False
 def sub_connect(client, userdata, flags, rc, properties=None):
     """
     function executed 'on_connect' for paho.mqtt.client
-    subscribes to xpublic/#
+    subscribes to origin/#
 
     :param client: client-object associated to 'on_connect'
     :param userdata: userdata
@@ -64,7 +64,7 @@ def sub_connect(client, userdata, flags, rc, properties=None):
     """
 
     logger.info(f"on connection to subscribe: {mqtt.connack_string(rc)}")
-    for s in ["xpublic/#"]:
+    for s in ["origin/#"]:
         client.subscribe(s, qos=1)
 
 

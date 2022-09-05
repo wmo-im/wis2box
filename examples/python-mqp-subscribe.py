@@ -38,7 +38,7 @@ messageCountMaximum = 5
 
 def sub_connect(client, userdata, flags, rc, properties=None):
     print("on connection to subscribe:", mqtt.connack_string(rc))
-    for s in ["xpublic/#"]:
+    for s in ["origin/#"]:
         client.subscribe(s, qos=1)
 
 
