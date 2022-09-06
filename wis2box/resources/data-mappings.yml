@@ -12,7 +12,7 @@ data:
             geojson:
                 - plugin: wis2box.data.geojson.ObservationDataGeoJSON
                   file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.geojson$'
-    ita.roma_met_centre.core.weather.surface-based-observations.SYNOP:
+    ita.roma_met_centre.data.core.weather.surface-based-observations.SYNOP:
         plugins:
             bin:
                 - plugin: wis2box.data.bufr4.ObservationDataBUFR

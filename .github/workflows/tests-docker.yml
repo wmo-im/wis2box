@@ -56,7 +56,7 @@ jobs:
           && wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA"
     - name: add Italy data 🇮🇹
       env:
-        TOPIC_HIERARCHY: ita.roma_met_centre.core.weather.surface-based-observations.SYNOP
+        TOPIC_HIERARCHY: ita.roma_met_centre.data.core.weather.surface-based-observations.SYNOP
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/it-surface-weather-observations.yml
         TEST_DATA: /data/wis2box/observations/italy
       run: |
