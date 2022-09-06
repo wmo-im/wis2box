@@ -75,8 +75,13 @@ To enable the wis2box-api and wis2box-ui to show your data disovery-metadata nee
 
     cp config_examples/surface-weather-observations.yml /your/data/directory/surface-weather-observations.yml
 
-And edit the file to provide the correct metadata for your dataset.
+And edit the file /your/data/directory/surface-weather-observations.yml to provide the correct metadata for your dataset:
+
 * replace 'member_code3.center_id.data.core.weather.surface-based-observations.SYNOP' with the topic you used in data-mappings.yml previously*
+
+* text provided in title and abstract will be displayed in wis2box-ui *
+
+* provide a valid bounding-box in bbox *
 
 wis2box build
 -------------
