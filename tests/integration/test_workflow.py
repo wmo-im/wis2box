@@ -75,7 +75,7 @@ def test_metadata_discovery_publish():
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP').json()  # noqa
 
-    assert r['id'] == 'mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP'
+    assert r['id'] == 'mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP' #noqa
     assert r['properties']['title'] == 'Surface weather observations from Malawi' # noqa
 
     assert len(r['links']) == 7
