@@ -105,8 +105,7 @@ def test_metadata_discovery_publish():
 
 def test_data_ingest():
     """Test data ingest/process publish"""
-
-    item = '2021-07-07/mwi/mwi_met_centre/data/core/weather/surface-based-observations/SYNOP/WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500-82.geojson'  # noqa
+    item = '2021-07-07/wis/mwi/mwi_met_centre/data/core/weather/surface-based-observations/SYNOP/WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500-82.geojson'  # noqa
 
     r = SESSION.get(f'{URL}/data/{item}')  # noqa
     assert r.status_code == codes.ok
