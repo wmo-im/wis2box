@@ -49,10 +49,10 @@ And update it to suit your needs. *You must replace '/your/data/directory'* with
 
 Wis2box configuration requires a file data-mapping.yml. 
 
-Baselines are provided in config_examples :
+Baselines are provided in config_examples/ :
 
-* config_example/data-mappings.yml.example-synop-bufr, input is .bufr containing SYNOP observation-data
-* config_example/data-mappings.yml.example-synop-csv, input is .csv containing SYNOP observation-data
+* config_examples/data-mappings.yml.example-synop-bufr, input is .bufr containing SYNOP observation-data
+* config_examples/data-mappings.yml.example-synop-csv, input is .csv containing SYNOP observation-data
 
 For example for publishing .bufr files with SYNOP data: 
 Copy this file in the directory you defined for /your/data/directory/
