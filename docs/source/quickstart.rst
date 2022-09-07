@@ -45,7 +45,7 @@ Wis2box will read environment variables from dev.env. A baseline is provided in 
 
     cp config_examples/dev.env.example dev.env
 
-And update it to suit your needs. *You must replace '/your/data/directory'* with a valid directory or your host.
+And update it to suit your needs. *You must replace '/your/data/directory'* with a valid directory on your host.
 
 Wis2box configuration requires a file data-mapping.yml. 
 
