@@ -14,7 +14,7 @@ wis2box requires the following prior to installation:
 
    `Python`_,3.8 (or greater)
    `Docker Engine`_, 20.10.14 (or greater)
-   `Docker Compose`_1.29.2 (or greater)
+   `Docker Compose`_,1.29.2 (or greater)
 
 If these are already installed, you can skip to installing wis2box.
 
@@ -49,21 +49,27 @@ And update it to suit your needs. *You must replace '/your/data/directory'* with
 
 Wis2box configuration requires a file data-mapping.yml. 
 
-Baselines are provided in config_examples/data-mapping.yml.example-* 
+Baselines are provided in config_examples :
 
-For example for publishing *.bufr4 files with SYNOP data: 
+* config_example/data-mappings.yml.example-synop-bufr, input is .bufr containing SYNOP observation-data
+* config_example/data-mappings.yml.example-synop-csv, input is .csv containing SYNOP observation-data
+
+For example for publishing .bufr files with SYNOP data: 
 Copy this file in the directory you defined for /your/data/directory/
 
-.. code-bloc:: bash
+.. code-block:: bash
 
     cp config_examples/data-mapping.yml.example-synop-bufr /your/data/directory/data-mappings.yml
-
-Edit /your/data/directory/data-mappings.yml and change 'member_code3.center_id.data.core.weather.surface-based-observations.SYNOP' to replace 'member_code3' with your corresponding 3-letter location-code and 'center_id' with the unique ID for your MET-center. 
+    
+Edit /your/data/directory/data-mappings.yml and change 'ISO3C_country.center_id.data.core.weather.surface-based-observations.SYNOP':
+    
+    * replace 'ISO3C_country' with your corresponding ISO 3166 alpha-3 code.
+    * replace 'center_id' with the string identifying the center running the wis2node.
 
 wis2box needs to have a station_list.csv that contains the stations you will process, an example is provided in config_example/station_list.csv.example
 Copy this file in the directory you defined for /your/data/directory/
 
-.. code-bloc:: bash
+.. code-block:: bash
 
     cp config_examples/station_list.csv.example /your/data/directory/station_list.csv
 
@@ -71,13 +77,13 @@ And update the file for your stations.
 
 To enable the wis2box-api and wis2box-ui to show your data disovery-metadata needs to be setup. You can setup a metadata-discovery file from the example
 
-.. code-bloc:: bash
+.. code-block:: bash
 
     cp config_examples/surface-weather-observations.yml /your/data/directory/surface-weather-observations.yml
 
 And edit the file /your/data/directory/surface-weather-observations.yml to provide the correct metadata for your dataset:
 
-* replace 'member_code3.center_id.data.core.weather.surface-based-observations.SYNOP' with the topic you used in data-mappings.yml previously*
+* replace 'ISO3C_country.center_id.data.core.weather.surface-based-observations.SYNOP' with the topic you used in data-mappings.yml previously*
 
 * text provided in title and abstract will be displayed in wis2box-ui *
 
@@ -89,6 +95,7 @@ wis2box build
 Please run the 'build'-command when setting up wis2box for the first time. This will start the process of building the wis2box containers from source.
 
 .. code-block:: bash
+    
     python3 wis2box-ctl.py build
 
 This might take a while. 
@@ -111,6 +118,7 @@ setup api publication
 Login to the wis2box-container
 
 .. code-block:: bash
+    
     python3 wis2box-ctl.py login
 
 Setup observation data processing and API publication:
@@ -118,7 +126,7 @@ Note: $WIS2BOX_DATADIR binds to the $WIS2BOX_HOST_DATADIR sets up previously, al
 
 .. code-block:: bash
 
-    wis2box api add-collection --topic-hierarchy member_code3.center_id.data.core.weather.surface-based-observations.SYNOP $WIS2BOX_DATADIR/surface-weather-observations.yml
+    wis2box api add-collection --topic-hierarchy ISO3C_country.center_id.data.core.weather.surface-based-observations.SYNOP $WIS2BOX_DATADIR/surface-weather-observations.yml
 
 Cache and publish station collection and discovery metadata to the API:
 
@@ -162,6 +170,7 @@ Not seeing any data for your datasets on the wis2box-ui ?
 After data has been ingested for a station for the first time, you need to re-publish the stations collection to additionally include link relations to collections with observations published from that station:
 
 .. code-block:: bash
+    
     python3 wis2box-ctl.py login
     wis2box metadata station publish-collection
     exit
