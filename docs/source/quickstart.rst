@@ -133,35 +133,39 @@ Logout of wis2box container:
 
     exit
 
-test data ingestion
--------------------
+From here, you can run ``python3 wis2box-ctl.py status`` to confirm that containers are running.
 
-Prepare a set of data to ingest in a folder called 'observations' in your '/your/data/directory'
+Congratulations your wis2box is now setup!
 
-Login to the wis2box-container
+data ingestion
+--------------
+
+You will want to test it by uploading data to the 'wis2box-incoming'-storage. 
+
+To access the storage-component visit http://localhost:3000 in your web browser. The default username/password is minio/minio123
+
+debugging
+---------
+
+Something's now working? The wis2box includes a local grafana-instance to help you collect and view logs and figure out what's wrong.
+
+Visit http://localhost:8999 in your local web browser to view the local grafana instance.
+
+wis2box-ui
+----------
+
+The wis2box includes a UI to view the data that has been ingested.
+
+To explore your wis2box-ui visit http://localhost:8999 in your web browser. 
+
+Not seeing any data for your datasets on the wis2box-ui ?
+After data has been ingested for a station for the first time, you need to re-publish the stations collection to additionally include link relations to collections with observations published from that station:
 
 .. code-block:: bash
     python3 wis2box-ctl.py login
-
-Ingest and publish data, using data ingest command to update the wis2box-incoming bucket :
-
-.. code-block:: bash
-
-    wis2box data ingest --topic-hierarchy member_code3.center_id.data.core.weather.surface-based-observations.SYNOP --path $WIS2BOX_DATADIR/observations
-
-Re-publish the stations collection to additionally include link relations to collections with observations published from that station:
-
-.. code-block:: bash
-
     wis2box metadata station publish-collection
-
-Logout of wis2box container:
-
-.. code-block:: bash
-
     exit
 
 
-From here, you can run ``python3 wis2box-ctl.py status`` to confirm that containers are running.
 
-To explore your wis2box installation and services, visit http://localhost:8999 in your web browser.
+
