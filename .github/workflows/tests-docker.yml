@@ -40,45 +40,39 @@ jobs:
         docker logs wis2box
     - name: setup wis2box ⚙️
       run: |
-        docker exec wis2box sh -c " \
-          wis2box environment create \
-          && wis2box environment show \
-          && wis2box api setup"
+        python3 wis2box-ctl.py execute wis2box environment create
+        python3 wis2box-ctl.py execute wis2box environment show
     - name: add Malawi data 🇲🇼
       env:
         TOPIC_HIERARCHY: mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/mw-surface-weather-observations.yml
         TEST_DATA: /data/wis2box/observations/malawi
       run: |
-        docker exec wis2box sh -c " \
-          wis2box metadata discovery publish $DISCOVERY_METADATA \
-          && wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOVERY_METADATA \
-          && wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA"
+        python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
+        python3 wis2box-ctl.py execute wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOVERY_METADATA
+        python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
     - name: add Italy data 🇮🇹
       env:
         TOPIC_HIERARCHY: ita.roma_met_centre.data.core.weather.surface-based-observations.SYNOP
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/it-surface-weather-observations.yml
         TEST_DATA: /data/wis2box/observations/italy
       run: |
-        docker exec wis2box sh -c " \
-          wis2box metadata discovery publish $DISCOVERY_METADATA \
-          && wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOVERY_METADATA \
-          && wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA"
+        python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
+        python3 wis2box-ctl.py execute wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOVERY_METADATA
+        python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
     - name: add Algeria data 🇩🇿
       env:
         TOPIC_HIERARCHY: dza.alger_met_centre.data.core.weather.surface-based-observations.SYNOP
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/dz-surface-weather-observations.yml
         TEST_DATA: /data/wis2box/observations/algeria
       run: |
-        docker exec wis2box sh -c " \
-          wis2box metadata discovery publish $DISCOVERY_METADATA \
-          && wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOVERY_METADATA \
-          && wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA"
+        python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
+        python3 wis2box-ctl.py execute wis2box api add-collection -th $TOPIC_HIERARCHY $DISCOVERY_METADATA
+        python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
     - name: sync stations 🔄
       run: |
         sleep 30
-        docker exec wis2box sh -c ' \
-          wis2box metadata station sync /data/wis2box/metadata/station/station_list.csv'
+        python3 wis2box-ctl.py execute wis2box metadata station sync /data/wis2box/metadata/station/station_list.csv
     - name: run integration tests ⚙️
       run: |
         sleep 5

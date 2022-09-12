@@ -46,6 +46,7 @@ commands = [
     'build',
     'config',
     'down',
+    'execute',
     'lint',
     'logs',
     'login',
@@ -156,6 +157,8 @@ def make(args) -> None:
                 run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} --file docker/docker-compose.dev.yml up'))
             else:
                 run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} up -d'))
+    elif args.command == "execute":
+        run(args, ['docker', 'exec', '-i', 'wis2box', 'sh', '-c', containers])
     elif args.command == "login":
         run(args, split(f'docker exec -it {container} /bin/bash'))
     elif args.command == "login-root":
