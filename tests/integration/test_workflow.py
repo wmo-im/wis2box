@@ -73,9 +73,9 @@ def test_metadata_discovery_publish():
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items').json()
     assert r['numberMatched'] == 3
 
-    r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/data.core.observations-surface-land.mw.FWCL.landFixed').json()  # noqa
+    r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP').json()  # noqa
 
-    assert r['id'] == 'data.core.observations-surface-land.mw.FWCL.landFixed'
+    assert r['id'] == 'mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP' # noqa
     assert r['properties']['title'] == 'Surface weather observations from Malawi' # noqa
 
     assert len(r['links']) == 7
@@ -105,8 +105,7 @@ def test_metadata_discovery_publish():
 
 def test_data_ingest():
     """Test data ingest/process publish"""
-
-    item = '2021-07-07/wis/data/core/observations-surface-land/mw/FWCL/landFixed/WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500-82.geojson'  # noqa
+    item = '2021-07-07/wis/mwi/mwi_met_centre/data/core/weather/surface-based-observations/SYNOP/WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500-82.geojson'  # noqa
 
     r = SESSION.get(f'{URL}/data/{item}')  # noqa
     assert r.status_code == codes.ok
@@ -117,7 +116,7 @@ def test_data_ingest():
     assert item_waf['properties']['resultTime'] == '2021-07-07T14:55:00Z'  # noqa
 
 
-    item_api_url = f'{API_URL}/collections/data.core.observations-surface-land.mw.FWCL.landFixed/items/{item_waf["id"]}'  # noqa
+    item_api_url = f'{API_URL}/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP/items/{item_waf["id"]}'  # noqa
 
     item_api = SESSION.get(item_api_url).json()
 
@@ -131,7 +130,7 @@ def test_data_ingest():
 def test_data_api():
     """Test data API collection queries"""
 
-    url = f'{API_URL}/collections/data.core.observations-surface-land.mw.FWCL.landFixed/items'  # noqa
+    url = f'{API_URL}/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP/items'  # noqa
 
     # filter by WIGOS station identifier
     params = {

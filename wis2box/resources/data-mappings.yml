@@ -1,5 +1,5 @@
 data:
-    data.core.observations-surface-land.mw.FWCL.landFixed:
+    mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP:
         plugins:
             csv:
                 - plugin: wis2box.data.observations.ObservationDataCSV
@@ -12,7 +12,7 @@ data:
             geojson:
                 - plugin: wis2box.data.geojson.ObservationDataGeoJSON
                   file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.geojson$'
-    data.core.observations-surface-land.it.LIIB.landFixed:
+    ita.roma_met_centre.data.core.weather.surface-based-observations.SYNOP:
         plugins:
             bin:
                 - plugin: wis2box.data.bufr4.ObservationDataBUFR
@@ -24,7 +24,7 @@ data:
             geojson:
                 - plugin: wis2box.data.geojson.ObservationDataGeoJSON
                   file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.geojson$'
-    data.core.observations-surface-land.dz.DAMM.landFixed:
+    dza.alger_met_centre.data.core.weather.surface-based-observations.SYNOP:
         plugins:
             bufr4:
                 - plugin: wis2box.data.bufr4.ObservationDataBUFR

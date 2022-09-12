@@ -1,16 +1,16 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: dza.alger_met_centre.data.core.weather.surface-based-observations.SYNOP
+    topic_hierarchy: ISO3C_country.center_id.data.core.weather.surface-based-observations.SYNOP
     data_category: observationsSurfaceLand
-    country_code: dz
-    originator: DAMM
+    country_code: ISO3C_country
+    originator: center_id
     station_type: landFixed
 
 mcf:
     version: 1.0
 
 metadata:
-    identifier: dza.alger_met_centre.data.core.weather.surface-based-observations.SYNOP
+    identifier: ISO3C_country.center_id.data.core.weather.surface-based-observations.SYNOP
     language: en
     language_alternate: fr
     charset: utf8
@@ -25,9 +25,9 @@ identification:
     language: en
     charset: utf8
     title:
-        en: Surface weather observations from Algeria
+        en: Surface weather observations from ISO3C_country.center_id
     abstract:
-        en: Surface weather observations from Algeria
+        en: Surface weather observations from ISO3C_country.center_id
     dates:
         creation: 2021-11-29
         publication: 2021-11-29
@@ -50,7 +50,7 @@ identification:
         wis2:
             keywords:
                 en:
-                    - dz.algeria.weatherObservations.dataset_name
+                    - ISO3C_country.center_id.dataset_name
             keywords_type: theme
             vocabulary:
                 name:
@@ -61,7 +61,7 @@ identification:
         - climatologyMeteorologyAtmosphere
     extents:
         spatial:
-            - bbox: [-8.68439978681, 19.0573642034, 11.9995056495, 37.1183806422]
+            - bbox: [0., 360., -90., 90.]
               crs: 4326
         temporal:
             - begin: 2021-11-29
@@ -71,14 +71,14 @@ identification:
     accessconstraints: otherRestrictions
     rights:
         en: WMO Unified Policy for the International Exchange of Earth System Data
-    url: https://example.org/malawi-surface-weather-observations
+    url: your.url
     status: onGoing
     maintenancefrequency: continual
 
 contact:
     pointOfContact: &contact_poc
-        organization: Department of Climate Change and Meteorologial Services (DCCMS)
-        url: NA
+        organization: WMO
+        url: http://contact.url
         individualname: Firstname Lastname
         positionname: Position Name
         phone: NA

@@ -131,7 +131,7 @@ class BaseAbstractData:
             'url': BROKER_PUBLIC
         }
         broker = load_plugin('pubsub', defs)
-        topic = f'xpublic/origin/a/wis2/{self.topic_hierarchy.dirpath}'
+        topic = f'origin/a/wis2/{self.topic_hierarchy.dirpath}'
 
         # publish using filename as identifier
         broker.pub(topic, wis_message.dumps())

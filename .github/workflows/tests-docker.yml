@@ -46,7 +46,7 @@ jobs:
           && wis2box api setup"
     - name: add Malawi data 🇲🇼
       env:
-        TOPIC_HIERARCHY: data.core.observations-surface-land.mw.FWCL.landFixed
+        TOPIC_HIERARCHY: mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/mw-surface-weather-observations.yml
         TEST_DATA: /data/wis2box/observations/malawi
       run: |
@@ -56,7 +56,7 @@ jobs:
           && wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA"
     - name: add Italy data 🇮🇹
       env:
-        TOPIC_HIERARCHY: data.core.observations-surface-land.it.LIIB.landFixed
+        TOPIC_HIERARCHY: ita.roma_met_centre.data.core.weather.surface-based-observations.SYNOP
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/it-surface-weather-observations.yml
         TEST_DATA: /data/wis2box/observations/italy
       run: |
@@ -66,7 +66,7 @@ jobs:
           && wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA"
     - name: add Algeria data 🇩🇿
       env:
-        TOPIC_HIERARCHY: data.core.observations-surface-land.dz.DAMM.landFixed
+        TOPIC_HIERARCHY: dza.alger_met_centre.data.core.weather.surface-based-observations.SYNOP
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/dz-surface-weather-observations.yml
         TEST_DATA: /data/wis2box/observations/algeria
       run: |

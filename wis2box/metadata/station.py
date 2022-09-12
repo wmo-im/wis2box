@@ -41,6 +41,8 @@ STATION_METADATA = DATADIR / 'metadata' / 'station'
 STATIONS = STATION_METADATA / 'station_list.csv'
 
 if STATIONS.exists() is False:
+    if STATION_METADATA.exists() is False:
+        STATION_METADATA.mkdir(parents=True, exist_ok=True)
     with STATIONS.open('w', newline='') as fh:
         writer = csv.writer(fh)
         writer.writerow(
