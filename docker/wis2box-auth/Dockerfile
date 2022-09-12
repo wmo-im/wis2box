@@ -19,7 +19,8 @@
 #
 ###############################################################################
 
-FROM wis2box_project_wis2box
+#FROM wis2box_project_wis2box
+FROM ghcr.io/wmo-im/wis2box:latest
 
 RUN apt-get update -y \
     && pip3 install pip -U \
