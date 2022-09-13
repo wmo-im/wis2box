@@ -227,7 +227,7 @@ def get_valid_wsi(wsi: str = '', tsi: str = '') -> str:
         reader = csv.DictReader(fh)
         for row in reader:
             if wsi == row['wigos_station_identifier'] or \
-               tsi == row['traditional_station_identifier']:
+               (tsi == row['traditional_station_identifier'] and tsi != ''):
                 return row['wigos_station_identifier']
 
 
