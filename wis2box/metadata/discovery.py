@@ -98,6 +98,7 @@ class DiscoveryMetadata(BaseMetadata):
 
         return record
 
+
 def gcm() -> dict:
     """
     Gets collection metadata for API provisioning
@@ -153,7 +154,7 @@ def publish(ctx, filepath, verbosity):
 def unpublish(ctx, identifier, verbosity):
     """Deletes a discovery metadata record from the catalogue"""
 
-    click.echo('Unpublishing discovery metadata {identifier}')
+    click.echo(f'Unpublishing discovery metadata {identifier}')
     delete_collection_item('discovery-metadata', identifier)
 
 

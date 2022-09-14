@@ -29,12 +29,13 @@ LOGGER = logging.getLogger(__name__)
 
 def setup_collection(meta: dict = {}) -> bool:
     """
-    Add collection to api backend and mcf or collection configuration
+    Add collection to api backend and configuration
 
     :param meta: `dict` of collection metadata
 
     :returns: `bool` of API collection metadata
     """
+
     try:
         collection_id = meta['id']
     except KeyError:
