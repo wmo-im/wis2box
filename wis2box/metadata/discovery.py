@@ -98,17 +98,14 @@ class DiscoveryMetadata(BaseMetadata):
 
         return record
 
-
-def publish_collection() -> bool:
+def gcm() -> dict:
     """
-    Publish discovery metadata collection
+    Gets collection metadata for API provisioning
 
-    :returns: `bool` of publish result
+    :returns: `dict` of collection metadata
     """
 
-    LOGGER.debug('Adding to API configuration')
-
-    meta = {
+    return {
         'id': 'discovery-metadata',
         'type': 'record',
         'title': 'Discovery metadata',
@@ -120,10 +117,6 @@ def publish_collection() -> bool:
         'time_field': 'created',
         'title_field': 'title',
     }
-
-    setup_collection('discovery-metadata', meta=meta)
-
-    return True
 
 
 @click.group('discovery')
@@ -139,13 +132,14 @@ def discovery_metadata():
 def publish(ctx, filepath, verbosity):
     """Inserts or updates discovery metadata to catalogue"""
 
+    setup_collection(meta=gcm())
+
     click.echo(f'Publishing discovery metadata from {filepath.name}')
     try:
         dm = DiscoveryMetadata()
         record = dm.parse_record(filepath.read())
         record = dm.generate(record)
         upsert_collection_item('discovery-metadata', record)
-        publish_collection()
     except Exception as err:
         raise click.ClickException(err)
 

@@ -27,18 +27,18 @@ from wis2box.api.config import load_config
 LOGGER = logging.getLogger(__name__)
 
 
-def setup_collection(collection_id: str, meta: dict = {}) -> bool:
+def setup_collection(meta: dict = {}) -> bool:
     """
     Add collection to api backend and mcf or collection configuration
 
-    :param collection_id: `str` of collection name
     :param meta: `dict` of collection metadata
-
 
     :returns: `bool` of API collection metadata
     """
-    if meta == {}:
-        LOGGER.error(f'Invalid configuration for: {collection_id}')
+    try:
+        collection_id = meta['id']
+    except KeyError:
+        LOGGER.error(f'Invalid configuration: {meta}')
         return False
 
     backend = load_backend()

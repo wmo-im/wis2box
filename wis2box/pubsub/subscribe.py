@@ -31,7 +31,7 @@ from wis2box.env import (BROKER_HOST, BROKER_PORT, BROKER_USERNAME,
                          BROKER_PASSWORD, STORAGE_SOURCE, STORAGE_ARCHIVE)
 from wis2box.handler import Handler
 from wis2box.plugin import load_plugin, PLUGINS
-from wis2box.pubsub.message import generate_collection_metadata as gcm
+from wis2box.pubsub.message import gcm
 
 LOGGER = logging.getLogger(__name__)
 
@@ -78,8 +78,7 @@ def on_message_handler(client, userdata, msg):
 def subscribe(ctx, broker, topic, verbosity):
     """Subscribe to a broker/topic"""
     click.echo('Adding messages collection')
-    meta = gcm()
-    setup_collection('messages', meta=meta)
+    setup_collection(meta=gcm())
 
     click.echo(f'Subscribing to broker {broker}, topic {topic}')
 

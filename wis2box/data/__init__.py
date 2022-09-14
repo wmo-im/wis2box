@@ -89,7 +89,7 @@ def clean_data(source_path: str, days: int) -> None:
     delete_collections_by_retention(days)
 
 
-def generate_collection_metadata(mcf: dict) -> dict:
+def gcm(mcf: dict) -> dict:
     """
     Generate collection metadata from metadata control file
 
@@ -203,12 +203,9 @@ def add_collection(ctx, filepath, topic_hierarchy, verbosity):
     if topic_hierarchy is None:
         raise click.ClickException('Missing -th/--topic-hierarchy')
 
-    click.echo('Generating collection metadata')
-    meta = generate_collection_metadata(filepath.read())
-
     th, _ = validate_and_load(topic_hierarchy)
     click.echo(f'Adding collection: {th.dotpath}')
-    setup_collection(th.dotpath, meta=meta)
+    setup_collection(meta=gcm(filepath.read()))
 
     click.echo("Done")
 

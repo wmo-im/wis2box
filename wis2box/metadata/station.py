@@ -53,7 +53,7 @@ if STATIONS.exists() is False:
         )
 
 
-def generate_collection_metadata() -> dict:
+def gcm() -> dict:
     """
     Gets collection metadata for API provisioning
 
@@ -151,8 +151,7 @@ def publish_station_collection() -> None:
     :returns: `None`
     """
 
-    meta = generate_collection_metadata()
-    setup_collection('stations', meta=meta)
+    setup_collection(meta=gcm())
 
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
