@@ -3,6 +3,7 @@ jupyter
 nbsphinx
 pypandoc
 pytest
+pyzmq==23.2.1
 requests
 sphinx
 twine

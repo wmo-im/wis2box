@@ -1,0 +1,4 @@
+ipython_genutils
+jinja2==3.0.3
+nbsphinx
+pyzmq==23.2.1
