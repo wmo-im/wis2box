@@ -82,7 +82,7 @@ jobs:
     - name: build docs ⚙️
       uses: ammaraskar/sphinx-action@master
       with:
-        pre-build-command: "apt-get install -y pandoc && pip3 install nbsphinx ipython_genutils jinja2==3.0.3"
+        pre-build-command: "apt-get install -y pandoc"
         docs-folder: "docs/"
     - name: failed tests 🚩
       if: ${{ failure() }}
