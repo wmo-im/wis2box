@@ -143,7 +143,7 @@ class ObservationDataBUFR(BaseAbstractData):
         #   - if None, use geometry from station report
         # - check for time,
         #   - if temporal extent, use end time
-        #   - TODO: if None, fix (use processing datetime?)
+        #   - set times in header
         # - write a separate BUFR
 
         with open(tmp.name, 'rb') as fh:
@@ -239,11 +239,25 @@ class ObservationDataBUFR(BaseAbstractData):
                         data_date = data_date[1]
                     isodate = datetime.strptime(
                         data_date, '%Y-%m-%dT%H:%M:%SZ'
-                    ).strftime('%Y%m%dT%H%M%S')
+                    )
                 except Exception as err:
                     LOGGER.warning(f'Invalid time: {data_date} {err}')
                     LOGGER.error(f'Failed to publish: {wsi}')
                     continue
+
+                field_names = [
+                    'typicalYear',
+                    'typicalMonth',
+                    'typicalDay',
+                    'typicalHour',
+                    'typicalMinute',
+                    'typicalSecond'
+                ]
+                patterns = ['%Y', '%m', '%d', '%H', '%M', '%S']
+                for (name, p) in zip(field_names, patterns):
+                    LOGGER.error(isodate.strftime(p))
+                    codes_set(template, name, int(isodate.strftime(p)))
+                isodate = isodate.strftime('%Y%m%dT%H%M%S')
 
                 rmk = f"WIGOS_{wsi}_{isodate}"
                 LOGGER.info(f'Publishing with identifier: {rmk}')
