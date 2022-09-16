@@ -149,9 +149,9 @@ def make(args) -> None:
             f'docker-compose {DOCKER_COMPOSE_ARGS} build {containers}'))
     elif args.command in ["up", "start", "start-dev"]:
         run(args, split(
-            'docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions'))
+            'docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions > /dev/null 2>&1'))
         if containers:
-            run(args, split(f"docker start {containers}"))
+            run(args, split(f"docker-compose {DOCKER_COMPOSE_ARGS} start {containers}"))
         else:
             if args.command == 'start-dev':
                 run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} --file docker/docker-compose.dev.yml up'))
@@ -168,13 +168,14 @@ def make(args) -> None:
             f'docker-compose {DOCKER_COMPOSE_ARGS} logs --follow {containers}'))
     elif args.command in ["stop", "down"]:
         if containers:
-            run(args, split(f"docker stop {containers}"))
+            run(args, split(f"docker-compose {DOCKER_COMPOSE_ARGS} {containers}"))
         else:
             run(args, split(
                 f'docker-compose {DOCKER_COMPOSE_ARGS} down --remove-orphans {containers}'))
     elif args.command == "update":
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} pull'))
     elif args.command == "prune":
+        run(args, split('docker builder prune -f'))
         run(args, split('docker container prune -f'))
         run(args, split('docker volume prune -f'))
         _ = run(args,
@@ -184,8 +185,16 @@ def make(args) -> None:
         _ = run(args, split('docker ps -a -q'), asciiPipe=True)
         run(args, split(f'docker rm {_}'))
     elif args.command == "restart":
-        run(args, split(
-            f'docker-compose {DOCKER_COMPOSE_ARGS} restart {containers}'))
+        if containers:
+            run(args, split(
+                f'docker-compose {DOCKER_COMPOSE_ARGS} stop {containers}'))
+            run(args, split(
+                f'docker-compose {DOCKER_COMPOSE_ARGS} start {containers}'))
+        else:
+            run(args, split(
+                f'docker-compose {DOCKER_COMPOSE_ARGS} down --remove-orphans'))
+            run(args, split(
+                f'docker-compose {DOCKER_COMPOSE_ARGS} up -d'))
     elif args.command == "status":
         run(args, split(
             f'docker-compose {DOCKER_COMPOSE_ARGS} ps {containers}'))
