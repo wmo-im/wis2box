@@ -37,21 +37,26 @@ def setup_collection(meta: dict = {}) -> bool:
     """
 
     try:
-        collection_id = meta['id']
+        name = meta['id']
     except KeyError:
         LOGGER.error(f'Invalid configuration: {meta}')
         return False
 
     backend = load_backend()
-    if backend.has_collection(collection_id) is False:
-        backend.add_collection(collection_id)
+    if backend.has_collection(name) is False:
+        backend.add_collection(name)
 
     api_config = load_config()
-    if api_config.has_collection(collection_id) is False:
+    if api_config.has_collection(name) is False:
         collection = api_config.prepare_collection(meta)
-        api_config.add_collection(collection_id, collection)
+        api_config.add_collection(name, collection)
 
-    return True
+    if backend.has_collection(name) is False or \
+       api_config.has_collection(name) is False:
+        LOGGER.error(f'Unable to setup collection for {name}')
+        return False
+    else:
+        return True
 
 
 def remove_collection(collection_id: str) -> bool:
