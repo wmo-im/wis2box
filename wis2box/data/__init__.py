@@ -195,17 +195,17 @@ def ingest(ctx, topic_hierarchy, path, recursive, verbosity):
 @click.command()
 @click.pass_context
 @cli_helpers.ARGUMENT_FILEPATH
-@cli_helpers.OPTION_TOPIC_HIERARCHY
 @cli_helpers.OPTION_VERBOSITY
-def add_collection(ctx, filepath, topic_hierarchy, verbosity):
+def add_collection(ctx, filepath, verbosity):
     """Add collection index to API backend"""
 
-    if topic_hierarchy is None:
-        raise click.ClickException('Missing -th/--topic-hierarchy')
+    meta = gcm(filepath.read())
+    topic_hierarchy = meta['id']
 
     th, _ = validate_and_load(topic_hierarchy)
+
     click.echo(f'Adding collection: {th.dotpath}')
-    setup_collection(meta=gcm(filepath.read()))
+    setup_collection(meta=meta)
 
     click.echo("Done")
 
