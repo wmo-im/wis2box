@@ -96,7 +96,6 @@ services:
       - ../dev.env
     volumes:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
-      - ./wis2box/wis2box.cron:/etc/cron.d/wis2box:ro
     depends_on:
       minio:
         condition: service_healthy

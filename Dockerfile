@@ -60,6 +60,10 @@ RUN cd /app \
 
 WORKDIR /home/wis2box
 
+# add wis2box.cron to crontab
+COPY ./docker/wis2box/wis2box.cron /etc/cron.d/wis2box.cron
+RUN cat /etc/cron.d/wis2box.cron > /etc/crontab && crontab /etc/crontab
+
 COPY ./docker/entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT [ "/entrypoint.sh" ]

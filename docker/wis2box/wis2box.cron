@@ -1,5 +1,3 @@
-# Clean out files older than WIS2BOX_DATA_RETENTION_DAYS daily at 0Z
-0 0 * * * wis2box data clean --days=$WIS2BOX_DATA_RETENTION_DAYS
-
-# Archive data daily at 1Z
-0 1 * * * wis2box data archive
+0 0 * * * wis2box data clean --days=$WIS2BOX_DATA_RETENTION_DAYS > /proc/1/fd/1 2>/proc/1/fd/2
+0 1 * * * wis2box data archive > /proc/1/fd/1 2>/proc/1/fd/2
+*/10 * * * * echo "wis2box.cron is alive" > /proc/1/fd/1 2>/proc/1/fd/2
