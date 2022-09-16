@@ -57,7 +57,7 @@ To delete the colection from the API backend and configuration:
 
 .. code-block:: bash
 
-   wis2box api delete-collection --topic-hierarchy foo.bar.baz
+   wis2box api delete-collection foo.bar.baz
 
 
 .. note::

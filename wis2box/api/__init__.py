@@ -19,10 +19,12 @@
 #
 ###############################################################################
 
+import click
 import logging
 
 from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
+from wis2box import cli_helpers
 
 LOGGER = logging.getLogger(__name__)
 
@@ -33,7 +35,7 @@ def setup_collection(meta: dict = {}) -> bool:
 
     :param meta: `dict` of collection metadata
 
-    :returns: `bool` of API collection metadata
+    :returns: `bool` of API collection setup result
     """
 
     try:
@@ -59,24 +61,29 @@ def setup_collection(meta: dict = {}) -> bool:
         return True
 
 
-def remove_collection(collection_id: str) -> bool:
+def remove_collection(name: str) -> bool:
     """
     Add collection to api backend and mcf or collection configuration
 
-    :param collection_id: `str` of collection name
+    :param name: `str` of collection name
 
-    :returns: `bool` of API collection metadata
+    :returns: `bool` of API collection removal result
     """
 
     backend = load_backend()
-    if backend.has_collection(collection_id) is True:
-        backend.delete_collection(collection_id)
+    if backend.has_collection(name) is True:
+        backend.delete_collection(name)
 
     api_config = load_config()
-    if api_config.has_collection(collection_id) is True:
-        api_config.delete_add_collection(collection_id)
+    if api_config.has_collection(name) is True:
+        api_config.delete_add_collection(name)
 
-    return True
+    if backend.has_collection(name) is True or \
+       api_config.has_collection(name) is True:
+        LOGGER.error(f'Unable to remove collection for {name}')
+        return False
+    else:
+        return True
 
 
 def upsert_collection_item(collection_id: str, item: dict) -> str:
@@ -117,3 +124,39 @@ def delete_collections_by_retention(days: int) -> None:
     """
     backend = load_backend()
     backend.delete_collections_by_retention(days)
+
+
+@click.group()
+def api():
+    """API management"""
+    pass
+
+
+@click.command()
+@click.pass_context
+@cli_helpers.ARGUMENT_FILEPATH
+@cli_helpers.OPTION_VERBOSITY
+def add_collection(ctx, filepath, verbosity):
+    """Delete collection from api backend"""
+
+    if setup_collection(meta=filepath.read()) is False:
+        click.echo('Unable to add collection')
+
+    click.echo('Done')
+
+
+@click.command()
+@click.pass_context
+@click.argument('collection')
+@cli_helpers.OPTION_VERBOSITY
+def delete_collection(ctx, collection, verbosity):
+    """Delete collection from api backend"""
+
+    if remove_collection(collection) is False:
+        click.echo('Unable to delete collection')
+
+    click.echo('Done')
+
+
+api.add_command(add_collection)
+api.add_command(delete_collection)
