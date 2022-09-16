@@ -151,7 +151,7 @@ def make(args) -> None:
         run(args, split(
             'docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions'))
         if containers:
-            run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} up -d {containers}'))
+            run(args, split(f"docker start {containers}"))
         else:
             if args.command == 'start-dev':
                 run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} --file docker/docker-compose.dev.yml up'))
@@ -184,7 +184,6 @@ def make(args) -> None:
         _ = run(args, split('docker ps -a -q'), asciiPipe=True)
         run(args, split(f'docker rm {_}'))
     elif args.command == "restart":
-        print(f"Restarting {containers}")
         run(args, split(
             f'docker-compose {DOCKER_COMPOSE_ARGS} restart {containers}'))
     elif args.command == "status":
