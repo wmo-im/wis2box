@@ -33,11 +33,14 @@ RUN if [ "$WIS2BOX_PIP3_EXTRA_PACKAGES" = "None" ]; \
     else export WIS2BOX_PIP3_EXTRA_PACKAGES=pip3 install ${WIS2BOX_PIP3_EXTRA_PACKAGES}; \
     fi
 
+# We need latest version of BUFR tables, these are only available in bookworm release, add to sources
+RUN echo 'deb http://deb.debian.org/debian bookworm main' >> /etc/apt/sources.list
+
 # install dependencies
-# FIXME: install newer version of eccodes
 # FIXME: csv2bufr/bufr2geojson: remove and install from requirements.txt once we have a stable release
 # FIXME: pygeometa: remove and install from requirements.txt once we have a stable release
 RUN apt-get update -y \
+    && apt-get install -y -t bookworm libeccodes-data \
     && apt-get install -y ${DEBIAN_PACKAGES} \
     # install wis2box dependencies
     && pip3 install --no-cache-dir https://github.com/wmo-im/csv2bufr/archive/refs/tags/v0.2.0.zip \
