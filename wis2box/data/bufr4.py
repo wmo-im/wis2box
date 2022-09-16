@@ -255,7 +255,6 @@ class ObservationDataBUFR(BaseAbstractData):
                 ]
                 patterns = ['%Y', '%m', '%d', '%H', '%M', '%S']
                 for (name, p) in zip(field_names, patterns):
-                    LOGGER.error(isodate.strftime(p))
                     codes_set(template, name, int(isodate.strftime(p)))
                 isodate = isodate.strftime('%Y%m%dT%H%M%S')
 
