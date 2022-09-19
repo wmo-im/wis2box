@@ -150,6 +150,8 @@ def make(args) -> None:
     elif args.command in ["up", "start", "start-dev"]:
         run(args, split(
             'docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions > /dev/null 2>&1'))
+        run(args, split(
+            'docker plugin enable loki'))
         if containers:
             run(args, split(f"docker-compose {DOCKER_COMPOSE_ARGS} start {containers}"))
         else:
