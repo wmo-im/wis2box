@@ -37,5 +37,6 @@ service cron status
 # wis2box commands
 wis2box environment create
 wis2box environment show
+wis2box api setup
 echo "END /entrypoint.sh"
 exec "$@"

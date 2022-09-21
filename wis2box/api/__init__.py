@@ -48,17 +48,22 @@ def setup_collection(meta: dict = {}) -> bool:
     if backend.has_collection(name) is False:
         backend.add_collection(name)
 
+    if backend.has_collection(name) is False:
+        msg = f'Unable to setup backend for collection {name}'
+        LOGGER.error(msg)
+        return False
+
     api_config = load_config()
     if api_config.has_collection(name) is False:
         collection = api_config.prepare_collection(meta)
         api_config.add_collection(name, collection)
 
-    if backend.has_collection(name) is False or \
-       api_config.has_collection(name) is False:
-        LOGGER.error(f'Unable to setup collection for {name}')
+    if api_config.has_collection(name) is False:
+        msg = f'Unable to setup configuration for collection {name}'
+        LOGGER.error(msg)
         return False
-    else:
-        return True
+
+    return True
 
 
 def remove_collection(name: str) -> bool:
@@ -134,6 +139,21 @@ def api():
 
 @click.command()
 @click.pass_context
+@cli_helpers.OPTION_VERBOSITY
+def setup(ctx, verbosity):
+    """Add collection items to API backend"""
+
+    api_config = load_config()
+    if api_config.has_collection('') is False:
+        click.echo('API not ready')
+    else:
+        click.echo('API ready')
+
+    click.echo('Done')
+
+
+@click.command()
+@click.pass_context
 @cli_helpers.ARGUMENT_FILEPATH
 @cli_helpers.OPTION_VERBOSITY
 def add_collection(ctx, filepath, verbosity):
@@ -158,5 +178,6 @@ def delete_collection(ctx, collection, verbosity):
     click.echo('Done')
 
 
+api.add_command(setup)
 api.add_command(add_collection)
 api.add_command(delete_collection)
