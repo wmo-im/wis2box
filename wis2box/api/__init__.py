@@ -46,22 +46,20 @@ def setup_collection(meta: dict = {}) -> bool:
 
     backend = load_backend()
     if backend.has_collection(name) is False:
-        backend.add_collection(name)
 
-    if backend.has_collection(name) is False:
-        msg = f'Unable to setup backend for collection {name}'
-        LOGGER.error(msg)
-        return False
+        if backend.add_collection(name) is False:
+            msg = f'Unable to setup backend for collection {name}'
+            LOGGER.error(msg)
+            return False
 
     api_config = load_config()
     if api_config.has_collection(name) is False:
-        collection = api_config.prepare_collection(meta)
-        api_config.add_collection(name, collection)
 
-    if api_config.has_collection(name) is False:
-        msg = f'Unable to setup configuration for collection {name}'
-        LOGGER.error(msg)
-        return False
+        collection = api_config.prepare_collection(meta)
+        if api_config.add_collection(name, collection) is False:
+            msg = f'Unable to setup configuration for collection {name}'
+            LOGGER.error(msg)
+            return False
 
     return True
 
@@ -149,8 +147,6 @@ def setup(ctx, verbosity):
     else:
         click.echo('API ready')
 
-    click.echo('Done')
-
 
 @click.command()
 @click.pass_context
@@ -161,8 +157,8 @@ def add_collection(ctx, filepath, verbosity):
 
     if setup_collection(meta=filepath.read()) is False:
         click.echo('Unable to add collection')
-
-    click.echo('Done')
+    else:
+        click.echo('Collection added')
 
 
 @click.command()
@@ -174,8 +170,8 @@ def delete_collection(ctx, collection, verbosity):
 
     if remove_collection(collection) is False:
         click.echo('Unable to delete collection')
-
-    click.echo('Done')
+    else:
+        click.echo('Collection deleted')
 
 
 api.add_command(setup)

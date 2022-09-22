@@ -20,7 +20,7 @@
 ###############################################################################
 
 import logging
-from requests import Session, codes
+from requests import Session
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
@@ -69,7 +69,7 @@ class PygeoapiConfig(BaseConfig):
             r = self.http.post(self.url, json=content)
 
         r.raise_for_status()
-        return r.status_code == codes.ok
+        return r.ok
 
     def delete_collection(self, name: str) -> bool:
         """
@@ -81,7 +81,7 @@ class PygeoapiConfig(BaseConfig):
         """
 
         r = self.http.delete(f'{self.url}/{name}')
-        return r.status_code == codes.ok
+        return r.ok
 
     def has_collection(self, name: str) -> bool:
         """
@@ -93,7 +93,7 @@ class PygeoapiConfig(BaseConfig):
         """
 
         r = self.http.get(f'{self.url}/{name}')
-        return r.status_code == codes.ok
+        return r.ok
 
     def prepare_collection(self, meta: dict) -> bool:
         """
