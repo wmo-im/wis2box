@@ -1,9 +1,11 @@
 flake8
+ipython_genutils
+jinja2==3.0.3
 jupyter
 nbsphinx
+pyzmq==23.2.1
 pypandoc
 pytest
-pyzmq==23.2.1
 requests
 sphinx
 twine
