@@ -127,6 +127,17 @@ PubSub configuration provides connectivity information for the PubSub broker.
     WIS2BOX_BROKER_PUBLIC=mqtt://foo:bar@localhost:1883  # RFC 1738 URL of public broker endpoint
 
 
+Web application
+^^^^^^^^^^^^^^^
+
+Web application configuration provides the ability to customize web components.
+
+.. code-block:: bash
+
+    WIS2BOX_BASEMAP_URL=https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png  # URL of map tile server to use
+    WIS2BOX_BASEMAP_ATTRIBUTION=<a href="https://osm.org/copyright">OpenStreetMap</a> contributors'  # attribution of map tile server
+
+
 Other
 ^^^^^
 
