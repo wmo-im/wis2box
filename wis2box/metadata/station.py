@@ -29,8 +29,7 @@ from owslib.ogcapi.features import Features
 from pygeometa.schemas.wmo_wigos import WMOWIGOSOutputSchema
 
 from wis2box import cli_helpers
-from wis2box.api.backend import load_backend
-from wis2box.api.config import load_config
+from wis2box.api import setup_collection, upsert_collection_item
 from wis2box.env import DATADIR, DOCKER_API_URL
 from wis2box.metadata.base import BaseMetadata
 from wis2box.metadata.oscar import get_station_report, upload_station_metadata
@@ -49,9 +48,28 @@ if STATIONS.exists() is False:
             [
                 'station_name',
                 'wigos_station_identifier',
-                'traditional_station_identifier',
+                'traditional_station_identifier'
             ]
         )
+
+
+def gcm() -> dict:
+    """
+    Gets collection metadata for API provisioning
+
+    :returns: `dict` of collection metadata
+    """
+
+    return {
+        'id': 'stations',
+        'title': 'Stations',
+        'description': 'Stations',
+        'keywords': ['wmo', 'wis 2.0'],
+        'links': ['https://oscar.wmo.int/surface'],
+        'bbox': [-180, -90, 180, 90],
+        'id_field': 'wigos_id',
+        'title_field': 'wigos_id'
+    }
 
 
 class StationMetadata(BaseMetadata):
@@ -133,12 +151,7 @@ def publish_station_collection() -> None:
     :returns: `None`
     """
 
-    backend = load_backend()
-    LOGGER.debug('Deleting existing station collection')
-    try:
-        backend.delete_collection('stations')
-    except RuntimeError as err:
-        LOGGER.warning(err)
+    setup_collection(meta=gcm())
 
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
@@ -165,23 +178,7 @@ def publish_station_collection() -> None:
             }
 
         LOGGER.debug('Publishing to backend')
-        backend.upsert_collection_items('stations', [feature])
-
-    click.echo('Adding to API configuration')
-    meta = {
-        'id': 'stations',
-        'title': 'Stations',
-        'description': 'Stations',
-        'keywords': ['wmo', 'wis 2.0'],
-        'links': ['https://oscar.wmo.int/surface'],
-        'bbox': [-180, -90, 180, 90],
-        'id_field': 'wigos_id',
-        'title_field': 'wigos_id',
-    }
-
-    api_config = load_config()
-    collection = api_config.prepare_collection(meta)
-    api_config.add_collection('stations', collection)
+        upsert_collection_item('stations', feature)
 
     return
 

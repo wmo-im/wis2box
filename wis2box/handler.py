@@ -23,6 +23,7 @@ import json
 import logging
 from pathlib import Path
 
+from wis2box.api import upsert_collection_item
 from wis2box.storage import get_data
 from wis2box.topic_hierarchy import validate_and_load
 
@@ -89,14 +90,14 @@ class Handler:
 
         return True
 
-    def publish(self, backend) -> bool:
+    def publish(self) -> bool:
         index_name = self.topic_hierarchy.dotpath
         if self.is_http:
             geojson = json.load(get_data(self.filepath))
-            backend.upsert_collection_items(index_name, [geojson])
+            upsert_collection_item(index_name, geojson)
         else:
             with Path(self.filepath).open() as fh1:
                 geojson = json.load(fh1)
-                backend.upsert_collection_items(index_name, [geojson])
+                upsert_collection_item(index_name, geojson)
 
         return True

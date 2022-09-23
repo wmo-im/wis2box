@@ -19,62 +19,114 @@
 #
 ###############################################################################
 
+import click
 import logging
 
-import click
-
-from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
-from wis2box.handler import Handler
-from wis2box.pubsub.message import generate_collection_metadata as gcm
-import wis2box.metadata.discovery as discovery_
-from wis2box.topic_hierarchy import validate_and_load
-from wis2box.util import walk_path
+from wis2box import cli_helpers
 
 LOGGER = logging.getLogger(__name__)
 
 
-def generate_collection_metadata(mcf: dict) -> dict:
+def setup_collection(meta: dict = {}) -> bool:
     """
-    Generate collection metadata from metadata control file
+    Add collection to api backend and configuration
 
-    :param mcf: `dict` of MCF file
+    :param meta: `dict` of collection metadata
 
-    :returns: `dict` of API collection metadata
+    :returns: `bool` of API collection setup result
     """
 
-    LOGGER.debug('Parsing discovery metadata')
+    try:
+        name = meta['id']
+    except KeyError:
+        LOGGER.error(f'Invalid configuration: {meta}')
+        return False
 
-    dm = discovery_.DiscoveryMetadata()
-    record = dm.parse_record(mcf)
-    generated = dm.generate(record)
+    backend = load_backend()
+    if backend.has_collection(name) is False:
 
-    LOGGER.debug('Creating collection configuration')
+        if backend.add_collection(name) is False:
+            msg = f'Unable to setup backend for collection {name}'
+            LOGGER.error(msg)
+            return False
 
-    bbox = [
-        generated['geometry']['coordinates'][0][0][0],
-        generated['geometry']['coordinates'][0][0][1],
-        generated['geometry']['coordinates'][0][2][0],
-        generated['geometry']['coordinates'][0][2][1],
-    ]
+    api_config = load_config()
+    if api_config.has_collection(name) is False:
 
-    kw = record['identification']['keywords']
+        collection = api_config.prepare_collection(meta)
+        if api_config.add_collection(name, collection) is False:
+            msg = f'Unable to setup configuration for collection {name}'
+            LOGGER.error(msg)
+            return False
 
-    keywords = set([k for k in kw.values() for k in kw])
+    return True
 
-    return {
-        'id': generated['id'],
-        'type': 'feature',
-        'title': generated['properties']['title'],
-        'description': generated['properties']['description'],
-        'keywords': list(keywords),
-        'bbox': bbox,
-        'links': generated['links'],
-        'id_field': 'id',
-        'time_field': 'resultTime',
-        'title_field': 'id'
-    }
+
+def remove_collection(name: str) -> bool:
+    """
+    Add collection to api backend and mcf or collection configuration
+
+    :param name: `str` of collection name
+
+    :returns: `bool` of API collection removal result
+    """
+
+    backend = load_backend()
+    if backend.has_collection(name) is True:
+        backend.delete_collection(name)
+
+    api_config = load_config()
+    if api_config.has_collection(name) is True:
+        api_config.delete_add_collection(name)
+
+    if backend.has_collection(name) is True or \
+       api_config.has_collection(name) is True:
+        LOGGER.error(f'Unable to remove collection for {name}')
+        return False
+    else:
+        return True
+
+
+def upsert_collection_item(collection_id: str, item: dict) -> str:
+    """
+    Add or update a collection item
+
+    :param collection_id: name of collection
+    :param item: `dict` of GeoJSON item data
+
+    :returns: `str` identifier of added item
+    """
+    backend = load_backend()
+    backend.upsert_collection_items(collection_id, [item])
+
+    return True
+
+
+def delete_collection_item(collection_id: str, item_id: str) -> str:
+    """
+    Delete an item from a collection
+
+    :param collection_id: name of collection
+    :param item_id: `str` of item identifier
+
+    :returns: `str` identifier of added item
+    """
+    backend = load_backend()
+    backend.delete_collection_item(collection_id, item_id)
+
+
+def delete_collections_by_retention(days: int) -> None:
+    """
+    Delete collections by retention date
+
+    :param days: `int` of number of days
+
+    :returns: `None`
+    """
+    backend = load_backend()
+    backend.delete_collections_by_retention(days)
 
 
 @click.group()
@@ -89,96 +141,39 @@ def api():
 def setup(ctx, verbosity):
     """Add collection items to API backend"""
 
-    click.echo('Generating collection metadata for messages')
-    meta = gcm()
-
-    backend = load_backend()
-    backend.add_collection('messages')
-
-    click.echo('Adding to API configuration')
     api_config = load_config()
-    collection = api_config.prepare_collection(meta)
-    api_config.add_collection('messages', collection)
-
-    click.echo("Done")
-
-
-@click.command()
-@click.pass_context
-@cli_helpers.OPTION_TOPIC_HIERARCHY
-@cli_helpers.OPTION_PATH
-@cli_helpers.OPTION_RECURSIVE
-@cli_helpers.OPTION_VERBOSITY
-def add_collection_items(ctx, topic_hierarchy, path, recursive, verbosity):
-    """Add collection items to API backend"""
-
-    click.echo('Loading Backend')
-    backend = load_backend()
-
-    click.echo(f'Adding GeoJSON files to collection: {topic_hierarchy}')
-    for file_to_process in walk_path(path, '.*.geojson$', recursive):
-        click.echo(f'Adding {file_to_process}')
-        handler = Handler(file_to_process, topic_hierarchy)
-        handler.publish(backend)
-
-    click.echo('Done')
+    if api_config.has_collection('') is False:
+        click.echo('API not ready')
+    else:
+        click.echo('API ready')
 
 
 @click.command()
 @click.pass_context
 @cli_helpers.ARGUMENT_FILEPATH
-@cli_helpers.OPTION_TOPIC_HIERARCHY
 @cli_helpers.OPTION_VERBOSITY
-def add_collection(ctx, filepath, topic_hierarchy, verbosity):
-    """Add collection index to API backend"""
+def add_collection(ctx, filepath, verbosity):
+    """Delete collection from api backend"""
 
-    if topic_hierarchy is None:
-        raise click.ClickException('Missing -th/--topic-hierarchy')
-
-    th, _ = validate_and_load(topic_hierarchy)
-    name = th.dotpath
-
-    click.echo('Generating collection metadata')
-    meta = generate_collection_metadata(filepath.read())
-
-    click.echo(f'Adding collection: {topic_hierarchy}')
-    backend = load_backend()
-    backend.add_collection(name)
-
-    click.echo('Adding to API configuration')
-    api_config = load_config()
-    collection = api_config.prepare_collection(meta)
-    api_config.add_collection(name, collection)
-
-    click.echo("Done")
+    if setup_collection(meta=filepath.read()) is False:
+        click.echo('Unable to add collection')
+    else:
+        click.echo('Collection added')
 
 
 @click.command()
 @click.pass_context
-@cli_helpers.OPTION_TOPIC_HIERARCHY
+@click.argument('collection')
 @cli_helpers.OPTION_VERBOSITY
-def delete_collection(ctx, topic_hierarchy, verbosity):
+def delete_collection(ctx, collection, verbosity):
     """Delete collection from api backend"""
 
-    if topic_hierarchy is None:
-        raise click.ClickException('Missing -th/--topic-hierarchy')
-
-    click.echo(f'Deleting collection: {topic_hierarchy}')
-
-    th, _ = validate_and_load(topic_hierarchy)
-    name = th.dotpath
-
-    backend = load_backend()
-    backend.delete_collection(name)
-
-    click.echo('Removing from API configuration')
-    api_config = load_config()
-    api_config.delete_collection(name)
-
-    click.echo('Done')
+    if remove_collection(collection) is False:
+        click.echo('Unable to delete collection')
+    else:
+        click.echo('Collection deleted')
 
 
-api.add_command(add_collection_items)
+api.add_command(setup)
 api.add_command(add_collection)
 api.add_command(delete_collection)
-api.add_command(setup)

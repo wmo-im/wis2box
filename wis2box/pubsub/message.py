@@ -155,7 +155,7 @@ class WISNotificationMessage(PubSubMessage):
         }
 
 
-def generate_collection_metadata() -> dict:
+def gcm() -> dict:
     """
     Gets collection metadata for API provisioning
 

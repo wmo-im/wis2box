@@ -39,7 +39,7 @@ Successful installation can be confirmed by inspecting the versions on your syst
 wis2box configuration
 ---------------------
 
-Wis2box will read environment variables from dev.env. A baseline is provided in dev.env.example. Copy dev.env.example to dev.env
+wis2box will read environment variables from dev.env. A baseline is provided in dev.env.example. Copy dev.env.example to dev.env
 
 .. code-block:: bash
 
@@ -47,22 +47,22 @@ Wis2box will read environment variables from dev.env. A baseline is provided in 
 
 And update it to suit your needs. *You must replace '/your/data/directory'* with a valid directory on your host.
 
-Wis2box configuration requires a file data-mapping.yml. 
+wis2box configuration requires a file data-mapping.yml.
 
 Baselines are provided in config_examples/ :
 
 * config_examples/data-mappings.yml.example-synop-bufr, input is .bufr containing SYNOP observation-data
 * config_examples/data-mappings.yml.example-synop-csv, input is .csv containing SYNOP observation-data
 
-For example for publishing .bufr files with SYNOP data: 
+For example for publishing .bufr files with SYNOP data:
 Copy this file in the directory you defined for /your/data/directory/
 
 .. code-block:: bash
 
     cp config_examples/data-mapping.yml.example-synop-bufr /your/data/directory/data-mappings.yml
-    
+
 Edit /your/data/directory/data-mappings.yml and change 'ISO3C_country.center_id.data.core.weather.surface-based-observations.SYNOP':
-    
+
     * replace 'ISO3C_country' with your corresponding ISO 3166 alpha-3 code.
     * replace 'center_id' with the string identifying the center running the wis2node.
 
@@ -95,10 +95,10 @@ wis2box build
 Please run the 'build'-command when setting up wis2box for the first time. This will start the process of building the wis2box containers from source.
 
 .. code-block:: bash
-    
+
     python3 wis2box-ctl.py build
 
-This might take a while. 
+This might take a while.
 
 wis2box start
 -------------
@@ -109,7 +109,7 @@ Start wis2box with Docker Compose and login to the wis2box container:
 
     python3 wis2box-ctl.py start
     python3 wis2box-ctl.py status
-    
+
 Check that all services are running (and not unhealthy). If neccessary repeat the command until all services are up and running.
 
 setup api publication
@@ -118,7 +118,7 @@ setup api publication
 Login to the wis2box-container
 
 .. code-block:: bash
-    
+
     python3 wis2box-ctl.py login
 
 Setup observation data processing and API publication:
@@ -126,7 +126,7 @@ Note: $WIS2BOX_DATADIR binds to the $WIS2BOX_HOST_DATADIR sets up previously, al
 
 .. code-block:: bash
 
-    wis2box api add-collection --topic-hierarchy ISO3C_country.center_id.data.core.weather.surface-based-observations.SYNOP $WIS2BOX_DATADIR/surface-weather-observations.yml
+    wis2box data add-collection $WIS2BOX_DATADIR/surface-weather-observations.yml
 
 Cache and publish station collection and discovery metadata to the API:
 
@@ -148,7 +148,7 @@ Congratulations your wis2box is now setup!
 data ingestion
 --------------
 
-You will want to test it by uploading data to the 'wis2box-incoming'-storage. 
+You will want to test it by uploading data to the 'wis2box-incoming'-storage.
 
 To access the storage-component visit http://localhost:3000 in your web browser. The default username/password is minio/minio123
 
@@ -164,13 +164,13 @@ wis2box-ui
 
 The wis2box includes a UI to view the data that has been ingested.
 
-To explore your wis2box-ui visit http://localhost:8999 in your web browser. 
+To explore your wis2box-ui visit http://localhost:8999 in your web browser.
 
 Not seeing any data for your datasets on the wis2box-ui ?
 After data has been ingested for a station for the first time, you need to re-publish the stations collection to additionally include link relations to collections with observations published from that station:
 
 .. code-block:: bash
-    
+
     python3 wis2box-ctl.py login
     wis2box metadata station publish-collection
     exit

@@ -25,6 +25,7 @@ import logging
 from elasticsearch import Elasticsearch, helpers
 from parse import parse
 from isodate import parse_date
+from typing import Tuple
 
 from wis2box.api.backend.base import BaseBackend
 from wis2box.util import older_than, is_dataset
@@ -102,15 +103,16 @@ class ElasticBackend(BaseBackend):
                                   max_retries=10, retry_on_timeout=True)
 
     @staticmethod
-    def es_id(collection_id: str) -> str:
+    def es_id(collection_id: str) -> Tuple[str]:
         """
         Make collection_id ES friendly
 
         :param collection_id: `str` name of collection
 
-        :returns: `str` ES index name
+        :returns: `tuple` of ES index and template name
         """
-        return collection_id.lower()
+        index = collection_id.lower()
+        return (index, f'{index}.')
 
     def add_collection(self, collection_id: str) -> dict:
         """
@@ -120,19 +122,12 @@ class ElasticBackend(BaseBackend):
 
         :returns: `bool` of result
         """
+        es_index, es_template = self.es_id(collection_id)
 
-        es_index = self.es_id(collection_id)
-        es_template = f'{es_index}.'
-
-        if self.conn.indices.exists(es_index):
+        if self.has_collection(collection_id):
             msg = f'index {es_index} exists'
             LOGGER.error(msg)
             raise RuntimeError(msg)
-
-        if self.conn.indices.exists_template(es_template):
-            msg = f'template {es_template} exists'
-            LOGGER.warning(msg)
-            # raise RuntimeError(msg)
 
         settings = deepcopy(SETTINGS)
 
@@ -148,29 +143,43 @@ class ElasticBackend(BaseBackend):
             LOGGER.debug('metadata index detected')
             self.conn.indices.create(index=es_index, body=settings)
 
-        return self.conn.indices.exists(es_index)
+        return self.has_collection(collection_id)
 
-    def delete_collection(self, collection_id: str) -> None:
+    def delete_collection(self, collection_id: str) -> bool:
         """
         Delete a collection
 
         :param collection_id: name of collection
 
-        :returns: `None`
+        :returns: `bool` of delete result
         """
+        es_index, es_template = self.es_id(collection_id)
 
-        es_index = self.es_id(collection_id)
-        es_template = f'{es_index}.'
-
-        if not self.conn.indices.exists(es_index):
+        if not self.has_collection(collection_id):
             msg = f'index {es_index} does not exist'
             LOGGER.error(msg)
             raise RuntimeError(msg)
 
-        self.conn.indices.delete(index=es_index)
+        if self.conn.indices.exists(es_index):
+            self.conn.indices.delete(index=es_index)
 
         if self.conn.indices.exists_template(es_template):
             self.conn.indices.delete_template(es_template)
+
+        return not self.has_collection(collection_id)
+
+    def has_collection(self, collection_id: str) -> bool:
+        """
+        Checks a collection
+
+        :param collection_id: name of collection
+
+        :returns: `bool` of collection result
+        """
+        es_index, es_template = self.es_id(collection_id)
+        indices = self.conn.indices
+
+        return indices.exists(es_index) or indices.exists_template(es_template)
 
     def upsert_collection_items(self, collection_id: str, items: list) -> str:
         """
@@ -181,12 +190,10 @@ class ElasticBackend(BaseBackend):
 
         :returns: `str` identifier of added item
         """
+        es_index, _ = self.es_id(collection_id)
 
-        es_index = self.es_id(collection_id)
-
-        if (not is_dataset(es_index) and
-                not self.conn.indices.exists(es_index)):
-            LOGGER.debug('Index {es_index} does not exist.  Creating')
+        if not self.has_collection(collection_id):
+            LOGGER.warning(f'Index {es_index} does not exist.  Creating')
             self.add_collection(es_index)
 
         def gendata(features):
@@ -199,7 +206,7 @@ class ElasticBackend(BaseBackend):
                 es_index2 = es_index
                 feature['properties']['id'] = feature['id']
                 if is_dataset(collection_id):
-                    LOGGER.debug('Determinining index date from OM GeoJSON')
+                    LOGGER.debug('Determining index date from OM GeoJSON')
                     try:
                         date_ = parse_date(feature['properties']['resultTime'])
                     except KeyError:

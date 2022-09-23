@@ -26,7 +26,7 @@ will generate local station collection GeoJSON for pygeoapi publication.
 
 
 .. note:: run the command ``wis2box metadata station sync /path/to/station_list.csv`` to both
-          cache stations form OSCAR/Surface and publish station as a collection to the wis2box API 
+          cache stations from OSCAR/Surface and publish station as a collection to the wis2box API
 
 
 .. seealso:: :ref:`station-metadata`
@@ -51,21 +51,14 @@ discovery metadata MCF created as described in the :ref:`discovery-metadata` sec
 
 .. code-block:: bash
 
-   wis2box api add-collection $WIS2BOX_DATADIR/data/config/foo/bar/baz/discovery-metadata.yml --topic-hierarchy foo.bar.baz
+   wis2box data add-collection $WIS2BOX_DATADIR/data/config/foo/bar/baz/discovery-metadata.yml
 
 To delete the colection from the API backend and configuration:
 
 .. code-block:: bash
 
-   wis2box api delete-collection --topic-hierarchy foo.bar.baz
+   wis2box api delete-collection foo.bar.baz
 
-
-Note that the data itself is being published to the API backend automatically given the event
-driven workflow. If manual ingest is needed, the following command can be run in interactive mode:
-
-.. code-block:: bash
-
-   wis2box api add-collection-items --topic-hierarchy foo.bar.baz
 
 .. note::
 

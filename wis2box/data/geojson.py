@@ -24,7 +24,7 @@ import logging
 from pathlib import Path
 from typing import Union
 
-from wis2box.api.backend import load_backend
+from wis2box.api import upsert_collection_item
 from wis2box.data.base import BaseAbstractData
 
 LOGGER = logging.getLogger(__name__)
@@ -65,10 +65,7 @@ class ObservationDataGeoJSON(BaseAbstractData):
                     continue
 
                 LOGGER.debug('Publishing data to API')
-                api_backend = load_backend()
-                api_backend.upsert_collection_items(
-                    self.topic_hierarchy.dotpath,
-                    items=[the_data])
+                upsert_collection_item(self.topic_hierarchy.dotpath, the_data)
 
         return True
 

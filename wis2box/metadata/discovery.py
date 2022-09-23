@@ -26,8 +26,8 @@ import logging
 from pygeometa.schemas.ogcapi_records import OGCAPIRecordOutputSchema
 
 from wis2box import cli_helpers
-from wis2box.api.backend import load_backend
-from wis2box.api.config import load_config
+from wis2box.api import (setup_collection, upsert_collection_item,
+                         delete_collection_item)
 from wis2box.env import API_URL, BROKER_PUBLIC
 from wis2box.metadata.base import BaseMetadata
 from wis2box.util import remove_auth_from_url
@@ -99,16 +99,14 @@ class DiscoveryMetadata(BaseMetadata):
         return record
 
 
-def publish_collection() -> bool:
+def gcm() -> dict:
     """
-    Publish discovery metadata collection
+    Gets collection metadata for API provisioning
 
-    :returns: `bool` of publish result
+    :returns: `dict` of collection metadata
     """
 
-    LOGGER.debug('Adding to API configuration')
-
-    meta = {
+    return {
         'id': 'discovery-metadata',
         'type': 'record',
         'title': 'Discovery metadata',
@@ -120,12 +118,6 @@ def publish_collection() -> bool:
         'time_field': 'created',
         'title_field': 'title',
     }
-
-    api_config = load_config()
-    collection = api_config.prepare_collection(meta)
-    api_config.add_collection(meta['id'], collection)
-
-    return True
 
 
 @click.group('discovery')
@@ -141,14 +133,14 @@ def discovery_metadata():
 def publish(ctx, filepath, verbosity):
     """Inserts or updates discovery metadata to catalogue"""
 
+    setup_collection(meta=gcm())
+
     click.echo(f'Publishing discovery metadata from {filepath.name}')
     try:
         dm = DiscoveryMetadata()
         record = dm.parse_record(filepath.read())
         record = dm.generate(record)
-        backend = load_backend()
-        backend.upsert_collection_items('discovery-metadata', [record])
-        publish_collection()
+        upsert_collection_item('discovery-metadata', record)
     except Exception as err:
         raise click.ClickException(err)
 
@@ -162,9 +154,8 @@ def publish(ctx, filepath, verbosity):
 def unpublish(ctx, identifier, verbosity):
     """Deletes a discovery metadata record from the catalogue"""
 
-    click.echo('Unpublishing discovery metadata {identifier}')
-    backend = load_backend()
-    backend.delete_collection_item('discovery-metadata', identifier)
+    click.echo(f'Unpublishing discovery metadata {identifier}')
+    delete_collection_item('discovery-metadata', identifier)
 
 
 discovery_metadata.add_command(publish)
