@@ -39,7 +39,7 @@ Successful installation can be confirmed by inspecting the versions on your syst
 wis2box configuration
 ---------------------
 
-Wis2box will read environment variables from dev.env. A baseline is provided in dev.env.example. Copy dev.env.example to dev.env
+wis2box will read environment variables from dev.env. A baseline is provided in dev.env.example. Copy dev.env.example to dev.env
 
 .. code-block:: bash
 
@@ -47,7 +47,7 @@ Wis2box will read environment variables from dev.env. A baseline is provided in 
 
 And update it to suit your needs. *You must replace '/your/data/directory'* with a valid directory on your host.
 
-Wis2box configuration requires a file data-mapping.yml.
+wis2box configuration requires a file data-mapping.yml.
 
 Baselines are provided in config_examples/ :
 

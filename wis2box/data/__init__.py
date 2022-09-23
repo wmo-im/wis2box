@@ -110,7 +110,7 @@ def gcm(mcf: dict) -> dict:
         generated['geometry']['coordinates'][0][0][0],
         generated['geometry']['coordinates'][0][0][1],
         generated['geometry']['coordinates'][0][2][0],
-        generated['geometry']['coordinates'][0][2][1],
+        generated['geometry']['coordinates'][0][2][1]
     ]
 
     kw = record['identification']['keywords']
@@ -127,7 +127,7 @@ def gcm(mcf: dict) -> dict:
         'links': generated['links'],
         'id_field': 'id',
         'time_field': 'resultTime',
-        'title_field': 'id',
+        'title_field': 'id'
     }
 
 

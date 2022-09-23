@@ -48,7 +48,7 @@ if STATIONS.exists() is False:
             [
                 'station_name',
                 'wigos_station_identifier',
-                'traditional_station_identifier',
+                'traditional_station_identifier'
             ]
         )
 
@@ -68,7 +68,7 @@ def gcm() -> dict:
         'links': ['https://oscar.wmo.int/surface'],
         'bbox': [-180, -90, 180, 90],
         'id_field': 'wigos_id',
-        'title_field': 'wigos_id',
+        'title_field': 'wigos_id'
     }
 
 
