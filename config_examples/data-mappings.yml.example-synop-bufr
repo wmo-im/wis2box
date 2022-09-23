@@ -12,6 +12,3 @@ data:
                   buckets:
                     - ${WIS2BOX_STORAGE_PUBLIC}
                   file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
-            geojson:
-                - plugin: wis2box.data.geojson.ObservationDataGeoJSON
-                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.geojson$'
