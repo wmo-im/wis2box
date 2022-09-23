@@ -82,7 +82,7 @@ jobs:
     - name: build docs ⚙️
       uses: ammaraskar/sphinx-action@master
       with:
-        pre-build-command: "apt-get install -y pandoc"
+        pre-build-command: "apt-get install -y pandoc && cp requirements-dev.txt docs/"
         docs-folder: "docs/"
     - name: failed tests 🚩
       if: ${{ failure() }}
