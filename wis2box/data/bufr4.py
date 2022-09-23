@@ -20,14 +20,13 @@
 ###############################################################################
 
 from datetime import datetime
-import json
 from io import BytesIO
 import logging
 from pathlib import Path
 import tempfile
 from typing import Union
 
-from bufr2geojson import BUFRParser, transform as as_geojson
+from bufr2geojson import BUFRParser
 from eccodes import (
     codes_bufr_copy_data,
     codes_bufr_new_from_samples,
@@ -45,59 +44,6 @@ from wis2box.data.base import BaseAbstractData
 from wis2box.metadata.station import get_geometry, get_valid_wsi
 
 LOGGER = logging.getLogger(__name__)
-
-
-class ObservationDataBUFR2GeoJSON(BaseAbstractData):
-    """Observation data"""
-
-    def transform(
-        self, input_data: Union[Path, bytes], filename: str = ''
-    ) -> bool:
-
-        LOGGER.debug('Procesing BUFR data')
-        input_bytes = self.as_bytes(input_data)
-
-        LOGGER.debug('Generating GeoJSON features')
-        results = as_geojson(input_bytes, serialize=False)
-
-        LOGGER.debug('Processing GeoJSON features')
-        for collection in results:
-            # results is an iterator, for each iteration we have:
-            # - dict['id']
-            # - dict['id']['_meta']
-            # - dict['id']
-            for id, item in collection.items():
-                LOGGER.debug(f'Processing feature: {id}')
-
-                LOGGER.debug('Parsing feature datetime')
-                data_date = item['_meta']['data_date']
-                if '/' in data_date:
-                    # date is range/period, split and get end date/time
-                    data_date = data_date.split('/')[1]
-
-                LOGGER.debug('Parsing feature fields')
-                items_to_remove = [
-                    key for key in item if key not in ('geojson', '_meta')
-                ]
-                for key in items_to_remove:
-                    LOGGER.debug(f'Removing unexpected key: {key}')
-                    item.pop(key)
-
-                LOGGER.debug('Populating output data for publication')
-                self.output_data[id] = item
-                self.output_data[id]['geojson'] = json.dumps(
-                    self.output_data[id]['geojson'], indent=4
-                )
-                self.output_data[id]['_meta'][
-                    'relative_filepath'
-                ] = self.get_local_filepath(data_date)
-
-        LOGGER.debug('Successfully finished transforming BUFR data')
-        return True
-
-    def get_local_filepath(self, date_):
-        yyyymmdd = date_[0:10]  # date_.strftime('%Y-%m-%d')
-        return Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath
 
 
 class ObservationDataBUFR(BaseAbstractData):
