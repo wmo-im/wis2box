@@ -6,22 +6,8 @@ Quickstart
 Requirements and dependencies
 -----------------------------
 
-wis2box requires the following prior to installation:
-
-.. csv-table::
-   :header: Requirement,Version
-   :align: left
-
-   `Python`_,3.8 (or greater)
-   `Docker Engine`_, 20.10.14 (or greater)
-   `Docker Compose`_,1.29.2 (or greater)
-
-If these are already installed, you can skip to installing wis2box.
-
-- To install Python, follow `Python installation`_.
-- To install Docker, follow `Docker Engine installation`_.
-- To install Docker Compose, follow `Compose installation`_.
-
+The quickstart assumes wis2box and its dependencies have been installed.
+If this is not true, please follow the :ref:`installation` steps first.
 Successful installation can be confirmed by inspecting the versions on your system.
 
 .. code-block:: bash
@@ -30,29 +16,28 @@ Successful installation can be confirmed by inspecting the versions on your syst
     docker-compose version
     python3 -V
 
-.. code-block:: bash
-
-    git clone https://github.com/wmo-im/wis2box.git
-    cd wis2box
-
-
 wis2box configuration
 ---------------------
 
-wis2box will read environment variables from dev.env. A baseline is provided in dev.env.example. Copy dev.env.example to dev.env
+wis2box passes environment variables from dev.env to its container on startup.
+An example file is provided in examples/wis2box.env. Copy this file to your working directory.
 
 .. code-block:: bash
 
     cp config_examples/dev.env.example dev.env
 
-And update it to suit your needs. *You must replace '/your/data/directory'* with a valid directory on your host.
+And update it to suit your needs.
 
-wis2box configuration requires a file data-mapping.yml.
+.. note::
 
-Baselines are provided in config_examples/ :
+    You must map ``WIS2BOX_HOST_DATADIR`` with a valid directory on your host. CI/CD testing with
+    Github Actions uses test.env.
 
-* config_examples/data-mappings.yml.example-synop-bufr, input is .bufr containing SYNOP observation-data
-* config_examples/data-mappings.yml.example-synop-csv, input is .csv containing SYNOP observation-data
+To start processing your own data, you need to define a data mappings file.
+Baselines are provided in examples/config:
+
+* synop-bufr-mappings.yml, input is .bufr containing SYNOP observation-data
+* synop-csv-mappings.yml, input is .csv containing SYNOP observation-data
 
 For example for publishing .bufr files with SYNOP data:
 Copy this file in the directory you defined for /your/data/directory/
@@ -174,7 +159,3 @@ After data has been ingested for a station for the first time, you need to re-pu
     python3 wis2box-ctl.py login
     wis2box metadata station publish-collection
     exit
-
-
-
-

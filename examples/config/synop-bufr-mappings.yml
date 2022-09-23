@@ -1,11 +1,12 @@
 data:
-    ISO3C_country.center_id.data.core.weather.surface-based-observations.SYNOP:
+    [ISO3C_country].[center_id].data.core.weather.surface-based-observations.SYNOP:
         plugins:
-            csv:
-                - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
-                  template: synop-bufr.json
+            bufr:
+                - plugin: wis2box.data.bufr4.ObservationDataBUFR
                   notify: true
-                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.csv$'
+                  buckets:
+                    - ${WIS2BOX_STORAGE_INCOMING}
+                  file-pattern: '*'
             bufr4:
                 - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
                   buckets:
