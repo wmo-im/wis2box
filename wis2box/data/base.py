@@ -173,7 +173,7 @@ class BaseAbstractData:
                 LOGGER.info(f'Writing data to {storage_path}')
                 put_data(data_bytes, storage_path)
 
-                if self.enable_notification is True:
+                if self.enable_notification:
                     LOGGER.debug('Sending notification to broker')
                     self.notify(identifier, storage_path,
                                 item['_meta'].get('geometry'))

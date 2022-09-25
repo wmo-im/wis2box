@@ -45,18 +45,18 @@ def setup_collection(meta: dict = {}) -> bool:
         return False
 
     backend = load_backend()
-    if backend.has_collection(name) is False:
+    if not backend.has_collection(name):
 
-        if backend.add_collection(name) is False:
+        if not backend.add_collection(name):
             msg = f'Unable to setup backend for collection {name}'
             LOGGER.error(msg)
             return False
 
     api_config = load_config()
-    if api_config.has_collection(name) is False:
+    if not api_config.has_collection(name):
 
         collection = api_config.prepare_collection(meta)
-        if api_config.add_collection(name, collection) is False:
+        if not api_config.add_collection(name, collection):
             msg = f'Unable to setup configuration for collection {name}'
             LOGGER.error(msg)
             return False
@@ -74,15 +74,14 @@ def remove_collection(name: str) -> bool:
     """
 
     backend = load_backend()
-    if backend.has_collection(name) is True:
+    if backend.has_collection(name):
         backend.delete_collection(name)
 
     api_config = load_config()
-    if api_config.has_collection(name) is True:
+    if api_config.has_collection(name):
         api_config.delete_add_collection(name)
 
-    if backend.has_collection(name) is True or \
-       api_config.has_collection(name) is True:
+    if backend.has_collection(name) or api_config.has_collection(name):
         LOGGER.error(f'Unable to remove collection for {name}')
         return False
     else:
@@ -142,7 +141,7 @@ def setup(ctx, verbosity):
     """Add collection items to API backend"""
 
     api_config = load_config()
-    if api_config.has_collection('') is False:
+    if not api_config.has_collection(''):
         click.echo('API not ready')
     else:
         click.echo('API ready')
@@ -155,7 +154,7 @@ def setup(ctx, verbosity):
 def add_collection(ctx, filepath, verbosity):
     """Delete collection from api backend"""
 
-    if setup_collection(meta=filepath.read()) is False:
+    if not setup_collection(meta=filepath.read()):
         click.echo('Unable to add collection')
     else:
         click.echo('Collection added')
@@ -168,7 +167,7 @@ def add_collection(ctx, filepath, verbosity):
 def delete_collection(ctx, collection, verbosity):
     """Delete collection from api backend"""
 
-    if remove_collection(collection) is False:
+    if not remove_collection(collection):
         click.echo('Unable to delete collection')
     else:
         click.echo('Collection deleted')

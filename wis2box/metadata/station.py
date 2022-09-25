@@ -39,8 +39,8 @@ LOGGER = logging.getLogger(__name__)
 STATION_METADATA = DATADIR / 'metadata' / 'station'
 STATIONS = STATION_METADATA / 'station_list.csv'
 
-if STATIONS.exists() is False:
-    if STATION_METADATA.exists() is False:
+if not STATIONS.exists():
+    if not STATION_METADATA.exists():
         STATION_METADATA.mkdir(parents=True, exist_ok=True)
     with STATIONS.open('w', newline='') as fh:
         writer = csv.writer(fh)
@@ -243,7 +243,7 @@ def get_geometry(wsi: str = '') -> dict:
         if get_valid_wsi(wsi=wsi) is None:
             LOGGER.info(f'Invalid wigos identifer: {wsi}, returning None')
             return None
-        if cache_station(wsi) is False:
+        if not cache_station(wsi):
             LOGGER.info(f'Unable to cache {wsi}, returning None')
             return None
 
