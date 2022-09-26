@@ -243,7 +243,6 @@ def get_geometry(wsi: str = '') -> dict:
         if get_valid_wsi(wsi=wsi) is None:
             LOGGER.info(f'Invalid wigos identifer: {wsi}, returning None')
             return None
-
         if not cache_station(wsi):
             LOGGER.info(f'Unable to cache {wsi}, returning None')
             return None
