@@ -58,6 +58,13 @@ class BaseAbstractData:
         self.output_data = {}
         self.discovery_metadata = {}
 
+        # load plugin for broker
+        defs = {
+            'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
+            'url': BROKER_PUBLIC
+        }
+        self.broker = load_plugin('pubsub', defs)
+
 #        if discovery_metadata:
 #            self.setup_discovery_metadata(discovery_metadata)
 
@@ -125,16 +132,10 @@ class BaseAbstractData:
         wis_message = WISNotificationMessage(identifier, storage_path,
                                              geometry)
 
-        # load plugin for broker
-        defs = {
-            'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-            'url': BROKER_PUBLIC
-        }
-        broker = load_plugin('pubsub', defs)
         topic = f'origin/a/wis2/{self.topic_hierarchy.dirpath}'
 
         # publish using filename as identifier
-        broker.pub(topic, wis_message.dumps())
+        self.broker.pub(topic, wis_message.dumps())
         LOGGER.info(f'WISNotificationMessage published for {identifier}')
 
         LOGGER.debug('Pushing message to API')
