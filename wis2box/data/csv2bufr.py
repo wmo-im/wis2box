@@ -33,11 +33,11 @@ from wis2box.env import DATADIR, DATADIR_CONFIG
 LOGGER = logging.getLogger(__name__)
 
 
-class ObservationDataCSV(BaseAbstractData):
+class ObservationDataCSV2BUFR(BaseAbstractData):
     """Observation data"""
     def __init__(self, defs: dict) -> None:
         """
-        ObservationDataCSV data initializer
+        ObservationDataCSV2BUFR data initializer
 
         :param def: `dict` object of resource mappings
 

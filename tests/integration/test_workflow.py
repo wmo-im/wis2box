@@ -32,6 +32,7 @@ DATADIR = Path('.').parent.absolute() / 'tests/data'
 
 URL = 'http://localhost:8999'
 API_URL = f'{URL}/oapi'
+TOPIC = 'mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP'
 SESSION = Session()
 SESSION.hooks = {
    'response': lambda r, *args, **kwargs: r.raise_for_status()
@@ -73,9 +74,9 @@ def test_metadata_discovery_publish():
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items').json()
     assert r['numberMatched'] == 3
 
-    r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP').json()  # noqa
+    r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/{TOPIC}').json()  # noqa
 
-    assert r['id'] == 'mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP' # noqa
+    assert r['id'] == TOPIC
     assert r['properties']['title'] == 'Surface weather observations from Malawi' # noqa
 
     assert len(r['links']) == 7
@@ -105,26 +106,15 @@ def test_metadata_discovery_publish():
 
 def test_data_ingest():
     """Test data ingest/process publish"""
-    item = '2021-07-07/wis/mwi/mwi_met_centre/data/core/weather/surface-based-observations/SYNOP/WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500-82.geojson'  # noqa
-
-    r = SESSION.get(f'{URL}/data/{item}')  # noqa
-    assert r.status_code == codes.ok
-
-    item_waf = r.json()
-
-    assert item_waf['reportId'] == 'WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500'
-    assert item_waf['properties']['resultTime'] == '2021-07-07T14:55:00Z'  # noqa
-
-
-    item_api_url = f'{API_URL}/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP/items/{item_waf["id"]}'  # noqa
+    item_api_url = f'{API_URL}/collections/{TOPIC}/items/WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500-82'  # noqa
 
     item_api = SESSION.get(item_api_url).json()
 
-    # make minor adjustments to payload to normalize API additions
-    item_api.pop('links')
-    item_waf['properties']['id'] = item_waf['id']
-
-    assert item_waf == item_api
+    assert item_api['reportId'] == 'WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500'
+    assert item_api['properties']['resultTime'] == '2021-07-07T14:55:00Z'  # noqa
+    item_source = f'2021-07-07/wis/mwi/mwi_met_centre/data/core/weather/surface-based-observations/SYNOP/{item_api["reportId"]}.bufr4' # noqa
+    r = SESSION.get(f'{URL}/data/{item_source}')  # noqa
+    assert r.status_code == codes.ok
 
 
 def test_data_api():

@@ -18,7 +18,7 @@ Default pipeline plugins
 wis2box provides a number of data pipeline plugins which users can be used "out of the box".
 
 
-``wis2box.data.observations.ObservationDataCSV``
+``wis2box.data.csv2bufr.ObservationDataCSV2BUFR``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This plugin converts CSV observation data into BUFR using ``csv2bufr``.  A csv2bufr template
