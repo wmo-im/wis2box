@@ -41,6 +41,15 @@ With wis2box now installed and started, it's time to start up the box and login 
 Now that you are logged into the wis2box container, it's now time to manage station metadata, discovery metadata
 and data processing pipelines.
 
+Public environment variables
+----------------------------
+
+The following environment variables are used for public services:
+
+- ``WIS2BOX_API_URL``: API application
+- ``WIS2BOX_MQTT_URL``: MQTT broker
+- ``WIS2BOX_URL``: Web application, including access to data download/object storage
+
 Default service ports
 ---------------------
 
@@ -49,23 +58,23 @@ A default wis2box installation utilizes the following ports for public services:
 Public services
 ^^^^^^^^^^^^^^^
 
-- 8999: Web application, API application, storage
-- 1883: Message broker
+- ``8999``: Web application, API application, storage
+- ``1883``: Message broker
 
 
 Internal services
 ^^^^^^^^^^^^^^^^^
 
-- 1883: Message broker
-- 9200: Elasticsearch
-- 9000: MinIO
-- 9001: MinIO admin UI
+- ``1883``: Message broker
+- ``9200``: Elasticsearch
+- ``9000``: MinIO
+- ``9001``: MinIO admin UI
 
 Changing default ports
 ^^^^^^^^^^^^^^^^^^^^^^
 
 The ``docker/docker-compose.override.yml`` file provides definitions on utilized ports.  To change default
-ports, edit this file and ``docker/default.env``  before stopping and starting wis2box for changes to take effect.
+ports, edit ``docker/default.env``  before stopping and starting wis2box for changes to take effect.
 
 
 MQTT Quality of Service (QoS)
