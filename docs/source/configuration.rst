@@ -134,8 +134,8 @@ Web application configuration provides the ability to customize web components.
 
 .. code-block:: bash
 
-    WIS2BOX_BASEMAP_URL=https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png  # URL of map tile server to use
-    WIS2BOX_BASEMAP_ATTRIBUTION=<a href="https://osm.org/copyright">OpenStreetMap</a> contributors'  # attribution of map tile server
+    WIS2BOX_BASEMAP_URL="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"  # URL of map tile server to use
+    WIS2BOX_BASEMAP_ATTRIBUTION="<a href="https://osm.org/copyright">OpenStreetMap</a> contributors"  # attribution of map tile server
 
 
 Other

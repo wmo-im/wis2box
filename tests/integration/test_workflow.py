@@ -79,7 +79,7 @@ def test_metadata_discovery_publish():
     assert r['id'] == TOPIC
     assert r['properties']['title'] == 'Surface weather observations from Malawi' # noqa
 
-    assert len(r['links']) == 7
+    assert len(r['links']) == 9
 
     geometry = {
         "type": "Polygon",
