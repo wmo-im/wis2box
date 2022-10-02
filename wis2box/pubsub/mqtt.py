@@ -102,7 +102,7 @@ class MQTTPubSubClient(BasePubSubClient):
 
         def on_connect(client, userdata, flags, rc):
             LOGGER.debug('Connected to {self.broker}')
-            LOGGER.debug('Subscribing to {self.topic}')
+            LOGGER.debug('Subscribing to {self.topic} ')
             client.subscribe(topic)
             LOGGER.debug('Subscribed to {self.topic}')
 
