@@ -65,7 +65,8 @@ WORKDIR /home/wis2box
 
 # add wis2box.cron to crontab
 COPY ./docker/wis2box/wis2box.cron /etc/cron.d/wis2box.cron
-RUN cat /etc/cron.d/wis2box.cron > /etc/crontab && crontab /etc/crontab
+
+RUN chmod 0644 /etc/cron.d/wis2box.cron && crontab /etc/cron.d/wis2box.cron
 
 COPY ./docker/entrypoint.sh /entrypoint.sh
 
