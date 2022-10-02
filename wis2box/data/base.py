@@ -122,7 +122,10 @@ class BaseAbstractData:
 
         LOGGER.info('Publishing WISNotificationMessage to public broker')
         LOGGER.debug(f'Prepare message for: {storage_path}')
-        wis_message = WISNotificationMessage(identifier, storage_path,
+
+        topic = f'origin/a/wis2/{self.topic_hierarchy.dirpath}'
+
+        wis_message = WISNotificationMessage(identifier, topic, storage_path,
                                              geometry)
 
         # load plugin for broker
@@ -131,7 +134,6 @@ class BaseAbstractData:
             'url': BROKER_PUBLIC
         }
         broker = load_plugin('pubsub', defs)
-        topic = f'origin/a/wis2/{self.topic_hierarchy.dirpath}'
 
         # publish using filename as identifier
         broker.pub(topic, wis_message.dumps())
