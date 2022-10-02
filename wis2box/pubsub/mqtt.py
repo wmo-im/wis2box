@@ -101,15 +101,15 @@ class MQTTPubSubClient(BasePubSubClient):
         """
 
         def on_connect(client, userdata, flags, rc):
-            LOGGER.debug('Connected to {self.broker}')
-            LOGGER.debug('Subscribing to {self.topic} ')
+            LOGGER.debug('Connected to broker {self.broker}')
+            LOGGER.debug('Subscribing to topic {topic} ')
             client.subscribe(topic)
-            LOGGER.debug('Subscribed to {self.topic}')
+            LOGGER.debug('Subscribed to topic {topic}')
 
         def on_disconnect(client, userdata, rc):
             LOGGER.debug('Disconnected from {self.broker}')
 
-        LOGGER.debug(f'Subscribing to {self.broker}, topic {self.topic}')
+        LOGGER.debug(f'Subscribing to broker {self.broker}, topic {topic}')
         self.conn.on_connect = on_connect
         self.conn.on_disconnect = on_disconnect
         self.conn.loop_forever()
