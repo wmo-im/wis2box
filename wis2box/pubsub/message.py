@@ -50,13 +50,14 @@ class PubSubMessage:
     Generic message class
     """
 
-    def __init__(self, type_: str, identifier: str, filepath: str,
+    def __init__(self, type_: str, identifier: str, topic: str, filepath: str,
                  geometry: dict = None) -> None:
         """
         Initializer
 
         :param type_: message type
         :param identifier: identifier
+        :param topic: topic
         :param geometry: `dict` of GeoJSON geometry object
         :param filepath: `Path` of file
 
@@ -118,9 +119,9 @@ class PubSubMessage:
 
 
 class WISNotificationMessage(PubSubMessage):
-    def __init__(self, identifier, filepath, geometry=None):
+    def __init__(self, identifier, topic, filepath, geometry=None):
         super().__init__('wis2-notification-message', identifier,
-                         filepath, geometry)
+                         topic, filepath, geometry)
 
         suffix = self.filepath.split('.')[-1]
 
@@ -138,6 +139,7 @@ class WISNotificationMessage(PubSubMessage):
             'version': 'v04',
             'geometry': self.geometry,
             'properties': {
+                'data-id': f'{topic}/{self.identifier}',
                 'pubTime': self.publish_datetime,
                 'content': {
                     'length': self.length
