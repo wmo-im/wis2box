@@ -44,8 +44,8 @@ class MQTTPubSubClient(BasePubSubClient):
         super().__init__(broker)
         self.type = 'mqtt'
         self._port = self.broker_url.port
+        self.client_id = f"wis2box-mqtt-{self.broker['client_type']}-{random.randint(0, 1000)}"  # noqa
 
-        self.client_id = f'wis2box-mqtt-{random.randint(0, 1000)}'
         msg = f'Connecting to broker {self.broker} with id {self.client_id}'
         LOGGER.debug(msg)
         self.conn = mqtt_client.Client(self.client_id)

@@ -84,7 +84,8 @@ def subscribe(ctx, broker, topic, verbosity):
 
     defs = {
         'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-        'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}'  # noqa
+        'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}',  # noqa
+        'client_type': 'subscriber'
     }
 
     broker = load_plugin('pubsub', defs)
