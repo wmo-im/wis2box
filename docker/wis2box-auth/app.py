@@ -29,7 +29,7 @@ from wis2box.auth import is_token_authorized, is_resource_open
 from wis2box.env import LOGLEVEL, LOGFILE
 from wis2box.log import setup_logger
 
-__version__ = '0.4.0'
+__version__ = '0.5.dev0'
 
 LOGGER = logging.getLogger(__name__)
 app = Flask(__name__)
