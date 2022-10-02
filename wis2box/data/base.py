@@ -128,7 +128,8 @@ class BaseAbstractData:
         # load plugin for broker
         defs = {
             'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-            'url': BROKER_PUBLIC
+            'url': BROKER_PUBLIC,
+            'client_type': 'publisher'
         }
         broker = load_plugin('pubsub', defs)
         topic = f'origin/a/wis2/{self.topic_hierarchy.dirpath}'

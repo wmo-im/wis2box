@@ -66,7 +66,6 @@ def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
 
     :param plugin_type: type of plugin (`data`)
     :param defs: `def` dict of plugin initializers
-                 (topic_hierarchy, codepath)
 
     :returns: plugin object
     """
