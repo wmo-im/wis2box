@@ -55,10 +55,10 @@ RUN apt-get update -y \
     && rm -rf /var/lib/apt/lists/*
 
 # copy the app
-COPY . /app
+COPY . /wis2box
 # install wis2box
-RUN cd /app \
-    && python3 setup.py install \
+RUN cd /wis2box \
+    && pip3 install -e . \
     # install wis2box plugins, if defined
     && $PIP_PLUGIN_PACKAGES \
     # add wis2box user
