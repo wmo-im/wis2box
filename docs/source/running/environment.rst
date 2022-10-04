@@ -12,3 +12,8 @@ view the environment, run the following command:
 
 For the purposes of documentation, the value ``WIS2BOX_DATADIR`` represents the base
 directory for all data managed in wis2box.
+
+The default enviroment variables are below.
+
+.. literalinclude:: ../../../docker/default.env
+   :language: bash
