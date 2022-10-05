@@ -157,7 +157,7 @@ Additional directives provide various configurationscontrol of configuration opt
 
 A full configuration example can be found below:
 
-.. literalinclude:: ../../wis2box.env
+.. literalinclude:: ../../examples/config/wis2box.env
    :language: bash
 
 .. literalinclude:: ../../docker/default.env

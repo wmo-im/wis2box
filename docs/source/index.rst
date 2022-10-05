@@ -14,10 +14,10 @@ wis2box |release| documentation
    :name: toc
 
    overview
-   quickstart
    wis2
    how-wis2box-works
    installation
+   quickstart
    configuration
    administration
    running/index

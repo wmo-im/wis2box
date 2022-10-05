@@ -6,21 +6,9 @@ Quickstart
 Requirements and dependencies
 -----------------------------
 
-wis2box requires the following prior to installation:
+The quickstart assumes wis2box and its dependencies have been installed.
+If this is not true, please follow the :ref:`installation` steps first.
 
-.. csv-table::
-   :header: Requirement,Version
-   :align: left
-
-   `Python`_,3.8 (or greater)
-   `Docker Engine`_, 20.10.14 (or greater)
-   `Docker Compose`_,1.29.2 (or greater)
-
-If these are already installed, you can skip to installing wis2box.
-
-- To install Python, follow `Python installation`_.
-- To install Docker, follow `Docker Engine installation`_.
-- To install Docker Compose, follow `Compose installation`_.
 
 Successful installation can be confirmed by inspecting the versions on your system.
 
@@ -30,110 +18,75 @@ Successful installation can be confirmed by inspecting the versions on your syst
     docker-compose version
     python3 -V
 
-.. code-block:: bash
+The quickstart deploys wis2box with test data.
+It is the minimal runtime configuration profile - as used in wis2box Github CI/CD.
 
-    git clone https://github.com/wmo-im/wis2box.git
-    cd wis2box
+.. note::
 
+    For information on how to quickly get started with your own data out of the box, proceed to :ref:`running`.
+    For more information on deployment, see :ref:`administration` and :ref:`configuration`.
 
-wis2box configuration
----------------------
-
-wis2box will read environment variables from dev.env. A baseline is provided in dev.env.example. Copy dev.env.example to dev.env
-
-.. code-block:: bash
-
-    cp config_examples/dev.env.example dev.env
-
-And update it to suit your needs. *You must replace '/your/data/directory'* with a valid directory on your host.
-
-wis2box configuration requires a file data-mapping.yml.
-
-Baselines are provided in config_examples/ :
-
-* config_examples/data-mappings.yml.example-synop-bufr, input is .bufr containing SYNOP observation-data
-* config_examples/data-mappings.yml.example-synop-csv, input is .csv containing SYNOP observation-data
-
-For example for publishing .bufr files with SYNOP data:
-Copy this file in the directory you defined for /your/data/directory/
+wis2box passes environment variables from dev.env to its container on startup.
+The test enviroment file is provided in ``tests/test.env``.
+Copy this file to ``dev.env`` in your working directory.
 
 .. code-block:: bash
 
-    cp config_examples/data-mapping.yml.example-synop-bufr /your/data/directory/data-mappings.yml
+    cp tests/test.env dev.env
 
-Edit /your/data/directory/data-mappings.yml and change 'ISO3C_country.center_id.data.core.weather.surface-based-observations.SYNOP':
 
-    * replace 'ISO3C_country' with your corresponding ISO 3166 alpha-3 code.
-    * replace 'center_id' with the string identifying the center running the wis2node.
-
-wis2box needs to have a station_list.csv that contains the stations you will process, an example is provided in config_example/station_list.csv.example
-Copy this file in the directory you defined for /your/data/directory/
-
-.. code-block:: bash
-
-    cp config_examples/station_list.csv.example /your/data/directory/station_list.csv
-
-And update the file for your stations.
-
-To enable the wis2box-api and wis2box-ui to show your data disovery-metadata needs to be setup. You can setup a metadata-discovery file from the example
-
-.. code-block:: bash
-
-    cp config_examples/surface-weather-observations.yml /your/data/directory/surface-weather-observations.yml
-
-And edit the file /your/data/directory/surface-weather-observations.yml to provide the correct metadata for your dataset:
-
-* replace 'ISO3C_country.center_id.data.core.weather.surface-based-observations.SYNOP' with the topic you used in data-mappings.yml previously*
-
-* text provided in title and abstract will be displayed in wis2box-ui *
-
-* provide a valid bounding-box in bbox *
-
-wis2box build
--------------
-
-Please run the 'build'-command when setting up wis2box for the first time. This will start the process of building the wis2box containers from source.
+Build and update wis2box
 
 .. code-block:: bash
 
     python3 wis2box-ctl.py build
+    python3 wis2box-ctl.py update
 
-This might take a while.
 
-wis2box start
--------------
-
-Start wis2box with Docker Compose and login to the wis2box container:
+Start wis2box and login to the wis2box container
 
 .. code-block:: bash
 
     python3 wis2box-ctl.py start
-    python3 wis2box-ctl.py status
-
-Check that all services are running (and not unhealthy). If neccessary repeat the command until all services are up and running.
-
-setup api publication
----------------------
-
-Login to the wis2box-container
-
-.. code-block:: bash
-
     python3 wis2box-ctl.py login
 
-Setup observation data processing and API publication:
-Note: $WIS2BOX_DATADIR binds to the $WIS2BOX_HOST_DATADIR sets up previously, allowing this commands to access the 'surface-weather-observations.yml' you've prepared.
+Once logged in, verify the enviroment
 
 .. code-block:: bash
 
-    wis2box data add-collection $WIS2BOX_DATADIR/surface-weather-observations.yml
+    wis2box environment show
 
-Cache and publish station collection and discovery metadata to the API:
+Publish test discovery metadata
 
 .. code-block:: bash
 
-    wis2box metadata discovery publish $WIS2BOX_DATADIR/surface-weather-observations.yml
-    wis2box metadata station sync $WIS2BOX_DATADIR/station_list.csv
+    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/mw-surface-weather-observations.yml
+    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/it-surface-weather-observations.yml
+    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/dz-surface-weather-observations.yml
+
+
+Setup observation collections from discovery metadata
+
+.. code-block:: bash
+
+    wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/mw-surface-weather-observations.yml
+    wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/it-surface-weather-observations.yml
+    wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/dz-surface-weather-observations.yml
+
+Ingest data, using data ingest command to push the wis2box-incoming bucket
+
+.. code-block:: bash
+
+    wis2box data ingest --topic-hierarchy mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP --path $WIS2BOX_DATADIR/observations/malawi
+    wis2box data ingest --topic-hierarchy ita.roma_met_centre.data.core.weather.surface-based-observations.SYNOP --path $WIS2BOX_DATADIR/observations/italy
+    wis2box data ingest --topic-hierarchy dza.alger_met_centre.data.core.weather.surface-based-observations.SYNOP --path $WIS2BOX_DATADIR/observations/algeria
+
+
+Cache and publish stations
+
+.. code-block:: bash
+
+    wis2box metadata station sync $WIS2BOX_DATADIR/metadata/station/station_list.csv
 
 Logout of wis2box container:
 
@@ -143,38 +96,4 @@ Logout of wis2box container:
 
 From here, you can run ``python3 wis2box-ctl.py status`` to confirm that containers are running.
 
-Congratulations your wis2box is now setup!
-
-data ingestion
---------------
-
-You will want to test it by uploading data to the 'wis2box-incoming'-storage.
-
-To access the storage-component visit http://localhost:3000 in your web browser. The default username/password is minio/minio123
-
-debugging
----------
-
-Something's now working? The wis2box includes a local grafana-instance to help you collect and view logs and figure out what's wrong.
-
-Visit http://localhost:8999 in your local web browser to view the local grafana instance.
-
-wis2box-ui
-----------
-
-The wis2box includes a UI to view the data that has been ingested.
-
-To explore your wis2box-ui visit http://localhost:8999 in your web browser.
-
-Not seeing any data for your datasets on the wis2box-ui ?
-After data has been ingested for a station for the first time, you need to re-publish the stations collection to additionally include link relations to collections with observations published from that station:
-
-.. code-block:: bash
-
-    python3 wis2box-ctl.py login
-    wis2box metadata station publish-collection
-    exit
-
-
-
-
+To explore your wis2box installation and services, visit http://localhost:8999 in your web browser.

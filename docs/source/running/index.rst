@@ -25,9 +25,9 @@ Running topics
 .. toctree::
    :maxdepth: 2
 
-   environment
    concepts
    topic-hierarchy
+   environment
    data-mappings
    station-metadata
    discovery-metadata
@@ -35,3 +35,4 @@ Running topics
    data-pipeline-plugins
    api-publishing
    data-retention
+   tldr
