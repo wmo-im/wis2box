@@ -220,7 +220,7 @@ class ObservationDataBUFR(BaseAbstractData):
                     'bufr4': bufr4,
                     '_meta': {
                         'identifier': rmk,
-                        'wigos_id': wsi,
+                        'wigos_station_identifier': wsi,
                         'data_date': data_date,
                         'geometry': location
                     }

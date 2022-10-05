@@ -67,8 +67,8 @@ def gcm() -> dict:
         'keywords': ['wmo', 'wis 2.0'],
         'links': ['https://oscar.wmo.int/surface'],
         'bbox': [-180, -90, 180, 90],
-        'id_field': 'wigos_id',
-        'title_field': 'wigos_id'
+        'id_field': 'wigos_station_identifier',
+        'title_field': 'wigos_station_identifier'
     }
 
 
@@ -114,12 +114,12 @@ def load_datasets() -> Iterator[dict]:
         yield {}
 
 
-def check_station_datasets(wigos_id: str) -> Iterator[dict]:
+def check_station_datasets(wigos_station_identifier: str) -> Iterator[dict]:
     """
     Filter datasets for topics with observations from station
 
     :param datasets: `list` of datasets
-    :param wigos_id: `string` of station WIGOS id
+    :param wigos_station_identifier: `string` of station WIGOS id
 
 
     :returns: `list`, of link relations to collections from a station
@@ -133,7 +133,8 @@ def check_station_datasets(wigos_id: str) -> Iterator[dict]:
 
         try:
             obs = oaf.collection_items(
-                topic['title'], wigos_station_identifier=wigos_id
+                topic['title'],
+                wigos_station_identifier=wigos_station_identifier
             )
         except RuntimeError as err:
             LOGGER.warning(f'Warning from topic {topic["title"]}: {err}')
@@ -159,17 +160,17 @@ def publish_station_collection() -> None:
         LOGGER.debug(f'Adding station metadata from {f.name}')
         with f.open() as fh:
             d = json.load(fh)
-            wigos_id = d['wigosIds'][0]['wid']
-            topics = list(check_station_datasets(wigos_id))
+            wigos_station_identifier = d['wigosIds'][0]['wid']
+            topics = list(check_station_datasets(wigos_station_identifier))
             topic = None if len(topics) == 0 else topics[0]['title']
             feature = {
                 'id': d['id'],
                 'type': 'Feature',
-                'geometry': get_geometry(wigos_id),
+                'geometry': get_geometry(wigos_station_identifier),
                 'properties': {
-                    'wigos_id': wigos_id,
+                    'wigos_station_identifier': wigos_station_identifier,
                     'name': d['name'],
-                    'url': f"{oscar_baseurl}/{wigos_id}",
+                    'url': f"{oscar_baseurl}/{wigos_station_identifier}",
                     'topic': topic,
                     # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
                     'status': 'operational'
