@@ -19,28 +19,5 @@
 #
 ###############################################################################
 
-__version__ = '0.6.dev0'
 
-import click
-
-from wis2box.api import api
-from wis2box.data import data
-from wis2box.env import environment
-from wis2box.metadata import metadata
-from wis2box.event import event
-from wis2box.auth import auth
-
-
-@click.group()
-@click.version_option(version=__version__)
-def cli():
-    """WIS 2.0 in a box"""
-    pass
-
-
-cli.add_command(api)
-cli.add_command(auth)
-cli.add_command(data)
-cli.add_command(environment)
-cli.add_command(event)
-cli.add_command(metadata)
+"""Message module containing the plugins wrapping clients"""

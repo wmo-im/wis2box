@@ -20,18 +20,19 @@
 ###############################################################################
 
 import logging
-import random
+import secrets
 from typing import Any, Callable
 
 from paho.mqtt import client as mqtt_client
 
-from wis2box.pubsub.base import BasePubSubClient
+from wis2box.event.clients.base import BasePubSubClient
 
 LOGGER = logging.getLogger(__name__)
 
 
 class MQTTPubSubClient(BasePubSubClient):
     """MQTT PubSub client"""
+
     def __init__(self, broker: str) -> None:
         """
         PubSub initializer
@@ -43,30 +44,29 @@ class MQTTPubSubClient(BasePubSubClient):
 
         super().__init__(broker)
         self.type = 'mqtt'
-        self._port = self.broker_url.port
-        self.client_id = f"wis2box-mqtt-{self.broker['client_type']}-{random.randint(0, 1000)}"  # noqa
 
+        self.client_id = f'wis2box-mqtt-{secrets.token_hex(4)}'
         msg = f'Connecting to broker {self.broker} with id {self.client_id}'
         LOGGER.debug(msg)
         self.conn = mqtt_client.Client(self.client_id)
 
         self.conn.enable_logger(logger=LOGGER)
 
-        if None not in [self.broker_url.password, self.broker_url.password]:
-            self.conn.username_pw_set(
-                self.broker_url.username,
-                self.broker_url.password)
+        credentials = [self.broker_url.username, self.broker_url.password]
+        if None not in credentials:
+            self.conn.username_pw_set(*credentials)
 
         if self._port is None:
+            self._port = 8883 if self.broker_url.scheme == 'mqtts' else 1883
             if self.broker_url.scheme == 'mqtts':
-                self._port = 8883
-            else:
-                self._port = 1883
-        if self.broker_url.scheme == 'mqtts':
-            self.conn.tls_set(tls_version=2)
+                self.conn.tls_set(tls_version=2)
 
         self.conn.connect(self.broker_url.hostname, self._port)
         LOGGER.debug('Connected to broker')
+
+    def __exit__(self, type, value, traceback):
+        self.conn.disconnect()
+        LOGGER.debug('Disconnected from broker')
 
     def pub(self, topic: str, message: str) -> bool:
         """

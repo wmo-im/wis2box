@@ -33,7 +33,7 @@ from wis2box.storage import put_data
 from wis2box.topic_hierarchy import TopicHierarchy
 from wis2box.plugin import load_plugin, PLUGINS
 
-from wis2box.pubsub.message import WISNotificationMessage
+from wis2box.event.messages.message import WISNotificationMessage
 
 LOGGER = logging.getLogger(__name__)
 

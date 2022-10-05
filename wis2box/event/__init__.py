@@ -19,19 +19,18 @@
 #
 ###############################################################################
 
+import click
 import logging
+
+from wis2box.event.subscribe import subscribe
 
 LOGGER = logging.getLogger(__name__)
 
-TOPICS = {
-    'STORAGE_INCOMING': {
-        'bucket': 'incoming',
-        'topic': 'xlocal/data_incoming',
-        'handler': 'wis2box.event.data_ingest.Event'
-    },
-    'STORAGE_PUBLIC': {
-        'bucket': 'public',
-        'topic': 'xlocal/data_public',
-        'handler': 'wis2box.event.data_api_publish.Event'
-    }
-}
+
+@click.group()
+def event():
+    """Event workflow"""
+    pass
+
+
+event.add_command(subscribe)

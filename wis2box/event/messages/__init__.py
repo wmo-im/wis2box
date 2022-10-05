@@ -19,18 +19,5 @@
 #
 ###############################################################################
 
-import click
-import logging
 
-from wis2box.pubsub.subscribe import subscribe
-
-LOGGER = logging.getLogger(__name__)
-
-
-@click.group()
-def pubsub():
-    """PubSub workflow"""
-    pass
-
-
-pubsub.add_command(subscribe)
+"""Message module containing the plugins wrapping messages"""

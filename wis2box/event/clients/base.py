@@ -40,6 +40,7 @@ class BasePubSubClient:
         self.type = None
         self.broker = broker
         self.broker_url = urlparse(self.broker['url'])
+        self._port = self.broker_url.port
 
     def pub(self, topic: str, message: str) -> bool:
         """

@@ -63,7 +63,7 @@ class PubSubMessage:
         :param geometry: `dict` of GeoJSON geometry object
         :param wigos_station_identifier: WSI associated with the data
 
-        :returns: `wis2box.pubsub.message.PubSubMessage` message object
+        :returns: `None`
         """
 
         self.type = type_

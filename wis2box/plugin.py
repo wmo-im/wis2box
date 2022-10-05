@@ -41,7 +41,7 @@ PLUGINS = {
     },
     'pubsub': {
         'mqtt': {
-            'plugin': 'wis2box.pubsub.mqtt.MQTTPubSubClient'
+            'plugin': 'wis2box.event.clients.mqtt.MQTTPubSubClient'
         }
     },
     'storage': {
