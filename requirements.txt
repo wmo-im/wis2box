@@ -8,3 +8,4 @@ pyoscar
 pywis-pubsub
 PyYAML
 requests
+watchdog

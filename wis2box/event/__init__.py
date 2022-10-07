@@ -23,6 +23,7 @@ import click
 import logging
 
 from wis2box.event.subscribe import subscribe
+from wis2box.event.watch import watch
 
 LOGGER = logging.getLogger(__name__)
 
@@ -34,3 +35,4 @@ def event():
 
 
 event.add_command(subscribe)
+event.add_command(watch)
