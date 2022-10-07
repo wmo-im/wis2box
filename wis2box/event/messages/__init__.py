@@ -21,3 +21,24 @@
 
 
 """Message module containing the plugins wrapping messages"""
+
+
+def gcm() -> dict:
+    """
+    Gets collection metadata for API provisioning
+
+    :returns: `dict` of collection metadata
+    """
+
+    return {
+        'id': 'messages',
+        'type': 'feature',
+        'title': 'Data notifications',
+        'description': 'Data notifications',
+        'keywords': ['wmo', 'wis 2.0'],
+        'bbox': [-180, -90, 180, 90],
+        'links': ['https://example.org'],
+        'id_field': 'id',
+        'time_field': 'pubTime',
+        'title_field': 'id',
+    }

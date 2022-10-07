@@ -27,7 +27,6 @@ import logging
 from pathlib import Path
 
 from wis2box.util import json_serial
-from wis2box.env import STORAGE_PUBLIC, URL, STORAGE_SOURCE
 from wis2box.storage import get_data
 
 LOGGER = logging.getLogger(__name__)
@@ -118,72 +117,3 @@ class PubSubMessage:
         sh = getattr(hashlib, algorithm)()
         sh.update(bytes)
         return sh.hexdigest()
-
-
-class WISNotificationMessage(PubSubMessage):
-    def __init__(self, identifier, topic, filepath, geometry=None,
-                 wigos_station_identifier=None):
-
-        super().__init__('wis2-notification-message', identifier,
-                         topic, filepath, geometry)
-
-        suffix = self.filepath.split('.')[-1]
-        try:
-            mimetype = DATA_OBJECT_MIMETYPES[suffix]
-        except KeyError:
-            mimetype = 'application/octet-stream'
-
-        # replace storage-source with wis2box-url
-        public_file_url = self.filepath.replace(
-            f'{STORAGE_SOURCE}/{STORAGE_PUBLIC}', f'{URL}/data'
-        )
-        self.message = {
-            'id': self.identifier,
-            'type': 'Feature',
-            'version': 'v04',
-            'geometry': self.geometry,
-            'properties': {
-                'data_id': f'{topic}/{self.identifier}',
-                'pubtime': self.publish_datetime,
-                'integrity': {
-                    'method': self.checksum_type,
-                    'value': self.checksum_value
-                }
-            },
-            'links': [{
-                'rel': 'canonical',
-                'type': mimetype,
-                'href': public_file_url,
-                'length': self.length
-            }]
-        }
-
-        if wigos_station_identifier is not None:
-            self.message['properties']['wigos_station_identifier'] = wigos_station_identifier  # noqa
-            link = {
-                'rel': 'via',
-                'type': 'text/html',
-                'href': f'https://oscar.wmo.int/surface/#/search/station/stationReportDetails/{wigos_station_identifier}'  # noqa
-            }
-            self.message['links'].append(link)
-
-
-def gcm() -> dict:
-    """
-    Gets collection metadata for API provisioning
-
-    :returns: `dict` of collection metadata
-    """
-
-    return {
-        'id': 'messages',
-        'type': 'feature',
-        'title': 'Data notifications',
-        'description': 'Data notifications',
-        'keywords': ['wmo', 'wis 2.0'],
-        'bbox': [-180, -90, 180, 90],
-        'links': ['https://example.org'],
-        'id_field': 'id',
-        'time_field': 'pubtime',
-        'title_field': 'id'
-    }

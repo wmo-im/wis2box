@@ -33,7 +33,7 @@ from wis2box.storage import put_data
 from wis2box.topic_hierarchy import TopicHierarchy
 from wis2box.plugin import load_plugin, PLUGINS
 
-from wis2box.event.messages.message import WISNotificationMessage
+from wis2box.event.messages.wis import WISNotificationMessage
 
 LOGGER = logging.getLogger(__name__)
 
@@ -135,6 +135,7 @@ class BaseAbstractData:
         """
         Send notification of data to broker
 
+        :param item: `dict` of item from output data
         :param storage_path: path to data on storage
         :param identifier: identifier
         :param geometry: `dict` of GeoJSON geometry object

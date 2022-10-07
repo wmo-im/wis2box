@@ -31,9 +31,9 @@ from wis2box import cli_helpers
 from wis2box.api import setup_collection
 from wis2box.env import (BROKER_HOST, BROKER_PORT, BROKER_USERNAME,
                          BROKER_PASSWORD, STORAGE_SOURCE, STORAGE_ARCHIVE)
+from wis2box.event.messages import gcm
 from wis2box.handler import Handler
 from wis2box.plugin import load_plugin, PLUGINS
-from wis2box.event.messages.message import gcm
 
 LOGGER = logging.getLogger(__name__)
 
