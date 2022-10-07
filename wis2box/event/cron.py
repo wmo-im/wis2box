@@ -19,22 +19,33 @@
 #
 ###############################################################################
 
-import click
 import logging
+import time
 
-from wis2box.event.cron import cron
-from wis2box.event.subscribe import subscribe
-from wis2box.event.watch import watch
+import click
+
+from wis2box import cli_helpers
+from wis2box.api import setup_collection
+from wis2box.event.messages import gcm
+# from wis2box.handler import Handler
 
 LOGGER = logging.getLogger(__name__)
 
 
-@click.group()
-def event():
-    """Event workflow"""
-    pass
+@click.command()
+@click.pass_context
+@cli_helpers.OPTION_PATH
+@click.option('--interval', '-i', help='Polling interval', default=5)
+@cli_helpers.OPTION_VERBOSITY
+def cron(ctx, path, interval, verbosity):
+    """Subscribe to a broker/topic"""
+    click.echo('Adding messages collection')
+    setup_collection(meta=gcm())
 
-
-event.add_command(cron)
-event.add_command(subscribe)
-event.add_command(watch)
+    LOGGER.info(f"Listening to {path} every {interval} second")
+    # TODO: CRON Workflow to replace  wis2box.cron
+    # TODO: Data clean capacity
+    # TODO: Data archive capacity
+    # TODO: Handler workflow?
+    while True:
+        time.sleep(interval)
