@@ -52,7 +52,7 @@ def test_metadata_station_cache():
 
             station = r.json()
 
-            assert station['properties']['wigos_id'] == wsi
+            assert station['properties']['wigos_station_identifier'] == wsi
 
 
 def test_metadata_station_publish():

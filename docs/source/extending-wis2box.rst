@@ -56,7 +56,7 @@ The ``_meta`` element can include the following:
     - ``relative_filepath``: path to data, required to publish data with ``BaseAbstractData.publish``
     - ``geometry``: GeoJSON geometry object, required to send geometry with WIS2.0 notification
     - ``md5``: md5 checksum of encoded data
-    - ``wigos_id``: WIGOS identifier
+    - ``wigos_station_identifier``: WIGOS identifier
     - ``data_date``: (as Python `datetime`_ objects) based on the observed datetime
     - ``originating_centre``: Originating centre (see Common code table C11)
     - ``data_category``: Category of data, see BUFR Table A
