@@ -1,4 +1,3 @@
-boto3
 elasticsearch<8
 isodate
 minio
