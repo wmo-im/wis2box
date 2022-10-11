@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Union
 
 from bufr2geojson import transform as as_geojson
-
+from wis2box.api import upsert_collection_item
 from wis2box.data.geojson import ObservationDataGeoJSON
 
 LOGGER = logging.getLogger(__name__)
@@ -79,3 +79,23 @@ class ObservationDataBUFR2GeoJSON(ObservationDataGeoJSON):
     def get_local_filepath(self, date_):
         yyyymmdd = date_[0:10]  # date_.strftime('%Y-%m-%d')
         return Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath
+
+    def publish(self) -> bool:
+        LOGGER.info('Publishing output data')
+        upsert_list = []
+        for identifier, item in self.output_data.items():
+            # now iterate over formats
+            for format_, the_data in item.items():
+                if format_ == '_meta':  # not data, skip
+                    continue
+
+                # check that we actually have data
+                if the_data is None:
+                    msg = f'Empty data for {identifier}-{format_}; not publishing'  # noqa
+                    LOGGER.warning(msg)
+                    continue
+                upsert_list.append(deepcopy(the_data))
+        LOGGER.debug('Publishing data to API')
+        LOGGER.debug(f"{len(upsert_list)} items to publish")
+
+        upsert_collection_item(self.topic_hierarchy.dotpath, upsert_list)

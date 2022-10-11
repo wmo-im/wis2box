@@ -98,7 +98,12 @@ def upsert_collection_item(collection_id: str, item: dict) -> str:
     :returns: `str` identifier of added item
     """
     backend = load_backend()
-    backend.upsert_collection_items(collection_id, [item])
+    if isinstance(item, dict):
+        backend.upsert_collection_items(collection_id, [item])
+    elif isinstance(item, list):
+        backend.upsert_collection_items(collection_id, item)
+    else:
+        LOGGER.error("Expecting list or dict in call to upsert collection item")
 
     return True
 
