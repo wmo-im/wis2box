@@ -51,15 +51,17 @@ class PubSubMessage:
     """
 
     def __init__(self, type_: str, identifier: str, topic: str, filepath: str,
-                 geometry: dict = None) -> None:
+                 geometry: dict = None,
+                 wigos_station_identifier: str = None) -> None:
         """
         Initializer
 
         :param type_: message type
         :param identifier: identifier
         :param topic: topic
-        :param geometry: `dict` of GeoJSON geometry object
         :param filepath: `Path` of file
+        :param geometry: `dict` of GeoJSON geometry object
+        :param wigos_station_identifier: WSI associated with the data
 
         :returns: `wis2box.pubsub.message.PubSubMessage` message object
         """
@@ -119,7 +121,9 @@ class PubSubMessage:
 
 
 class WISNotificationMessage(PubSubMessage):
-    def __init__(self, identifier, topic, filepath, geometry=None):
+    def __init__(self, identifier, topic, filepath, geometry=None,
+                 wigos_station_identifier=None):
+
         super().__init__('wis2-notification-message', identifier,
                          topic, filepath, geometry)
 
@@ -155,6 +159,9 @@ class WISNotificationMessage(PubSubMessage):
                 'href': public_file_url
             }]
         }
+
+        if wigos_station_identifier is not None:
+            self.message['properties']['wigos_station_identifier'] = wigos_station_identifier  # noqa
 
 
 def gcm() -> dict:
