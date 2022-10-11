@@ -190,6 +190,7 @@ def test_message_api():
     assert msg['geometry'] is not None
 
     props = msg['properties']
+    assert props['wigos_station_identifier'] == '0-454-2-AWSNAMITAMBO'
     assert props['integrity']['method'] == 'sha512'
 
     link_rel = msg['links'][0]
