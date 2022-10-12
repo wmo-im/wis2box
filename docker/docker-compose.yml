@@ -62,6 +62,10 @@ services:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       # - xpack.security.enabled=true  # TODO: setup credentials
+    #mem_limit: 1g
+    #memswap_limit: 1g
+
+
     volumes:
       - es-data:/usr/share/elasticsearch/data:rw
     # ulimits:
