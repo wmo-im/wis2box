@@ -1,5 +1,5 @@
 services:
-  wis2box:
+  wis2box-management:
     volumes:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
       - ./wis2box/wis2box.cron:/etc/cron.d/wis2box:ro
@@ -8,7 +8,7 @@ services:
 
 #  wis2box-api:
 #    volumes:
-#      - ../../wis2box-api/wis2box_api:/usr/local/lib/python3.8/dist-packages/wis2box_api-0.3.dev0-py3.8.egg/wis2box_api
+#      - ../wis2box-api/wis2box_api:/usr/local/lib/python3.8/dist-packages/wis2box_api-0.3.dev0-py3.8.egg/wis2box_api
 
   wis2box-auth:
     volumes:

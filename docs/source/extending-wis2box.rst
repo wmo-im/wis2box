@@ -14,7 +14,7 @@ Building your own data plugin
 -----------------------------
 
 The heart of a wis2box data plugin is driven from the ``wis2box.data.base`` abstract base class (ABC)
-located in ``wis2box/data/base.py``. Any wis2box plugin needs to inherit from
+located in ``wis2box-management/wis2box/data/base.py``. Any wis2box plugin needs to inherit from
 ``wis2box.data.base.BaseAbstractData``. A minimal example can be found below:
 
 .. code-block:: python

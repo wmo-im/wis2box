@@ -73,8 +73,8 @@ Internal services
 Changing default ports
 ^^^^^^^^^^^^^^^^^^^^^^
 
-The ``docker/docker-compose.override.yml`` file provides definitions on utilized ports.  To change default
-ports, edit ``docker/default.env``  before stopping and starting wis2box for changes to take effect.
+The ``docker-compose.override.yml`` file provides definitions on utilized ports.  To change default
+ports, edit ``default.env``  before stopping and starting wis2box for changes to take effect.
 
 
 MQTT Quality of Service (QoS)

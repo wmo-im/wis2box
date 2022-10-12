@@ -10,9 +10,9 @@ Environment variables
 ---------------------
 
 wis2box configuration is driven primarily by a small set of environment variables. The runtime
-configuration is defined in the `Env`_ format in a plain text file named ``dev.env`` and ``docker/default.env``.
+configuration is defined in the `Env`_ format in a plain text file named ``dev.env`` and ``default.env``.
 
-Any values set in ``dev.env`` override the default environment variables in ``docker/default.env``. For further / specialized
+Any values set in ``dev.env`` override the default environment variables in ``default.env``. For further / specialized
 configuration, see the sections below.
 
 ``WIS2BOX_HOST_DATADIR``
@@ -160,7 +160,7 @@ A full configuration example can be found below:
 .. literalinclude:: ../../examples/config/wis2box.env
    :language: bash
 
-.. literalinclude:: ../../docker/default.env
+.. literalinclude:: ../../default.env
    :language: bash
 
 Docker Compose
@@ -177,4 +177,4 @@ At this point, you have defined the runtime configuration required to administer
 
 
 .. _`Env`: https://en.wikipedia.org/wiki/Env
-.. _`GitHub`: https://github.com/wmo-im/wis2box/blob/main/docker/default.env
+.. _`GitHub`: https://github.com/wmo-im/wis2box/blob/main/default.env

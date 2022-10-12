@@ -40,8 +40,8 @@ RUN echo 'deb http://deb.debian.org/debian bookworm main' >> /etc/apt/sources.li
 # FIXME: csv2bufr/bufr2geojson: remove and install from requirements.txt once we have a stable release
 # FIXME: pygeometa: remove and install from requirements.txt once we have a stable release
 RUN apt-get update -y \
-    && apt-get install -y -t bookworm libeccodes-data \
-    && apt-get install -y ${DEBIAN_PACKAGES} \
+    && apt-get install --no-install-recommends -y -t bookworm libeccodes-data \
+    && apt-get install --no-install-recommends -y ${DEBIAN_PACKAGES} \
     # install wis2box dependencies
     && pip3 install --no-cache-dir https://github.com/wmo-im/csv2bufr/archive/refs/tags/v0.3.1.zip \
     && pip3 install --no-cache-dir https://github.com/wmo-im/bufr2geojson/archive/refs/tags/v0.3.0.zip \
@@ -64,7 +64,7 @@ RUN cd /app \
 WORKDIR /home/wis2box
 
 # add wis2box.cron to crontab
-COPY ./docker/wis2box/wis2box.cron /etc/cron.d/wis2box.cron
+COPY ./docker/wis2box.cron /etc/cron.d/wis2box.cron
 RUN cat /etc/cron.d/wis2box.cron > /etc/crontab && crontab /etc/crontab
 
 COPY ./docker/entrypoint.sh /entrypoint.sh

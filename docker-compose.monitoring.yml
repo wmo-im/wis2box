@@ -36,7 +36,7 @@ services:
     container_name: mqtt_metrics_collector
     env_file:
       - default.env
-      - ../dev.env
+      - dev.env
     #image: ghcr.io/wmo-im/wis2box-mqtt-metrics-collector:0.4.0
     build:
       context: ./mqtt_metrics_collector
@@ -59,7 +59,7 @@ services:
     <<: *logging
     container_name: grafana
     env_file:
-      - ../dev.env
+      - dev.env
     image: grafana/grafana-oss:9.0.3
     volumes:
       - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
@@ -81,7 +81,7 @@ services:
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
     ports:
       - 3000:3000
-  wis2box:
+  wis2box-management:
     <<: *logging
   mosquitto:
     <<: *logging

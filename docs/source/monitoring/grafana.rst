@@ -14,5 +14,5 @@ Go to http://localhost:3000 to see the home dashboard of wis2box once the stack 
 
 .. note::
 
-   The dashboard configuration can be found in ``docker/grafana/dashboards/home.json``.
+   The dashboard configuration can be found in ``grafana/dashboards/home.json``.
 

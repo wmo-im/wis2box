@@ -1,6 +1,6 @@
 wis2box-data
-tests/data/public
-tests/data/incoming
+wis2box-management/tests/data/public
+wis2box-management/tests/data/incoming
 docs
 examples
 .git

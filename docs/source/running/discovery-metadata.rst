@@ -19,7 +19,7 @@ Creating a discovery metadata record in wis2box is as easy as completing a YAML 
 leverages the `pygeometa`_ project's `metadata control file (MCF)`_ format. Below is an example MCF file.
 
 
-.. literalinclude:: ../../../tests/data/metadata/discovery/mw-surface-weather-observations.yml
+.. literalinclude:: ../../../wis2box-management/tests/data/metadata/discovery/mw-surface-weather-observations.yml
    :language: yaml
 
 .. note::
