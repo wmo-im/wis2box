@@ -79,7 +79,7 @@ def remove_collection(name: str) -> bool:
 
     api_config = load_config()
     if api_config.has_collection(name):
-        api_config.delete_add_collection(name)
+        api_config.delete_collection(name)
 
     if backend.has_collection(name) or api_config.has_collection(name):
         LOGGER.error(f'Unable to remove collection for {name}')
