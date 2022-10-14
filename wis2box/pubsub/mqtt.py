@@ -62,6 +62,8 @@ class MQTTPubSubClient(BasePubSubClient):
                 self._port = 8883
             else:
                 self._port = 1883
+        if self.broker_url.scheme == 'mqtts':
+            self.conn.tls_set(tls_version=2)
 
         self.conn.connect(self.broker_url.hostname, self._port)
         LOGGER.debug('Connected to broker')
