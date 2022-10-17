@@ -21,6 +21,7 @@
 
 import click
 from copy import deepcopy
+import json
 import logging
 
 from pygeometa.schemas.ogcapi_records import OGCAPIRecordOutputSchema
@@ -30,7 +31,8 @@ from wis2box.api import (setup_collection, upsert_collection_item,
                          delete_collection_item)
 from wis2box.env import API_URL, BROKER_PUBLIC
 from wis2box.metadata.base import BaseMetadata
-from wis2box.util import remove_auth_from_url
+from wis2box.plugin import load_plugin, PLUGINS
+from wis2box.util import json_serial, remove_auth_from_url
 
 LOGGER = logging.getLogger(__name__)
 
@@ -99,6 +101,31 @@ class DiscoveryMetadata(BaseMetadata):
         return record
 
 
+def publish_broker_message(record, country: str, centre_id: str) -> bool:
+    """
+    Publish discovery metadata to broker
+
+    :param record: `dict` of discovery metadata record
+    :param country: ISO 3166 alpha 3
+    :param centre_id: centre acronym
+
+    :returns: `bool` of publish result
+    """
+
+    topic = f'origin/a/wis2/{country}/{centre_id}/metadata'
+
+    # load plugin for broker
+    defs = {
+        'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
+        'url': BROKER_PUBLIC,
+        'client_type': 'publisher'
+    }
+    broker = load_plugin('pubsub', defs)
+
+    broker.pub(topic, json.dumps(record, default=json_serial))
+    LOGGER.info(f'Discovery metadata published to {topic}')
+
+
 def gcm() -> dict:
     """
     Gets collection metadata for API provisioning
@@ -138,8 +165,10 @@ def publish(ctx, filepath, verbosity):
     click.echo(f'Publishing discovery metadata from {filepath.name}')
     try:
         dm = DiscoveryMetadata()
-        record = dm.parse_record(filepath.read())
-        record = dm.generate(record)
+        record_mcf = dm.parse_record(filepath.read())
+        record = dm.generate(record_mcf)
+        publish_broker_message(record, record_mcf['wis2box']['country'],
+                               record_mcf['wis2box']['centre_id'])
         upsert_collection_item('discovery-metadata', record)
     except Exception as err:
         raise click.ClickException(err)

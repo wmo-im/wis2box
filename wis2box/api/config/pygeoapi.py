@@ -26,7 +26,6 @@ from requests.packages.urllib3.util.retry import Retry
 
 from wis2box.api.config.base import BaseConfig
 from wis2box.env import API_BACKEND_TYPE, API_BACKEND_URL, DOCKER_API_URL
-from wis2box.util import is_dataset
 
 LOGGER = logging.getLogger(__name__)
 
@@ -62,6 +61,8 @@ class PygeoapiConfig(BaseConfig):
 
         :returns: `bool` of add result
         """
+
+        print("JJJ", collection)
         if self.has_collection(name):
             r = self.http.put(f'{self.url}/{name}', json=collection)
         else:
@@ -104,16 +105,13 @@ class PygeoapiConfig(BaseConfig):
         :returns: `dict` of collection configuration
         """
 
-        resource_id = meta.get('id')
+        resource_id = meta.get('id').lower()
         type_ = meta.get('type', 'feature')
 
         provider_name = API_BACKEND_TYPE
 
         if type_ == 'record':
             provider_name = f'{provider_name}Catalogue'
-
-        if is_dataset(resource_id):
-            resource_id = f'{resource_id}.*'.lower()
 
         collection = {
             'type': 'collection',
@@ -135,7 +133,7 @@ class PygeoapiConfig(BaseConfig):
             'providers': [{
                 'type': type_,
                 'name': provider_name,
-                'data': f'{API_BACKEND_URL}/{resource_id}',  # noqa
+                'data': f'{API_BACKEND_URL}/{resource_id}',
                 'id_field': meta.get('id_field'),
                 'time_field': meta.get('time_field'),
                 'title_field': meta.get('title_field')
