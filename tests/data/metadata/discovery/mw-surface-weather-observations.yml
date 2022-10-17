@@ -2,9 +2,8 @@ wis2box:
     retention: P30D
     topic_hierarchy: mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP
     data_category: observationsSurfaceLand
-    country_code: mw
-    originator: FWCL
-    station_type: landFixed
+    country: mw
+    centre_id: FWCL
 
 mcf:
     version: 1.0

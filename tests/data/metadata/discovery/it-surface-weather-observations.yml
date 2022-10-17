@@ -2,9 +2,8 @@ wis2box:
     retention: P30D
     topic_hierarchy: ita.roma_met_centre.data.core.weather.surface-based-observations.SYNOP
     data_category: observationsSurfaceLand
-    country_code: it
-    originator: LIIB
-    station_type: landFixed
+    country: it
+    centre_id: LIIB
 
 mcf:
     version: 1.0
