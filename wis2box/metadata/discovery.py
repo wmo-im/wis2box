@@ -101,18 +101,18 @@ class DiscoveryMetadata(BaseMetadata):
         return record
 
 
-def publish_broker_message(record, country: str, centre_id: str) -> bool:
+def publish_broker_message(record, country: str, center_id: str) -> bool:
     """
     Publish discovery metadata to broker
 
     :param record: `dict` of discovery metadata record
     :param country: ISO 3166 alpha 3
-    :param centre_id: centre acronym
+    :param center_id: center acronym
 
     :returns: `bool` of publish result
     """
 
-    topic = f'origin/a/wis2/{country.lower()}/{centre_id.lower()}/metadata'  # noqa
+    topic = f'origin/a/wis2/{country.lower()}/{center_id.lower()}/metadata'  # noqa
 
     # load plugin for broker
     defs = {
@@ -168,7 +168,7 @@ def publish(ctx, filepath, verbosity):
         record_mcf = dm.parse_record(filepath.read())
         record = dm.generate(record_mcf)
         publish_broker_message(record, record_mcf['wis2box']['country'],
-                               record_mcf['wis2box']['centre_id'])
+                               record_mcf['wis2box']['center_id'])
         upsert_collection_item('discovery-metadata', record)
     except Exception as err:
         raise click.ClickException(err)

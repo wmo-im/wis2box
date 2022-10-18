@@ -3,7 +3,7 @@ wis2box:
     topic_hierarchy: ita.roma_met_centre.data.core.weather.surface-based-observations.SYNOP
     data_category: observationsSurfaceLand
     country: ita
-    centre_id: roma_met_centre
+    center_id: roma_met_centre
 
 mcf:
     version: 1.0

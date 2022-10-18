@@ -3,7 +3,7 @@ wis2box:
     topic_hierarchy: mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP
     data_category: observationsSurfaceLand
     country: mwi
-    centre_id: mwi_met_centre
+    center_id: mwi_met_centre
 
 mcf:
     version: 1.0

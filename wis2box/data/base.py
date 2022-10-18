@@ -75,7 +75,7 @@ class BaseAbstractData:
         self.topic_hierarchy = TopicHierarchy(
             discovery_metadata['metadata']['identifier'])
 
-        self.centre_id = discovery_metadata['wis2box']['centre_id']
+        self.center_id = discovery_metadata['wis2box']['center_id']
         self.data_category = discovery_metadata['wis2box']['data_category']
         self.country = discovery_metadata['wis2box']['country']
         self.representation = None

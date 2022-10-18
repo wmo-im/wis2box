@@ -3,7 +3,7 @@ wis2box:
     topic_hierarchy: dza.alger_met_centre.data.core.weather.surface-based-observations.SYNOP
     data_category: observationsSurfaceLand
     country: dza
-    centre_id: alger_met_centre
+    center_id: alger_met_centre
 
 mcf:
     version: 1.0
