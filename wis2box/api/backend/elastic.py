@@ -42,6 +42,14 @@ SETTINGS = {
             'geometry': {
                 'type': 'geo_shape'
             },
+            'reportId': {
+                'type': 'text',
+                'fields': {
+                    'raw': {
+                        'type': 'keyword'
+                    }
+                }
+            },
             'properties': {
                 'properties': {
                     'resultTime': {
