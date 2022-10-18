@@ -22,7 +22,6 @@
 from copy import deepcopy
 import logging
 
-from datetime import datetime
 from elasticsearch import Elasticsearch, helpers
 from typing import Tuple
 
@@ -63,6 +62,12 @@ SETTINGS = {
                     },
                     'phenomenonTime': {
                         'type': 'text'
+                    },
+                    'wigos_station_identifier': {
+                        'type': 'text',
+                        'fields': {
+                            'raw': {'type': 'keyword'}
+                        }
                     },
                     'value': {
                         'type': 'float',
