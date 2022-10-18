@@ -71,7 +71,7 @@ jobs:
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
     - name: sync stations 🔄
       run: |
-        python3 wis2box-ctl.py execute wis2box metadata station sync /data/wis2box/metadata/station/station_list.csv
+        python3 wis2box-ctl.py execute wis2box metadata station publish-collection
     - name: run integration tests ⚙️
       run: |
         sleep 5
