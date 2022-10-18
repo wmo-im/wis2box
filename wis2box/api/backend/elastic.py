@@ -54,7 +54,7 @@ SETTINGS = {
                             }
                         }
                     },
-                    'pubTime': {
+                    'pubtime': {
                         'type': 'date',
                         'fields': {
                             'raw': {
@@ -210,7 +210,7 @@ class ElasticBackend(BaseBackend):
                     try:
                         date_ = parse_date(feature['properties']['resultTime'])
                     except KeyError:
-                        date_ = parse_date(feature['properties']['pubTime'])
+                        date_ = parse_date(feature['properties']['pubtime'])
                     es_index2 = f"{es_index}.{date_.strftime('%Y-%m-%d')}"
                 yield {
                     '_index': es_index2,
