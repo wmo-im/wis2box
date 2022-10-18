@@ -181,7 +181,7 @@ def test_data_api():
 def test_message_api():
     """Test message API collection queries"""
 
-    url = f'{API_URL}/collections/messages/items?sortby=-resultTime'
+    url = f'{API_URL}/collections/messages/items?sortby=-wigos_station_identifier'  # noqa
     r = SESSION.get(url).json()
 
     assert r['numberMatched'] == 89
