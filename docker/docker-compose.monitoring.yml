@@ -103,6 +103,8 @@ services:
     <<: *logging
   wis2box-auth:
     <<: *logging
+  minio:
+    <<: *logging
 
 volumes:
   loki-data:
