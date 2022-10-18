@@ -144,7 +144,7 @@ class WISNotificationMessage(PubSubMessage):
             'geometry': self.geometry,
             'properties': {
                 'data-id': f'{topic}/{self.identifier}',
-                'pubTime': self.publish_datetime,
+                'pubtime': self.publish_datetime,
                 'content': {
                     'length': self.length
                 },
@@ -180,6 +180,6 @@ def gcm() -> dict:
         'bbox': [-180, -90, 180, 90],
         'links': ['https://example.org'],
         'id_field': 'id',
-        'time_field': 'pubTime',
+        'time_field': 'pubtime',
         'title_field': 'id'
     }
