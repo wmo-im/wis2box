@@ -80,7 +80,7 @@ class MQTTPubSubClient(BasePubSubClient):
         LOGGER.debug(f'Topic: {topic}')
         LOGGER.debug(f'Message: {message}')
 
-        result = self.conn.publish(topic, message)
+        result = self.conn.publish(topic, message, qos=1)
 
         result.wait_for_publish()
 
@@ -103,7 +103,7 @@ class MQTTPubSubClient(BasePubSubClient):
         def on_connect(client, userdata, flags, rc):
             LOGGER.debug('Connected to broker {self.broker}')
             LOGGER.debug('Subscribing to topic {topic} ')
-            client.subscribe(topic)
+            client.subscribe(topic, qos=1)
             LOGGER.debug('Subscribed to topic {topic}')
 
         def on_disconnect(client, userdata, rc):
