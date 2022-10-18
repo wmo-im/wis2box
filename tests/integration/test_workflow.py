@@ -181,7 +181,7 @@ def test_data_api():
 def test_message_api():
     """Test message API collection queries"""
 
-    url = f'{API_URL}/collections/messages/items'
+    url = f'{API_URL}/collections/messages/items?sortby=-resultTime'
     r = SESSION.get(url).json()
 
     assert r['numberMatched'] == 89
