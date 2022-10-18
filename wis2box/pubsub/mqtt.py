@@ -82,7 +82,8 @@ class MQTTPubSubClient(BasePubSubClient):
 
         result = self.conn.publish(topic, message, qos=1)
 
-        result.wait_for_publish()
+        # TODO: investigate implication
+        # result.wait_for_publish()
 
         if result.is_published:
             return True
