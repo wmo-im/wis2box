@@ -62,7 +62,6 @@ class PygeoapiConfig(BaseConfig):
         :returns: `bool` of add result
         """
 
-        print("JJJ", collection)
         if self.has_collection(name):
             r = self.http.put(f'{self.url}/{name}', json=collection)
         else:
