@@ -112,7 +112,7 @@ def publish_broker_message(record, country: str, centre_id: str) -> bool:
     :returns: `bool` of publish result
     """
 
-    topic = f'origin/a/wis2/{country}/{centre_id}/metadata'
+    topic = f'origin/a/wis2/{country.lower()}/{centre_id.lower()}/metadata'  # noqa
 
     # load plugin for broker
     defs = {
