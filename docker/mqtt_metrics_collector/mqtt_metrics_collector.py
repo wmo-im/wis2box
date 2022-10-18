@@ -126,7 +126,7 @@ def gather_mqtt_metrics():
                 _port = 1883
         if broker_url.scheme == 'mqtts':
             client.tls_set(tls_version=2)
-        client.connect(broker_url.hostname,_port)
+        client.connect(broker_url.hostname, _port)
         client.loop_forever()
     except Exception as e:
         logger.error(f"Failed to setup MQTT-client with error: {e}")
