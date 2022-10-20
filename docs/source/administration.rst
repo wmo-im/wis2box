@@ -47,7 +47,7 @@ Public environment variables
 The following environment variables are used for public services:
 
 - ``WIS2BOX_API_URL``: API application
-- ``WIS2BOX_MQTT_URL``: MQTT broker
+- ``WIS2BOX_BROKER_PUBLIC``: MQTT broker
 - ``WIS2BOX_URL``: Web application, including access to data download/object storage
 
 Default service ports

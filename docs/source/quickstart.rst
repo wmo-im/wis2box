@@ -60,18 +60,18 @@ Publish test discovery metadata
 
 .. code-block:: bash
 
-    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/mw-surface-weather-observations.yml
-    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/it-surface-weather-observations.yml
-    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/dz-surface-weather-observations.yml
+    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/mwi-surface-weather-observations.yml
+    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/ita-surface-weather-observations.yml
+    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/dza-surface-weather-observations.yml
 
 
 Setup observation collections from discovery metadata
 
 .. code-block:: bash
 
-    wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/mw-surface-weather-observations.yml
-    wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/it-surface-weather-observations.yml
-    wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/dz-surface-weather-observations.yml
+    wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/mwi-surface-weather-observations.yml
+    wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/ita-surface-weather-observations.yml
+    wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/dza-surface-weather-observations.yml
 
 Ingest data, using data ingest command to push the wis2box-incoming bucket
 
