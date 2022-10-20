@@ -2,9 +2,8 @@ wis2box:
     retention: P30D
     topic_hierarchy: ISO3C_country.center_id.data.core.weather.surface-based-observations.SYNOP
     data_category: observationsSurfaceLand
-    country_code: ISO3C_country
-    originator: center_id
-    station_type: landFixed
+    country: ISO3C_country
+    center_id: center_id
 
 mcf:
     version: 1.0
