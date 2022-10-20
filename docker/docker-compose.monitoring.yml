@@ -23,8 +23,10 @@ services:
     <<: *logging
     container_name: loki
     image: grafana/loki:2.4.1
+    command: -config.file=/etc/loki/loki-config.yml
     volumes:
       - loki-data:/loki
+      - ./loki/loki-config.yml:/etc/loki/loki-config.yml
     networks:
       vpcbr: # this is the place where we assign the static ipv4 address
         ipv4_address: 10.5.0.2
@@ -54,6 +56,18 @@ services:
       - prometheus-data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+  # cadvisor to monitor our containers!
+  cadvisor:
+    image: 'google/cadvisor:latest'
+    container_name: cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk:/dev/disk/:ro
+    depends_on:
+      - wis2box
   # Grafana, graphical monitoring dashboards for wis2box using data from loki and prometheus
   grafana:
     <<: *logging
@@ -84,6 +98,14 @@ services:
   wis2box:
     <<: *logging
   mosquitto:
+    <<: *logging
+  wis2box-api:
+    <<: *logging
+  elasticsearch:
+    <<: *logging
+  wis2box-auth:
+    <<: *logging
+  minio:
     <<: *logging
 
 volumes:
