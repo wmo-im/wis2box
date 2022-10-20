@@ -42,7 +42,7 @@ function error() {
 }
 
 # Workdir
-cd '/wis2box'
+cd '/app'
 
 # SCRIPT_NAME should not have value '/'
 [[ "${SCRIPT_NAME}" = '/' ]] && export SCRIPT_NAME="" && echo "make SCRIPT_NAME empty from /"
@@ -53,6 +53,6 @@ exec gunicorn --workers ${WSGI_WORKERS} \
         --timeout ${WSGI_WORKER_TIMEOUT} \
         --name=${CONTAINER_NAME} \
         --bind ${CONTAINER_HOST}:${CONTAINER_PORT} \
-        wis2box-auth.app:app
+        wis2box_auth.app:app
 
 echo "END /auth-entrypoint.sh"

@@ -25,14 +25,21 @@ import os
 import re
 from typing import Tuple
 
-from wis2box.auth import is_token_authorized, is_resource_open
-from wis2box.env import LOGLEVEL, LOGFILE
-from wis2box.log import setup_logger
+from wis2box_auth import (
+    is_token_authorized,
+    is_resource_open,
+    create_token,
+    delete_token,
+)
+from wis2box_auth.log import setup_logger
 
 __version__ = '0.5.dev0'
 
 LOGGER = logging.getLogger(__name__)
 app = Flask(__name__)
+
+LOGLEVEL = os.environ.get('WIS2BOX_LOGGING_LOGLEVEL', 'ERROR')
+LOGFILE = os.environ.get('WIS2BOX_LOGGING_LOGFILE', 'stdout')
 setup_logger(LOGLEVEL, LOGFILE)
 app.secret_key = os.urandom(32)
 
@@ -47,10 +54,7 @@ def get_response(code: int, description: str) -> Tuple[dict, int]:
     :returns: `Tuple` of wis2box-auth response instance
     """
 
-    return {
-        'code': code,
-        'description': description
-    }, code
+    return {'code': code, 'description': description}, code
 
 
 def extract_topic(uri: str) -> str:
@@ -63,7 +67,7 @@ def extract_topic(uri: str) -> str:
     """
 
     # TODO: Move away from regex matching for topic hierarchies.
-    pattern = r'(data[\/.][a-z]{4,11}[\/.][a-z-]+[\/.][a-z]{2}[\/.][A-Z]*[\/.][a-zA-Z]+)'  # noqa
+    pattern = r'([a-z]{3}\.[_a-z]+\.(data|metadata|reports)\.(core|reccomended)\.[\w]+\.[\w-]+\.[\w]+)'  # noqa
     prog = re.compile(pattern)
     match = prog.search(uri)
     return match[0] if match else None
@@ -88,21 +92,61 @@ def authorize():
     # check if resource passed exists in auth list
     # if no, it's open, return
     if resource is None or is_resource_open(resource):
-        return get_response(200, 'Resource is open')
+        msg = 'Resource is open'
+        LOGGER.debug(msg)
+        return get_response(200, msg)
 
     LOGGER.debug(f'Request for restricted resource: {resource}')
     # if yes, check that api key exists
     # if no, return 401
     if api_key is None:
-        return get_response(401, 'Missing API key')
+        msg = 'Missing API key'
+        LOGGER.debug(msg)
+        return get_response(401, msg)
 
     # check that API key can access the resource
-    if is_token_authorized(api_key, resource):
-        LOGGER.debug('Access granted')
-        return get_response(200, 'Authorized')
+    if is_token_authorized(resource, api_key):
+        msg = f'Access granted for {resource}'
+        LOGGER.debug(msg)
+        return get_response(200, msg)
     else:
-        LOGGER.debug('Access denied')
-        return get_response(401, 'Unauthorized')
+        msg = f'Access denied for {resource}'
+        LOGGER.debug(msg)
+        return get_response(401, msg)
+
+
+@app.route('/add_token', methods=['POST'])
+def add_token():
+    """Add access token for a topic"""
+
+    token = request.form.get('token')
+    topic = request.form.get('topic')
+
+    if create_token(topic, token):
+        msg = f'Access token created for {topic}'
+        LOGGER.debug(msg)
+        return get_response(200, msg)
+    else:
+        msg = f'Failed to create access token {topic}'
+        LOGGER.debug(msg)
+        return get_response(400, msg)
+
+
+@app.route('/remove_token', methods=['POST'])
+def remove_token():
+    """Delete one to many tokens for a topic"""
+
+    token = request.form.get('token')
+    topic = request.form.get('topic')
+
+    if delete_token(topic, token):
+        msg = f'Access token(s) deleted for {topic}'
+        LOGGER.error(msg)
+        return get_response(200, msg)
+    else:
+        msg = f'Failed to remove access token(s) for {topic}'
+        LOGGER.error(msg)
+        return get_response(400, msg)
 
 
 if __name__ == '__main__':

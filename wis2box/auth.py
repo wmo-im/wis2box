@@ -21,13 +21,12 @@
 
 import click
 import logging
-from secrets import choice
-from string import ascii_letters, digits
+import requests
+from secrets import token_hex
 
 from wis2box import cli_helpers
 from wis2box.topic_hierarchy import validate_and_load
-from wis2box.auth.base import BaseAuth
-from wis2box.env import AUTH_STORE
+from wis2box.env import AUTH_URL
 
 LOGGER = logging.getLogger(__name__)
 
@@ -40,9 +39,11 @@ def is_resource_open(topic: str) -> bool:
 
     :returns: `bool` of result
     """
-    auth_db = BaseAuth(AUTH_STORE)
+
     th, _ = validate_and_load(topic)
-    return auth_db.is_resource_open(th.dotpath)
+    headers = {'X-Original-URI': th.dotpath}
+    r = requests.get(f'{AUTH_URL}/authorize', headers=headers)
+    return r.ok
 
 
 def is_token_authorized(auth_key: str, topic: str) -> bool:
@@ -54,9 +55,12 @@ def is_token_authorized(auth_key: str, topic: str) -> bool:
 
     :returns: `bool` of result
     """
-    auth_db = BaseAuth(AUTH_STORE)
-    th, _ = validate_and_load(topic)
-    return auth_db.is_token_authorized(auth_key, th.dotpath)
+    headers = {
+        'X-Original-URI': topic,
+        'Authorization': f'Bearer {auth_key}',
+    }
+    r = requests.get(f'{AUTH_URL}/authorize', headers=headers)
+    return r.ok
 
 
 @click.group()
@@ -84,55 +88,55 @@ def has_access(ctx, topic_hierarchy, token):
 
 @click.command()
 @click.pass_context
-def show(ctx):
-    """Show topics with access control configured"""
-    auth_db = BaseAuth(AUTH_STORE)
-    [click.echo(f'Topic: {topic}') for topic in auth_db.topics()]
-
-
-@click.command()
-@click.pass_context
 @cli_helpers.OPTION_TOPIC_HIERARCHY
+@click.option(
+    '--yes', '-y', default=False, is_flag=True, help='Automatic yes to prompts'
+)
 @click.argument('token', required=False)
-def add_token(ctx, topic_hierarchy, token):
+def add_token(ctx, topic_hierarchy, yes, token):
     """Add access token for a topic"""
 
     if topic_hierarchy is None:
         raise click.ClickException('Missing -th/--topic-hierarchy')
 
     if token is None:
-        click.echo(f'Generating token for {topic_hierarchy}')
-        token = ''.join(choice(ascii_letters + digits) for _ in range(24))
+        click.echo('Generating random token')
+        token = token_hex(32)
 
-    if not click.confirm(f'Continue with token: {token}', prompt_suffix='?'):
+    if yes:
+        click.echo(f'Using token: {token}')
+    elif not click.confirm(f'Continue with token: {token}', prompt_suffix='?'):
         return
 
-    auth_db = BaseAuth(AUTH_STORE)
-    auth_db.add(token, topic_hierarchy)
+    data = {'topic': topic_hierarchy, 'token': token}
+
+    r = requests.post(f'{AUTH_URL}/add_token', data=data)
+    click.echo(r.json().get('description'))
+    return r.ok
 
 
 @click.command()
 @click.pass_context
 @cli_helpers.OPTION_TOPIC_HIERARCHY
 @click.argument('token', required=False, nargs=-1)
-def remove_tokens(ctx, topic_hierarchy, token):
+def remove_token(ctx, topic_hierarchy, token):
     """Delete one to many tokens for a topic"""
 
     if topic_hierarchy is None:
         raise click.ClickException('Missing -th/--topic-hierarchy')
 
-    auth_db = BaseAuth(AUTH_STORE)
+    data = {'topic': topic_hierarchy}
 
-    if not token:
+    if token:
         # Delete all tokens for a given th
-        return auth_db.delete_by_topic_hierarchy(topic_hierarchy)
-    else:
-        # Delete specific tokens
-        return [auth_db.delete_by_token(t, topic_hierarchy) for t in token]
+        data['token'] = token
+
+    r = requests.post(f'{AUTH_URL}/remove_token', data=data)
+    click.echo(r.json().get('description'))
+    return r.ok
 
 
-auth.add_command(is_restricted)
-auth.add_command(has_access)
-auth.add_command(show)
 auth.add_command(add_token)
-auth.add_command(remove_tokens)
+auth.add_command(has_access)
+auth.add_command(is_restricted)
+auth.add_command(remove_token)

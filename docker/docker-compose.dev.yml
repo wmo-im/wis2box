@@ -10,11 +10,6 @@ services:
 #    volumes:
 #      - ../../wis2box-api/wis2box_api:/usr/local/lib/python3.8/dist-packages/wis2box_api-0.3.dev0-py3.8.egg/wis2box_api
 
-  wis2box-auth:
-    volumes:
-      - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
-      - ./wis2box-auth/app.py:/wis2box-auth/wis2box-auth/app.py
-
   elasticsearch:
     ports:
       - 9200:9200

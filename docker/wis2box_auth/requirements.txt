@@ -1,0 +1,5 @@
+flask
+flask-cors
+gevent
+gunicorn
+jinja2==3.0.3

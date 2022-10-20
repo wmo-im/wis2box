@@ -113,16 +113,17 @@ services:
     container_name: wis2box-auth
     #image: ghcr.io/wmo-im/wis2box-auth:0.4.0
     build:
-      context: ./wis2box-auth
+      context: ./wis2box_auth
     env_file:
       - default.env
       - ../dev.env
     volumes:
-      - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
+      - auth-data:/data/wis2box:rw
     depends_on:
       - wis2box
 
 volumes:
   es-data:
   minio-data:
+  auth-data:
   api-config:

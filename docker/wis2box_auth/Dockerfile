@@ -19,18 +19,27 @@
 #
 ###############################################################################
 
-#FROM wis2box_project_wis2box
-FROM ghcr.io/wmo-im/wis2box:latest
+FROM python:3.9.13-slim
+
+LABEL maintainer="tomkralidis@gmail.com"
+
+ENV DEBIAN_FRONTEND="noninteractive" \
+    DEBIAN_PACKAGES="python3-pip python3-setuptools python3-distutils python3-flask python3-flask-cors python3-gevent gunicorn python3-dateparser python3-tz"
 
 RUN apt-get update -y \
-    && pip3 install pip -U \
-    && pip3 install gevent gunicorn flask flask-cors jinja2==3.0.3
+    && apt-get install -y ${DEBIAN_PACKAGES} \
+    # cleanup
+    && apt autoremove -y  \
+    && apt-get -q clean \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /wis2box/wis2box-auth/
+# copy the app
+COPY . /app
+# install wis2box_auth
+RUN cd /app \
+    && pip3 install -r requirements.txt \
+    && python3 setup.py install
 
-COPY ./app.py /wis2box/wis2box-auth/app.py
-COPY ./entrypoint.sh /auth-entrypoint.sh
+COPY ./entrypoint.sh /entrypoint.sh
 
-WORKDIR /wis2box
-
-ENTRYPOINT [ "/auth-entrypoint.sh" ]
+ENTRYPOINT [ "/entrypoint.sh" ]
