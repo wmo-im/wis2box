@@ -272,7 +272,7 @@ def get_geometry(wsi: str = '') -> dict:
         LOGGER.warning('Elevation missing from station metadata')
         return None
     else:
-        geometry['coordinates'].append(
+        geometry['coordinates'].append(location['elevation'])
 
     return geometry
 
