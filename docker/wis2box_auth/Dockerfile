@@ -23,18 +23,9 @@ FROM python:3.9.13-slim
 
 LABEL maintainer="tomkralidis@gmail.com"
 
-ENV DEBIAN_FRONTEND="noninteractive" \
-    DEBIAN_PACKAGES="python3-pip python3-setuptools python3-distutils python3-flask python3-flask-cors python3-gevent gunicorn python3-dateparser python3-tz"
-
-RUN apt-get update -y \
-    && apt-get install -y ${DEBIAN_PACKAGES} \
-    # cleanup
-    && apt autoremove -y  \
-    && apt-get -q clean \
-    && rm -rf /var/lib/apt/lists/*
-
 # copy the app
 COPY . /app
+
 # install wis2box_auth
 RUN cd /app \
     && pip3 install -r requirements.txt \
