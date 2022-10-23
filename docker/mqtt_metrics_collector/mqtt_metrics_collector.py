@@ -25,9 +25,8 @@ import logging
 import paho.mqtt.client as mqtt
 import random
 
-from urllib.parse import urlparse
-
 import sys
+import json
 
 from prometheus_client import start_http_server, Counter
 
@@ -57,7 +56,6 @@ INTERRUPT = False
 def sub_connect(client, userdata, flags, rc, properties=None):
     """
     function executed 'on_connect' for paho.mqtt.client
-    subscribes to origin/#
 
     :param client: client-object associated to 'on_connect'
     :param userdata: userdata
@@ -69,15 +67,26 @@ def sub_connect(client, userdata, flags, rc, properties=None):
     """
 
     logger.info(f"on connection to subscribe: {mqtt.connack_string(rc)}")
-    for s in ["origin/#"]:
+    for s in ["wis2box/notifications", "wis2box/failure", "wis2box-storage/#"]:
         client.subscribe(s, qos=1)
 
 
-mqtt_msg_counter = Counter('mqtt_msg_count',
-                           'Nr of messages seen on MQTT')
-mqtt_msg_topic_counter = Counter('mqtt_msg_count_topic',
-                                 'Nr of messages seen on MQTT, by topic',
-                                 ["topic"])
+notify_total = Counter('wis2box_notify_total',
+                       'Total notifications sent by wis2box')
+notify_topic_wsi_total = Counter('wis2box_notify_topic_wsi_total',
+                                 'Total notifications sent by wis2box, by topic and WSI', # noqa
+                                 ["topic", "WSI"])
+
+failure_total = Counter('wi2box_failure_total',
+                        'Total failed actions reported by wis2box')
+failure_description_total = Counter('wis2box_failure_type_total',
+                                    'Total notifications sent by wis2box, by failure description', # noqa
+                                    ["description"])
+
+storage_incoming_total = Counter('wis2box_storage_incoming_total',
+                                 'Total storage notifications received on incoming') # noqa
+storage_public_total = Counter('wis2box_storage_public_total',
+                               'Total storage notifications received on public') # noqa
 
 
 def sub_mqtt_metrics(client, userdata, msg):
@@ -91,10 +100,20 @@ def sub_mqtt_metrics(client, userdata, msg):
 
     :returns: `None`
     """
-    # m = json.loads(msg.payload.decode('utf-8'))
-    logger.info(f"Received message on topic ={msg.topic}")
-    mqtt_msg_topic_counter.labels(msg.topic).inc(1)
-    mqtt_msg_counter.inc(1)
+    m = json.loads(msg.payload.decode('utf-8'))
+    logger.debug(f"Received message on topic={msg.topic}")
+    if str(msg.topic).startswith('wis2box/notifications'):
+        notify_topic_wsi_total.labels(
+            m['topic'], m['wigos_station_identifier']).inc(1)
+        notify_total.inc(1)
+    if str(msg.topic).startswith('wis2box/failure'):
+        failure_description_total.labels(m['description']).inc(1)
+        failure_total.inc(1)
+    if str(msg.topic).startswith('wis2box-storage'):
+        if str(m["Key"]).startswith('wis2box-incoming'):
+            storage_incoming_total.inc(1)
+        if str(m["Key"]).startswith('wis2box-public'):
+            storage_public_total.inc(1)
 
 
 def gather_mqtt_metrics():
@@ -103,30 +122,24 @@ def gather_mqtt_metrics():
 
     :returns: `None`
     """
-    # explicitly set the counter to 0 at the start
-    mqtt_msg_counter.inc(0)
 
-    broker_url = urlparse(os.environ.get('WIS2BOX_BROKER_PUBLIC', ''))
+    # connect to the internal broker
+    broker_host = os.environ.get('WIS2BOX_BROKER_HOST', '')
+    broker_username = os.environ.get('WIS2BOX_BROKER_USERNAME', '')
+    broker_password = os.environ.get('WIS2BOX_BROKER_PASSWORD', '')
+    broker_port = int(os.environ.get('WIS2BOX_BROKER_PORT', '1883'))
 
     # generate a random clientId for the mqtt-session
     r = random.Random()
     client_id = f"mqtt_metrics_collector_{r.randint(1,1000):04d}"
     try:
         logger.info("setup connection")
-        logger.info(f"host={broker_url.hostname}, user={broker_url.username}")
+        logger.info(f"host={broker_host}, user={broker_username}")
         client = mqtt.Client(client_id=client_id, protocol=mqtt.MQTTv5)
         client.on_connect = sub_connect
         client.on_message = sub_mqtt_metrics
-        client.username_pw_set(broker_url.username, broker_url.password)
-        _port = broker_url.port
-        if _port is None:
-            if broker_url.scheme == 'mqtts':
-                _port = 8883
-            else:
-                _port = 1883
-        if broker_url.scheme == 'mqtts':
-            client.tls_set(tls_version=2)
-        client.connect(broker_url.hostname, _port)
+        client.username_pw_set(broker_username, broker_password)
+        client.connect(broker_host, broker_port)
         client.loop_forever()
     except Exception as e:
         logger.error(f"Failed to setup MQTT-client with error: {e}")

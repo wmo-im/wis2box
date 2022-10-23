@@ -24,7 +24,8 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 2,
+  "iteration": 1666555249151,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -45,7 +46,7 @@
             "axisSoftMin": 0,
             "barAlignment": 0,
             "drawStyle": "bars",
-            "fillOpacity": 33,
+            "fillOpacity": 100,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -88,13 +89,14 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
-        "w": 12,
+        "h": 4,
+        "w": 15,
         "x": 0,
         "y": 0
       },
       "id": 2,
-      "interval": "1m",
+      "interval": "5m",
+      "maxDataPoints": 3000,
       "options": {
         "legend": {
           "calcs": [],
@@ -114,51 +116,118 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "delta(minio_bucket_usage_object_total{bucket=\"wis2box-incoming\"}[1h])",
-          "interval": "",
-          "legendFormat": "Received files per hour in wis2box-incoming",
+          "expr": "delta(wis2box_storage_incoming_total{}[$__interval])",
+          "interval": "5m",
+          "legendFormat": "New/updated files per hour in wis2box-incoming",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Received files per hour in wis2box-incoming",
+      "title": "New/updated files in wis2box-incoming storage",
       "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P55348B596EBB51C3"
+        "type": "prometheus",
+        "uid": "PABAFD29CE247021E"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "displayMode": "auto",
+            "filterable": false,
+            "inspect": false
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "WSI"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 215
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 18,
-        "w": 9,
-        "x": 12,
+        "h": 12,
+        "w": 7,
+        "x": 15,
         "y": 0
       },
-      "id": 8,
+      "id": 12,
+      "interval": "1m",
+      "maxDataPoints": 1,
       "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": false,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": true,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true
+        "footer": {
+          "fields": [],
+          "reducer": [
+            "sum"
+          ],
+          "show": true
+        },
+        "showHeader": true,
+        "sortBy": []
       },
+      "pluginVersion": "9.0.3",
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "wis2box-loki"
+            "type": "prometheus",
+            "uid": "PABAFD29CE247021E"
           },
-          "expr": "{compose_service=\"wis2box\"}",
-          "hide": false,
-          "refId": "B"
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(delta(wis2box_notify_topic_wsi_total{}[$__range])>0) by (WSI)",
+          "format": "table",
+          "instant": true,
+          "interval": "5m",
+          "legendFormat": "{{WSI}}",
+          "range": false,
+          "refId": "A"
         }
       ],
-      "title": "wis2box logging",
-      "type": "logs"
+      "title": "Notifications published by WIGOS-ID",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "Value": "Number of notifications",
+              "WSI": "WIGOS-ID"
+            }
+          }
+        }
+      ],
+      "type": "table"
     },
     {
       "datasource": {
@@ -176,7 +245,7 @@
             "axisSoftMax": 5,
             "barAlignment": 0,
             "drawStyle": "bars",
-            "fillOpacity": 30,
+            "fillOpacity": 100,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -219,13 +288,13 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
-        "w": 12,
+        "h": 4,
+        "w": 15,
         "x": 0,
-        "y": 6
+        "y": 4
       },
       "id": 6,
-      "interval": "1m",
+      "interval": "5m",
       "options": {
         "legend": {
           "calcs": [],
@@ -245,14 +314,14 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "delta(minio_bucket_usage_object_total{bucket=\"wis2box-public\"}[1h])",
-          "interval": "",
-          "legendFormat": "New files per hour in wis2box-public",
+          "expr": "delta(wis2box_storage_public_total{}[$__interval])",
+          "interval": "5m",
+          "legendFormat": "New/updated files in wis2box-public",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "New files per hour in wis2box-public",
+      "title": "New/updated files in wis2box-public storage",
       "type": "timeseries"
     },
     {
@@ -271,7 +340,7 @@
             "axisSoftMax": 5,
             "barAlignment": 0,
             "drawStyle": "bars",
-            "fillOpacity": 36,
+            "fillOpacity": 100,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -314,13 +383,13 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
-        "w": 12,
+        "h": 4,
+        "w": 15,
         "x": 0,
-        "y": 12
+        "y": 8
       },
       "id": 10,
-      "interval": "1m",
+      "interval": "5m",
       "options": {
         "legend": {
           "calcs": [],
@@ -340,15 +409,161 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "delta(mqtt_msg_count_total[1h])",
-          "interval": "",
-          "legendFormat": "mqtt messages published per hour",
+          "expr": "delta(wis2box_notify_total[$__interval])",
+          "interval": "5m",
+          "legendFormat": "WIS2.0 notifications",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "mqtt messages published per hour",
+      "title": "Number of WIS2.0 notifications published by wis2box",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P55348B596EBB51C3"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "id": 8,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": false,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "wis2box-loki"
+          },
+          "editorMode": "builder",
+          "expr": "{compose_service=\"wis2box\"} |~ `ERROR|WARNING`",
+          "hide": false,
+          "legendFormat": "",
+          "queryType": "range",
+          "refId": "B"
+        }
+      ],
+      "title": "wis2box logging: ERRORS and WARNINGs",
+      "type": "logs"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PABAFD29CE247021E"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-BlYlRd"
+          },
+          "custom": {
+            "align": "center",
+            "displayMode": "auto",
+            "filterable": false,
+            "inspect": false
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Failure description"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 435
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 10,
+        "x": 12,
+        "y": 12
+      },
+      "id": 14,
+      "interval": "5m",
+      "maxDataPoints": 1,
+      "options": {
+        "footer": {
+          "enablePagination": false,
+          "fields": [
+            "Value"
+          ],
+          "reducer": [
+            "sum"
+          ],
+          "show": true
+        },
+        "frameIndex": 0,
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "9.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PABAFD29CE247021E"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(delta(wis2box_failure_type_total{description!=\"\"}[$__range])) by (description)",
+          "format": "table",
+          "instant": true,
+          "interval": "5m",
+          "legendFormat": "{{description}}",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "wis2box processing failures",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "Value": "Number of occurences",
+              "description": "Failure description"
+            }
+          }
+        }
+      ],
+      "type": "table"
     }
   ],
   "schemaVersion": 36,
@@ -358,13 +573,13 @@
     "list": []
   },
   "time": {
-    "from": "now-2d",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "wis2box workflow monitoring",
   "uid": "lIowuuP7k",
-  "version": 1,
+  "version": 7,
   "weekStart": ""
 }

@@ -27,6 +27,12 @@ from wis2box.api import upsert_collection_item
 from wis2box.storage import get_data
 from wis2box.topic_hierarchy import validate_and_load
 
+from wis2box.plugin import load_plugin
+from wis2box.plugin import PLUGINS
+
+from wis2box.env import (BROKER_HOST, BROKER_USERNAME,
+                         BROKER_PASSWORD, BROKER_PORT)
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -53,21 +59,45 @@ class Handler:
             th = self.filepath
             fuzzy = True
 
+        # handler uses local broker to publish success/failure messages
+        defs = {
+            'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
+            'url': f"mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}", # noqa
+            'client_type': 'handler-publisher'
+        }
+        self.local_broker = load_plugin('pubsub', defs)
+
         try:
             self.topic_hierarchy, self.plugins = validate_and_load(
                 th, self.filetype, fuzzy=fuzzy)
         except Exception as err:
             msg = f'Topic Hierarchy validation error: {err}'
             LOGGER.error(msg)
+            self.publish_failure_message(
+                description='Topic hierarchy validation'
+            )
             raise ValueError(msg)
+
+    def publish_failure_message(self, description, plugin=None):
+        message = {
+            'filepath': self.filepath,
+            'description': description
+        }
+        if plugin is not None:
+            cl = plugin.__class__
+            message['plugin'] = f"{cl.__module__ }.{cl.__name__}"
+        # publish message
+        self.local_broker.pub('wis2box/failure', json.dumps(message))
 
     def handle(self) -> bool:
         for plugin in self.plugins:
-
             if not plugin.accept_file(self.filepath):
-                LOGGER.info(f'file {self.filepath} not accepted')
+                msg = f'file {self.filepath} not accepted'
+                LOGGER.info(msg)
+                self.publish_failure_message(
+                    description="filepath not accepted",
+                    plugin=plugin)
                 continue
-
             try:
                 if self.is_http:
                     plugin.transform(
@@ -79,13 +109,18 @@ class Handler:
             except Exception as err:
                 msg = f'file {self.filepath} failed to transform: {err}'
                 LOGGER.warning(msg)
+                self.publish_failure_message(
+                    description="failed to transform file",
+                    plugin=plugin)
                 return False
-
             try:
                 plugin.publish()
             except Exception as err:
                 msg = f'file {self.filepath} failed to publish: {err}'
                 LOGGER.warning(msg)
+                self.publish_failure_message(
+                    decription="failed to publish file to api-backend",
+                    plugin=plugin)
                 return False
 
         return True
