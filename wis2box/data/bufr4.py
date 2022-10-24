@@ -145,6 +145,9 @@ class ObservationDataBUFR(BaseAbstractData):
                     msg = f'Invalid station, wsi: {temp_wsi}, tsi: {tsi}'
                     LOGGER.warning(msg)
                     LOGGER.error(f'Failed to publish: {wsi}')
+                    self.publish_failure_message(
+                        description="Invalid station",
+                        wsi=temp_wsi)
                     continue
 
                 LOGGER.debug('Creating template BUFR')
@@ -189,6 +192,9 @@ class ObservationDataBUFR(BaseAbstractData):
                 except Exception as err:
                     LOGGER.warning(f'Invalid time: {data_date} {err}')
                     LOGGER.error(f'Failed to publish: {wsi}')
+                    self.publish_failure_message(
+                        description="Invalid time",
+                        wsi=wsi)
                     continue
 
                 field_names = [

@@ -61,8 +61,26 @@ class BaseAbstractData:
         self.output_data = {}
         self.discovery_metadata = {}
 
+        # load plugin for local broker
+        defs2 = {
+            'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
+            'url': f"mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}", # noqa
+            'client_type': 'notify-publisher'
+        }
+        self.local_broker = load_plugin('pubsub', defs2)
+
 #        if discovery_metadata:
 #            self.setup_discovery_metadata(discovery_metadata)
+
+    def publish_failure_message(self, description, wsi=None):
+        message = {
+            'filepath': self.incoming_filepath,
+            'description': description
+        }
+        if wsi is not None:
+            message['wigos_station_identifier'] = wsi
+        # publish message
+        self.local_broker.pub('wis2box/failure', json.dumps(message))
 
     def setup_discovery_metadata(self, discovery_metadata: dict) -> None:
         """
@@ -146,19 +164,12 @@ class BaseAbstractData:
         broker.pub(topic, wis_message.dumps())
         LOGGER.info(f'WISNotificationMessage published for {identifier}')
 
-        # load plugin for local broker
-        defs2 = {
-            'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-            'url': f"mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}", # noqa
-            'client_type': 'notify-publisher'
-        }
-        local_broker = load_plugin('pubsub', defs2)
         # publish message for internal monitoring
         notify_msg = {
             'topic': topic,
             'wigos_station_identifier': wigos_station_identifier
         }
-        local_broker.pub('wis2box/notifications', json.dumps(notify_msg))
+        self.local_broker.pub('wis2box/notifications', json.dumps(notify_msg))
 
         LOGGER.debug('Pushing message to API')
         upsert_collection_item('messages', wis_message.message)
