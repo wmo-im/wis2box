@@ -21,6 +21,7 @@
 
 import json
 import logging
+from multiprocessing import Process
 from pathlib import Path
 
 import click
@@ -34,6 +35,23 @@ from wis2box.plugin import load_plugin, PLUGINS
 from wis2box.pubsub.message import gcm
 
 LOGGER = logging.getLogger(__name__)
+
+
+def handle(filepath):
+    try:
+        LOGGER.info(f'Processing {filepath}')
+        handler = Handler(filepath)
+        if handler.handle():
+            LOGGER.info('Data processed')
+            for plugin in handler.plugins:
+                for filepath in plugin.files():
+                    LOGGER.info(f'Public filepath: {filepath}')
+    except ValueError as err:
+        msg = f'handle() error: {err}'
+        LOGGER.error(msg)
+    except Exception as err:
+        msg = f'handle() error: {err}'
+        raise err
 
 
 def on_message_handler(client, userdata, msg):
@@ -54,20 +72,9 @@ def on_message_handler(client, userdata, msg):
         LOGGER.warning('message payload could not be parsed')
         return
 
-    try:
-        LOGGER.info(f'Processing {filepath}')
-        handler = Handler(filepath)
-        if handler.handle():
-            LOGGER.info('Data processed')
-            for plugin in handler.plugins:
-                for filepath in plugin.files():
-                    LOGGER.info(f'Public filepath: {filepath}')
-    except ValueError as err:
-        msg = f'handle() error: {err}'
-        LOGGER.error(msg)
-    except Exception as err:
-        msg = f'handle() error: {err}'
-        raise err
+    p = Process(target=handle, args=(filepath,))
+    p.start()
+    p.join()
 
 
 @click.command()
