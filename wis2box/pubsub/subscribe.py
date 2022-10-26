@@ -62,9 +62,10 @@ def on_message_handler(client, userdata, msg):
 
     if message.get('EventName') == 's3:ObjectCreated:Put':
         LOGGER.debug('Incoming data is an s3 data object')
-        filepath = f'{STORAGE_SOURCE}/{message["Key"]}'
-        if str(message["Key"]).startswith(STORAGE_ARCHIVE):
-            LOGGER.info(f'Do not process archived-data: {message["Key"]}')
+        key = str(message['Key'])
+        filepath = f'{STORAGE_SOURCE}/{key}'
+        if key.startswith(STORAGE_ARCHIVE):
+            LOGGER.info(f'Do not process archived-data: {key}')
             return
     elif 'relPath' in message:
         LOGGER.debug('Incoming data is a filesystem path')
