@@ -21,8 +21,9 @@
 
 import json
 import logging
-from multiprocessing import Process
+import multiprocessing as mp
 from pathlib import Path
+from time import sleep
 
 import click
 
@@ -72,9 +73,11 @@ def on_message_handler(client, userdata, msg):
         LOGGER.warning('message payload could not be parsed')
         return
 
-    p = Process(target=handle, args=(filepath,))
+    while len(mp.active_children()) == mp.cpu_count():
+        sleep(0.1)
+
+    p = mp.Process(target=handle, args=(filepath,))
     p.start()
-    p.join()
 
 
 @click.command()
