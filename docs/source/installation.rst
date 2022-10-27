@@ -57,6 +57,7 @@ wis2box can be installed from a ZIP archive of a the latest branch or a `wis2box
 
     # curl, wget or download from your web browser
     curl https://github.com/wmo-im/wis2box/archive/refs/heads/main.zip
+    unzip main.zip
     cd wis2box-main
 
 GitHub
