@@ -59,7 +59,8 @@ Public services
 ^^^^^^^^^^^^^^^
 
 - ``8999``: Web application, API application, storage
-- ``1883``: Message broker
+- ``1883``: Message broker via MQTT
+- ``8884``: Message broker via MQTT/WebSockets
 
 
 Internal services
