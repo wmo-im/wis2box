@@ -162,6 +162,12 @@ class WISNotificationMessage(PubSubMessage):
 
         if wigos_station_identifier is not None:
             self.message['properties']['wigos_station_identifier'] = wigos_station_identifier  # noqa
+            link = {
+                'rel': 'via',
+                'type': 'text/html',
+                'href': f'https://oscar.wmo.int/surface/#/search/station/stationReportDetails/{wigos_station_identifier}'  # noqa
+            }
+            self.message['links'].append(link)
 
 
 def gcm() -> dict:
