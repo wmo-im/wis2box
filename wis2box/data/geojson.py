@@ -51,6 +51,7 @@ class ObservationDataGeoJSON(BaseAbstractData):
 
     def publish(self) -> bool:
         LOGGER.info('Publishing output data')
+        upsert_list[]
         for identifier, item in self.output_data.items():
             # now iterate over formats
             for format_, the_data in item.items():
@@ -63,9 +64,9 @@ class ObservationDataGeoJSON(BaseAbstractData):
                     msg = f'Empty data for {identifier}-{format_}; not publishing'  # noqa
                     LOGGER.warning(msg)
                     continue
-
-                LOGGER.debug('Publishing data to API')
-                upsert_collection_item(self.topic_hierarchy.dotpath, the_data)
+                upsert_list.append(deepcopy(the_data))
+        LOGGER.debug('Publishing data to API')
+        upsert_collection_item(self.topic_hierarchy.dotpath, the_data)
 
         return True
 
