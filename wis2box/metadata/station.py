@@ -260,14 +260,21 @@ def get_geometry(wsi: str = '') -> dict:
         LOGGER.debug(f'Invalid station report for {wsi}')
         return None
 
-    return {
+    geometry = {
         'type': 'Point',
         'coordinates': [
             location['longitude'],
-            location['latitude'],
-            location['elevation']
+            location['latitude']
         ]
     }
+
+    if location.get('elevation') is None:
+        LOGGER.warning('Elevation missing from station metadata')
+        return None
+    else:
+        geometry['coordinates'].append(location['elevation'])
+
+    return geometry
 
 
 @click.command()

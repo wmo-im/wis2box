@@ -181,7 +181,7 @@ def test_data_api():
 def test_message_api():
     """Test message API collection queries"""
 
-    url = f'{API_URL}/collections/messages/items'
+    url = f'{API_URL}/collections/messages/items?sortby=wigos_station_identifier'  # noqa
     r = SESSION.get(url).json()
 
     assert r['numberMatched'] == 89
@@ -190,6 +190,7 @@ def test_message_api():
     assert msg['geometry'] is not None
 
     props = msg['properties']
+    assert props['wigos_station_identifier'] == '0-12-0-08BECCN60577'
     assert props['integrity']['method'] == 'sha512'
 
     link_rel = msg['links'][0]

@@ -45,7 +45,7 @@ jobs:
     - name: add Malawi data 🇲🇼
       env:
         TOPIC_HIERARCHY: mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP
-        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/mw-surface-weather-observations.yml
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/mwi-surface-weather-observations.yml
         TEST_DATA: /data/wis2box/observations/malawi
       run: |
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
@@ -54,7 +54,7 @@ jobs:
     - name: add Italy data 🇮🇹
       env:
         TOPIC_HIERARCHY: ita.roma_met_centre.data.core.weather.surface-based-observations.SYNOP
-        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/it-surface-weather-observations.yml
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/ita-surface-weather-observations.yml
         TEST_DATA: /data/wis2box/observations/italy
       run: |
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
@@ -63,7 +63,7 @@ jobs:
     - name: add Algeria data 🇩🇿
       env:
         TOPIC_HIERARCHY: dza.alger_met_centre.data.core.weather.surface-based-observations.SYNOP
-        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/dz-surface-weather-observations.yml
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/dza-surface-weather-observations.yml
         TEST_DATA: /data/wis2box/observations/algeria
       run: |
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
@@ -71,7 +71,7 @@ jobs:
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
     - name: sync stations 🔄
       run: |
-        python3 wis2box-ctl.py execute wis2box metadata station sync /data/wis2box/metadata/station/station_list.csv
+        python3 wis2box-ctl.py execute wis2box metadata station publish-collection
     - name: run integration tests ⚙️
       run: |
         sleep 5

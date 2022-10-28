@@ -172,6 +172,20 @@ def older_than(datetime_: str, days: int) -> bool:
     return dt < delta
 
 
+def datetime_days_ago(days: int) -> datetime:
+    """
+    Calculates datetime given n days ago
+
+    :param days: `int` of number of days
+
+    :returns: `datetime.date` object of date n days ago
+    """
+
+    today = datetime.utcnow().date()
+
+    return today - timedelta(days=days)
+
+
 def is_dataset(collection_id: str) -> bool:
     """
     Check whether the index is a dataset (and thus

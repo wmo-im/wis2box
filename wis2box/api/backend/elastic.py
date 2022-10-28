@@ -23,12 +23,10 @@ from copy import deepcopy
 import logging
 
 from elasticsearch import Elasticsearch, helpers
-from parse import parse
-from isodate import parse_date
 from typing import Tuple
 
 from wis2box.api.backend.base import BaseBackend
-from wis2box.util import older_than, is_dataset
+from wis2box.util import datetime_days_ago
 
 logging.getLogger('elasticsearch').setLevel(logging.ERROR)
 LOGGER = logging.getLogger(__name__)
@@ -43,6 +41,14 @@ SETTINGS = {
         'properties': {
             'geometry': {
                 'type': 'geo_shape'
+            },
+            'reportId': {
+                'type': 'text',
+                'fields': {
+                    'raw': {
+                        'type': 'keyword'
+                    }
+                }
             },
             'properties': {
                 'properties': {
@@ -64,6 +70,12 @@ SETTINGS = {
                     },
                     'phenomenonTime': {
                         'type': 'text'
+                    },
+                    'wigos_station_identifier': {
+                        'type': 'text',
+                        'fields': {
+                            'raw': {'type': 'keyword'}
+                        }
                     },
                     'value': {
                         'type': 'float',
@@ -109,10 +121,9 @@ class ElasticBackend(BaseBackend):
 
         :param collection_id: `str` name of collection
 
-        :returns: `tuple` of ES index and template name
+        :returns: `str` of ES index
         """
-        index = collection_id.lower()
-        return (index, f'{index}.')
+        return collection_id.lower()
 
     def add_collection(self, collection_id: str) -> dict:
         """
@@ -122,7 +133,7 @@ class ElasticBackend(BaseBackend):
 
         :returns: `bool` of result
         """
-        es_index, es_template = self.es_id(collection_id)
+        es_index = self.es_id(collection_id)
 
         if self.has_collection(collection_id):
             msg = f'index {es_index} exists'
@@ -131,17 +142,8 @@ class ElasticBackend(BaseBackend):
 
         settings = deepcopy(SETTINGS)
 
-        if is_dataset(es_index):
-            LOGGER.debug('dataset index detected')
-            LOGGER.debug('creating index template')
-            settings['index_patterns'] = [f'{es_template}*']
-            settings['order'] = 0
-            settings['version'] = 1
-            self.conn.indices.put_template(es_template, settings)
-
-        else:
-            LOGGER.debug('metadata index detected')
-            self.conn.indices.create(index=es_index, body=settings)
+        LOGGER.debug('Creating index')
+        self.conn.indices.create(index=es_index, body=settings)
 
         return self.has_collection(collection_id)
 
@@ -153,7 +155,7 @@ class ElasticBackend(BaseBackend):
 
         :returns: `bool` of delete result
         """
-        es_index, es_template = self.es_id(collection_id)
+        es_index = self.es_id(collection_id)
 
         if not self.has_collection(collection_id):
             msg = f'index {es_index} does not exist'
@@ -162,9 +164,6 @@ class ElasticBackend(BaseBackend):
 
         if self.conn.indices.exists(es_index):
             self.conn.indices.delete(index=es_index)
-
-        if self.conn.indices.exists_template(es_template):
-            self.conn.indices.delete_template(es_template)
 
         return not self.has_collection(collection_id)
 
@@ -176,10 +175,10 @@ class ElasticBackend(BaseBackend):
 
         :returns: `bool` of collection result
         """
-        es_index, es_template = self.es_id(collection_id)
+        es_index = self.es_id(collection_id)
         indices = self.conn.indices
 
-        return indices.exists(es_index) or indices.exists_template(es_template)
+        return indices.exists(es_index)
 
     def upsert_collection_items(self, collection_id: str, items: list) -> str:
         """
@@ -190,7 +189,7 @@ class ElasticBackend(BaseBackend):
 
         :returns: `str` identifier of added item
         """
-        es_index, _ = self.es_id(collection_id)
+        es_index = self.es_id(collection_id)
 
         if not self.has_collection(collection_id):
             LOGGER.warning(f'Index {es_index} does not exist.  Creating')
@@ -203,17 +202,10 @@ class ElasticBackend(BaseBackend):
 
             for feature in features:
                 LOGGER.debug(f'Feature: {feature}')
-                es_index2 = es_index
                 feature['properties']['id'] = feature['id']
-                if is_dataset(collection_id):
-                    LOGGER.debug('Determining index date from OM GeoJSON')
-                    try:
-                        date_ = parse_date(feature['properties']['resultTime'])
-                    except KeyError:
-                        date_ = parse_date(feature['properties']['pubTime'])
-                    es_index2 = f"{es_index}.{date_.strftime('%Y-%m-%d')}"
+
                 yield {
-                    '_index': es_index2,
+                    '_index': es_index,
                     '_id': feature['id'],
                     '_source': feature
                 }
@@ -243,16 +235,31 @@ class ElasticBackend(BaseBackend):
 
         indices = self.conn.indices.get('*').keys()
 
-        pattern = '{index_name}.{Y:d}-{M:d}-{d:d}'
+        before = datetime_days_ago(days)
+
+        query_by_date = {
+            'query': {
+                'bool': {
+                    'should': [{
+                        'range': {
+                            'properties.resultTime': {
+                                'lte': before
+                            }
+                        }
+                    }, {
+                        'range': {
+                            'properties.pubTime': {
+                                'lte': before
+                            }
+                        }
+                    }]
+                }
+            }
+        }
 
         for index in indices:
-            match = parse(pattern, index)
-            if match:
-                idx = f"{match.named['Y']}-{match.named['M']}-{match.named['d']}"  # noqa
-                if older_than(idx, days):
-                    LOGGER.debug(f'Index {index} older than {days} days')
-                    LOGGER.debug('Deleting')
-                    self.delete_collection(index)
+            LOGGER.debug(f'deleting documents older than {days} days ({before})')  # noqa
+            self.conn.delete_by_query(index=index, body=query_by_date)
 
         return
 

@@ -14,3 +14,7 @@ services:
     volumes:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
       - ./wis2box-auth/app.py:/wis2box-auth/wis2box-auth/app.py
+
+  elasticsearch:
+    ports:
+      - 9200:9200
