@@ -25,7 +25,6 @@ from pathlib import Path
 from typing import Union
 
 from bufr2geojson import transform as as_geojson
-from wis2box.api import upsert_collection_item
 from wis2box.data.geojson import ObservationDataGeoJSON
 
 LOGGER = logging.getLogger(__name__)
