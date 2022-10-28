@@ -103,7 +103,7 @@ def upsert_collection_item(collection_id: str, item: dict) -> str:
     elif isinstance(item, list):
         backend.upsert_collection_items(collection_id, item)
     else:
-        LOGGER.error("Expecting list or dict in call to upsert collection item")
+        LOGGER.error("Expecting list or dict in call to upsert collection item")  # noqa
 
     return True
 
