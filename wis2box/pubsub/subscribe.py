@@ -21,7 +21,9 @@
 
 import json
 import logging
+import multiprocessing as mp
 from pathlib import Path
+from time import sleep
 
 import click
 
@@ -36,24 +38,7 @@ from wis2box.pubsub.message import gcm
 LOGGER = logging.getLogger(__name__)
 
 
-def on_message_handler(client, userdata, msg):
-    LOGGER.debug(f'Raw message: {msg.payload}')
-
-    message = json.loads(msg.payload)
-
-    if message.get('EventName') == 's3:ObjectCreated:Put':
-        LOGGER.debug('Incoming data is an s3 data object')
-        filepath = f'{STORAGE_SOURCE}/{message["Key"]}'
-        if str(message["Key"]).startswith(STORAGE_ARCHIVE):
-            LOGGER.info(f'Do not process archived-data: {message["Key"]}')
-            return
-    elif 'relPath' in message:
-        LOGGER.debug('Incoming data is a filesystem path')
-        filepath = Path(message['relPath'])
-    else:
-        LOGGER.warning('message payload could not be parsed')
-        return
-
+def handle(filepath):
     try:
         LOGGER.info(f'Processing {filepath}')
         handler = Handler(filepath)
@@ -68,6 +53,32 @@ def on_message_handler(client, userdata, msg):
     except Exception as err:
         msg = f'handle() error: {err}'
         raise err
+
+
+def on_message_handler(client, userdata, msg):
+    LOGGER.debug(f'Raw message: {msg.payload}')
+
+    message = json.loads(msg.payload)
+
+    if message.get('EventName') == 's3:ObjectCreated:Put':
+        LOGGER.debug('Incoming data is an s3 data object')
+        key = str(message['Key'])
+        filepath = f'{STORAGE_SOURCE}/{key}'
+        if key.startswith(STORAGE_ARCHIVE):
+            LOGGER.info(f'Do not process archived-data: {key}')
+            return
+    elif 'relPath' in message:
+        LOGGER.debug('Incoming data is a filesystem path')
+        filepath = Path(message['relPath'])
+    else:
+        LOGGER.warning('message payload could not be parsed')
+        return
+
+    while len(mp.active_children()) == mp.cpu_count():
+        sleep(0.1)
+
+    p = mp.Process(target=handle, args=(filepath,))
+    p.start()
 
 
 @click.command()

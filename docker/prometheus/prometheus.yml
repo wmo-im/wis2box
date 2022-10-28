@@ -21,3 +21,8 @@ scrape_configs:
   scrape_interval: 5s
   static_configs:
   - targets: ['mqtt_metrics_collector:8001']
+- job_name: 'cadvisor'
+  static_configs:
+  - targets: ['cadvisor:8080']
+    labels:
+      alias: 'cadvisor'

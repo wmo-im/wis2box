@@ -13,7 +13,7 @@ services:
 
   wis2box-ui:
     container_name: wis2box-ui
-    image: ghcr.io/wmo-im/wis2box-ui:0.4.0
+    image: ghcr.io/wmo-im/wis2box-ui:latest
     env_file:
       - default.env
       - ../dev.env
@@ -22,7 +22,7 @@ services:
 
   wis2box-api:
     container_name: wis2box-api
-    image: ghcr.io/wmo-im/wis2box-api:0.4.0
+    image: ghcr.io/wmo-im/wis2box-api:latest
     env_file:
       - default.env
       - ../dev.env
@@ -35,6 +35,9 @@ services:
   minio:
     container_name: wis2box-minio
     image: minio/minio
+    mem_limit: 512m
+    memswap_limit: 512m
+    restart: always
     env_file:
       - default.env
       - ../dev.env
@@ -62,10 +65,8 @@ services:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       # - xpack.security.enabled=true  # TODO: setup credentials
-    #mem_limit: 1g
-    #memswap_limit: 1g
-
-
+    mem_limit: 1.5g
+    memswap_limit: 1.5g
     volumes:
       - es-data:/usr/share/elasticsearch/data:rw
     # ulimits:
@@ -91,6 +92,9 @@ services:
 
   wis2box:
     container_name: wis2box
+    mem_limit: 1g
+    memswap_limit: 1g
+    restart: always
     #image: ghcr.io/wmo-im/wis2box:0.4.0
     build:
       context: ..

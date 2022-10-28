@@ -25,6 +25,8 @@ import logging
 import paho.mqtt.client as mqtt
 import random
 
+from urllib.parse import urlparse
+
 import sys
 
 from prometheus_client import start_http_server, Counter
@@ -104,21 +106,27 @@ def gather_mqtt_metrics():
     # explicitly set the counter to 0 at the start
     mqtt_msg_counter.inc(0)
 
-    broker_host = os.environ.get('WIS2BOX_BROKER_HOST', '')
-    broker_username = os.environ.get('WIS2BOX_BROKER_USERNAME', '')
-    broker_password = os.environ.get('WIS2BOX_BROKER_PASSWORD', '')
+    broker_url = urlparse(os.environ.get('WIS2BOX_BROKER_PUBLIC', ''))
 
     # generate a random clientId for the mqtt-session
     r = random.Random()
     client_id = f"mqtt_metrics_collector_{r.randint(1,1000):04d}"
     try:
         logger.info("setup connection")
-        logger.info(f"host={broker_host}, user={broker_username}")
+        logger.info(f"host={broker_url.hostname}, user={broker_url.username}")
         client = mqtt.Client(client_id=client_id, protocol=mqtt.MQTTv5)
         client.on_connect = sub_connect
         client.on_message = sub_mqtt_metrics
-        client.username_pw_set(broker_username, broker_password)
-        client.connect(broker_host)
+        client.username_pw_set(broker_url.username, broker_url.password)
+        _port = broker_url.port
+        if _port is None:
+            if broker_url.scheme == 'mqtts':
+                _port = 8883
+            else:
+                _port = 1883
+        if broker_url.scheme == 'mqtts':
+            client.tls_set(tls_version=2)
+        client.connect(broker_url.hostname, _port)
         client.loop_forever()
     except Exception as e:
         logger.error(f"Failed to setup MQTT-client with error: {e}")

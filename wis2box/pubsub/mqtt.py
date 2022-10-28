@@ -62,6 +62,8 @@ class MQTTPubSubClient(BasePubSubClient):
                 self._port = 8883
             else:
                 self._port = 1883
+        if self.broker_url.scheme == 'mqtts':
+            self.conn.tls_set(tls_version=2)
 
         self.conn.connect(self.broker_url.hostname, self._port)
         LOGGER.debug('Connected to broker')
@@ -80,14 +82,15 @@ class MQTTPubSubClient(BasePubSubClient):
         LOGGER.debug(f'Topic: {topic}')
         LOGGER.debug(f'Message: {message}')
 
-        result = self.conn.publish(topic, message)
+        result = self.conn.publish(topic, message, qos=1)
 
-        result.wait_for_publish()
+        # TODO: investigate implication
+        # result.wait_for_publish()
 
         if result.is_published:
             return True
         else:
-            msg = 'Publishing error code: {result[1]}'
+            msg = f'Publishing error code: {result[1]}'
             LOGGER.warning(msg)
             return False
 
@@ -101,13 +104,13 @@ class MQTTPubSubClient(BasePubSubClient):
         """
 
         def on_connect(client, userdata, flags, rc):
-            LOGGER.debug('Connected to broker {self.broker}')
-            LOGGER.debug('Subscribing to topic {topic} ')
-            client.subscribe(topic)
-            LOGGER.debug('Subscribed to topic {topic}')
+            LOGGER.debug(f'Connected to broker {self.broker}')
+            LOGGER.debug(f'Subscribing to topic {topic} ')
+            client.subscribe(topic, qos=1)
+            LOGGER.debug(f'Subscribed to topic {topic}')
 
         def on_disconnect(client, userdata, rc):
-            LOGGER.debug('Disconnected from {self.broker}')
+            LOGGER.debug(f'Disconnected from {self.broker}')
 
         LOGGER.debug(f'Subscribing to broker {self.broker}, topic {topic}')
         self.conn.on_connect = on_connect
