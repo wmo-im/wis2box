@@ -143,7 +143,7 @@ class WISNotificationMessage(PubSubMessage):
             'version': 'v04',
             'geometry': self.geometry,
             'properties': {
-                'data-id': f'{topic}/{self.identifier}',
+                'data_id': f'{topic}/{self.identifier}',
                 'pubtime': self.publish_datetime,
                 'content': {
                     'length': self.length
