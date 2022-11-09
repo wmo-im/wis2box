@@ -31,6 +31,44 @@ from wis2box.env import AUTH_URL
 LOGGER = logging.getLogger(__name__)
 
 
+def create_token(topic: str, token: str) -> bool:
+    """
+    Creates a token with access control
+
+    :param topic: `str` topic hierarchy
+    :param token: `str` authentication token
+
+    :returns: `bool` of result
+    """
+    data = {'topic': topic, 'token': token}
+
+    r = requests.post(f'{AUTH_URL}/add_token', data=data)
+    LOGGER.info(r.json().get('description'))
+
+    return r.ok
+
+
+def delete_token(topic: str, token: str = '') -> bool:
+    """
+    Creates a token with access control
+
+    :param topic: `str` topic hierarchy
+    :param token: `str` authentication token
+
+    :returns: `bool` of result
+    """
+    data = {'topic': topic}
+
+    if token != '':
+        # Delete all tokens for a given th
+        data['token'] = token
+
+    r = requests.post(f'{AUTH_URL}/remove_token', data=data)
+    click.echo(r.json().get('description'))
+
+    return r.ok
+
+
 def is_resource_open(topic: str) -> bool:
     """
     Checks if topic has access control configured
@@ -39,27 +77,29 @@ def is_resource_open(topic: str) -> bool:
 
     :returns: `bool` of result
     """
+    headers = {'X-Original-URI': topic}
 
-    th, _ = validate_and_load(topic)
-    headers = {'X-Original-URI': th.dotpath}
     r = requests.get(f'{AUTH_URL}/authorize', headers=headers)
+
     return r.ok
 
 
-def is_token_authorized(auth_key: str, topic: str) -> bool:
+def is_token_authorized(topic: str, token: str) -> bool:
     """
     Checks if token is authorized to access a topic
 
-    :param auth_key: `str` auth_key
     :param topic: `str` topic hierarchy
+    :param token: `str` authentication token
 
     :returns: `bool` of result
     """
     headers = {
         'X-Original-URI': topic,
-        'Authorization': f'Bearer {auth_key}',
+        'Authorization': f'Bearer {token}',
     }
+
     r = requests.get(f'{AUTH_URL}/authorize', headers=headers)
+
     return r.ok
 
 
@@ -74,7 +114,8 @@ def auth():
 @cli_helpers.OPTION_TOPIC_HIERARCHY
 def is_restricted(ctx, topic_hierarchy):
     """Check if topic has access control"""
-    click.echo(not is_resource_open(topic_hierarchy))
+    th, _ = validate_and_load(topic_hierarchy)
+    click.echo(not is_resource_open(th.dotpath))
 
 
 @click.command()
@@ -83,60 +124,58 @@ def is_restricted(ctx, topic_hierarchy):
 @click.argument('token')
 def has_access(ctx, topic_hierarchy, token):
     """Check if a token has access to a topic"""
-    click.echo(is_token_authorized(token, topic_hierarchy))
+    th, _ = validate_and_load(topic_hierarchy)
+    click.echo(is_token_authorized(th.dotpath, token))
 
 
 @click.command()
 @click.pass_context
 @cli_helpers.OPTION_TOPIC_HIERARCHY
-@click.option(
-    '--yes', '-y', default=False, is_flag=True, help='Automatic yes to prompts'
-)
+@click.option('--path', '-p')
+@click.option('--yes', '-y', default=False, is_flag=True, help='Automatic yes')
 @click.argument('token', required=False)
-def add_token(ctx, topic_hierarchy, yes, token):
+def add_token(ctx, topic_hierarchy, path, yes, token):
     """Add access token for a topic"""
 
-    if topic_hierarchy is None:
-        raise click.ClickException('Missing -th/--topic-hierarchy')
+    if topic_hierarchy is not None:
+        th, _ = validate_and_load(topic_hierarchy)
+        topic = th.dotpath
+    elif path is not None:
+        topic = path
+    else:
+        raise click.ClickException('Missing path or topic hierarchy')
 
-    if token is None:
-        click.echo('Generating random token')
-        token = token_hex(32)
-
+    token = token_hex(32) if token is None else token
     if yes:
         click.echo(f'Using token: {token}')
     elif not click.confirm(f'Continue with token: {token}', prompt_suffix='?'):
         return
 
-    data = {'topic': topic_hierarchy, 'token': token}
-
-    r = requests.post(f'{AUTH_URL}/add_token', data=data)
-    click.echo(r.json().get('description'))
-    return r.ok
+    if create_token(topic, token):
+        click.echo('Token successfully created')
 
 
 @click.command()
 @click.pass_context
 @cli_helpers.OPTION_TOPIC_HIERARCHY
+@click.option('--path', '-p')
 @click.argument('token', required=False, nargs=-1)
-def remove_token(ctx, topic_hierarchy, token):
+def remove_token(ctx, topic_hierarchy, path, token):
     """Delete one to many tokens for a topic"""
 
-    if topic_hierarchy is None:
-        raise click.ClickException('Missing -th/--topic-hierarchy')
+    if topic_hierarchy is not None:
+        th, _ = validate_and_load(topic_hierarchy)
+        topic = th.dotpath
+    elif path is not None:
+        topic = path
+    else:
+        raise click.ClickException('Missing path or topic hierarchy')
 
-    data = {'topic': topic_hierarchy}
-
-    if token:
-        # Delete all tokens for a given th
-        data['token'] = token
-
-    r = requests.post(f'{AUTH_URL}/remove_token', data=data)
-    click.echo(r.json().get('description'))
-    return r.ok
+    if delete_token(topic, token):
+        click.echo('Token successfully deleted')
 
 
 auth.add_command(add_token)
+auth.add_command(remove_token)
 auth.add_command(has_access)
 auth.add_command(is_restricted)
-auth.add_command(remove_token)

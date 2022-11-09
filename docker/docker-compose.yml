@@ -51,7 +51,6 @@ services:
       mosquitto:
         condition: service_started
 
-
   elasticsearch:
     container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
@@ -111,9 +110,7 @@ services:
 
   wis2box-auth:
     container_name: wis2box-auth
-    #image: ghcr.io/wmo-im/wis2box-auth:0.4.0
-    build:
-      context: ./wis2box_auth
+    image: ghcr.io/wmo-im/wis2box-auth:latest
     env_file:
       - default.env
       - ../dev.env
