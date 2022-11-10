@@ -150,10 +150,6 @@ class WISNotificationMessage(PubSubMessage):
             'properties': {
                 'data_id': f'{topic}/{self.identifier}',
                 'pubtime': self.publish_datetime,
-                'content': {
-                    'size': self.length,
-                    'encoding': file_encoding
-                },
                 'integrity': {
                     'method': self.checksum_type,
                     'value': self.checksum_value
@@ -162,7 +158,8 @@ class WISNotificationMessage(PubSubMessage):
             'links': [{
                 'rel': 'canonical',
                 'type': mimetype,
-                'href': public_file_url
+                'href': public_file_url,
+                'length': self.length
             }]
         }
 
