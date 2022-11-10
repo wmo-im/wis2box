@@ -128,11 +128,11 @@ class WISNotificationMessage(PubSubMessage):
                          topic, filepath, geometry)
 
         suffix = self.filepath.split('.')[-1]
-
         try:
             mimetype = DATA_OBJECT_MIMETYPES[suffix]
         except KeyError:
             mimetype = 'application/octet-stream'
+
         # replace storage-source with wis2box-url
         public_file_url = self.filepath.replace(
             f'{STORAGE_SOURCE}/{STORAGE_PUBLIC}', f'{URL}/data'
@@ -145,9 +145,6 @@ class WISNotificationMessage(PubSubMessage):
             'properties': {
                 'data_id': f'{topic}/{self.identifier}',
                 'pubtime': self.publish_datetime,
-                'content': {
-                    'length': self.length
-                },
                 'integrity': {
                     'method': self.checksum_type,
                     'value': self.checksum_value
@@ -156,7 +153,8 @@ class WISNotificationMessage(PubSubMessage):
             'links': [{
                 'rel': 'canonical',
                 'type': mimetype,
-                'href': public_file_url
+                'href': public_file_url,
+                'length': self.length
             }]
         }
 
