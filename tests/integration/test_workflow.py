@@ -201,6 +201,6 @@ def test_message_api():
 
     assert r.status_code == codes.ok
 
-    assert str(r.headers['Content-Length']) == str(link_rel['size'])
+    assert str(r.headers['Content-Length']) == str(link_rel['length'])
 
     assert b'BUFR' in r.content
