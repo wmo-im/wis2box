@@ -132,11 +132,6 @@ class WISNotificationMessage(PubSubMessage):
             mimetype = DATA_OBJECT_MIMETYPES[suffix]
         except KeyError:
             mimetype = 'application/octet-stream'
-        # WIS2 requires us to specify content-encoding
-        # options are 'utf-8' or 'base64'
-        file_encoding = 'utf-8'
-        if suffix in ['bufr4', 'grib2']:
-            file_encoding = 'base64'
 
         # replace storage-source with wis2box-url
         public_file_url = self.filepath.replace(
