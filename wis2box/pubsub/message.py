@@ -128,11 +128,16 @@ class WISNotificationMessage(PubSubMessage):
                          topic, filepath, geometry)
 
         suffix = self.filepath.split('.')[-1]
-
         try:
             mimetype = DATA_OBJECT_MIMETYPES[suffix]
         except KeyError:
             mimetype = 'application/octet-stream'
+        # WIS2 requires us to specify content-encoding
+        # options are 'utf-8' or 'base64'
+        file_encoding = 'utf-8'
+        if suffix in ['bufr4', 'grib2']:
+            file_encoding = 'base64'
+
         # replace storage-source with wis2box-url
         public_file_url = self.filepath.replace(
             f'{STORAGE_SOURCE}/{STORAGE_PUBLIC}', f'{URL}/data'
@@ -146,7 +151,8 @@ class WISNotificationMessage(PubSubMessage):
                 'data_id': f'{topic}/{self.identifier}',
                 'pubtime': self.publish_datetime,
                 'content': {
-                    'length': self.length
+                    'size': self.length,
+                    'encoding': file_encoding
                 },
                 'integrity': {
                     'method': self.checksum_type,
