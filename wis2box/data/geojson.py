@@ -66,7 +66,7 @@ class ObservationDataGeoJSON(BaseAbstractData):
                     continue
                 upsert_list.append(deepcopy(the_data))
         LOGGER.debug('Publishing data to API')
-        upsert_collection_item(self.topic_hierarchy.dotpath, the_data)
+        upsert_collection_item(self.topic_hierarchy.dotpath, upsert_list)
         return True
 
     def get_local_filepath(self, date_):
