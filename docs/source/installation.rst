@@ -48,7 +48,7 @@ Installing wis2box
 
 Once Python and Docker are installed, the wis2box software needs to be installed.
 
-ZIP Archive
+ZIP archive
 ^^^^^^^^^^^
 
 wis2box can be installed from a ZIP archive of a the latest branch or a `wis2box release`_.
@@ -56,8 +56,8 @@ wis2box can be installed from a ZIP archive of a the latest branch or a `wis2box
 .. code-block:: bash
 
     # curl, wget or download from your web browser
-    curl https://github.com/wmo-im/wis2box/archive/refs/heads/main.zip
-    unzip main.zip
+    curl https://github.com/wmo-im/wis2box/archive/refs/heads/main.zip -L -O -J
+    unzip wis2box-main.zip
     cd wis2box-main
 
 GitHub
