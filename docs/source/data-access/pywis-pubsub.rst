@@ -16,19 +16,17 @@ The pywis-pubsub tool
 
 ``pywis-pubsub`` is a Python package that provides publish, subscription and download
 capability of data from WIS2 infrastructure services.  ``pywis-pubsub`` is included
-in the main wis2box container.
+in both the wis2box and wis2box-subscribe-download containers.
 
-To use ``pywis-pubsub``, login to the wis2box main container:
+To use ``pywis-pubsub``, run the ``wis2box-subscribe-download`` container as follows:
 
 .. code-block:: bash
 
-   python3 wis2box-ctl.py login
+   # subscribe by editing/using the configuration in docker/wis2box-subscribe-download/local.yml
+   docker-compose -f docker/docker.subscribe-download.yml up
 
 
-.. note:: ``pywis-pubsub`` can also be installed separately from wis2box in any environment,
-          by running ``pip3 install pywis-pubsub``
-
-pywis-pubsub requires a configuration in order to run. The below YAML provides an example
+pywis-pubsub requires a configuration in order to run (``docker/wis2box-subscribe-download/local.yml``).  The below YAML provides an example
 of a typical configuration:
 
 .. code-block:: yaml
@@ -52,9 +50,18 @@ of a typical configuration:
        options:
            path: /tmp/foo/bar
 
-Once configuration is completed, pywis-pubsub can be run as follows:
+Running pywis-pubsub interactively
+----------------------------------
+
+To run pywis-pubsub interactively, pywis-pubsub can be run as follows:
 
 .. code-block:: bash
+
+   # login to wis2box main container
+   python3 wis2box-ctl.py login
+
+   # edit a local configuration by using docker/wis2box-subscribe-download/local.yml as a template
+   vi /data/wis2box/local.yml
 
    # connect, and simply display data notifications
    pywis-pubsub subscribe --config local.yml
