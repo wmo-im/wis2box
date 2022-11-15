@@ -24,8 +24,8 @@ wis2box |release| documentation
    storage
    monitoring/index
    services
-   data-access/index
    auth
+   data-access/index
    extending-wis2box
    development
    contributing
