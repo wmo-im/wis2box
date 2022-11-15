@@ -1,0 +1,35 @@
+# please define a data-directory on your host machine
+# this will map to /data/wis2box on the wis2box-container
+WIS2BOX_HOST_DATADIR=/path/to/local/data/directory
+WIS2BOX_DATADIR_DATA_MAPPINGS=/data/wis2box/data-mappings.yml
+
+# Optional
+# Environment variable overrides
+WIS2BOX_LOGGING_LOGLEVEL=WARNING
+WIS2BOX_DATA_RETENTION_DAYS=30
+
+# define the url used by the wis2box-ui and wis2box-api
+WIS2BOX_URL=http://127.0.0.1
+WIS2BOX_API_URL=${WIS2BOX_URL}/oapi
+
+# PubSub local broker setup for internal commmunication
+# please update to user secure username/password
+WIS2BOX_BROKER_USERNAME=wis2box
+WIS2BOX_BROKER_PASSWORD=wis2box
+
+# use local broker also for public message publishing
+# when using external broker, please replace this with the connection-string for your external broker
+WIS2BOX_BROKER_PUBLIC=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@mosquitto:1883
+
+# setup the wis2box storage username password
+# please update to user secure username/password
+WIS2BOX_STORAGE_USERNAME=minio
+WIS2BOX_STORAGE_PASSWORD=minio123
+WIS2BOX_STORAGE_DATA_RETENTION_DAYS=30
+
+# use minio for storage
+MINIO_ROOT_USER=${WIS2BOX_STORAGE_USERNAME}
+MINIO_ROOT_PASSWORD=${WIS2BOX_STORAGE_PASSWORD}
+MINIO_NOTIFY_MQTT_USERNAME_WIS2BOX=${WIS2BOX_BROKER_USERNAME}
+MINIO_NOTIFY_MQTT_PASSWORD_WIS2BOX=${WIS2BOX_BROKER_PASSWORD}
+MINIO_NOTIFY_MQTT_BROKER_WIS2BOX=tcp://${WIS2BOX_BROKER_HOST}:${WIS2BOX_BROKER_PORT}
