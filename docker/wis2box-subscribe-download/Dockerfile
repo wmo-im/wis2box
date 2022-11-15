@@ -22,7 +22,9 @@
 FROM python:3.8
 
 RUN pip3 install pywis-pubsub
+# sync WIS2 notification schema
+RUN pywis-pubsub schema sync
 
 COPY local.yml /app/
 
-CMD ["pywis-pubsub", "subscribe", "--config", "/app/local.yml", "--verbosity", "DEBUG"]
+CMD ["pywis-pubsub", "subscribe", "--config", "/app/local.yml", "--download"]

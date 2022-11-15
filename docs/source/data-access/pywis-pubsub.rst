@@ -14,20 +14,13 @@ local environment / workstation / decision support system from the WIS2 Global C
 The pywis-pubsub tool
 ---------------------
 
-``pywis-pubsub`` is a Python package that provides publish, subscription and download
-capability of data from WIS2 infrastructure services.  ``pywis-pubsub`` is included
-in both the wis2box and wis2box-subscribe-download containers.
+This repository includes docker files to help you subscribe and download data from the WIS2 network, by using ``pywis-pubsub`` inside the wis2box-subscribe-download container.
 
-To use ``pywis-pubsub``, run the ``wis2box-subscribe-download`` container as follows:
+``pywis-pubsub`` is a Python package that provides publish, subscription and download capability of data from WIS2 infrastructure services.  
 
-.. code-block:: bash
-
-   # subscribe by editing/using the configuration in docker/wis2box-subscribe-download/local.yml
-   docker-compose -f docker/docker.subscribe-download.yml up
-
-
-pywis-pubsub requires a configuration in order to run (``docker/wis2box-subscribe-download/local.yml``).  The below YAML provides an example
-of a typical configuration:
+Before starting the wis2box-subscribe-download container you must edit the default configuration provided in ``docker/wis2box-subscribe-download/local.yml``.
+You need to define the URL of the MQTT-broker and the topics you which you wish to subscribe to.
+You also need to specify the storage where you wish the downloaded data to be stored.
 
 .. code-block:: yaml
 
@@ -42,7 +35,8 @@ of a typical configuration:
 
    # list of 1..n topics to subscribe to
    topics:
-       - '#'
+       - 'cache/a/wis2/topic1/#'
+       - 'cache/a/wis2/topic2/#'
 
    # storage: filesystem
    storage:
@@ -50,10 +44,23 @@ of a typical configuration:
        options:
            path: /tmp/foo/bar
 
+To start a contineous subscribe-and-download process, run the ``wis2box-subscribe-download`` container as follows (-d for detached mode, --build to ensure changes in local.yml are built into the container):
+
+.. code-block:: bash
+
+   docker-compose -f docker/docker.subscribe-download.yml up -d --build
+
+To stop the subscribe-and-download process run the following command:
+
+.. code-block:: bash
+
+   docker-compose -f docker/docker.subscribe-download.yml down
+
+
 Running pywis-pubsub interactively
 ----------------------------------
 
-To run pywis-pubsub interactively, pywis-pubsub can be run as follows:
+pywis-pubsub can also be run interactively from inside the wis2box the main container as follows:
 
 .. code-block:: bash
 
