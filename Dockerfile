@@ -46,6 +46,7 @@ RUN apt-get update -y \
     && pip3 install --no-cache-dir https://github.com/wmo-im/csv2bufr/archive/refs/tags/v0.3.1.zip \
     && pip3 install --no-cache-dir https://github.com/wmo-im/bufr2geojson/archive/refs/tags/v0.4.0.zip \
     && pip3 install --no-cache-dir https://github.com/geopython/pygeometa/archive/master.zip \
+    && pip3 install cython \
     # cleanup
     && apt autoremove -y  \
     && apt-get -q clean \
