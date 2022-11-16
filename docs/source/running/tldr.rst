@@ -46,9 +46,9 @@ To publish .bufr files of SYNOP data:
 
    cp examples/config/synop-bufr-mappings.yml $WIS2BOX_HOST_DATADIR/data-mappings.yml
 
-Edit ``$WIS2BOX_HOST_DATADIR/data-mappings.yml`` and change ``[ISO3C_country].[center_id].data.core.weather.surface-based-observations.SYNOP``:
+Edit ``$WIS2BOX_HOST_DATADIR/data-mappings.yml`` and change ``[iso3c_country].[center_id].data.core.weather.surface-based-observations.SYNOP``:
 
-   * replace ``ISO3C_country`` with your corresponding ISO 3166 alpha-3 code.
+   * replace ``iso3c_country`` with your corresponding ISO 3166 alpha-3 code.
    * replace ``center_id`` with the string identifying the center running the wis2node.
 
 
@@ -76,7 +76,7 @@ An example is provided in ``examples/config/surface-weather-observations.yml``.
 
 Edit the file ``$WIS2BOX_HOST_DATADIR/surface-weather-observations.yml`` to provide the correct metadata for your dataset:
 
-* replace ``[ISO3C_country].[center_id].data.core.weather.surface-based-observations.SYNOP`` with the topic you used in ``$WIS2BOX_HOST_DATADIR/data-mappings.yml`` previously
+* replace ``[iso3c_country].[center_id].data.core.weather.surface-based-observations.SYNOP`` with the topic you used in ``$WIS2BOX_HOST_DATADIR/data-mappings.yml`` previously
 * text provided in title and abstract will be displayed in wis2box-ui
 * provide a valid bounding-box in bbox
 
