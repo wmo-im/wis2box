@@ -13,7 +13,7 @@ services:
 
   wis2box-ui:
     container_name: wis2box-ui
-    image: ghcr.io/wmo-im/wis2box-ui:0.5.0
+    image: ghcr.io/wmo-im/wis2box-ui:latest
     env_file:
       - default.env
       - ../dev.env
@@ -22,7 +22,7 @@ services:
 
   wis2box-api:
     container_name: wis2box-api
-    image: ghcr.io/wmo-im/wis2box-api:0.5.0
+    image: ghcr.io/wmo-im/wis2box-api:latest
     env_file:
       - default.env
       - ../dev.env
@@ -82,9 +82,9 @@ services:
 
   mosquitto:
     container_name: mosquitto
-    image: ghcr.io/wmo-im/wis2box-broker:0.5.0
-    #build:
-    #  context: ./mosquitto
+    #image: ghcr.io/wmo-im/wis2box-broker:latest
+    build:
+      context: ./mosquitto
     env_file:
       - default.env
       - ../dev.env
@@ -94,9 +94,9 @@ services:
     mem_limit: 1g
     memswap_limit: 1g
     restart: always
-    image: ghcr.io/wmo-im/wis2box:0.5.0
-    #build:
-    #  context: ..
+    #image: ghcr.io/wmo-im/wis2box:0.5.0
+    build:
+      context: ..
       # args:
       #   WIS2BOX_PIP3_EXTRA_PACKAGES: ${WIS2BOX_PIP3_EXTRA_PACKAGES}
     #user: wis2box:wis2box
@@ -116,7 +116,7 @@ services:
 
   wis2box-auth:
     container_name: wis2box-auth
-    image: ghcr.io/wmo-im/wis2box-auth:0.5.0
+    image: ghcr.io/wmo-im/wis2box-auth:latest
     env_file:
       - default.env
       - ../dev.env
