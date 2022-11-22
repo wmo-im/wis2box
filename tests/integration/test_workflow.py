@@ -184,7 +184,7 @@ def test_message_api():
     url = f'{API_URL}/collections/messages/items?sortby=wigos_station_identifier'  # noqa
     r = SESSION.get(url).json()
 
-    assert r['numberMatched'] == 89
+    assert r['numberMatched'] == 82
 
     msg = r['features'][0]
     assert msg['geometry'] is not None
