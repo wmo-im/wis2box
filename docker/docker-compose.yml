@@ -63,12 +63,12 @@ services:
       - discovery.seed_hosts=elasticsearch-01
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      # - xpack.security.enabled=true  # TODO: setup credentials
+      - cluster.name=es-wis2box
+      - xpack.security.enabled=false
     mem_limit: 1.5g
     memswap_limit: 1.5g
     volumes:
       - es-data:/usr/share/elasticsearch/data:rw
-      - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     # ulimits:
     #   nofile:
     #     soft: 524288
