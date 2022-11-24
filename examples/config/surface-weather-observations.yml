@@ -1,15 +1,15 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: ISO3C_country.center_id.data.core.weather.surface-based-observations.SYNOP
+    topic_hierarchy: iso3c_country.center_id.data.core.weather.surface-based-observations.synop
     data_category: observationsSurfaceLand
-    country: ISO3C_country
+    country: iso3c_country
     center_id: center_id
 
 mcf:
     version: 1.0
 
 metadata:
-    identifier: ISO3C_country.center_id.data.core.weather.surface-based-observations.SYNOP
+    identifier: iso3c_country.center_id.data.core.weather.surface-based-observations.synop
     language: en
     language_alternate: fr
     charset: utf8
@@ -24,9 +24,9 @@ identification:
     language: en
     charset: utf8
     title:
-        en: Surface weather observations from ISO3C_country.center_id
+        en: Surface weather observations from iso3c_country.center_id
     abstract:
-        en: Surface weather observations from ISO3C_country.center_id
+        en: Surface weather observations from iso3c_country.center_id
     dates:
         creation: 2021-11-29
         publication: 2021-11-29
@@ -49,7 +49,7 @@ identification:
         wis2:
             keywords:
                 en:
-                    - ISO3C_country.center_id.dataset_name
+                    - iso3c_country.center_id.dataset_name
             keywords_type: theme
             vocabulary:
                 name:
