@@ -93,7 +93,7 @@ class Handler:
         for plugin in self.plugins:
             if not plugin.accept_file(self.filepath):
                 msg = f'file {self.filepath} not accepted'
-                LOGGER.info(msg)
+                LOGGER.warning(msg)
                 self.publish_failure_message(
                     description="filepath not accepted",
                     plugin=plugin)

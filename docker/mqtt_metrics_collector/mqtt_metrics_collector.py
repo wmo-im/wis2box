@@ -67,7 +67,7 @@ def sub_connect(client, userdata, flags, rc, properties=None):
     """
 
     logger.info(f"on connection to subscribe: {mqtt.connack_string(rc)}")
-    for s in ["wis2box/notifications", "wis2box/failure", "wis2box-storage/#"]:
+    for s in ["wis2box/#", "wis2box-storage/#"]:
         client.subscribe(s, qos=1)
 
 
@@ -79,9 +79,9 @@ notify_topic_wsi_total = Counter('wis2box_notify_topic_wsi_total',
 
 failure_total = Counter('wi2box_failure_total',
                         'Total failed actions reported by wis2box')
-failure_description_total = Counter('wis2box_failure_type_total',
-                                    'Total notifications sent by wis2box, by failure description', # noqa
-                                    ["description"])
+failure_descr_wsi_total = Counter('wis2box_failure_detail_total',
+                                    'Total failed actions sent by wis2box, by description and WSI', # noqa
+                                    ["description", "WSI"])
 
 storage_incoming_total = Counter('wis2box_storage_incoming_total',
                                  'Total storage notifications received on incoming') # noqa
@@ -101,13 +101,19 @@ def sub_mqtt_metrics(client, userdata, msg):
     :returns: `None`
     """
     m = json.loads(msg.payload.decode('utf-8'))
-    logger.debug(f"Received message on topic={msg.topic}")
+    logger.info(f"Received message on topic={msg.topic}")
     if str(msg.topic).startswith('wis2box/notifications'):
         notify_topic_wsi_total.labels(
             m['topic'], m['wigos_station_identifier']).inc(1)
         notify_total.inc(1)
     if str(msg.topic).startswith('wis2box/failure'):
-        failure_description_total.labels(m['description']).inc(1)
+        # always print content of failure messages
+        print(f"failure_message: {msg}")
+        descr = m['description']
+        wsi = 'none'
+        if 'wigos_station_identifier' in m:
+            wsi = m['wigos_station_identifier']
+        failure_descr_wsi_total.labels(descr, wsi).inc(1)
         failure_total.inc(1)
     if str(msg.topic).startswith('wis2box-storage'):
         if str(m["Key"]).startswith('wis2box-incoming'):

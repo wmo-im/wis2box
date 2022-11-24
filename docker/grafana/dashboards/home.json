@@ -538,7 +538,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(delta(wis2box_failure_type_total{description!=\"\"}[$__range])) by (description)",
+          "expr": "sum(delta(wis2box_failure_detail_total{description!=\"\"}[$__range])) by (description,WSI)",
           "format": "table",
           "instant": true,
           "interval": "5m",
