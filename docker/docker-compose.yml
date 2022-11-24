@@ -68,6 +68,7 @@ services:
     memswap_limit: 1.5g
     volumes:
       - es-data:/usr/share/elasticsearch/data:rw
+      - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     # ulimits:
     #   nofile:
     #     soft: 524288

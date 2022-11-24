@@ -1,0 +1,2 @@
+cluster.name: es-wis2box
+xpack.security.enabled: false
