@@ -122,6 +122,7 @@ def sub_mqtt_metrics(client, userdata, msg):
         if str(m["Key"]).startswith('wis2box-public'):
             storage_public_total.inc(1)
 
+
 def gather_mqtt_metrics():
     """
     setup mqtt-client to monitor metrics from broker on this box
