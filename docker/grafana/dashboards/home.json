@@ -88,7 +88,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
+        "h": 7,
         "w": 15,
         "x": 0,
         "y": 0
@@ -130,13 +130,14 @@
         "type": "loki",
         "uid": "P55348B596EBB51C3"
       },
+      "description": "",
       "gridPos": {
-        "h": 15,
+        "h": 21,
         "w": 9,
         "x": 15,
         "y": 0
       },
-      "id": 12,
+      "id": 8,
       "options": {
         "dedupStrategy": "none",
         "enableLogDetails": false,
@@ -151,15 +152,17 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "P55348B596EBB51C3"
+            "uid": "wis2box-loki"
           },
           "editorMode": "builder",
-          "expr": "{container_name=\"wis2box\"}",
+          "expr": "{compose_service=\"wis2box\"} |~ `ERROR`",
+          "hide": false,
+          "legendFormat": "",
           "queryType": "range",
-          "refId": "A"
+          "refId": "B"
         }
       ],
-      "title": "wis2box logging",
+      "title": "wis2box ERRORs",
       "type": "logs"
     },
     {
@@ -221,10 +224,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
+        "h": 7,
         "w": 15,
         "x": 0,
-        "y": 5
+        "y": 7
       },
       "id": 6,
       "interval": "5m",
@@ -316,10 +319,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
+        "h": 7,
         "w": 15,
         "x": 0,
-        "y": 10
+        "y": 14
       },
       "id": 10,
       "interval": "5m",
@@ -351,46 +354,6 @@
       ],
       "title": "Number of WIS2.0 notifications published by wis2box",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P55348B596EBB51C3"
-      },
-      "description": "",
-      "gridPos": {
-        "h": 6,
-        "w": 24,
-        "x": 0,
-        "y": 15
-      },
-      "id": 8,
-      "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": false,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": true,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "wis2box-loki"
-          },
-          "editorMode": "builder",
-          "expr": "{compose_service=\"wis2box\"} |~ `Topic Hierarchy validation error|Failed to transform|Failed to publish`",
-          "hide": false,
-          "legendFormat": "",
-          "queryType": "range",
-          "refId": "B"
-        }
-      ],
-      "title": "wis2box processing issues",
-      "type": "logs"
     }
   ],
   "refresh": "5s",
