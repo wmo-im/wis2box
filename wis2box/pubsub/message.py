@@ -128,11 +128,11 @@ class WISNotificationMessage(PubSubMessage):
                          topic, filepath, geometry)
 
         suffix = self.filepath.split('.')[-1]
-
         try:
             mimetype = DATA_OBJECT_MIMETYPES[suffix]
         except KeyError:
             mimetype = 'application/octet-stream'
+
         # replace storage-source with wis2box-url
         public_file_url = self.filepath.replace(
             f'{STORAGE_SOURCE}/{STORAGE_PUBLIC}', f'{URL}/data'
@@ -143,11 +143,8 @@ class WISNotificationMessage(PubSubMessage):
             'version': 'v04',
             'geometry': self.geometry,
             'properties': {
-                'data-id': f'{topic}/{self.identifier}',
+                'data_id': f'{topic}/{self.identifier}',
                 'pubtime': self.publish_datetime,
-                'content': {
-                    'length': self.length
-                },
                 'integrity': {
                     'method': self.checksum_type,
                     'value': self.checksum_value
@@ -156,12 +153,19 @@ class WISNotificationMessage(PubSubMessage):
             'links': [{
                 'rel': 'canonical',
                 'type': mimetype,
-                'href': public_file_url
+                'href': public_file_url,
+                'length': self.length
             }]
         }
 
         if wigos_station_identifier is not None:
             self.message['properties']['wigos_station_identifier'] = wigos_station_identifier  # noqa
+            link = {
+                'rel': 'via',
+                'type': 'text/html',
+                'href': f'https://oscar.wmo.int/surface/#/search/station/stationReportDetails/{wigos_station_identifier}'  # noqa
+            }
+            self.message['links'].append(link)
 
 
 def gcm() -> dict:

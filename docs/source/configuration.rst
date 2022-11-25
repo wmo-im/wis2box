@@ -147,7 +147,7 @@ Additional directives provide various configurationscontrol of configuration opt
 
     WIS2BOX_OSCAR_API_TOKEN=some_token  # OSCAR/Surface API token for OSCAR API interaction
     WIS2BOX_URL=http://localhost:8999/  # public wis2box url
-    WIS2BOX_AUTH_STORE=/data/wis2box/auth.db # wis2box auth location
+    WIS2BOX_AUTH_STORE=http://wis2box-auth # wis2box auth service location
 
 
 .. note::

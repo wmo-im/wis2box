@@ -1,0 +1,14 @@
+broker: mqtts://host:port
+
+verify_data: true
+
+#validate_message: true
+
+topics:
+    - '#'
+
+# storage: filesystem
+storage:
+    type: fs
+    options:
+        path: /data/wis2box-subscribe-download

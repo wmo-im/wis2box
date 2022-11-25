@@ -35,6 +35,9 @@ services:
   minio:
     container_name: wis2box-minio
     image: minio/minio
+    mem_limit: 512m
+    memswap_limit: 512m
+    restart: always
     env_file:
       - default.env
       - ../dev.env
@@ -51,7 +54,6 @@ services:
       mosquitto:
         condition: service_started
 
-
   elasticsearch:
     container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
@@ -61,9 +63,10 @@ services:
       - discovery.seed_hosts=elasticsearch-01
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      # - xpack.security.enabled=true  # TODO: setup credentials
-    mem_limit: 1g
-    memswap_limit: 1g
+      - cluster.name=es-wis2box
+      - xpack.security.enabled=false
+    mem_limit: 1.5g
+    memswap_limit: 1.5g
     volumes:
       - es-data:/usr/share/elasticsearch/data:rw
     # ulimits:
@@ -80,7 +83,7 @@ services:
 
   mosquitto:
     container_name: mosquitto
-    #image: ghcr.io/wmo-im/wis2box-broker:0.4.0
+    #image: ghcr.io/wmo-im/wis2box-broker:latest
     build:
       context: ./mosquitto
     env_file:
@@ -89,7 +92,10 @@ services:
 
   wis2box:
     container_name: wis2box
-    #image: ghcr.io/wmo-im/wis2box:0.4.0
+    mem_limit: 1g
+    memswap_limit: 1g
+    restart: always
+    #image: ghcr.io/wmo-im/wis2box:0.5.0
     build:
       context: ..
       # args:
@@ -111,18 +117,17 @@ services:
 
   wis2box-auth:
     container_name: wis2box-auth
-    #image: ghcr.io/wmo-im/wis2box-auth:0.4.0
-    build:
-      context: ./wis2box-auth
+    image: ghcr.io/wmo-im/wis2box-auth:latest
     env_file:
       - default.env
       - ../dev.env
     volumes:
-      - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
+      - auth-data:/data/wis2box:rw
     depends_on:
       - wis2box
 
 volumes:
   es-data:
   minio-data:
+  auth-data:
   api-config:

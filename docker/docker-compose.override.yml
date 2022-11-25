@@ -7,10 +7,6 @@ services:
     ports:
       - 9999:80
 
-  wis2box-auth:
-    ports:
-      - 12345:80
-
   minio:
     ports:
       - "9000:9000"
@@ -21,3 +17,4 @@ services:
   mosquitto:
     ports:
       - 1883:1883
+      - 8884:8884

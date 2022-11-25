@@ -19,18 +19,12 @@
 #
 ###############################################################################
 
-#FROM wis2box_project_wis2box
-FROM ghcr.io/wmo-im/wis2box:latest
+FROM python:3.8
 
-RUN apt-get update -y \
-    && pip3 install pip -U \
-    && pip3 install gevent gunicorn flask flask-cors jinja2==3.0.3
+RUN pip3 install pywis-pubsub
+# sync WIS2 notification schema
+RUN pywis-pubsub schema sync
 
-RUN mkdir -p /wis2box/wis2box-auth/
+COPY local.yml /app/
 
-COPY ./app.py /wis2box/wis2box-auth/app.py
-COPY ./entrypoint.sh /auth-entrypoint.sh
-
-WORKDIR /wis2box
-
-ENTRYPOINT [ "/auth-entrypoint.sh" ]
+CMD ["pywis-pubsub", "subscribe", "--config", "/app/local.yml", "--download"]

@@ -39,7 +39,7 @@ services:
     env_file:
       - default.env
       - ../dev.env
-    #image: ghcr.io/wmo-im/wis2box-mqtt-metrics-collector:0.4.0
+    #image: ghcr.io/wmo-im/wis2box-mqtt-metrics-collector:latest
     build:
       context: ./mqtt_metrics_collector
     depends_on:
@@ -63,6 +63,7 @@ services:
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
       - /dev/disk:/dev/disk/:ro

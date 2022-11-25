@@ -90,7 +90,7 @@ class MQTTPubSubClient(BasePubSubClient):
         if result.is_published:
             return True
         else:
-            msg = 'Publishing error code: {result[1]}'
+            msg = f'Publishing error code: {result[1]}'
             LOGGER.warning(msg)
             return False
 
@@ -104,13 +104,13 @@ class MQTTPubSubClient(BasePubSubClient):
         """
 
         def on_connect(client, userdata, flags, rc):
-            LOGGER.debug('Connected to broker {self.broker}')
-            LOGGER.debug('Subscribing to topic {topic} ')
+            LOGGER.debug(f'Connected to broker {self.broker}')
+            LOGGER.debug(f'Subscribing to topic {topic} ')
             client.subscribe(topic, qos=1)
-            LOGGER.debug('Subscribed to topic {topic}')
+            LOGGER.debug(f'Subscribed to topic {topic}')
 
         def on_disconnect(client, userdata, rc):
-            LOGGER.debug('Disconnected from {self.broker}')
+            LOGGER.debug(f'Disconnected from {self.broker}')
 
         LOGGER.debug(f'Subscribing to broker {self.broker}, topic {topic}')
         self.conn.on_connect = on_connect

@@ -142,9 +142,8 @@ class ObservationDataBUFR(BaseAbstractData):
 
                 wsi = get_valid_wsi(wsi=temp_wsi, tsi=tsi)
                 if wsi is None:
-                    msg = f'Invalid station, wsi: {temp_wsi}, tsi: {tsi}'
-                    LOGGER.warning(msg)
-                    LOGGER.error(f'Failed to publish: {wsi}')
+                    msg = f'Failed to publish, wsi: {temp_wsi}, tsi: {tsi}'
+                    LOGGER.error(msg)
                     self.publish_failure_message(
                         description="Invalid station",
                         wsi=temp_wsi)

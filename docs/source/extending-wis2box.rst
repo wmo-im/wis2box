@@ -30,10 +30,10 @@ located in ``wis2box/data/base.py``. Any wis2box plugin needs to inherit from
         def transform(self, input_data: Path) -> bool:
             # transform data
             # populate self.output_data with a dict as per:
-            self.output_data {
+            self.output_data = {
                 'c123': {
                     '_meta': {
-                        'identifier': 'c123'
+                        'identifier': 'c123',
                         'relative_filepath': '/path/to/item/',
                         'data_date': datetime_object
                     },

@@ -27,6 +27,7 @@ PubSub
 .. toctree::
    :maxdepth: 2
 
+   pywis-pubsub
    python-mqp-subscribe
 
 
