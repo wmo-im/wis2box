@@ -92,7 +92,7 @@ class Handler:
     def handle(self) -> bool:
         for plugin in self.plugins:
             if not plugin.accept_file(self.filepath):
-                msg = f'file {self.filepath} not accepted'
+                msg = f'Filepath not accepted: {self.filepath}'
                 LOGGER.warning(msg)
                 self.publish_failure_message(
                     description="filepath not accepted",
@@ -107,7 +107,7 @@ class Handler:
                 else:
                     plugin.transform(self.filepath)
             except Exception as err:
-                msg = f'file {self.filepath} failed to transform: {err}'
+                msg = f'Failed to transform file {self.filepath} : {err}'
                 LOGGER.warning(msg)
                 self.publish_failure_message(
                     description="failed to transform file",
@@ -116,10 +116,10 @@ class Handler:
             try:
                 plugin.publish()
             except Exception as err:
-                msg = f'file {self.filepath} failed to publish: {err}'
+                msg = f'Failed to publish file {self.filepath}: {err}'
                 LOGGER.warning(msg)
                 self.publish_failure_message(
-                    decription="failed to publish file to api-backend",
+                    decription="Failed to publish file to api-backend",
                     plugin=plugin)
                 return False
 

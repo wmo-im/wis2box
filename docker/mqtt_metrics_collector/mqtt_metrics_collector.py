@@ -102,25 +102,25 @@ def sub_mqtt_metrics(client, userdata, msg):
     """
     m = json.loads(msg.payload.decode('utf-8'))
     logger.info(f"Received message on topic={msg.topic}")
+
     if str(msg.topic).startswith('wis2box/notifications'):
         notify_topic_wsi_total.labels(
             m['topic'], m['wigos_station_identifier']).inc(1)
         notify_total.inc(1)
+
     if str(msg.topic).startswith('wis2box/failure'):
-        # always print content of failure messages
-        print(f"failure_message: {msg}")
         descr = m['description']
         wsi = 'none'
         if 'wigos_station_identifier' in m:
             wsi = m['wigos_station_identifier']
         failure_descr_wsi_total.labels(descr, wsi).inc(1)
         failure_total.inc(1)
+
     if str(msg.topic).startswith('wis2box-storage'):
         if str(m["Key"]).startswith('wis2box-incoming'):
             storage_incoming_total.inc(1)
         if str(m["Key"]).startswith('wis2box-public'):
             storage_public_total.inc(1)
-
 
 def gather_mqtt_metrics():
     """
