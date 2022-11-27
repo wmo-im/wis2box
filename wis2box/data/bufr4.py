@@ -81,7 +81,7 @@ class ObservationDataBUFR(BaseAbstractData):
                     self.transform_message(data)
                     codes_release(data)
 
-    def transform_message(self, bufr_in: int):
+    def transform_message(self, bufr_in: int) -> None:
         """
         Parse single BUFR message
 
@@ -91,6 +91,7 @@ class ObservationDataBUFR(BaseAbstractData):
         """
         # workflow
         # check for multiple subsets
+        # add necessary components for WSI in BUFR
         # split subsets into individual messages and process
         try:
             codes_set(bufr_in, 'unpack', True)
@@ -128,10 +129,11 @@ class ObservationDataBUFR(BaseAbstractData):
             codes_release(subset)
             codes_release(subset_out)
 
-    def transform_subset(self, subset: int, subset_out: int):
+    def transform_subset(self, subset: int, subset_out: int) -> None:
         """
         Parse single BUFR message subset
 
+        :param subset: `int` of ecCodes pointer to input BUFR
         :param subset_out: `int` of ecCodes pointer to output BUFR
 
         :returns: `None`
@@ -154,6 +156,7 @@ class ObservationDataBUFR(BaseAbstractData):
 
         try:
             temp_wsi = parser.get_wsi()
+            temp_tsi = parser.get_tsi()
         except Exception as err:
             LOGGER.warning(err)
 
@@ -170,11 +173,11 @@ class ObservationDataBUFR(BaseAbstractData):
 
         del parser
 
-        tsi = temp_wsi.split('-')[-1]
-        LOGGER.debug(f'Processing wsi: {temp_wsi}, tsi: {tsi}')
-        wsi = get_valid_wsi(wsi=temp_wsi, tsi=tsi)
+        LOGGER.debug(f'Processing temp_wsi: {temp_wsi}, temp_tsi: {temp_tsi}')
+        wsi = get_valid_wsi(wsi=temp_wsi, tsi=temp_tsi)
         if wsi is None:
-            LOGGER.error(f'Failed to publish, wsi: {temp_wsi}, tsi: {tsi}')
+            msg = f'Failed to publish, wsi: {temp_wsi}, tsi: {temp_tsi}'
+            LOGGER.error(msg)
             return
 
         LOGGER.debug('Copying wsi to BUFR')
