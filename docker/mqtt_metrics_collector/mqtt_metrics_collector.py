@@ -77,7 +77,7 @@ notify_topic_wsi_total = Counter('wis2box_notify_topic_wsi_total',
                                  'Total notifications sent by wis2box, by topic and WSI', # noqa
                                  ["topic", "WSI"])
 
-failure_total = Counter('wi2box_failure_total',
+failure_total = Counter('wis2box_failure_total',
                         'Total failed actions reported by wis2box')
 failure_descr_wsi_total = Counter('wis2box_failure_detail_total',
                                     'Total failed actions sent by wis2box, by description and WSI', # noqa

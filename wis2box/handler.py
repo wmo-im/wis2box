@@ -59,14 +59,6 @@ class Handler:
             th = self.filepath
             fuzzy = True
 
-        # handler uses local broker to publish success/failure messages
-        defs = {
-            'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-            'url': f"mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}", # noqa
-            'client_type': 'handler-publisher'
-        }
-        self.local_broker = load_plugin('pubsub', defs)
-
         try:
             self.topic_hierarchy, self.plugins = validate_and_load(
                 th, self.filetype, fuzzy=fuzzy)
@@ -86,8 +78,14 @@ class Handler:
         if plugin is not None:
             cl = plugin.__class__
             message['plugin'] = f"{cl.__module__ }.{cl.__name__}"
-        # publish message
-        self.local_broker.pub('wis2box/failure', json.dumps(message))
+        # handler uses local broker to publish success/failure messages
+        defs = {
+            'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
+            'url': f"mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}", # noqa
+            'client_type': 'handler-publisher'
+        }
+        local_broker = load_plugin('pubsub', defs)
+        local_broker.pub('wis2box/failure', json.dumps(message))
 
     def handle(self) -> bool:
         for plugin in self.plugins:

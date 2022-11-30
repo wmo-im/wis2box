@@ -94,7 +94,7 @@
         "y": 0
       },
       "id": 2,
-      "interval": "5m",
+      "interval": "1m",
       "maxDataPoints": 3000,
       "options": {
         "legend": {
@@ -116,7 +116,7 @@
           "editorMode": "code",
           "exemplar": true,
           "expr": "delta(wis2box_storage_incoming_total{}[$__interval])",
-          "interval": "5m",
+          "interval": "1m",
           "legendFormat": "New/updated files per hour in wis2box-incoming",
           "range": true,
           "refId": "A"
@@ -230,7 +230,7 @@
         "y": 7
       },
       "id": 6,
-      "interval": "5m",
+      "interval": "1m",
       "options": {
         "legend": {
           "calcs": [],
@@ -251,7 +251,7 @@
           "editorMode": "code",
           "exemplar": true,
           "expr": "delta(wis2box_storage_public_total{}[$__interval])",
-          "interval": "5m",
+          "interval": "1m",
           "legendFormat": "New/updated files in wis2box-public",
           "range": true,
           "refId": "A"
@@ -325,7 +325,7 @@
         "y": 14
       },
       "id": 10,
-      "interval": "5m",
+      "interval": "1m",
       "options": {
         "legend": {
           "calcs": [],
@@ -346,7 +346,7 @@
           "editorMode": "code",
           "exemplar": true,
           "expr": "delta(wis2box_notify_total[$__interval])",
-          "interval": "5m",
+          "interval": "1m",
           "legendFormat": "WIS2.0 notifications",
           "range": true,
           "refId": "A"
@@ -364,7 +364,7 @@
     "list": []
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
