@@ -144,10 +144,11 @@ class BaseAbstractData:
         LOGGER.debug(f'Prepare message for: {storage_path}')
 
         topic = f'origin/a/wis2/{self.topic_hierarchy.dirpath}'
+        data_id_topic = topic.replace('origin/a/', '')
 
-        wis_message = WISNotificationMessage(identifier, topic, storage_path,
-                                             geometry,
-                                             wigos_station_identifier)
+        wis_message = WISNotificationMessage(
+            identifier, data_id_topic, storage_path, geometry,
+            wigos_station_identifier)
 
         # load plugin for public broker
         defs = {
