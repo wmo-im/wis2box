@@ -192,6 +192,7 @@ def test_message_api():
     props = msg['properties']
     assert props['wigos_station_identifier'] == '0-12-0-08BECCN60577'
     assert props['integrity']['method'] == 'sha512'
+    assert props['data_id'].startswith('wis2')
 
     link_rel = msg['links'][0]
 
