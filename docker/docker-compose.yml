@@ -13,7 +13,7 @@ services:
 
   wis2box-ui:
     container_name: wis2box-ui
-    image: ghcr.io/wmo-im/wis2box-ui:0.5.0
+    image: ghcr.io/wmo-im/wis2box-ui:0.5.1
     env_file:
       - default.env
       - ../dev.env
