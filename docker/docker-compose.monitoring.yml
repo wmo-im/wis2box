@@ -39,9 +39,9 @@ services:
     env_file:
       - default.env
       - ../dev.env
-    image: ghcr.io/wmo-im/wis2box-mqtt-metrics-collector:0.5.1
-    #build:
-    #  context: ./mqtt_metrics_collector
+    #image: ghcr.io/wmo-im/wis2box-mqtt-metrics-collector:0.5.1
+    build:
+      context: ./mqtt_metrics_collector
     depends_on:
       - mosquitto
     ports:

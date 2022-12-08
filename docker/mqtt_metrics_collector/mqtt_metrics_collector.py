@@ -33,7 +33,7 @@ from prometheus_client import start_http_server, Counter
 # de-register default-collectors
 from prometheus_client import REGISTRY, PROCESS_COLLECTOR, PLATFORM_COLLECTOR
 
-__version__ = '0.5.1'
+__version__ = '0.6.dev1'
 
 REGISTRY.unregister(PROCESS_COLLECTOR)
 REGISTRY.unregister(PLATFORM_COLLECTOR)
