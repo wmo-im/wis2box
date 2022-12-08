@@ -83,9 +83,9 @@ services:
 
   mosquitto:
     container_name: mosquitto
-    #image: ghcr.io/wmo-im/wis2box-broker:latest
-    build:
-      context: ./mosquitto
+    image: ghcr.io/wmo-im/wis2box-broker:latest
+    #build:
+    #  context: ./mosquitto
     env_file:
       - default.env
       - ../dev.env
@@ -95,9 +95,9 @@ services:
     mem_limit: 1g
     memswap_limit: 1g
     restart: always
-    #image: ghcr.io/wmo-im/wis2box:0.5.0
-    build:
-      context: ..
+    image: ghcr.io/wmo-im/wis2box:0.5.1
+    #build:
+    #  context: ..
       # args:
       #   WIS2BOX_PIP3_EXTRA_PACKAGES: ${WIS2BOX_PIP3_EXTRA_PACKAGES}
     #user: wis2box:wis2box
