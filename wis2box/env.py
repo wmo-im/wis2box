@@ -61,7 +61,6 @@ STORAGE_PASSWORD = os.environ.get('WIS2BOX_STORAGE_PASSWORD')
 STORAGE_INCOMING = os.environ.get('WIS2BOX_STORAGE_INCOMING')
 STORAGE_ARCHIVE = os.environ.get('WIS2BOX_STORAGE_ARCHIVE')
 STORAGE_PUBLIC = os.environ.get('WIS2BOX_STORAGE_PUBLIC')
-STORAGE_CONFIG = os.environ.get('WIS2BOX_STORAGE_CONFIG')
 
 try:
     STORAGE_DATA_RETENTION_DAYS = int(os.environ.get('WIS2BOX_STORAGE_DATA_RETENTION_DAYS')) # noqa
@@ -89,8 +88,7 @@ required_environment_variables = [
     STORAGE_USERNAME,
     STORAGE_PASSWORD,
     STORAGE_INCOMING,
-    STORAGE_PUBLIC,
-    STORAGE_CONFIG
+    STORAGE_PUBLIC
 ]
 
 for rev in required_environment_variables:
@@ -129,7 +127,6 @@ def create(ctx, verbosity):
     }
 
     storages = {
-        STORAGE_CONFIG: 'private',
         STORAGE_INCOMING: 'private',
         STORAGE_ARCHIVE: 'private',
         STORAGE_PUBLIC: 'readonly'

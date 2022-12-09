@@ -69,7 +69,6 @@ The following environment variables can be used to configure `WIS2BOX_STORAGE`.
     WIS2BOX_STORAGE_INCOMING=wis2box-incoming  # name of the storage-bucket/folder for incoming files
     WIS2BOX_STORAGE_PUBLIC=wis2box-public  # name of the storage-bucket/folder for public files
     WIS2BOX_STORAGE_ARCHIVE=wis2box-archive  # name of the storage-bucket/folder for archived data
-    WIS2BOX_STORAGE_CONFIG=wis2box-config  # name of the storage-bucket/folder for configuration files
     WIS2BOX_STORAGE_DATA_RETENTION_DAYS=7  # number of days to keep files in incoming and public
 
 
