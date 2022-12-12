@@ -107,7 +107,7 @@ def load_datasets() -> Iterator[dict]:
         dm = oaf.collection_items('discovery-metadata')
         for topic in dm['features']:
             for link in topic['links']:
-                if link['type'] == 'OAFeat':
+                if link['type'] == 'MQTT':
                     yield link
     except RuntimeError:
         LOGGER.warning('discovery-metadata collection has not been created')
@@ -118,9 +118,7 @@ def check_station_datasets(wigos_station_identifier: str) -> Iterator[dict]:
     """
     Filter datasets for topics with observations from station
 
-    :param datasets: `list` of datasets
     :param wigos_station_identifier: `string` of station WIGOS id
-
 
     :returns: `list`, of link relations to collections from a station
     """
