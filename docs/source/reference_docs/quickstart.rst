@@ -1,34 +1,13 @@
 .. _quickstart:
 
-Quickstart
-==========
+Quickstart tests
+================
 
-Requirements and dependencies
------------------------------
+The 'quickstart' deploys wis2box with test data and provides a vital reference for wis2box-developers to validate their contributions do not break the wis2box-core-functionality.
+It is the minimal runtime configuration profile - as used in wis2box Github CI/CD: `GitHub Actions`_ 
 
-The quickstart assumes wis2box and its dependencies have been installed.
-If this is not true, please follow the :ref:`installation` steps first.
-
-
-Successful installation can be confirmed by inspecting the versions on your system.
-
-.. code-block:: bash
-
-    docker version
-    docker-compose version
-    python3 -V
-
-The quickstart deploys wis2box with test data.
-It is the minimal runtime configuration profile - as used in wis2box Github CI/CD.
-
-.. note::
-
-    For information on how to quickly get started with your own data out of the box, proceed to :ref:`running`.
-    For more information on deployment, see :ref:`administration` and :ref:`configuration`.
-
-wis2box passes environment variables from dev.env to its container on startup.
 The test enviroment file is provided in ``tests/test.env``.
-Copy this file to ``dev.env`` in your working directory.
+To run with the 'quickstart'-configuration, copy this file to ``dev.env`` in your working directory.
 
 .. code-block:: bash
 
@@ -97,3 +76,5 @@ Logout of wis2box container:
 From here, you can run ``python3 wis2box-ctl.py status`` to confirm that containers are running.
 
 To explore your wis2box installation and services, visit http://localhost:8999 in your web browser.
+
+.. _`GitHub Actions`: https://github.com/wmo-im/wis2box/blob/main/.github/workflows/tests-docker.yml

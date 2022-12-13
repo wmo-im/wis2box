@@ -1,7 +1,7 @@
 .. _how-wis2box-works:
 
-How wis2box works
-==================
+Implementation
+==============
 
 wis2box is implemented in the spirit of the `Twelve-Factor App methodology`_.
 
@@ -15,7 +15,7 @@ High level system context
 The following diagram provides a high level overview of the main functions
 of wis2box:
 
-.. figure:: ../architecture/c4-system-context.png
+.. figure:: ../../architecture/c4-system-context.png
    :scale: 70%
    :alt: how wis2box works: System context
    :align: center
@@ -45,7 +45,7 @@ Container workflow
 Let's dive a little deeper. The following diagram provides a view of all
 wis2box containers:
 
-.. figure:: ../architecture/c4-container.png
+.. figure:: ../../architecture/c4-container.png
    :scale: 70%
    :alt: how wis2box works: Containers
    :align: center

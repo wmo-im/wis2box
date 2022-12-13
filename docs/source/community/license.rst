@@ -6,7 +6,7 @@ License
 Software
 --------
 
-.. literalinclude:: ../../LICENSE
+.. literalinclude:: ../../../LICENSE
 
 Documentation
 -------------
