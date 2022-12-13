@@ -1,40 +1,22 @@
-.. _index:
+.. wis2box guide documentation master file, created by
+   sphinx-quickstart on Tue Oct 18 13:32:54 2022.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
 
-wis2box |release| documentation
-===============================
-
-:Author: World Meteorological Organization (WMO)
-:Contact: https://github.com/wmo-im/wis2box
-:Release: |release|
-:Date: |today|
+Index
+=====
 
 .. toctree::
    :maxdepth: 2
-   :caption: Table of contents:
+   :caption: Contents:
    :name: toc
 
-   overview
-   wis2
-   how-wis2box-works
-   installation
-   quickstart
-   configuration
-   administration
-   running/index
-   storage
-   monitoring/index
-   services
-   auth
-   data-access/index
-   extending-wis2box
-   development
-   contributing
-   support
-   license
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   introduction
+   gettingstarted
+   wis2box-setup
+   data-ingestion
+   http-services
+   mqtt-configuration
+   troubleshooting
+   otherdocs
+   olddocs/index
