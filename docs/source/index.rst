@@ -12,7 +12,7 @@ User guide
 The user guide helps you setup your own WIS2-in-a-box instance.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: User guide:
    :name: toc
 
@@ -33,7 +33,7 @@ The reference documentation is more complete and programmatic in nature. It cont
 of information on the WIS2-in-a-box software that can be quickly referenced.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Reference guide:
    :name: toc
 
