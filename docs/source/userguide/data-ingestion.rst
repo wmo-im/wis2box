@@ -1,6 +1,6 @@
 .. _data-ingestion:
 
-Setting up ingestion
+Data ingestion setup
 ====================
 
 The runtime component of wis2box is data ingestion. This is an event driven workflow driven by S3 notifications from uploading data to wis2box-storage.
@@ -8,6 +8,7 @@ The runtime component of wis2box is data ingestion. This is an event driven work
 The wis2box-storage is provided using a `MinIO`_-container that provides S3-compatible object storage.
 
 Any file received in the 'wis2box-incoming'-bucket will trigger an action to process the file. 
+What action to take is determined by the data-mappings.yml you've setup in the previous section.
 
 MinIO UI
 --------

@@ -20,7 +20,7 @@ The user guide helps you setup your own WIS2-in-a-box instance.
    userguide/gettingstarted
    userguide/wis2box-setup
    userguide/data-ingestion
-   userguide/http-services
+   userguide/public-services
    userguide/mqtt-configuration
    userguide/download
 
@@ -28,7 +28,7 @@ Reference guide
 ===============
 
 The reference documentation is more complete and programmatic in nature. It contains a comprehensive set
-of information on the WIS2-in-a-box software that can be quickly referenced.
+of information on the WIS2-in-a-box software for easy reference.
 
 .. toctree::
    :maxdepth: 1
