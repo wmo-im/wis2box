@@ -3,7 +3,7 @@
 Introduction
 ============
 
-This is an administrator guide for onboarding your data onto the `WIS 2.0`_ network using the WIS2-in-a-box software.
+This is a user guide for downloading and publishing data through the `WIS 2.0`_ network using the WIS2-in-a-box software.
 
 The "wis2box"-software provides a set of services to help you ingest, transform and publish your weather data. 
 

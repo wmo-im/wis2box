@@ -1,11 +1,6 @@
-=======
-Welcome
-=======
-
-:Author: World Meteorological Organization (WMO)
-:Contact: https://github.com/wmo-im/wis2box
-:Release: |release|
-:Date: |today|
+=============
+WIS2-in-a-box
+=============
 
 The `WMO Information System 2.0 (WIS 2.0) <https://community.wmo.int/activity-areas/wis>`_ is the framework for WMO data sharing in the 21st century for all WMO domains and disciplines.
 
@@ -39,7 +34,7 @@ of information on the WIS2-in-a-box software that can be quickly referenced.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Table of contents:
+   :caption: Reference guide:
    :name: toc
 
    reference_docs/overview
