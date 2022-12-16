@@ -1,7 +1,7 @@
 .. _data-ingestion:
 
-Data ingestion
-==============
+Setting up ingestion
+====================
 
 The runtime component of wis2box is data ingestion. This is an event driven workflow driven by S3 notifications from uploading data to wis2box-storage.
 
@@ -91,10 +91,8 @@ See below an example to upload data using the Minio-module in python:
 
 Another example is provided in the GitHub-repository `minio-ftp-forwarder`_ , demonstrating how to setup an FTP forwarding data to MinIO
 
-After you have successfully setup your data-ingestion process into the wis2box, you are ready to share your data with the Global WIS2 network by:
-
-* Enabling external access to your HTTP-endpoint :ref:`http-services`.
-* and sharing your WIS2 notifications with a Global Broker: :ref:`mqtt-configuration`
+After you have successfully setup your data-ingestion process into the wis2box, 
+you are ready to share your data with the Global WIS2 network by enabling external access to your public services: :ref:`public-services`.
 
 .. _`MinIO`: https://min.io/docs/minio/container/index.html
 .. _`minio-ftp-forwarder`: https://github.com/wmo-im/minio-ftp-forwarder

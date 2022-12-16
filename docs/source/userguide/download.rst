@@ -1,7 +1,7 @@
-.. _pywis-pubsub:
+.. _download:
 
-Downloading data from WIS2 using pywis-pubsub
-=============================================
+Downloading data from WIS2
+==========================
 
 Overview
 --------

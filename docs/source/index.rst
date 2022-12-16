@@ -16,15 +16,13 @@ The user guide helps you setup your own WIS2-in-a-box instance.
    :caption: User guide:
    :name: toc
 
-   introduction
-   gettingstarted
-   wis2box-setup
-   data-ingestion
-   http-services
-   mqtt-configuration
-   troubleshooting
-   contributing
-   license
+   userguide/introduction
+   userguide/gettingstarted
+   userguide/wis2box-setup
+   userguide/data-ingestion
+   userguide/http-services
+   userguide/mqtt-configuration
+   userguide/download
 
 Reference guide
 ===============
@@ -50,3 +48,16 @@ of information on the WIS2-in-a-box software that can be quickly referenced.
    reference_docs/data-access/index
    reference_docs/extending-wis2box
    reference_docs/development
+
+Community
+=========
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Community:
+   :name: toc
+
+   community/support
+   community/troubleshooting
+   community/contributing
+   community/license

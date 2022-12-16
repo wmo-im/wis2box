@@ -1,7 +1,7 @@
 .. _quickstart:
 
-wis2box quickstart tests
-========================
+Quickstart tests
+================
 
 The 'quickstart' deploys wis2box with test data and provides a vital reference for wis2box-developers to validate their contributions do not break the wis2box-core-functionality.
 It is the minimal runtime configuration profile - as used in wis2box Github CI/CD: `GitHub Actions`_ 
