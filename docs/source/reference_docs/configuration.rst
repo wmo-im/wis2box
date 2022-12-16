@@ -168,12 +168,5 @@ Docker Compose
 The Docker Compose setup is driven from the resulting ``dev.env`` file created. For advanced cases and/or power users,
 updates can also be made to ``docker-compose.yml`` or ``docker-compose.override.yml`` (for changes to ports).
 
-
-Summary
--------
-
-At this point, you have defined the runtime configuration required to administer your wis2box installation.
-
-
 .. _`Env`: https://en.wikipedia.org/wiki/Env
 .. _`GitHub`: https://github.com/wmo-im/wis2box/blob/main/docker/default.env

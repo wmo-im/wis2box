@@ -6,15 +6,14 @@ Downloading data from WIS2 using pywis-pubsub
 Overview
 --------
 
-This section provides examples of using the `pywis-pubsub tool <https://github.com/wmo-im/pywis-pubsub>`_ to download data
-from WIS2 global services.  WIS2 global services include a Global Broker that
-provides users the ability to subscribe to data (via topics) and download to their
+This section provides guidance how to download data from WIS2 global services. 
+WIS2 global services include a Global Broker that provides users the ability to subscribe to data (via topics) and download to their
 local environment / workstation / decision support system from the WIS2 Global Cache.
 
 The pywis-pubsub tool
 ---------------------
 
-This repository includes docker files to help you subscribe and download data from the WIS2 network, by using ``pywis-pubsub`` inside the wis2box-subscribe-download container.
+WIS2-in-a-box can help you subscribe and download data from the WIS2 network, by using the wis2box-subscribe-download container, inside of which runs the `pywis-pubsub tool <https://github.com/wmo-im/pywis-pubsub>`_
 
 ``pywis-pubsub`` is a Python package that provides publish, subscription and download capability of data from WIS2 infrastructure services.  
 
@@ -79,10 +78,3 @@ pywis-pubsub can also be run interactively from inside the wis2box main containe
 
    # connect, and filter messages by bounding box geometry
    pywis-pubsub subscribe --config local.yml --bbox=-142,42,-52,84
-
-
-
-Summary
--------
-
-The above examples provide examples of using pywis-pubsub to subscribe and download data from WIS2 global services.

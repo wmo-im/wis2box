@@ -18,5 +18,7 @@ Index
    http-services
    mqtt-configuration
    troubleshooting
-   otherdocs
-   olddocs/index
+   contributing
+   license
+   reference_docs/index
+   

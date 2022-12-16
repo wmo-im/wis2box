@@ -52,9 +52,3 @@ Event driven ingest, processing and publishing
 Once all metadata and topic hierarchies are setup, event driven workflow
 will immediately start to listen on files in the ``wis2box-incoming`` storage bucket as they are
 placed in the appropriate topic hierarchy directory.
-
-Summary
--------
-
-Congratulations! At this point, you have successfully setup a wis2box data pipeline. Data should be flowing through
-the system.

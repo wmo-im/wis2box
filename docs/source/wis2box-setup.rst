@@ -18,7 +18,7 @@ Download the wis2box-setup files:
    unzip wis2box-setup-0.5.0.zip
    cd wis2box-0.5.0
 
-See https://github.com/wmo-im/wis2box/releases to check the latest release available.
+See `wis2box releases`_ to check the latest release available.
 
 
 Environment variables
@@ -281,4 +281,5 @@ You can now logout of wis2box container :
 
 The next step is to setup the :ref:`data-ingestion`.
 
+.. _`wis2box releases`: https://github.com/wmo-im/wis2box/releases
 .. _`WIS2-topic-hierarchy`: https://github.com/wmo-im/wis2-topic-hierarchy

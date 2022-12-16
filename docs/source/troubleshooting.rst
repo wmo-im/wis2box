@@ -1,17 +1,26 @@
 .. _troubleshooting:
 
-Troubleshooting
-===============
+Troubleshooting and support
+===========================
 
-This section summarizes how to troubleshoot commonly seen issues when setting up a wis2box for data-sharing on the WIS 2.0 network.
+This page lists several commonly seen issues and how to address them.
 
-To check for errors you can check the logs from the command-line:
+The WIS2-in-a-box community can provide support with any additional issues encountered installing and/or running your wis2box. 
+Please consult the wis2box `Discussions`_ for support with the project.
+
+.. _`Discussions`: https://github.com/wmo-im/wis2box/discussions
+
+WIS2-in-a-box includes a Grafana instance to allow you to view monitoring dashboard for your wis2box-instance, accessible at http://localhost:9000: 
+
+.. image:: screenshots/grafana_homepage.png
+    :width: 600
+    :alt: wis2box-workflow-monitoring
+
+You can also check for errors from the command-line using the following command:
 
 .. code-block:: bash
     
     python3 wis2box-ctl.py logs
-
-Or use the Grafana-UI, which is exposed at port 3000 on our local wis2box-host.
 
 './docker/docker-compose.yml' is invalid
 ----------------------------------------

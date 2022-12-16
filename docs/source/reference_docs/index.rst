@@ -1,7 +1,7 @@
 .. _index:
 
-wis2box |release| documentation
-===============================
+Reference documentation
+=======================
 
 :Author: World Meteorological Organization (WMO)
 :Contact: https://github.com/wmo-im/wis2box
@@ -14,12 +14,10 @@ wis2box |release| documentation
    :name: toc
 
    overview
-   wis2
    how-wis2box-works
-   installation
-   quickstart
    configuration
    administration
+   quickstart
    running/index
    storage
    monitoring/index
@@ -28,9 +26,6 @@ wis2box |release| documentation
    data-access/index
    extending-wis2box
    development
-   contributing
-   support
-   license
 
 Indices and tables
 ==================

@@ -6,6 +6,18 @@ Development
 wis2box is developed as a free and open source project on GitHub. The wis2box
 codebase can be found at https://github.com/wmo-im/wis2box.
 
+
+GitHub
+------
+
+wis2box can be installed using the git CLI as follows:
+
+.. code-block:: bash
+
+    # clone wis2box GitHub repository
+    git clone https://github.com/wmo-im/wis2box.git
+    cd wis2box
+
 Testing
 -------
 

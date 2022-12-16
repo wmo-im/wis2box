@@ -1,7 +1,7 @@
 .. _running:
 
-Running
-=======
+wis2box workflows
+=================
 
 wis2box workflows can be categorized as design time (interactive) or runtime (automated).
 
@@ -19,8 +19,8 @@ Runtime
 
 - automated data processing and publishing
 
-Running topics
---------------
+topics
+------
 
 .. toctree::
    :maxdepth: 2
@@ -35,4 +35,3 @@ Running topics
    data-pipeline-plugins
    api-publishing
    data-retention
-   tldr

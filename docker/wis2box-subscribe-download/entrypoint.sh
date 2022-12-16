@@ -1,3 +1,4 @@
+#!/bin/bash
 ###############################################################################
 #
 # Licensed to the Apache Software Foundation (ASF) under one
@@ -19,14 +20,23 @@
 #
 ###############################################################################
 
-FROM python:3.8
+# wis2box-download entry script
 
-RUN pip3 install pywis-pubsub
-# sync WIS2 notification schema
-RUN pywis-pubsub schema sync
+echo "START /entrypoint.sh"
 
-COPY local.base.yml /app/
+set -e
 
-ENTRYPOINT [ "/entrypoint.sh" ]
+cp /app/local.base.yml /app/local.yml
 
-CMD ["pywis-pubsub", "subscribe", "--config", "/app/local.yml", "--download"]
+# replace BROKER_DOWNLOAD_PATH
+sed -i 's/BROKER_DOWNLOAD_PATH/$BROKER_DOWNLOAD_PATH/g' /app/local.yml
+
+# add topics 
+echo 'topics:' > /app/local.yml
+
+IFS=,
+for topic in $DOWNLOAD_TOPICS:
+    echo '  - '$topic > /app/local.yml
+
+echo "END /entrypoint.sh"
+exec "$@"

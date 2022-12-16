@@ -1,11 +1,6 @@
-broker: mqtts://host:port
+broker: BROKER_DOWNLOAD_PATH
 
 verify_data: true
-
-#validate_message: true
-
-topics:
-    - '#'
 
 # storage: filesystem
 storage:
