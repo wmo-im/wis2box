@@ -1,10 +1,17 @@
-=============
-WIS2-in-a-box
-=============
+=========================================
+WMO INFORMATION SYSTEM (WIS) 2.0 IN A BOX
+=========================================
 
-The `WMO Information System 2.0 (WIS 2.0) <https://community.wmo.int/activity-areas/wis>`_ is the framework for WMO data sharing in the 21st century for all WMO domains and disciplines.
 
-The “WIS2-in-a-box” is an open-source reference implementation for a WIS2-node. This software was developed to enable WMO-members to publish and download data through the WIS2-network with minimum existing hardware or software requirements. 
+The WIS2-in-a-box project was started in November 2021 to provide a system to share data using the `WIS2 framework <https://community.wmo.int/activity-areas/wis>`_ for members of the World Meteorological Organization (WMO).
+
+The “WIS2-in-a-box” software was developed to enable WMO-members to publish and download data through the WIS2-network. The main features are:
+
+* based on existing open-source software widely used in the operations of some WMO Members.
+* allows Members to share data internationally and nationally using message queuing protocols (MQP) and Web services in compliance with WIS2 technical regulations
+* provides Web APIs complying with Open Geospatial Consortium (OGC) standards, making access to data extremely easy from all common languages (Python, R, ...) and many open-source and proprietary programs (Excel).
+
+Demonstration instances of WIS2-in-a-box can be viewed at `https://demo.wis2box.wis.wmo.int`_
 
 User guide
 ==========
