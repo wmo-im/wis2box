@@ -2,7 +2,7 @@
 WMO INFORMATION SYSTEM (WIS) 2.0 IN A BOX
 =========================================
 
-**The WIS2-in-a-box project was started in November 2021 to provide a system to share data using the `WIS2 framework <https://community.wmo.int/activity-areas/wis>`_ for members of the World Meteorological Organization (WMO).**
+ .. epigraph:: The WIS2-in-a-box project was started in November 2021 to provide a system to share data using the `WIS2 framework <https://community.wmo.int/activity-areas/wis>`_ for members of the World Meteorological Organization (WMO).
 
 The “WIS2-in-a-box” software was developed to enable WMO-members to publish and download data through the WIS2-network. The main features are:
 
