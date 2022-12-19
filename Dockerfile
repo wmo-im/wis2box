@@ -48,7 +48,7 @@ RUN apt-get update -y \
     && pip3 install --no-cache-dir https://github.com/geopython/pygeometa/archive/master.zip \
     # install shapely
     && pip3 install cython pygeos \
-    && pip3 install shapely --no-binary shapely \
+    && pip3 install -U "shapely<2" --no-binary shapely \
     # cleanup
     && apt autoremove -y  \
     && apt-get -q clean \

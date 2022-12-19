@@ -104,7 +104,13 @@ class PygeoapiConfig(BaseConfig):
         :returns: `dict` of collection configuration
         """
 
-        resource_id = meta.get('id').lower()
+        if meta['id'] in ['discovery-metadata', 'messages', 'stations']:
+            resource_id = meta['id']
+        else:
+            resource_id = meta['topic_hierarchy']
+
+        LOGGER.debug(f'Resource id: {resource_id}')
+
         type_ = meta.get('type', 'feature')
 
         provider_name = API_BACKEND_TYPE
@@ -114,15 +120,9 @@ class PygeoapiConfig(BaseConfig):
 
         collection = {
             'type': 'collection',
-            'title': {
-                'en': meta.get('title')
-            },
-            'description': {
-                'en': meta.get('description')
-            },
-            'keywords': {
-                'en': meta.get('keywords')
-            },
+            'title': meta.get('title'),
+            'description': meta.get('description'),
+            'keywords': meta.get('keywords'),
             'extents': {
                 'spatial': {
                     'bbox': meta.get('bbox'),

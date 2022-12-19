@@ -123,7 +123,7 @@ class ElasticBackend(BaseBackend):
 
         :returns: `str` of ES index
         """
-        return collection_id.lower()
+        return collection_id.lower().replace(':', '-')
 
     def add_collection(self, collection_id: str) -> dict:
         """
@@ -219,10 +219,18 @@ class ElasticBackend(BaseBackend):
         :param collection_id: name of collection
         :param item_id: `str` of item identifier
 
-        :returns: `str` identifier of added item
+        :returns: `bool` of delete result
         """
 
-        raise NotImplementedError()
+        LOGGER.debug(f'Deleting {item_id} from {collection_id}')
+        try:
+            _ = self.conn.delete(index=collection_id, id=item_id)
+        except Exception as err:
+            msg = f'Item deletion failed: {err}'
+            LOGGER.error(msg)
+            raise RuntimeError(msg)
+
+        return True
 
     def delete_collections_by_retention(self, days: int) -> bool:
         """

@@ -24,7 +24,7 @@ from copy import deepcopy
 import json
 import logging
 
-from pygeometa.schemas.ogcapi_records import OGCAPIRecordOutputSchema
+from pygeometa.schemas.wmo_wcmp2 import WMOWCMP2OutputSchema
 
 from wis2box import cli_helpers
 from wis2box.api import (setup_collection, upsert_collection_item,
@@ -54,21 +54,37 @@ class DiscoveryMetadata(BaseMetadata):
 
         identifier = md['metadata']['identifier']
 
+        local_topic = mcf['wis2box']['topic_hierarchy'].replace('.', '/')
+        mqtt_topic = f'origin/a/wis2/{local_topic}'
+
+        LOGGER.debug('Adding topic hierarchy as keyword')
+        topic_hierarchy_keywords = {
+            'keywords': [mcf['wis2box']['topic_hierarchy']],
+            'keywords_type': 'theme',
+            'vocabulary': {
+                'name': 'WMO Core Metadata profile topic hierarchy',
+                'url': 'https://github.com/wmo-im/wis2-topic-hierarchy'
+            }
+        }
+
+        md['identification']['keywords']['wis2'] = topic_hierarchy_keywords
+
         LOGGER.debug('Adding distribution links')
         oafeat_link = {
             'url': f"{API_URL}/collections/{identifier}",
             'type': 'OAFeat',
             'name': identifier,
             'description': identifier,
-            'function': 'collection'
+            'rel': 'collection'
         }
 
         mqp_link = {
             'url': remove_auth_from_url(BROKER_PUBLIC),
             'type': 'MQTT',
-            'name': identifier,
-            'description': identifier,
-            'function': 'collection'
+            'name': mcf['wis2box']['topic_hierarchy'],
+            'description': mcf['wis2box']['topic_hierarchy'],
+            'rel': 'data',
+            'wmo_topic': mqtt_topic
         }
 
         canonical_link = {
@@ -76,7 +92,7 @@ class DiscoveryMetadata(BaseMetadata):
             'type': 'OARec',
             'name': identifier,
             'description': identifier,
-            'function': 'canonical'
+            'rel': 'canonical'
         }
 
         md['distribution'] = {
@@ -85,16 +101,19 @@ class DiscoveryMetadata(BaseMetadata):
             'canonical': canonical_link
         }
 
+        LOGGER.debug('Adding data policy')
+        md['identification']['wmo_data_policy'] = mqtt_topic.split('/')[6]
+
         LOGGER.debug('Generating OARec discovery metadata')
-        record = OGCAPIRecordOutputSchema().write(md, stringify=False)
+        record = WMOWCMP2OutputSchema().write(md, stringify=False)
 
         anytext_bag = [
-            md['identification']['title']['en'],
-            md['identification']['abstract']['en']
+            md['identification']['title'],
+            md['identification']['abstract']
         ]
 
         for k, v in md['identification']['keywords'].items():
-            anytext_bag.extend(v['keywords']['en'])
+            anytext_bag.extend(v['keywords'])
 
         record['properties']['_metadata-anytext'] = ' '.join(anytext_bag)
 

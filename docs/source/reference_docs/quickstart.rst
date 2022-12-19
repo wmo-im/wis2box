@@ -56,9 +56,9 @@ Ingest data, using data ingest command to push the wis2box-incoming bucket
 
 .. code-block:: bash
 
-    wis2box data ingest --topic-hierarchy mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP --path $WIS2BOX_DATADIR/observations/malawi
-    wis2box data ingest --topic-hierarchy ita.roma_met_centre.data.core.weather.surface-based-observations.SYNOP --path $WIS2BOX_DATADIR/observations/italy
-    wis2box data ingest --topic-hierarchy dza.alger_met_centre.data.core.weather.surface-based-observations.SYNOP --path $WIS2BOX_DATADIR/observations/algeria
+    wis2box data ingest --topic-hierarchy mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/malawi
+    wis2box data ingest --topic-hierarchy ita.roma_met_centre.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/italy
+    wis2box data ingest --topic-hierarchy dza.alger_met_centre.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/algeria
 
 
 Cache and publish stations

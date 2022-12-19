@@ -120,6 +120,7 @@ def gcm(mcf: dict) -> dict:
     return {
         'id': generated['id'],
         'type': 'feature',
+        'topic_hierarchy': record['wis2box']['topic_hierarchy'],
         'title': generated['properties']['title'],
         'description': generated['properties']['description'],
         'keywords': list(keywords),
@@ -200,11 +201,11 @@ def add_collection(ctx, filepath, verbosity):
     """Add collection index to API backend"""
 
     meta = gcm(filepath.read())
-    topic_hierarchy = meta['id']
+    # topic_hierarchy = meta['id']
 
-    th, _ = validate_and_load(topic_hierarchy)
+    # th, _ = validate_and_load(topic_hierarchy)
 
-    click.echo(f'Adding collection: {th.dotpath}')
+    # click.echo(f'Adding collection: {th.dotpath}')
     setup_collection(meta=meta)
 
     click.echo("Done")

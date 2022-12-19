@@ -39,16 +39,21 @@ def setup_collection(meta: dict = {}) -> bool:
     """
 
     try:
-        name = meta['id']
+        name = meta['id'].lower()
     except KeyError:
         LOGGER.error(f'Invalid configuration: {meta}')
         return False
 
-    backend = load_backend()
-    if not backend.has_collection(name):
+    if 'topic_hierarchy' in meta:
+        data_name = meta['topic_hierarchy']
+    else:
+        data_name = meta['id']
 
-        if not backend.add_collection(name):
-            msg = f'Unable to setup backend for collection {name}'
+    backend = load_backend()
+    if not backend.has_collection(data_name):
+
+        if not backend.add_collection(data_name):
+            msg = f'Unable to setup backend for collection {data_name}'
             LOGGER.error(msg)
             return False
 
