@@ -1,7 +1,6 @@
 wis2box:
     retention: P30D
     topic_hierarchy: iso3c_country.center_id.data.core.weather.surface-based-observations.synop
-    data_category: observationsSurfaceLand
     country: iso3c_country
     center_id: center_id
 
@@ -46,15 +45,6 @@ identification:
                 name:
                     en: WMO Category Code
                 url: https://github.com/wmo-im/wcmp-codelists/blob/main/codelists/WMO_CategoryCode.csv
-        wis2:
-            keywords:
-                en:
-                    - iso3c_country.center_id.dataset_name
-            keywords_type: theme
-            vocabulary:
-                name:
-                    en: WMO Core Metadata profile topic hierarchy
-                url: https://github.com/wmo-im/wcmp2-codelists/blob/main/codelists/topic_hierarchy.csv
 
     topiccategory:
         - climatologyMeteorologyAtmosphere

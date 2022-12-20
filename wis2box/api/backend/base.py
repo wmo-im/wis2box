@@ -92,7 +92,7 @@ class BaseBackend:
         :param collection: name of collection
         :param item_id: `str` of item identifier
 
-        :returns: `str` identifier of added item
+        :returns: `bool` of delete result
         """
 
         raise NotImplementedError()

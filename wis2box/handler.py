@@ -117,7 +117,7 @@ class Handler:
                 msg = f'Failed to publish file {self.filepath}: {err}'
                 LOGGER.warning(msg)
                 self.publish_failure_message(
-                    decription="Failed to publish file to api-backend",
+                    description="Failed to publish file to api-backend",
                     plugin=plugin)
                 return False
 

@@ -27,14 +27,14 @@ The user guide helps you setup your own wis2box instance.
 .. toctree::
    :maxdepth: 1
    :caption: User guide
-   :name: toc-userguide
+   :name: toc-user
 
-   userguide/introduction
-   userguide/getting-started
-   userguide/setup
-   userguide/data-ingest
-   userguide/public-services-setup
-   userguide/downloading-data
+   user/introduction
+   user/getting-started
+   user/setup
+   user/data-ingest
+   user/public-services-setup
+   user/downloading-data
 
 Reference guide
 ===============

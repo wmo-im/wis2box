@@ -19,7 +19,7 @@ first time a token is generated for a topic hierarchy.
 
 .. code-block:: bash
 
-    wis2box auth add-token --topic-hierarchy mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP mytoken
+    wis2box auth add-token --topic-hierarchy mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop mytoken
 
 
 If no token is provided, a random string will be generated. Be sure to the record token now, there is no
@@ -33,8 +33,8 @@ Token credentials can be validated using the wis2box command line utility.
 .. code-block:: bash
 
     wis2box auth show
-    wis2box auth has-access --topic-hierarchy mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP mytoken
-    wis2box auth has-access --topic-hierarchy mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP notmytoken
+    wis2box auth has-access --topic-hierarchy mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop mytoken
+    wis2box auth has-access --topic-hierarchy mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop notmytoken
 
 
 Once a token has been generated, access to any data of that topic in the WAF or API requires token authentication.
@@ -43,8 +43,8 @@ easily added to requests using `cURL`_.
 
 .. code-block:: bash
 
-    curl -H "Authorization: Bearer mytoken" "http://localhost:8999/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP"
-    curl -H "Authorization: Bearer notmytoken" "http://localhost:8999/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP"
+    curl -H "Authorization: Bearer mytoken" "http://localhost:8999/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop"
+    curl -H "Authorization: Bearer notmytoken" "http://localhost:8999/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop"
 
 
 Removing Access Control
@@ -55,7 +55,7 @@ deleting individual tokens, or all tokens for a given topic hierarchy.
 
 .. code-block:: bash
 
-    wis2box auth remove-tokens --topic-hierarchy mwi.mwi_met_centre.data.core.weather.surface-based-observations.SYNOP
+    wis2box auth remove-tokens --topic-hierarchy mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop
     wis2box auth show
 
 
