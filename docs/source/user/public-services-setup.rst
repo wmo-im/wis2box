@@ -13,10 +13,16 @@ Nginx (HTTP)
 
 wis2box runs a local nginx container allowing access to the following HTTP based services on port 8999:
 
-* wis2box-api: WIS2BOX_URL/oapi
-* wis2box-ui: WIS2BOX_URL/
-* incoming data: WIS2BOX_URL/wis2box-incoming
-* public data: WIS2BOX_URL/data
+
+.. csv-table::
+   :header: Function, URL
+   :align: left
+
+   API (wis2box-api),`WIS2BOX_URL/oapi`
+   UI (wis2box-ui),`WIS2BOX_URL/`
+   Storage (incoming data) (minio:wis2box-incoming),`WIS2BOX_URL/wis2box-incoming`
+   Storage (public data) (minio:wis2box-public),`WIS2BOX_URL/data`
+
 
 You can edit ``docker/nginx/nginx.conf`` to control which services are exposed through the nginx-container include in your stack.
 

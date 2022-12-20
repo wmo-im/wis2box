@@ -8,7 +8,7 @@ Discovery metadata describes a given dataset or collection. Data being published
 requires discovery metadata (describing it) to be created, maintained and published to the wis2box
 catalogue API.
 
-wis2box supports managing discovery metadata using the WMO Core Metadata Profile (WCMP2)standard.
+wis2box supports managing discovery metadata using the WMO Core Metadata Profile (WCMP2) standard.
 
 .. note::
 
