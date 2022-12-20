@@ -4,7 +4,7 @@ Data pipeline plugins
 =====================
 
 Driven by topic hierarchies, wis2box is a plugin architecture orchestrating all the
-required components of a WIS 2.0 node.  wis2box also provides a data pipeline plugin
+required components of a WIS2 node.  wis2box also provides a data pipeline plugin
 architecture which allows for users to define a plugin based on a topic hierarchy to
 publish incoming data (see :ref:`data-mappings` for more information).
 

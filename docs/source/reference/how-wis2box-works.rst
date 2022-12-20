@@ -1,7 +1,7 @@
 .. _how-wis2box-works:
 
-Implementation
-==============
+How wis2box works
+=================
 
 wis2box is implemented in the spirit of the `Twelve-Factor App methodology`_.
 
@@ -29,9 +29,9 @@ Core wis2box functionality includes the ability to:
 * create and publish discovery metadata of your datasets
 * provide your data via OGC and PubSub standards mechanisms to your data, enabling
   easy access for web applications, desktop GIS tools, mobile applications
-* connect your wis2box to the WIS 2.0 network
+* connect your wis2box to the WIS2 network
 * make your data and services available to market search engines
-* subscribe to and download weather/climate/water data from the WIS 2.0 network
+* subscribe to and download weather/climate/water data from the WIS2 network
 
 Docker Compose
 --------------

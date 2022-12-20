@@ -8,18 +8,18 @@ Discovery metadata describes a given dataset or collection. Data being published
 requires discovery metadata (describing it) to be created, maintained and published to the wis2box
 catalogue API.
 
-wis2box supports managing discovery metadata using the WMO Core Metadata Profile (WCMP) 2.0 standard.
+wis2box supports managing discovery metadata using the WMO Core Metadata Profile (WCMP2)standard.
 
 .. note::
 
-   WCMP 2.0 is currently in development as part of WMO activities.
+   WCMP2 is currently in development as part of WMO activities.
 
 
 Creating a discovery metadata record in wis2box is as easy as completing a YAML configuration file. wis2box
 leverages the `pygeometa`_ project's `metadata control file (MCF)`_ format. Below is an example MCF file.
 
 
-.. literalinclude:: ../../../tests/data/metadata/discovery/mwi-surface-weather-observations.yml
+.. literalinclude:: ../../../../tests/data/metadata/discovery/mwi-surface-weather-observations.yml
    :language: yaml
 
 .. note::

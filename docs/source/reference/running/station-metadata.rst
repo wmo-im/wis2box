@@ -11,7 +11,7 @@ wis2box provides the ability to cache station metadata from the `WMO OSCAR/Surfa
 To cache your stations of interest, create a CSV file formatting per below, specifying one
 line (with station name and WIGOS station identifier [WSI]) per station:
 
-.. literalinclude:: ../../../examples/config/station_list.csv
+.. literalinclude:: ../../../../examples/config/station_list.csv
 
 Use this CSV to cache station metadata:
 

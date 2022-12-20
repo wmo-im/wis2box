@@ -1,6 +1,6 @@
 .. _auth:
 
-Authentication and Access control
+Authentication and access control
 =================================
 
 wis2box provides built in access control for the WAF and API on a topic hierarchy basis. Configuration is done

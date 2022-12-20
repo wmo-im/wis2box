@@ -12,7 +12,7 @@ as well as GeoJSON features.
 .. warning::
    GeoJSON **data** representations provided in wis2box are in development and
    are subject to change based on evolving requirements for observation data
-   representations in WIS 2.0 technical regulations.
+   representations in WIS2 technical regulations.
 
 Interactive ingest, processing and publishing
 ---------------------------------------------

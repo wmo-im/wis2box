@@ -3,26 +3,26 @@
 Introduction
 ============
 
-This is a user guide for downloading and publishing data through the `WIS 2.0`_ network using the WIS2-in-a-box software.
+This is a user guide for publishing and downloading data through the `WIS2`_ network using the wis2box software.
 
-The "wis2box"-software provides a set of services to help you ingest, transform and publish your weather data. 
+wis2box provides a set of services to help you ingest, transform and publish your weather/climate/water data. 
 
-Core WIS2 services:
+wis2box implements the core WIS2 requirements of a WIS2 Node:
 
-* Module to produce WIS2-compliant notifications
-* MQTT-broker
-* HTTP-endpoint to enable data download
+* Module to produce WIS2 compliant notifications
+* MQTT broker
+* HTTP endpoint to enable data download
 
-Additional services:
+Additional services included in wis2box include:
 
 * Customizable plugins to transform input data
-* API exposing data in geojson-format using `pygeoapi`_
+* API exposing data in GeoJSON using `pygeoapi`_
 * Monitoring functions using `Prometheus`_ and `Grafana`_
-* Data visualization through the wis2box-UI
+* Data visualization through the wis2box user interface
 
-Next: :ref:`gettingstarted`.
+Next: :ref:`getting-started`.
 
-.. _`WIS 2.0`: https://community.wmo.int/activity-areas/wis/wis2-implementation
-.. _`pygeoapi`: https://pygeoapi.io/
-.. _`Prometheus`: https://prometheus.io/docs/introduction/overview/
-.. _`Grafana`: https://grafana.com/docs/grafana/latest/introduction/
+.. _`WIS2`: https://community.wmo.int/activity-areas/wis/wis2-implementation
+.. _`pygeoapi`: https://pygeoapi.io
+.. _`Prometheus`: https://prometheus.io/docs/introduction/overview
+.. _`Grafana`: https://grafana.com/docs/grafana/latest/introduction

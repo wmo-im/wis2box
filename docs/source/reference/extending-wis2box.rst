@@ -4,8 +4,8 @@ Extending wis2box
 ==================
 
 At its core, wis2box is a plugin architecture orchestrating all the required components of a node in
-the WIS 2.0 network. Driven by topic hierarchies, wis2box can be used to process and publish any type
-of geospatial data beyond the requirements of the WIS 2.0 itself.
+the WIS2 network. Driven by topic hierarchies, wis2box can be used to process and publish any type
+of geospatial data beyond the requirements of the WIS2 itself.
 
 In this section we will to explore how wis2box can be extended. wis2box plugin development requires
 knowledge of how to program in Python as well as Python's packaging and module system.
@@ -54,7 +54,7 @@ of the item, with the following values ``dict``:
 The ``_meta`` element can include the following:
     - ``identifier``: identifier for report (WIGOS_<WSI>_<ISO8601>)
     - ``relative_filepath``: path to data, required to publish data with ``BaseAbstractData.publish``
-    - ``geometry``: GeoJSON geometry object, required to send geometry with WIS2.0 notification
+    - ``geometry``: GeoJSON geometry object, required to send geometry with WIS2 notification
     - ``md5``: md5 checksum of encoded data
     - ``wigos_station_identifier``: WIGOS identifier
     - ``data_date``: (as Python `datetime`_ objects) based on the observed datetime

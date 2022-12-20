@@ -15,5 +15,5 @@ directory for all data managed in wis2box.
 
 The default enviroment variables are below.
 
-.. literalinclude:: ../../../docker/default.env
+.. literalinclude:: ../../../../docker/default.env
    :language: bash

@@ -1,5 +1,5 @@
-WIS 2.0
-=======
+WIS2
+====
 
 The `WMO Information System`_ is a coordinated global infrastructure responsible for telecommunications
 and data management functions and is owned and operated by WMO Members.
@@ -16,7 +16,7 @@ alerts where and when needed.
 WIS is a vital data communications backbone for integrating the diverse real-time and non-real-time high
 priority data sets, regardless of location.
 
-Further documentation on WIS 2.0 can be found at the following links:
+Further documentation on WIS2 can be found at the following links:
 
 * `WIS Overview`_
 

@@ -12,7 +12,7 @@ The default wis2box MinIO administration user interface can be accessed locally 
 
 The username/password for MinIO is configured through environment variables (see :ref:`configuration`). 
 
-.. image:: /_static/minio_login_screen.png
+.. image:: ../_static/minio-login-screen.png
    :width: 600px
    :alt: MinIO login screen
    :align: center
@@ -20,7 +20,7 @@ The username/password for MinIO is configured through environment variables (see
 Once logged in, buckets can be managed via the default "Buckets" menu item (click "Manage").  Click "Browse"
 provides a browsing capability for a storage administrator.
 
-.. image:: /_static/minio_buckets.png
+.. image:: ../_static/minio-buckets.png
    :width: 800px
    :alt: MinIO default administration UI
    :align: center
@@ -150,7 +150,7 @@ Using the MinIO UI
 Files can also be uploaded interactively via the MinIO adminstration interface.  The example below demonstrates this
 capability when browsing the ``wis2box-incoming`` bucket:
 
-.. image:: /_static/minio_upload_files.png
+.. image:: /_static/minio-upload-files.png
    :width: 800px
    :alt: Uploading files using the MinIO adminstration interface
    :align: center
