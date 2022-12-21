@@ -30,7 +30,9 @@
 import os
 import re
 
-project = 'wis2box'
+import wmo_sphinx_theme
+
+project = 'WIS2 in a box'
 author = 'World Meteorological Organization (WMO)'
 license = 'This work is licensed under a Creative Commons Attribution 4.0 International License'  # noqa
 copyright = '2021-2022, ' + author + ' ' + license
@@ -68,11 +70,10 @@ exclude_patterns = []
 
 today_fmt = '%Y-%m-%d'
 
-html_theme = 'wmo'
-html_theme_path = ['_themes']
+html_theme = 'wmo_sphinx_theme'
+html_theme_path = wmo_sphinx_theme.get_html_theme_path()
 html_css_files = [
-    # 'basic.css',  # included through inheritance from the basic theme
-    'wmo.css',
+    'wmo.css'
 ]
 html_static_path = ['_static']
 

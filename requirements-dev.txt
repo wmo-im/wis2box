@@ -10,3 +10,4 @@ requests
 sphinx
 twine
 wheel
+wmo-sphinx-theme
