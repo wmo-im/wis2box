@@ -23,7 +23,7 @@ import click
 import csv
 import json
 import logging
-from typing import Iterator
+from typing import Iterator, Union
 
 from owslib.ogcapi.features import Features
 from pygeometa.schemas.wmo_wigos import WMOWIGOSOutputSchema
@@ -32,7 +32,6 @@ from wis2box import cli_helpers
 from wis2box.api import setup_collection, upsert_collection_item
 from wis2box.env import DATADIR, DOCKER_API_URL
 from wis2box.metadata.base import BaseMetadata
-from wis2box.metadata.oscar import get_station_report, upload_station_metadata
 
 LOGGER = logging.getLogger(__name__)
 
@@ -154,20 +153,30 @@ def publish_station_collection() -> None:
 
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
-    for f in STATION_METADATA.glob('*.json'):
-        LOGGER.debug(f'Adding station metadata from {f.name}')
-        with f.open() as fh:
-            d = json.load(fh)
-            wigos_station_identifier = d['wigosIds'][0]['wid']
+    with STATIONS.open() as fh:
+        reader = csv.DictReader(fh)
+
+        for row in reader:
+            wigos_station_identifier = row['wigos_station_identifier']
             topics = list(check_station_datasets(wigos_station_identifier))
             topic = None if len(topics) == 0 else topics[0]['title']
             feature = {
-                'id': d['id'],
+                'id': wigos_station_identifier,
                 'type': 'Feature',
-                'geometry': get_geometry(wigos_station_identifier),
+                'geometry': {
+                    'type': 'Point',
+                    'coordinates': [
+                        row['longitude'],
+                        row['latitude'],
+                        row['elevation']
+                    ]
+                 },
                 'properties': {
+                    'name': row['station_name'],
                     'wigos_station_identifier': wigos_station_identifier,
-                    'name': d['name'],
+                    'facility_type': row['facility_type'],
+                    'territory_name': row['territory_name'],
+                    'wmo_region': row['wmo_region'],
                     'url': f"{oscar_baseurl}/{wigos_station_identifier}",
                     'topic': topic,
                     # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
@@ -182,40 +191,14 @@ def publish_station_collection() -> None:
     return
 
 
-def cache_station(wsi: str = '') -> bool:
+def get_valid_wsi(wsi: str = '', tsi: str = '') -> Union[str, None]:
     """
-    Caches station locally WMO OSCAR/Surface
-
-    :param wsi: `str` WIGOS Station identifier
-
-    :returns: `bool`, of cache result
-    """
-    try:
-        station_report = get_station_report(wsi)
-    except RuntimeError:
-        LOGGER.error(f'Station not found: {wsi}')
-        return False
-
-    if station_report == {}:
-        LOGGER.error(f'Station report empty: {wsi}')
-        return False
-
-    filename = STATION_METADATA / f'{wsi}.json'
-    LOGGER.debug(f'Writing file to {filename}')
-    with filename.open('w') as fh:
-        json.dump(station_report, fh)
-
-    return True
-
-
-def get_valid_wsi(wsi: str = '', tsi: str = '') -> str:
-    """
-    Validates and returns WSI from WMO OSCAR/Surface
+    Validates and returns WSI
 
     :param wsi: `str` WIGOS Station identifier
     :param tsi: `str` Traditional Station identifier
 
-    :returns: `str`, of valid wsi
+    :returns: `str`, of valid wsi or `None`
     """
 
     LOGGER.info(f'Validating WIGOS Station Identifier: {wsi}')
@@ -226,14 +209,16 @@ def get_valid_wsi(wsi: str = '', tsi: str = '') -> str:
                (tsi == row['traditional_station_identifier'] and tsi != ''):
                 return row['wigos_station_identifier']
 
+    return None
 
-def get_geometry(wsi: str = '') -> dict:
+
+def get_geometry(wsi: str = '') -> Union[dict, None]:
     """
-    Validates and caches WSI from WMO OSCAR/Surface
+    Validates geometry
 
     :param wsi: `str` WIGOS Station identifier
 
-    :returns: `dict`, of station geometr
+    :returns: `dict`, of station geometry or `None`
     """
 
     filename = STATION_METADATA / f'{wsi}.json'
@@ -241,9 +226,6 @@ def get_geometry(wsi: str = '') -> dict:
     if not filename.exists():
         if get_valid_wsi(wsi=wsi) is None:
             LOGGER.info(f'Invalid wigos identifer: {wsi}, returning None')
-            return None
-        if not cache_station(wsi):
-            LOGGER.info(f'Unable to cache {wsi}, returning None')
             return None
 
     with filename.open() as fh:
@@ -278,28 +260,6 @@ def get_geometry(wsi: str = '') -> dict:
 @click.command()
 @click.pass_context
 @cli_helpers.OPTION_VERBOSITY
-@cli_helpers.ARGUMENT_FILEPATH
-def cache(ctx, filepath, verbosity):
-    """Caches local station metadata in with WMO OSCAR/Surface"""
-
-    click.echo(f'Caching OSCAR/Surface metadata from in {filepath.name}')
-    reader = csv.DictReader(filepath)
-
-    for row in reader:
-        wsi = row['wigos_station_identifier']
-
-        if get_valid_wsi(wsi=wsi) is None:
-            with STATIONS.open('a', newline='') as fh:
-                writer = csv.DictWriter(fh, fieldnames=row.keys())
-                writer.writerow(row)
-
-        click.echo(f"Caching station metadata for {wsi}")
-        cache_station(wsi)
-
-
-@click.command()
-@click.pass_context
-@cli_helpers.OPTION_VERBOSITY
 def publish_collection(ctx, verbosity):
     """Publishes collection of stations to API config and backend"""
 
@@ -307,34 +267,4 @@ def publish_collection(ctx, verbosity):
     click.echo('Done')
 
 
-@click.command()
-@click.pass_context
-@cli_helpers.OPTION_VERBOSITY
-@cli_helpers.ARGUMENT_FILEPATH
-def sync(ctx, filepath, verbosity):
-    ctx.invoke(cache, filepath=filepath, verbosity=verbosity)
-    ctx.invoke(publish_collection, verbosity=verbosity)
-
-
-@click.command()
-@click.pass_context
-@cli_helpers.ARGUMENT_FILEPATH
-@cli_helpers.OPTION_VERBOSITY
-def publish(ctx, filepath, verbosity):
-    """Inserts or updates station metadata to OSCAR/Surface"""
-
-    click.echo(f'Publishing {filepath.name} to OSCAR/Surface')
-    try:
-        record = StationMetadata()
-        station_metadata = record.parse_record(filepath.read())
-        upload_station_metadata(record.generate(station_metadata))
-    except Exception as err:
-        raise click.ClickException(err)
-
-    click.echo('Done')
-
-
-station.add_command(publish)
 station.add_command(publish_collection)
-station.add_command(cache)
-station.add_command(sync)
