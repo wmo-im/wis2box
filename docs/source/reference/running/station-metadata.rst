@@ -6,19 +6,12 @@ Station metadata
 wis2box is designed to support data ingest and processing of any kind. For observations,
 processing workflow typically requires station metadata to be present at runtime.
 
-To cache your stations of interest, create a CSV file formatting per below, specifying one
-line (with station name and WIGOS station identifier [WSI]) per station:
+To manage your stations of interest, create a CSV file formatting per below, specifying one
+line per station:
 
 .. literalinclude:: ../../../../examples/config/station_list.csv
 
-Use this CSV to cache station metadata:
-
-.. code-block:: bash
-
-   wis2box metadata station cache /path/to/station_list.csv
-
-Resulting station metadata files (JSON) are stored in ``WIS2BOX_DATADIR/data/metadata/station`` and
-can be used by wis2box data processing pipelines. These data are required before starting automated
+This CSV file is used by wis2box data processing pipelines and is required before starting automated
 processing.
 
 .. note:: run the command ``wis2box metadata station publish-collection`` to
