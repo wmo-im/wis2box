@@ -8,7 +8,7 @@ name: publish image to ghcr.io
 on:
   push:
     branches:
-      - main
+      - test
   release:
     types: [published]
 
@@ -61,6 +61,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/arm64, linux/amd64
-          push: true
+          push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
