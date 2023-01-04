@@ -2,7 +2,7 @@ wis2box:
     retention: P30D
     topic_hierarchy: mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop
     country: mwi
-    center_id: mwi_met_centre
+    centre_id: mwi_met_centre
 
 mcf:
     version: 1.0

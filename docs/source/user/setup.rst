@@ -72,7 +72,7 @@ is set to ``/home/wis2box-user/wis2box-data``, you can copy the following exampl
 Edit ``/home/wis2box-user/wis2box-data/data-mappings.yml``:
  
  * Replace ``iso3c_country`` with your corresponding ISO 3166 alpha-3 country code 
- * Replace ``center_id`` with the string identifying the center running your wis2node
+ * Replace ``centre_id`` with the string identifying the centre running your wis2node
 
 If you need to define multiple datasets, you can add multiple entries in your ``data-mappings.yml``. For example:
 
@@ -150,7 +150,7 @@ An example is provided in ``surface-weather-observations.yml``. Each dataset req
 
 You can copy the file ``surface-weather-observations.yml`` to the directory you defined for ``WIS2BOX_HOST_DATADIR`` and update it to provide the correct discovery metadata for your dataset:
 
-* replace ``[iso3c_country].[center_id].data.core.weather.surface-based-observations.synop`` with the topic previously used in ``$WIS2BOX_HOST_DATADIR/data-mappings.yml``
+* replace ``[iso3c_country].[centre_id].data.core.weather.surface-based-observations.synop`` with the topic previously used in ``$WIS2BOX_HOST_DATADIR/data-mappings.yml``
 * text provided in ``identification.title`` and ``identification.abstract`` will be displayed in the wis2box user interface
 * provide a valid geographic bounding box in ``identification.extents.spatial.bbox``
 

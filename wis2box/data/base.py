@@ -94,7 +94,7 @@ class BaseAbstractData:
             discovery_metadata['metadata']['identifier'])
 
         self.country = discovery_metadata['wis2box']['country']
-        self.center_id = discovery_metadata['wis2box']['center_id']
+        self.centre_id = discovery_metadata['wis2box']['centre_id']
 
     def accept_file(self, filename: str = '') -> bool:
         """
