@@ -2,7 +2,7 @@ wis2box:
     retention: P30D
     topic_hierarchy: dza.alger_met_centre.data.core.weather.surface-based-observations.synop
     country: dza
-    center_id: alger_met_centre
+    centre_id: alger_met_centre
 
 mcf:
     version: 1.0

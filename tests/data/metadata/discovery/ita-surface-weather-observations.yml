@@ -2,7 +2,7 @@ wis2box:
     retention: P30D
     topic_hierarchy: ita.roma_met_centre.data.core.weather.surface-based-observations.synop
     country: ita
-    center_id: roma_met_centre
+    centre_id: roma_met_centre
 
 mcf:
     version: 1.0
