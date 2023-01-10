@@ -107,7 +107,7 @@ def load_datasets() -> Iterator[dict]:
         dm = oaf.collection_items('discovery-metadata')
         for topic in dm['features']:
             for link in topic['links']:
-                if link['type'] == 'MQTT':
+                if link['rel'] == 'canonical':
                     yield link
     except RuntimeError:
         LOGGER.warning('discovery-metadata collection has not been created')

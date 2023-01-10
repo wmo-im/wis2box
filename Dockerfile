@@ -47,7 +47,7 @@ RUN apt-get update -y \
     && pip3 install --no-cache-dir https://github.com/wmo-im/bufr2geojson/archive/refs/tags/v0.4.1.zip \
     && pip3 install --no-cache-dir https://github.com/geopython/pygeometa/archive/master.zip \
     # install shapely
-    && pip3 install cython pygeos \
+    && pip3 install cython pygeos==0.13 \
     && pip3 install -U "shapely<2" --no-binary shapely \
     # cleanup
     && apt autoremove -y  \
