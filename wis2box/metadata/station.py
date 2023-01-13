@@ -170,17 +170,17 @@ def publish_station_collection() -> None:
                         get_typed_value(row['latitude']),
                         get_typed_value(row['elevation'])
                     ]
-                 },
+                },
                 'properties': {
-                    'name': row['station_name'],
-                    'wigos_station_identifier': wigos_station_identifier,
-                    'facility_type': row['facility_type'],
-                    'territory_name': row['territory_name'],
-                    'wmo_region': row['wmo_region'],
-                    'url': f"{oscar_baseurl}/{wigos_station_identifier}",
-                    'topic': topic,
-                    # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
-                    'status': 'operational'
+                   'name': row['station_name'],
+                   'wigos_station_identifier': wigos_station_identifier,
+                   'facility_type': row['facility_type'],
+                   'territory_name': row['territory_name'],
+                   'wmo_region': row['wmo_region'],
+                   'url': f"{oscar_baseurl}/{wigos_station_identifier}",
+                   'topic': topic,
+                   # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
+                   'status': 'operational'
                 },
                 'links': topics
             }
