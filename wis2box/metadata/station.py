@@ -185,8 +185,8 @@ def publish_station_collection() -> None:
                 'links': topics
             }
 
-        LOGGER.debug('Publishing to backend')
-        upsert_collection_item('stations', feature)
+            LOGGER.debug('Publishing to backend')
+            upsert_collection_item('stations', feature)
 
     return
 
