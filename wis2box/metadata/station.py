@@ -21,7 +21,6 @@
 
 import click
 import csv
-import json
 import logging
 from typing import Iterator, Union
 
@@ -32,6 +31,7 @@ from wis2box import cli_helpers
 from wis2box.api import setup_collection, upsert_collection_item
 from wis2box.env import DATADIR, DOCKER_API_URL
 from wis2box.metadata.base import BaseMetadata
+from wis2box.util import get_typed_value
 
 LOGGER = logging.getLogger(__name__)
 
@@ -166,9 +166,9 @@ def publish_station_collection() -> None:
                 'geometry': {
                     'type': 'Point',
                     'coordinates': [
-                        row['longitude'],
-                        row['latitude'],
-                        row['elevation']
+                        get_typed_value(row['longitude']),
+                        get_typed_value(row['latitude']),
+                        get_typed_value(row['elevation'])
                     ]
                  },
                 'properties': {
@@ -221,40 +221,23 @@ def get_geometry(wsi: str = '') -> Union[dict, None]:
     :returns: `dict`, of station geometry or `None`
     """
 
-    filename = STATION_METADATA / f'{wsi}.json'
+    LOGGER.info(f'Validating WIGOS Station Identifier: {wsi}')
+    with STATIONS.open(newline='') as fh:
+        reader = csv.DictReader(fh)
+        for row in reader:
+            if wsi == row['wigos_station_identifier']:
+                LOGGER.debug('Found matching WSI')
+                return {
+                    'type': 'Point',
+                    'coordinates': [
+                        get_typed_value(row['longitude']),
+                        get_typed_value(row['latitude']),
+                        get_typed_value(row['elevation'])
+                    ]
+                }
 
-    if not filename.exists():
-        if get_valid_wsi(wsi=wsi) is None:
-            LOGGER.info(f'Invalid wigos identifer: {wsi}, returning None')
-            return None
-
-    with filename.open() as fh:
-        station_report = json.load(fh)
-
-    try:
-        location = station_report['locations'][0]
-    except IndexError:
-        LOGGER.debug(f'No geometry found for {wsi}, returning None')
-        return None
-    except KeyError:
-        LOGGER.debug(f'Invalid station report for {wsi}')
-        return None
-
-    geometry = {
-        'type': 'Point',
-        'coordinates': [
-            location['longitude'],
-            location['latitude']
-        ]
-    }
-
-    if location.get('elevation') is None:
-        LOGGER.warning('Elevation missing from station metadata')
-        return None
-    else:
-        geometry['coordinates'].append(location['elevation'])
-
-    return geometry
+    LOGGER.debug('No matching WSI')
+    return None
 
 
 @click.command()
