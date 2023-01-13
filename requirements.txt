@@ -4,7 +4,6 @@ minio
 OWSLib
 paho-mqtt
 pygeometa
-pyoscar
 pywis-pubsub
 PyYAML
 requests

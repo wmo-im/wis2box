@@ -23,8 +23,6 @@ of wis2box:
 Core wis2box functionality includes the ability to:
 
 * integrate your existing data processing pipeline
-* cache station metadata from the `OSCAR/Surface`_ station metadata management
-  tool
 * process and transform your weather/climate/water data into official WMO data formats
 * create and publish discovery metadata of your datasets
 * provide your data via OGC and PubSub standards mechanisms to your data, enabling
@@ -74,7 +72,7 @@ wis2box is built on free and open source (FOSS) technology.
    Storage,data and metadata storage,`MinIO`_ `Elasticsearch`_,`S3`_
    Internal Message Broker,PubSub,`mosquitto`_, `MQTT`_
    Public Message Broker,PubSub,`mosquitto`_, `MQTT`_
-   Data Management,data processing and publishing,`ecCodes`_ `csv2bufr`_ `bufr2geojson`_ `OWSLib`_ `pygeometa`_ `pyoscar`_,:abbr:`WCMP (WMO Core Metadata Profile)` :abbr:`WMDR (WIGOS Metadata Record)`
+   Data Management,data processing and publishing,`ecCodes`_ `csv2bufr`_ `bufr2geojson`_ `OWSLib`_ `pygeometa`_,:abbr:`WCMP (WMO Core Metadata Profile)` :abbr:`WMDR (WIGOS Metadata Record)`
    API Application,data discovery and access, `pygeoapi`_,`OGC API`_
    Web Application,data discovery and visualization,`Vue.js`_ `Leaflet`_,`OGC API`_
 
@@ -83,10 +81,8 @@ wis2box is built on free and open source (FOSS) technology.
 .. _`Docker`: https://www.docker.com
 .. _`Python`: https://www.python.org
 .. _`MQTT`: https://mqtt.org
-.. _`OSCAR/Surface`: https://oscar.wmo.int/surface
 .. _`mosquitto`: https://mosquitto.org
 .. _`pygeometa`: https://geopython.github.io/pygeometa
-.. _`pyoscar`: https://github.com/wmo-cop/pyoscar
 .. _`pygeoapi`: https://pygeoapi.io
 .. _`Elasticsearch`: https://www.elastic.co/elasticsearch
 .. _`Vue.js`: https://vuejs.org

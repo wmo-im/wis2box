@@ -22,6 +22,7 @@
 import json
 import logging
 from pathlib import Path
+import re
 from typing import Iterator, Union
 
 from wis2box.api import upsert_collection_item
@@ -219,6 +220,24 @@ class BaseAbstractData:
                     LOGGER.debug('No notification sent')
 
         return True
+
+    def validate_filename_pattern(self, filename: str) -> bool:
+        """
+        Validate a filename pattern against a configured file_filter
+
+        :filename: `str` of filename
+
+        :returns: `bool` of vadidation result
+        """
+
+        try:
+            LOGGER.debug(f'Validating {filename} against {self.file_filter}')
+            _ = re.match(self.file_filter, filename).group(1)
+            return True
+        except AttributeError:
+            msg = 'Validation failed'
+            LOGGER.error(msg)
+            return False
 
     def files(self) -> Iterator[str]:
         """

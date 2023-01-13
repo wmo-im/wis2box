@@ -134,7 +134,7 @@ An example of the configuration file for the stations is provided in ``station_l
 
 .. note::
 
-   The ``station_list.csv`` requires column names ``station_name`` and the ``wigos_station_identifier`` (WSI) with which the station is registered in OSCAR.  Optionally, you can provide a ``traditional_station_identifier (TSI)`` column.
+   The ``station_list.csv`` requires column names ``station_name`` and the ``wigos_station_identifier`` (WSI) with which the station is registered in `OSCAR`_.  Optionally, you can provide a ``traditional_station_identifier (TSI)`` column.
    The TSI can be left empty if your data contains a WSI. If your data contains a TSI but no WSI, the ``station_list.csv`` will be used to derive the corresponding WSI for that station.
 
 Discovery metadata
@@ -260,16 +260,11 @@ You can review the discovery metadata just cached through the new link in  ``htt
   :width: 800
   :alt: wis2box API collections list with added discovery metadata
 
-The final step is to collect station information from OSCAR and cache the station metadata list you prepared:
+The final step is to publish your station information to the wis2box API from the station metadata list you prepared:
 
 .. code-block:: bash
 
-   wis2box metadata station sync $WIS2BOX_DATADIR/station_list.csv
-
-.. note::
-
-   The error message ``ERROR - Station not found: <wigos-station-identifier>`` means wis2box could not find an entry with the corresponding WIGOS station identifier (WSI) in OSCAR.
-   Data for this station will **not** be processed by wis2box.  If you add a station with this identifier to OSCAR in the future, you will have the repeat the step caching station data.
+   wis2box metadata station publish-collection
 
 You can review the stations you just cached through the new link in  ``http://localhost:8999/oapi/collections``:
 
@@ -287,3 +282,4 @@ The next is the :ref:`data-ingest`.
 
 .. _`wis2box releases`: https://github.com/wmo-im/wis2box/releases
 .. _`WIS2 topic hierarchy`: https://github.com/wmo-im/wis2-topic-hierarchy
+.. _`OSCAR`: https://oscar.wmo.int/surface

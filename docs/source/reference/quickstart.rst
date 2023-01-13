@@ -62,11 +62,11 @@ Ingest data using the data ingest command to push data to the ``wis2box-incoming
     wis2box data ingest --topic-hierarchy dza.alger_met_centre.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/algeria
 
 
-Cache and publish stations:
+Publish stations:
 
 .. code-block:: bash
 
-    wis2box metadata station sync $WIS2BOX_DATADIR/metadata/station/station_list.csv
+    wis2box metadata station publish-collection
 
 Logout of wis2box container:
 

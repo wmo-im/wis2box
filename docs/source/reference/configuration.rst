@@ -144,7 +144,6 @@ Additional directives provide various configurationscontrol of configuration opt
 
 .. code-block:: bash
 
-    WIS2BOX_OSCAR_API_TOKEN=some_token  # OSCAR/Surface API token for OSCAR API interaction
     WIS2BOX_URL=http://localhost:8999/  # public wis2box url
     WIS2BOX_AUTH_STORE=http://wis2box-auth # wis2box auth service location
 

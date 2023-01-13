@@ -45,7 +45,6 @@ API_BACKEND_TYPE = os.environ.get('WIS2BOX_API_BACKEND_TYPE')
 API_BACKEND_URL = os.environ.get('WIS2BOX_API_BACKEND_URL').rstrip('/')
 DOCKER_API_URL = os.environ.get('WIS2BOX_DOCKER_API_URL')
 AUTH_URL = os.environ.get('WIS2BOX_AUTH_URL')
-OSCAR_API_TOKEN = os.environ.get('WIS2BOX_OSCAR_API_TOKEN')
 URL = os.environ.get('WIS2BOX_URL')
 
 BROKER_USERNAME = os.environ.get('WIS2BOX_BROKER_USERNAME')
@@ -75,7 +74,6 @@ missing_environment_variables = []
 required_environment_variables = [
     DATADIR,
     DOCKER_API_URL,
-    OSCAR_API_TOKEN,
     API_TYPE,
     BROKER_HOST,
     BROKER_PORT,

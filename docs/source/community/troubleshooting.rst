@@ -116,4 +116,4 @@ ERROR - Failed to publish, wsi: ..., tsi: XXXXX
 -----------------------------------------------
 
 Data arrived for a station that is not present in the stations-metadata cache. 
-To add missing stations create a new 'station_list.csv' and update the stations-cache using the command 'wis2box metadata station sync' (see :ref:`setup`)
+To add missing stations create a new 'station_list.csv' (see :ref:`setup`)
