@@ -22,13 +22,12 @@
 import json
 import logging
 from pathlib import Path
-import re
 from typing import Union
 
 from csv2bufr import transform as transform_csv
 
 from wis2box.data.base import BaseAbstractData
-from wis2box.env import DATADIR, DATADIR_CONFIG
+from wis2box.env import DATADIR_CONFIG
 
 LOGGER = logging.getLogger(__name__)
 
@@ -57,36 +56,22 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
     def transform(self, input_data: Union[Path, bytes],
                   filename: str = '') -> bool:
 
-        LOGGER.debug('Procesing CSV data')
+        LOGGER.debug('Processing CSV data')
 
         if isinstance(input_data, Path):
             LOGGER.debug('input_data is a Path')
             filename = input_data.name
 
-        try:
-            LOGGER.debug('Extracting WSI from filename')
-            regex = self.file_filter
-            wsi = re.match(regex, filename).group(1)
-        except AttributeError:
+        if not self.validate_filename_pattern(filename):
             msg = f'Invalid filename format: {filename} ({self.file_filter})'
             LOGGER.error(msg)
             raise ValueError(msg)
-
-        sm = DATADIR / 'metadata' / 'station' / f'{wsi}.json'
-        if not sm.exists():
-            msg = f'Missing station metadata file {sm}'
-            LOGGER.error(msg)
-            raise FileNotFoundError(msg)
-
-        with sm.open() as fh1:
-            self.station_metadata = json.load(fh1)
 
         LOGGER.debug('Generating BUFR4')
         input_bytes = self.as_bytes(input_data)
 
         LOGGER.debug('Transforming data')
         results = transform_csv(input_bytes.decode(),
-                                self.station_metadata,
                                 self.mappings['bufr4'])
 
         # convert to list
