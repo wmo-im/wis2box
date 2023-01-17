@@ -212,10 +212,14 @@ class BaseAbstractData:
                 put_data(data_bytes, storage_path)
 
                 if self.enable_notification:
+                    try:
+                        wsi = item['_meta']['properties']['wigos_station_identifier']  # noqa
+                    except KeyError:
+                        wsi = item['_meta'].get('wigos_station_identifier')
+
                     LOGGER.debug('Sending notification to broker')
                     self.notify(identifier, storage_path,
-                                item['_meta'].get('geometry'),
-                                item['_meta'].get('wigos_station_identifier'))
+                                item['_meta'].get('geometry'), wsi)
                 else:
                     LOGGER.debug('No notification sent')
 
