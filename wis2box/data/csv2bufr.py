@@ -78,8 +78,8 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
         LOGGER.debug('Iterating over BUFR messages')
         for item in results:
             LOGGER.debug('Setting obs date for filepath creation')
-            identifier = item['_meta']['identifier']
-            data_date = item['_meta']['data_date']
+            identifier = item['_meta']['id']
+            data_date = item['_meta']['properties']['datetime']
 
             self.output_data[identifier] = item
             self.output_data[identifier]['_meta']['relative_filepath'] = \
