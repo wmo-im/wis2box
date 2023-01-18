@@ -19,24 +19,25 @@
 #
 ###############################################################################
 
-import json
 import logging
 from pathlib import Path
 from typing import Union
 
-from csv2bufr import transform as transform_csv
+from synop2bufr import transform as transform_synop
 
 from wis2box.data.base import BaseAbstractData
-from wis2box.env import DATADIR_CONFIG
+from wis2box.env import DATADIR
 
 LOGGER = logging.getLogger(__name__)
 
+STATION_METADATA = DATADIR / 'metadata' / 'station' / 'station_list.csv'
 
-class ObservationDataCSV2BUFR(BaseAbstractData):
-    """Observation data"""
+
+class ObservationDataSYNOP2BUFR(BaseAbstractData):
+    """Synoptic observation data"""
     def __init__(self, defs: dict) -> None:
         """
-        ObservationDataCSV2BUFR data initializer
+        ObservationDataSYNOP2BUFR data initializer
 
         :param def: `dict` object of resource mappings
 
@@ -46,23 +47,22 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
         super().__init__(defs)
 
         self.mappings = {}
-        mapping_bufr4 = DATADIR_CONFIG / "csv2bufr" / self.template
 
-        with mapping_bufr4.open() as fh1:
-            self.mappings['bufr4'] = json.load(fh1)
-
-        self.station_metadata = None
+        with STATION_METADATA.open() as fh:
+            self.station_metadata = fh.read()
 
     def transform(self, input_data: Union[Path, bytes],
                   filename: str = '') -> bool:
 
-        LOGGER.debug('Processing CSV data')
+        LOGGER.debug('Processing SYNOP ASCII data')
 
         if isinstance(input_data, Path):
             LOGGER.debug('input_data is a Path')
             filename = input_data.name
 
-        if self.validate_filename_pattern(filename) is None:
+        file_match = self.validate_filename_pattern(filename)
+
+        if file_match is None:
             msg = f'Invalid filename format: {filename} ({self.file_filter})'
             LOGGER.error(msg)
             raise ValueError(msg)
@@ -70,9 +70,12 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
         LOGGER.debug('Generating BUFR4')
         input_bytes = self.as_bytes(input_data)
 
+        year = int(file_match.group(1))
+        month = int(file_match.group(2))
+
         LOGGER.debug('Transforming data')
-        results = transform_csv(input_bytes.decode(),
-                                self.mappings['bufr4'])
+        results = transform_synop(input_bytes.decode(), self.station_metadata,
+                                  year, month)
 
         # convert to list
         LOGGER.debug('Iterating over BUFR messages')

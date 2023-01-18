@@ -1,0 +1,60 @@
+wis2box:
+    retention: P30D
+    topic_hierarchy: rou.rnimh.data.core.weather.surface-based-observations.synop
+    country: rou
+    centre_id: rnimh
+
+mcf:
+    version: 1.0
+
+metadata:
+    identifier: urn:x-wmo:md:rou:rnimh:synoptic-weather-observations
+    hierarchylevel: dataset
+
+identification:
+    title: Synoptic weather observations from Romania
+    abstract: Synoptic weather observations from Romania
+    dates:
+        creation: 2023-01-18
+    keywords:
+        default:
+            keywords:
+                - synoptic weather
+                - temperature
+                - observations
+        wmo:
+            keywords:
+                - weatherObservations
+            keywords_type: theme
+            vocabulary:
+                name: WMO Category Code
+                url: https://github.com/wmo-im/wcmp-codelists/blob/main/codelists/WMO_CategoryCode.csv
+    extents:
+        spatial:
+            - bbox: [20.2201924985,43.6884447292,29.62654341,48.2208812526]
+              crs: 4326
+        temporal:
+            - begin: 2023-01-17
+              end: null
+              resolution: P6H
+    url: https://example.org/malawi-surface-weather-observations
+    wmo_data_policy: core
+
+contact:
+    pointOfContact: &contact_poc
+        organization: Romanian National Meteorological Administration
+        url: https://www.meteoromania.ro
+        individualname: Firstname Lastname
+        positionname: Position Name
+        phone:  +40 21 318 32 40
+        fax: +40 21 316 31 43
+        address: Building A, Șoseaua București-Ploiești 9
+        city: Bucharest
+        administrativearea: Municipality of Bucharest
+        postalcode: 013686
+        country: Romania
+        email: you@example.org
+        hoursofservice: 0700h - 1500h UTC
+        contactinstructions: email
+
+    distributor: *contact_poc

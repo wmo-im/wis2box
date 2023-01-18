@@ -69,6 +69,15 @@ jobs:
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data add-collection $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
+    - name: add Romania data 🇷🇴
+      env:
+        TOPIC_HIERARCHY: rou.rnimh.data.core.weather.surface-based-observations.synop
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/rou-synoptic-weather-observations.yml
+        TEST_DATA: /data/wis2box/observations/romania
+      run: |
+        python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
+        python3 wis2box-ctl.py execute wis2box data add-collection $DISCOVERY_METADATA
+        python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
     - name: sync stations 🔄
       run: |
         sleep 15

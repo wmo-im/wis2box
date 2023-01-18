@@ -1,4 +1,13 @@
 data:
+    rou.rnimh.data.core.weather.surface-based-observations.synop:
+        plugins:
+            txt:
+                - plugin: wis2box.data.synop2bufr.ObservationDataSYNOP2BUFR
+                  notify: true
+                  file-pattern: '^A_SMR.*EDZW_(\d{4})(\d{2}).*.txt$'
+            bufr4:
+                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
+                  file-pattern: '^A_SMR.*EDZW_(\d{4})(\d{2}).*.bufr4$'
     mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop:
         plugins:
             csv:

@@ -72,7 +72,7 @@ wis2box is built on free and open source (FOSS) technology.
    Storage,data and metadata storage,`MinIO`_ `Elasticsearch`_,`S3`_
    Internal Message Broker,PubSub,`mosquitto`_, `MQTT`_
    Public Message Broker,PubSub,`mosquitto`_, `MQTT`_
-   Data Management,data processing and publishing,`ecCodes`_ `csv2bufr`_ `bufr2geojson`_ `OWSLib`_ `pygeometa`_,:abbr:`WCMP (WMO Core Metadata Profile)` :abbr:`WMDR (WIGOS Metadata Record)`
+   Data Management,data processing and publishing,`ecCodes`_ `csv2bufr`_ `bufr2geojson`_ `synop2bufr`_ `OWSLib`_ `pygeometa`_,:abbr:`WCMP (WMO Core Metadata Profile)` :abbr:`WMDR (WIGOS Metadata Record)`
    API Application,data discovery and access, `pygeoapi`_,`OGC API`_
    Web Application,data discovery and visualization,`Vue.js`_ `Leaflet`_,`OGC API`_
 
@@ -91,6 +91,7 @@ wis2box is built on free and open source (FOSS) technology.
 .. _`OGC API`: https://ogcapi.ogc.org
 .. _`ecCodes`: https://confluence.ecmwf.int/display/ECC
 .. _`csv2bufr`: https://csv2bufr.readthedocs.io
+.. _`synop2bufr`: https://github.com/wmo-im/synop2bufr
 .. _`bufr2geojson`: https://github.com/wmo-im/bufr2geojson
 .. _`MinIO`: https://dosc.min.io
 .. _`S3`: https://en.wikipedia.org/wiki/Object_storage
