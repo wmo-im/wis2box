@@ -25,9 +25,9 @@ import os
 import subprocess
 
 DOCKER_COMPOSE_ARGS = """
-    --file docker/docker-compose.yml
-    --file docker/docker-compose.override.yml
-    --file docker/docker-compose.monitoring.yml
+    --file docker-compose.yml
+    --file docker-compose.override.yml
+    --file docker-compose.monitoring.yml
     --env-file dev.env
     --project-name wis2box_project
     """
@@ -67,7 +67,7 @@ parser.add_argument('command',
     - build [containers]: build all services
     - start [containers]: start system
     - start-dev [containers]: start system in local development mode
-    - login [container]: login to the container (default: wis2box)
+    - login [container]: login to the container (default: wis2box-management)
     - login-root [container]: login to the container as root
     - stop: stop [container] system
     - update: update Docker images
@@ -140,7 +140,7 @@ def make(args) -> None:
     containers = "" if not args.args else ' '.join(args.args)
 
     # if there can be only one, default to wisbox
-    container = "wis2box" if not args.args else ' '.join(args.args)
+    container = "wis2box-management" if not args.args else ' '.join(args.args)
 
     if args.command == "config":
         run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} config'))
@@ -156,11 +156,11 @@ def make(args) -> None:
             run(args, split(f"docker-compose {DOCKER_COMPOSE_ARGS} start {containers}"))
         else:
             if args.command == 'start-dev':
-                run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} --file docker/docker-compose.dev.yml up'))
+                run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} --file docker-compose.dev.yml up'))
             else:
                 run(args, split(f'docker-compose {DOCKER_COMPOSE_ARGS} up -d'))
     elif args.command == "execute":
-        run(args, ['docker', 'exec', '-i', 'wis2box', 'sh', '-c', containers])
+        run(args, ['docker', 'exec', '-i', 'wis2box-management', 'sh', '-c', containers])
     elif args.command == "login":
         run(args, split(f'docker exec -it {container} /bin/bash'))
     elif args.command == "login-root":

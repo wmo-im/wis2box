@@ -5,7 +5,7 @@ services:
     restart: always
     env_file:
       - default.env
-      - ../dev.env
+      - dev.env
     depends_on:
       - wis2box-ui
     volumes:
@@ -16,7 +16,7 @@ services:
     image: ghcr.io/wmo-im/wis2box-ui:latest
     env_file:
       - default.env
-      - ../dev.env
+      - dev.env
     depends_on:
       - wis2box-api
 
@@ -25,7 +25,7 @@ services:
     image: ghcr.io/wmo-im/wis2box-api:latest
     env_file:
       - default.env
-      - ../dev.env
+      - dev.env
     depends_on:
       elasticsearch:
         condition: service_healthy
@@ -40,7 +40,7 @@ services:
     restart: always
     env_file:
       - default.env
-      - ../dev.env
+      - dev.env
     command: server --console-address ":9001" /data
     # in a production-setup minio needs to be
     volumes:
@@ -88,22 +88,22 @@ services:
       context: ./mosquitto
     env_file:
       - default.env
-      - ../dev.env
+      - dev.env
 
-  wis2box:
-    container_name: wis2box
+  wis2box-management:
+    container_name: wis2box-management
     mem_limit: 1g
     memswap_limit: 1g
     restart: always
     #image: ghcr.io/wmo-im/wis2box:0.5.1
     build:
-      context: ..
+      context: ./wis2box-management
       # args:
       #   WIS2BOX_PIP3_EXTRA_PACKAGES: ${WIS2BOX_PIP3_EXTRA_PACKAGES}
     #user: wis2box:wis2box
     env_file:
       - default.env
-      - ../dev.env
+      - dev.env
     volumes:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
     depends_on:
@@ -120,11 +120,11 @@ services:
     image: ghcr.io/wmo-im/wis2box-auth:latest
     env_file:
       - default.env
-      - ../dev.env
+      - dev.env
     volumes:
       - auth-data:/data/wis2box:rw
     depends_on:
-      - wis2box
+      - wis2box-management
 
 volumes:
   es-data:

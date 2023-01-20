@@ -26,11 +26,6 @@ pull requests to wis2box trigger continuous integration (CI) testing on `GitHub 
 
 GitHub Actions invokes functional testing as well as integration testing to ensure regressions.
 
-Unit testing
-^^^^^^^^^^^^
-
-Unit tests are in ``tests/unit``.
-
 Integration testing
 ^^^^^^^^^^^^^^^^^^^
 
@@ -54,4 +49,4 @@ Python code follows `PEP8`_ coding conventions.
 
 .. _`GitHub Actions`: https://github.com/wmo-im/wis2box/blob/main/.github/workflows/tests-docker.yml
 .. _`Semantic Versioning Specification (SemVer)`: https://semver.org
-.. _`PEP8`: https://www.python.org/dev/peps/pep-0008
+.. _`PEP8`: https://peps.python.org/pep-0008

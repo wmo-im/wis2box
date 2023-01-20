@@ -39,7 +39,7 @@ copyright = '2021-2023, ' + author + ' ' + license
 
 # The full version, including alpha/beta/rc tags
 
-file_ = '../wis2box/__init__.py'
+file_ = '../wis2box-management/wis2box/__init__.py'
 filepath = os.path.join(os.path.abspath('..'), file_)
 
 with open(filepath) as fh:
