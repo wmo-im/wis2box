@@ -19,7 +19,7 @@ Each plugin is based on the file extension to be detected and processed, with th
 - ``notify``: whether the plugin should publish a data notification
 - ``template``: additional argument allowing a mapping template name to be passed to the plugin
 - ``file-pattern``: additional argument allowing a file pattern to be passed to the plugin
-- ``buckets``: the name(s) of the storage bucket(s) that data should be saved to (See :ref:`configuration` for more informaiton on buckets)
+- ``buckets``: the name(s) of the storage bucket(s) that data should be saved to (See :ref:`configuration` for more information on buckets)
 
 The default data mapping can be overriden by user-defined data mappings with the following steps:
 

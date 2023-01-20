@@ -64,15 +64,15 @@ def test_metadata_station_publish():
 
     stations = r.json()
 
-    assert stations['numberReturned'] == 56
-    assert stations['numberMatched'] == 56
+    assert stations['numberReturned'] == 79
+    assert stations['numberMatched'] == 79
 
 
 def test_metadata_discovery_publish():
     """Test discovery metadata publishing"""
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items').json()
-    assert r['numberMatched'] == 3
+    assert r['numberMatched'] == 4
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/{ID}').json()  # noqa
 
@@ -101,7 +101,7 @@ def test_metadata_discovery_publish():
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items',
                     params=params).json()
 
-    assert r['numberMatched'] == 3
+    assert r['numberMatched'] == 4
 
 
 def test_data_ingest():
@@ -185,7 +185,7 @@ def test_message_api():
     url = f'{API_URL}/collections/messages/items?sortby=wigos_station_identifier'  # noqa
     r = SESSION.get(url).json()
 
-    assert r['numberMatched'] == 82
+    assert r['numberMatched'] == 197
 
     msg = r['features'][0]
     assert msg['geometry'] is not None

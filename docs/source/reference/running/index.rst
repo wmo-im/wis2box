@@ -1,7 +1,7 @@
 .. _running:
 
-Workflows
-=========
+Running
+=======
 
 wis2box workflows can be categorized as design time (interactive) or runtime (automated).
 

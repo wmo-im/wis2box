@@ -17,7 +17,6 @@ Default pipeline plugins
 
 wis2box provides a number of data pipeline plugins which users can be used "out of the box".
 
-
 ``wis2box.data.csv2bufr.ObservationDataCSV2BUFR``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -33,12 +32,19 @@ This plugin converts BUFR observation data into GeoJSON using ``bufr2geojson``. 
 can be used to filter on incoming data based on a regular expression.  Consult the bufr2geojson documentation
 for more information on configuration and templating.
 
-
 ``wis2box.data.geojson.ObservationDataGeoJSON``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This plugin is for the purposes of publishing GeoJSON data to the API.
 
+``wis2box.data.synop2bufr.SYNOP2BUFR``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This plugin converts SYNOP ASCII data into BUFR using ``synop2bufr``.  A ``file-pattern`` can be used
+to filter on incoming data based on a regular expression.  Note that the regex must contain two groups
+(for year and month), which are used as part of synop2bufr processing.  Consult the synop2bufr documentation
+for more information.
 
 .. _`csv2bufr`: https://csv2bufr.readthedocs.io
 .. _`bufr2geojson`: https://github.com/wmo-im/bufr2geojson
+.. _`synop2bufr`: https://github.com/wmo-im/synop2bufr

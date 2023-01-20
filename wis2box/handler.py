@@ -106,7 +106,7 @@ class Handler:
                     plugin.transform(self.filepath)
             except Exception as err:
                 msg = f'Failed to transform file {self.filepath} : {err}'
-                LOGGER.warning(msg)
+                LOGGER.error(msg, exc_info=True)
                 self.publish_failure_message(
                     description="failed to transform file",
                     plugin=plugin)
@@ -115,7 +115,7 @@ class Handler:
                 plugin.publish()
             except Exception as err:
                 msg = f'Failed to publish file {self.filepath}: {err}'
-                LOGGER.warning(msg)
+                LOGGER.error(msg, exc_info=True)
                 self.publish_failure_message(
                     description="Failed to publish file to api-backend",
                     plugin=plugin)
