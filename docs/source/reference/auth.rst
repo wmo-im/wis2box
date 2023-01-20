@@ -15,7 +15,7 @@ first time a token is generated for a topic hierarchy.
 
 .. note::
 
-    Make sure you are logged into the wis2box container when using the wis2box CLI
+    Make sure you are logged into the wis2box-management container when using the wis2box CLI
 
 .. code-block:: bash
 

@@ -23,7 +23,7 @@ You can login with your ``WIS2BOX_STORAGE_USERNAME`` and ``WIS2BOX_STORAGE_PASSW
 
 To test the data ingest, add a sample file for your observations in the ``wis2box-incoming`` storage bucket.
 
-Select 'browse' on the `'wis2box-incoming`` bucket and select 'Choose or create a new path' to define a new folder path:
+Select 'browse' on the ``wis2box-incoming`` bucket and select 'Choose or create a new path' to define a new folder path:
 
 .. image:: ../_static/minio-new-folder-path.png
     :width: 800

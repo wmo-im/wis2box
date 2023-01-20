@@ -12,13 +12,13 @@ the following steps are required:
 
 Let's dive into publishing the data and metadata:
 
-wis2box provides an API supporting the `OGC API`_ standards using `pygeoapi`_.
+wis2box provides an API supporting the `OGC API`_ suite of standards using `pygeoapi`_.
 
 Station metadata API publishing
 -------------------------------
 
 The first step is to publish our station metadata to the API. The command below
-will generate local station collection GeoJSON for pygeoapi publication.
+will generate local station collection GeoJSON for API publication.
 
 .. code-block:: bash
 

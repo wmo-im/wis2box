@@ -18,7 +18,7 @@ wis2box enables subscribe and data download workflow the WIS2 network, by using 
 
 ``pywis-pubsub`` is a Python package that provides publish, subscription and download capability of data from WIS2 Global Services.
 
-Before starting the ``wis2box-subscribe-download`` container, the default configuration (provided in ``docker/wis2box-subscribe-download/local.yml``)
+Before starting the ``wis2box-subscribe-download`` container, the default configuration (provided in ``wis2box-subscribe-download/local.yml``)
 must be updated, by defining the URL of the MQTT broker as well as the desired topic(s) to subscribe to.
 
 In addition, the storage path should be updated to specify where downloaded data should be saved to.
@@ -49,13 +49,13 @@ To start a continuous subscribe and download process, run the ``wis2box-subscrib
 
 .. code-block:: bash
 
-   docker-compose -f docker/docker.subscribe-download.yml up -d --build
+   docker-compose -f docker.subscribe-download.yml up -d --build
 
 To stop the subscribe and download process, run the following command:
 
 .. code-block:: bash
 
-   docker-compose -f docker/docker.subscribe-download.yml down
+   docker-compose -f docker.subscribe-download.yml down
 
 
 Running pywis-pubsub interactively
@@ -68,7 +68,7 @@ pywis-pubsub can also be run interactively from inside the wis2box main containe
    # login to wis2box main container
    python3 wis2box-ctl.py login
 
-   # edit a local configuration by using docker/wis2box-subscribe-download/local.yml as a template
+   # edit a local configuration by using wis2box-subscribe-download/local.yml as a template
    vi /data/wis2box/local.yml
 
    # connect, and simply display data notifications

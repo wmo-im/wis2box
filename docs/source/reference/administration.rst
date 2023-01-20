@@ -7,7 +7,7 @@ wis2box is designed to be built as a network of virtual machines within a virtua
 is built, users login into the main wis2box machine to setup their workflow and configurations for
 data processing and publishing.
 
-The ``wis2box-ctl.py`` utility provides a number of tools for managing the wis2box containers.
+The ``wis2box-ctl.py`` utility provides a number of tools for managing the wis2box-management containers.
 
 The following steps provide an example of container management workflow.
 
@@ -31,14 +31,14 @@ The following steps provide an example of container management workflow.
     Run ``python3 wis2box-ctl.py --help`` for all usage options.
 
 
-With wis2box now installed and started, it's time to start up the box and login to the wis2box container:
+With wis2box now installed and started, it's time to start up the box and login to the wis2box-management container:
 
 .. code-block:: bash
 
     python3 wis2box-ctl.py start
     python3 wis2box-ctl.py login
 
-Now that you are logged into the wis2box container, it's now time to manage station metadata, discovery metadata
+Now that you are logged into the wis2box-management container, it's now time to manage station metadata, discovery metadata
 and data processing pipelines.
 
 Public environment variables
@@ -74,8 +74,8 @@ Internal services
 Changing default ports
 ^^^^^^^^^^^^^^^^^^^^^^
 
-The ``docker/docker-compose.override.yml`` file provides definitions on utilized ports.  To change default
-ports, edit ``docker/default.env``  before stopping and starting wis2box for changes to take effect.
+The ``docker-compose.override.yml`` file provides definitions on utilized ports.  To change default
+ports, edit ``default.env``  before stopping and starting wis2box for changes to take effect.
 
 
 MQTT Quality of Service (QoS)

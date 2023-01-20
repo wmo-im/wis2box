@@ -24,9 +24,9 @@ wis2box runs a local nginx container allowing access to the following HTTP based
    Storage (public data) (minio:wis2box-public),`WIS2BOX_URL/data`
 
 
-You can edit ``docker/nginx/nginx.conf`` to control which services are exposed through the nginx-container include in your stack.
+You can edit ``nginx/nginx.conf`` to control which services are exposed through the nginx-container include in your stack.
 
-You can edit ``docker/docker-compose.override.yml`` to change the port on which the ``web-proxy`` service exposes HTTP on the localhost.
+You can edit ``docker-compose.override.yml`` to change the port on which the ``web-proxy`` service exposes HTTP on the localhost.
 
 .. note::
     The WIS2 notifications published by the wis2box includes the path ``<wis2box-url>/data/``.
@@ -44,7 +44,7 @@ After updating ``WIS2BOX_URL``, please stop and start your wis2box using ``wis2b
 wis2box API
 -----------
 
-The wis2box API uses `pygeoapi`_,  which implements the OGC API standards, to provide programmatic access to the data collections hosted in your wis2box.
+The wis2box API uses `pygeoapi`_,  which implements the `OGC API`_ suite of standards, to provide programmatic access to the data collections hosted in your wis2box.
 
 .. image:: ../_static/wis2box-api.png
   :width: 800
@@ -119,3 +119,4 @@ Next: :ref:`downloading-data`
 .. _`Mosquitto`: https://mosquitto.org/
 .. _`pygeoapi`: https://pygeoapi.io/
 .. _`Elasticsearch`: https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
+.. _`OGC API`: https://ogcapi.ogc.org

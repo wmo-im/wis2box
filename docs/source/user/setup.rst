@@ -34,7 +34,7 @@ Copy this file to your working directory, and update it to suit your needs.
 
 .. note::
 
-   You must map ``WIS2BOX_HOST_DATADIR`` to the absolute path of a directory on your host machine. This path will be mapped to ``/data/wis2box`` inside the wis2box container
+   You must map ``WIS2BOX_HOST_DATADIR`` to the absolute path of a directory on your host machine. This path will be mapped to ``/data/wis2box`` inside the wis2box-management container
    To enable external data sharing you must set ``WIS2BOX_URL`` to the URL pointing to where your host is exposed on the public network.
 
 Updated variables in ``dev.env``, for example:
@@ -71,7 +71,7 @@ is set to ``/home/wis2box-user/wis2box-data``, you can copy the following exampl
 
 Edit ``/home/wis2box-user/wis2box-data/data-mappings.yml``:
  
- * Replace ``iso3c_country`` with your corresponding ISO 3166 alpha-3 country code 
+ * Replace ``country`` with your corresponding ISO 3166 alpha-3 country code
  * Replace ``centre_id`` with the string identifying the centre running your wis2node
 
 If you need to define multiple datasets, you can add multiple entries in your ``data-mappings.yml``. For example:
@@ -109,16 +109,15 @@ If you need to define multiple datasets, you can add multiple entries in your ``
 In this case the data mappings configuration has specified 2 datasets (SYNOP, and TEMP).
 
 .. note::
-    
+
    The dataset identifier is used to define the topic hierarchy for your data (see `WIS2 topic hierarchy`_).  The top 3 levels of the WIS2 topic hierarchy (``origin/a/wis2``) are automatically included by wis2box when publishing your data.
     
-   dataset: ita.italy_wmo_demo.data.core.weather.surface-based-observations.synop 
-   
-   topic-hierarchy: origin/a/wis2/ita/italy_wmo_demo/data/core/weather/surface-based-observations/synop
+   * dataset: ita.italy_wmo_demo.data.core.weather.surface-based-observations.synop
+   * topic-hierarchy: origin/a/wis2/ita/italy_wmo_demo/data/core/weather/surface-based-observations/synop
 
 .. note::
    
-   In these examples, files in the ``wis2box-incoming`` storage bucket are processed to produce ``.bufr4` stored in the ``wis2box-public`` storage bucket, using either the ``bufr4.ObservationDataBUFR`` or the ``wis2box.data.csv2bufr.ObservationDataCSV2BUFR`` plugins. 
+   In these examples, files in the ``wis2box-incoming`` storage bucket are processed to produce ``.bufr4`` stored in the ``wis2box-public`` storage bucket, using either the ``bufr4.ObservationDataBUFR`` or the ``wis2box.data.csv2bufr.ObservationDataCSV2BUFR`` plugins.
 
    Files in the ``wis2box-public`` storage bucket are converted to GeoJSON and stored in the wis2box API backend using the ``wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON`` plugin.
 
@@ -150,7 +149,7 @@ An example is provided in ``surface-weather-observations.yml``. Each dataset req
 
 You can copy the file ``surface-weather-observations.yml`` to the directory you defined for ``WIS2BOX_HOST_DATADIR`` and update it to provide the correct discovery metadata for your dataset:
 
-* replace ``[iso3c_country].[centre_id].data.core.weather.surface-based-observations.synop`` with the topic previously used in ``$WIS2BOX_HOST_DATADIR/data-mappings.yml``
+* replace ``[country].[centre_id].data.core.weather.surface-based-observations.synop`` with the topic previously used in ``$WIS2BOX_HOST_DATADIR/data-mappings.yml``
 * text provided in ``identification.title`` and ``identification.abstract`` will be displayed in the wis2box user interface
 * provide a valid geographic bounding box in ``identification.extents.spatial.bbox``
 
@@ -169,8 +168,8 @@ This might take a while the first time, as Docker images will be downloaded.
 
 .. note::
 
-   The ``wis2box-ctl.py`` program is used as a wrapper around a set of Docker Compose commands. 
-   You can customize the ports exposed on your host by editing ``docker/docker-compose.override.yml``.
+   The ``wis2box-ctl.py`` program is used as a convenience utility around a set of Docker Compose commands.
+   You can customize the ports exposed on your host by editing ``docker-compose.override.yml``.
    
 Once the command above is completed, check that all services are running (and healthy).
 
@@ -218,7 +217,7 @@ Runtime configuration
 
 The following last design time steps are then required once wis2box is running.
 
-Login to the wis2box container
+Login to the wis2box-management container
 
 .. code-block:: bash
 
@@ -227,8 +226,8 @@ Login to the wis2box container
 .. note::
 
    ``$WIS2BOX_DATADIR`` is the location that ``$WIS2BOX_HOST_DATADIR`` binds to **inside** the container. 
-   This allows wis2box to access the configuration files from **inside** the wis2box container.
-   By default, ``WIS2BOX_DATADIR`` points to ``/data/wis2box`` **inside** the wis2box container.
+   This allows wis2box to access the configuration files from **inside** the wis2box-management container.
+   By default, ``WIS2BOX_DATADIR`` points to ``/data/wis2box`` **inside** the wis2box-management container.
 
 The first step is add the new dataset as defined by the YAML file for your discovery metadata record defined previously, using the following command:
 
@@ -272,7 +271,7 @@ You can review the stations you just cached through the new link in  ``http://lo
   :width: 800
   :alt: wis2box API collections list with added stations
 
-You can now logout of wis2box container:
+You can now logout of wis2box-management container:
 
 .. code-block:: bash
 

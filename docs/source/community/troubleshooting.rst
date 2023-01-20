@@ -5,14 +5,14 @@ Troubleshooting
 
 This page lists several commonly seen issues and how to address them.
 
-'./docker/docker-compose.yml' is invalid
+'./docker-compose.yml' is invalid
 ----------------------------------------
 
 When starting wis2box you see the errors:
 
 .. code-block:: bash
     
-    ERROR: The Compose file './docker/docker-compose.yml' is invalid because:
+    ERROR: The Compose file './docker-compose.yml' is invalid because:
     Unsupported config option for volumes: 'auth-data'
     Unsupported config option for services: 'wis2box-auth'
 

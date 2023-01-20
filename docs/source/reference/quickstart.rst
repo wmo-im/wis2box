@@ -4,7 +4,7 @@ Quickstart with test data
 =========================
 
 The 'quickstart' deploys wis2box with test data and provides a vital reference for wis2box developers to validate their contributions do not break the wis2box core functionality.
-It is the minimal runtime configuration profile as used in wis2box Github CI/CD: `GitHub Actions`_.
+It is the minimal runtime configuration profile as used in wis2box GitHub CI/CD: `GitHub Actions`_.
 
 The test enviroment file is provided in ``tests/test.env``.
 
@@ -23,7 +23,7 @@ Build and update wis2box:
     python3 wis2box-ctl.py update
 
 
-Start wis2box and login to the wis2box container:
+Start wis2box and login to the wis2box-management container:
 
 .. code-block:: bash
 
@@ -71,7 +71,7 @@ Publish stations:
 
     wis2box metadata station publish-collection
 
-Logout of wis2box container:
+Logout of wis2box-management container:
 
 .. code-block:: bash
 

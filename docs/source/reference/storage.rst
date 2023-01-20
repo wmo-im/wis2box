@@ -156,7 +156,7 @@ capability when browsing the ``wis2box-incoming`` bucket:
    :align: center
 
 
-.. _`MinIO`: https://www.min.io
+.. _`MinIO`: https://min.io
 .. _`official MinIO documentation`: https://docs.min.io
 .. _`pip`: https://pip.pypa.io
 .. _`S3cmd`: https://s3tools.org/s3cmd

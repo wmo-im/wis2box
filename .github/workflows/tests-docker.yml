@@ -12,7 +12,8 @@ jobs:
       name: setup Python
       with:
         python-version: 3.8
-    - name: install requirements 📦
+    - name: install wis2box-management requirements 📦
+      working-directory: wis2box-management
       run: |
         pip3 install -r requirements-dev.txt
         python3 setup.py install
@@ -21,9 +22,6 @@ jobs:
         docker version
         docker-compose version
         python3 -V
-    - name: run unit tests ⚙️
-      run: |
-        pytest tests/unit
     - name: setup wis2box configuration
       run: |
         cp tests/test.env dev.env
@@ -37,8 +35,8 @@ jobs:
       run: |
         python3 wis2box-ctl.py start
         python3 wis2box-ctl.py status -a
-        docker logs wis2box
-    - name: setup wis2box ⚙️
+        docker logs wis2box-management
+    - name: setup wis2box-management ⚙️
       run: |
         sleep 10
         python3 wis2box-ctl.py execute wis2box environment show
@@ -92,10 +90,10 @@ jobs:
     - name: build docs ⚙️
       uses: ammaraskar/sphinx-action@master
       with:
-        pre-build-command: "apt-get install -y pandoc && cp requirements-dev.txt docs/requirements.txt"
+        pre-build-command: "apt-get install -y pandoc && cp wis2box-management/requirements-dev.txt docs/requirements.txt"
         docs-folder: "docs/"
     - name: failed tests 🚩
       if: ${{ failure() }}
       run: |
-        docker-compose --file docker/docker-compose.yml --file docker/docker-compose.override.yml --file docker/docker-compose.monitoring.yml --env-file dev.env --project-name wis2box_project ps
-        docker-compose --file docker/docker-compose.yml --file docker/docker-compose.override.yml --file docker/docker-compose.monitoring.yml --env-file dev.env --project-name wis2box_project logs
+        docker-compose --file docker-compose.yml --file docker-compose.override.yml --file docker-compose.monitoring.yml --env-file dev.env --project-name wis2box_project ps
+        docker-compose --file docker-compose.yml --file docker-compose.override.yml --file docker-compose.monitoring.yml --env-file dev.env --project-name wis2box_project logs

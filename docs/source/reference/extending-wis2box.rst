@@ -86,7 +86,7 @@ See the `Python packaging tutorial`_ or `Cookiecutter PyPackage`_ for guidance a
 Integration
 -----------
 
-Once your package is installed on the wis2box container, the data mappings need to be updated to connect
+Once your package is installed on the wis2box-management container, the data mappings need to be updated to connect
 your plugin to a topic hierarchy.  See :ref:`data-mappings` for more information.
 
 
