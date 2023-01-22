@@ -155,7 +155,7 @@
             "uid": "wis2box-loki"
           },
           "editorMode": "builder",
-          "expr": "{compose_service=\"wis2box\"} |~ `ERROR`",
+          "expr": "{compose_service=\"wis2box-management\"} |~ `ERROR`",
           "hide": false,
           "legendFormat": "",
           "queryType": "range",
