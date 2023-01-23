@@ -69,7 +69,7 @@ After you have ensured the data-mappings.yml is in the directory defined by WIS2
 Topic Hierarchy validation error: Unknown file type
 ---------------------------------------------------
 
-Check your data-mappings.yml file to adjust the file extension expected by the plugins processing your dataset. 
+Check your ``data-mappings.yml`` file to adjust the file extension expected by the plugins processing your dataset. 
 
 If you are ingesting files with extension .bin:
 
@@ -84,7 +84,7 @@ If you are ingesting files with extension .bin:
                   file-pattern: '*'
 
 
-If you are ingesting files with extension .b:
+If you are ingesting files with extension ``.b``:
 
 .. code-block:: bash
 
@@ -100,20 +100,20 @@ The Access Key Id you provided does not exist in our records
 ------------------------------------------------------------
 
 If you see this error when uploading data to the wis2box-incoming storage, you have provided the wrong username and/or password to access MinIO.
-Check the values for WIS2BOX_BROKER_USERNAME and WIS2BOX_BROKER_PASSWORD you have provided in your dev.env file. 
-The default username/password for MinIO is minio/minio123
+Check the values for ``WIS2BOX_BROKER_USERNAME`` and ``WIS2BOX_BROKER_PASSWORD`` you have provided in your ``dev.env`` file. 
+The default username/password for MinIO is ``minio/minio123``.
 
 Topic Hierarchy validation error: No plugins for ... in data mappings
 ---------------------------------------------------------------------
 
-A file arrived a folder for which no matching dataset was defined in your data-mappings.yml. 
+A file arrived a folder for which no matching dataset was defined in your ``data-mappings.yml``.
 
-For dataset='foo.bar', store your file in the path '/foo/bar/'
+For dataset ``foo.bar``, store your file in the path ``/foo/bar/``.
 
-You need to either update your data-mappings.yml or change the target-folder in which the file is received.
+This requires either updating ``data-mappings.yml`` or changing the target folder under which the file is received.
 
 ERROR - Failed to publish, wsi: ..., tsi: XXXXX
 -----------------------------------------------
 
-Data arrived for a station that is not present in the stations-metadata cache. 
-To add missing stations create a new 'station_list.csv' (see :ref:`setup`)
+Data arrived for a station that is not present in the station metadata cache. 
+To add missing stations, update the file ``metadata/station/station_list.csv`` in the wis2box data directory (see :ref:`setup`).

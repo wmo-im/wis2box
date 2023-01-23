@@ -129,7 +129,16 @@ Station metadata list
 
 wis2box requires information about the stations for which you will be sharing data.
 
-An example of the configuration file for the stations is provided in ``station_list.csv``. You can copy this file to the directory defined in ``$WIS2BOX_HOST_DATADIR`` and edit the file with your stations.
+An example of the configuration file for the stations is provided in ``station_list.csv``. 
+
+You can copy this file to ``metadata/station/station_list.csv`` in your $WIS2BOX_HOST_DATADIR :
+
+.. code-block:: bash
+
+   mkdir -p /home/wis2box-user/wis2box-data/metadata/station
+   cp station_list.csv /home/wis2box-user/wis2box-data/metadata/station
+
+And edit ``metadata/station/station_list.csv`` to include the data for your stations.
 
 .. note::
 
