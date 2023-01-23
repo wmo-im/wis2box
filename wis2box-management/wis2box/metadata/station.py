@@ -39,17 +39,9 @@ STATION_METADATA = DATADIR / 'metadata' / 'station'
 STATIONS = STATION_METADATA / 'station_list.csv'
 
 if not STATIONS.exists():
-    if not STATION_METADATA.exists():
-        STATION_METADATA.mkdir(parents=True, exist_ok=True)
-    with STATIONS.open('w', newline='') as fh:
-        writer = csv.writer(fh)
-        writer.writerow(
-            [
-                'station_name',
-                'wigos_station_identifier',
-                'traditional_station_identifier'
-            ]
-        )
+    msg = f'Please create a station metadata file in {STATION_METADATA}'
+    LOGGER.error(msg)
+    raise RuntimeError(msg)
 
 
 def gcm() -> dict:
@@ -153,6 +145,7 @@ def publish_station_collection() -> None:
 
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
+    LOGGER.debug(f'Publishing station list from {STATIONS}')
     with STATIONS.open() as fh:
         reader = csv.DictReader(fh)
 
