@@ -29,10 +29,6 @@ set -e
 #ensure environment-variables are available for cronjob
 printenv | grep -v "no_proxy" >> /etc/environment
 
-if [ ! -d "$WIS2BOX_DATADIR/config/csv2bufr" ]; then
-  git clone https://github.com/wmo-im/csv2bufr-templates.git $WIS2BOX_DATADIR/config/csv2bufr
-fi
-
 # ensure cron is running
 service cron start
 service cron status

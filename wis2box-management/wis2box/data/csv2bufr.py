@@ -24,10 +24,9 @@ import logging
 from pathlib import Path
 from typing import Union
 
-from csv2bufr import transform as transform_csv
+from csv2bufr import MAPPINGS, transform as transform_csv
 
 from wis2box.data.base import BaseAbstractData
-from wis2box.env import DATADIR_CONFIG
 
 LOGGER = logging.getLogger(__name__)
 
@@ -46,7 +45,7 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
         super().__init__(defs)
 
         self.mappings = {}
-        mapping_bufr4 = DATADIR_CONFIG / "csv2bufr" / self.template
+        mapping_bufr4 = Path(MAPPINGS) / self.template
 
         with mapping_bufr4.open() as fh1:
             self.mappings['bufr4'] = json.load(fh1)

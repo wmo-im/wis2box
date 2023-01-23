@@ -12,7 +12,7 @@ data:
         plugins:
             csv:
                 - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
-                  template: synop-bufr.json
+                  template: synop_bufr.json
                   notify: true
                   file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.csv$'
             bufr4:
