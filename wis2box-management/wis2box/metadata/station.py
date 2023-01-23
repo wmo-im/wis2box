@@ -153,6 +153,7 @@ def publish_station_collection() -> None:
 
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
+    LOGGER.debug(f'Publishing station list from {STATIONS}')
     with STATIONS.open() as fh:
         reader = csv.DictReader(fh)
 
