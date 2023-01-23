@@ -6,8 +6,8 @@ Station metadata
 wis2box is designed to support data ingest and processing of any kind. For observations,
 processing workflow typically requires station metadata to be present at runtime.
 
-To manage your stations of interest, create a CSV file 'metadata/station/station_list.csv' in your $WIS2BOX_HOST_DATADIR,
-specifying one line per station as follows :
+To manage your stations of interest, create a CSV file named ``metadata/station/station_list.csv`` in ``$WIS2BOX_HOST_DATADIR``,
+specifying one line per station as follows:
 
 .. literalinclude:: ../../../../examples/config/station_list.csv
 
