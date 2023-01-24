@@ -28,7 +28,9 @@ from owslib.ogcapi.features import Features
 from pygeometa.schemas.wmo_wigos import WMOWIGOSOutputSchema
 
 from wis2box import cli_helpers
-from wis2box.api import setup_collection, upsert_collection_item
+from wis2box.api import (
+    setup_collection, remove_collection, upsert_collection_item
+)
 from wis2box.env import DATADIR, DOCKER_API_URL
 from wis2box.metadata.base import BaseMetadata
 from wis2box.util import get_typed_value
@@ -143,6 +145,9 @@ def publish_station_collection() -> None:
 
     setup_collection(meta=gcm())
 
+    LOGGER.debug('Flushing API backend index')
+    remove_collection('stations', config=False)
+
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
     LOGGER.debug(f'Publishing station list from {STATIONS}')
@@ -188,8 +193,8 @@ def get_valid_wsi(wsi: str = '', tsi: str = '') -> Union[str, None]:
     """
     Validates and returns WSI
 
-    :param wsi: `str` WIGOS Station identifier
-    :param tsi: `str` Traditional Station identifier
+    :param wsi: WIGOS Station identifier
+    :param tsi: Traditional Station identifier
 
     :returns: `str`, of valid wsi or `None`
     """
