@@ -69,28 +69,38 @@ def setup_collection(meta: dict = {}) -> bool:
     return True
 
 
-def remove_collection(name: str) -> bool:
+def remove_collection(name: str, backend: bool = True,
+                      config: bool = True) -> bool:
     """
-    Add collection to api backend and mcf or collection configuration
+    Remove collection from api backend and configuration
 
     :param name: `str` of collection name
 
     :returns: `bool` of API collection removal result
     """
 
-    backend = load_backend()
-    if backend.has_collection(name):
-        backend.delete_collection(name)
+    api_backend = None
+    api_config = None
 
-    api_config = load_config()
-    if api_config.has_collection(name):
-        api_config.delete_collection(name)
+    if backend:
+        api_backend = load_backend()
+        if api_backend.has_collection(name):
+            api_backend.delete_collection(name)
 
-    if backend.has_collection(name) or api_config.has_collection(name):
+    if config:
+        api_config = load_config()
+        if api_config.has_collection(name):
+            api_config.delete_collection(name)
+
+    if api_backend is not None and api_backend.has_collection(name):
         LOGGER.error(f'Unable to remove collection for {name}')
         return False
-    else:
-        return True
+
+    if api_config is not None and api_backend.has_collection(name):
+        LOGGER.error(f'Unable to remove collection for {name}')
+        return False
+
+    return True
 
 
 def upsert_collection_item(collection_id: str, item: dict) -> str:
