@@ -14,7 +14,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: wis2box-management
+  IMAGE_NAME: wmo-im/wis2box-management
 
 jobs:
   # Push image to GitHub Packages.
