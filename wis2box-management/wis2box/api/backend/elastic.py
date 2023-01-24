@@ -192,7 +192,7 @@ class ElasticBackend(BaseBackend):
         es_index = self.es_id(collection_id)
 
         if not self.has_collection(collection_id):
-            LOGGER.warning(f'Index {es_index} does not exist.  Creating')
+            LOGGER.debug(f'Index {es_index} does not exist.  Creating')
             self.add_collection(es_index)
 
         def gendata(features):
