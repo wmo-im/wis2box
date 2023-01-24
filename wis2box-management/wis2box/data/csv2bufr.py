@@ -77,7 +77,7 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
         # convert to list
         LOGGER.debug('Iterating over BUFR messages')
         for item in results:
-            wsi = item['_meta']['wigos_station_identifier']
+            wsi = item['_meta']['properties']['wigos_station_identifier']
             if get_valid_wsi(wsi) is None:
                 LOGGER.error(f'Station {wsi} not in station list, skipping')
                 continue
