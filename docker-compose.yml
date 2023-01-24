@@ -13,7 +13,7 @@ services:
 
   wis2box-ui:
     container_name: wis2box-ui
-    image: ghcr.io/wmo-im/wis2box-ui:0.5.2
+    image: ghcr.io/wmo-im/wis2box-ui:latest
     env_file:
       - default.env
       - dev.env
@@ -22,7 +22,7 @@ services:
 
   wis2box-api:
     container_name: wis2box-api
-    image: ghcr.io/wmo-im/wis2box-api:0.5.1
+    image: ghcr.io/wmo-im/wis2box-api:latest
     env_file:
       - default.env
       - dev.env
@@ -83,7 +83,9 @@ services:
 
   mosquitto:
     container_name: mosquitto
-    image: ghcr.io/wmo-im/wis2box-broker:1.0.beta1
+    #image: ghcr.io/wmo-im/wis2box-broker:1.0.beta1
+    build:
+      context: ./mosquitto
     env_file:
       - default.env
       - dev.env
@@ -93,7 +95,9 @@ services:
     mem_limit: 1g
     memswap_limit: 1g
     restart: always
-    image: ghcr.io/wmo-im/wis2box-management:1.0.beta1
+    #image: ghcr.io/wmo-im/wis2box-management:1.0.beta1
+    build:
+      context: ./wis2box-management
     #user: wis2box:wis2box
     env_file:
       - default.env
