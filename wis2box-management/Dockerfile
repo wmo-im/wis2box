@@ -43,8 +43,8 @@ RUN apt-get update -y \
     && apt-get install -y -t bookworm libeccodes-data \
     && apt-get install -y ${DEBIAN_PACKAGES} \
     # install wis2box data pipeline dependencies
-    && pip3 install --no-cache-dir https://github.com/wmo-im/csv2bufr/archive/master.zip \
-    && pip3 install --no-cache-dir https://github.com/wmo-im/bufr2geojson/archive/refs/tags/v0.4.1.zip \
+    && pip3 install --no-cache-dir https://github.com/wmo-im/csv2bufr/archive/refs/tags/v0.4.0.zip \
+    && pip3 install --no-cache-dir https://github.com/wmo-im/bufr2geojson/archive/refs/tags/v0.4.2.zip \
     && pip3 install --no-cache-dir https://github.com/wmo-im/pymetdecoder/archive/master.zip \
     && pip3 install --no-cache-dir https://github.com/wmo-im/synop2bufr/archive/main.zip \
     # install geopython tooling

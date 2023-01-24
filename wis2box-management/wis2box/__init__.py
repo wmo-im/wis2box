@@ -19,7 +19,7 @@
 #
 ###############################################################################
 
-__version__ = '0.6.dev1'
+__version__ = '1.0.beta1'
 
 import click
 
@@ -34,7 +34,7 @@ from wis2box.auth import auth
 @click.group()
 @click.version_option(version=__version__)
 def cli():
-    """WIS 2.0 in a box"""
+    """WIS2 in a box"""
     pass
 
 
