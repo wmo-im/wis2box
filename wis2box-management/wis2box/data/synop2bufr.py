@@ -27,6 +27,7 @@ from synop2bufr import transform as transform_synop
 
 from wis2box.data.base import BaseAbstractData
 from wis2box.env import DATADIR
+from wis2box.metadata.station import get_valid_wsi
 
 LOGGER = logging.getLogger(__name__)
 
@@ -80,6 +81,10 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
         # convert to list
         LOGGER.debug('Iterating over BUFR messages')
         for item in results:
+            wsi = item['_meta']['wigos_station_identifier']
+            if get_valid_wsi(wsi) is None:
+                LOGGER.error(f'Station {wsi} not in station list, skipping')
+                continue
             LOGGER.debug('Setting obs date for filepath creation')
             identifier = item['_meta']['id']
             data_date = item['_meta']['properties']['datetime']

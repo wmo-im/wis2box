@@ -79,7 +79,7 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
         for item in results:
             wsi = item['_meta']['wigos_station_identifier']
             if get_valid_wsi(wsi) is None:
-                LOGGER.error(f"Station {wsi} not found in station list, skipping record")  # noqa
+                LOGGER.error(f'Station {wsi} not in station list, skipping')
                 continue
             LOGGER.debug('Setting obs date for filepath creation')
             identifier = item['_meta']['id']
