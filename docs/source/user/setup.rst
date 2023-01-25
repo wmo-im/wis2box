@@ -10,15 +10,14 @@ Ensure you have Docker, Docker Compose and Python installed on your host, as det
 Download
 --------
 
-Download the wis2box setup files:
+Download the wis2box setup files from the `wis2box Releases`_ page.  Go to the latest release
+and download the ``wis2box-setup-<release>.zip`` file from the Assets section.
 
 .. code-block:: bash
 
-   wget https://github.com/wmo-im/wis2box/releases/download/0.5.0/wis2box-setup-0.5.0.zip
-   unzip wis2box-setup-0.5.0.zip
-   cd wis2box-0.5.0
-
-See `wis2box releases`_ to check the latest release available.
+   wget https://github.com/wmo-im/wis2box/releases/download/0.5.0/wis2box-setup-<release>.zip
+   unzip wis2box-setup-<release>.zip
+   cd wis2box-<release>
 
 
 Environment variables
@@ -288,6 +287,6 @@ You can now logout of wis2box-management container:
 
 The next is the :ref:`data-ingest`.
 
-.. _`wis2box releases`: https://github.com/wmo-im/wis2box/releases
+.. _`wis2box Releases`: https://github.com/wmo-im/wis2box/releases
 .. _`WIS2 topic hierarchy`: https://github.com/wmo-im/wis2-topic-hierarchy
 .. _`OSCAR`: https://oscar.wmo.int/surface
