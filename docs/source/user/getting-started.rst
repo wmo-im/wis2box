@@ -29,7 +29,7 @@ wis2box requires the following prior to installation:
 
    Python,3.8 or higher
    Docker Engine, 20.10.14 or higher
-   Docker Compose, 1.29.2 or higher
+   Docker Compose, 1.29.2
 
 The following commands can be used to inspect the available versions of Python, Docker and Docker Compose on your system:
 

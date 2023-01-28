@@ -15,7 +15,7 @@ and download the ``wis2box-setup-<release>.zip`` file from the Assets section.
 
 .. code-block:: bash
 
-   wget https://github.com/wmo-im/wis2box/releases/download/0.5.0/wis2box-setup-<release>.zip
+   wget https://github.com/wmo-im/wis2box/releases/download/<release>/wis2box-setup-<release>.zip
    unzip wis2box-setup-<release>.zip
    cd wis2box-<release>
 
@@ -54,10 +54,10 @@ Data mappings
 wis2box configuration requires a data mappings file, which defines the plugins used to process your data.
 Example mapping files are provided in the current directory:
 
-* ``synop-bufr-mappings.yml``, input is BUFR data containing surface synoptic observations (SYNOP)
+* ``synop-bufr-mappings.yml``, input is BUFR data containing surface synoptic observations
 * ``synop-csv-mappings.yml``, input is CSV data containing surface synoptic observations
 
-For example, if your incoming data contains ``.bufr4`` files containing SYNOP data, and your ``WIS2BOX_HOST_DATADIR`` environment variable
+For example, if your incoming data contains ``.bufr4`` files containing synoptic observations, and your ``WIS2BOX_HOST_DATADIR`` environment variable
 is set to ``/home/wis2box-user/wis2box-data``, you can copy the following example:
 
 .. code-block:: bash
@@ -70,8 +70,8 @@ is set to ``/home/wis2box-user/wis2box-data``, you can copy the following exampl
 
 Edit ``/home/wis2box-user/wis2box-data/data-mappings.yml``:
  
- * Replace ``country`` with your corresponding ISO 3166 alpha-3 country code
- * Replace ``centre_id`` with the string identifying the centre running your wis2node
+ * Replace ``country`` with your corresponding ISO 3166 alpha-3 country code in lowercase
+ * Replace ``centre_id`` with the string identifying the centre running your wis2node in lowercase, alphanumeric characters
 
 If you need to define multiple datasets, you can add multiple entries in your ``data-mappings.yml``. For example:
 
@@ -157,7 +157,7 @@ An example is provided in ``surface-weather-observations.yml``. Each dataset req
 
 You can copy the file ``surface-weather-observations.yml`` to the directory you defined for ``WIS2BOX_HOST_DATADIR`` and update it to provide the correct discovery metadata for your dataset:
 
-* replace ``[country].[centre_id].data.core.weather.surface-based-observations.synop`` with the topic previously used in ``$WIS2BOX_HOST_DATADIR/data-mappings.yml``
+* replace ``[country].[centre_id].data.core.weather.surface-based-observations.synop`` with the topic as previously used in ``$WIS2BOX_HOST_DATADIR/data-mappings.yml``
 * text provided in ``identification.title`` and ``identification.abstract`` will be displayed in the wis2box user interface
 * provide a valid geographic bounding box in ``identification.extents.spatial.bbox``
 
