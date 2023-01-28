@@ -57,17 +57,8 @@ class DiscoveryMetadata(BaseMetadata):
         local_topic = mcf['wis2box']['topic_hierarchy'].replace('.', '/')
         mqtt_topic = f'origin/a/wis2/{local_topic}'
 
-        LOGGER.debug('Adding topic hierarchy as keyword')
-        topic_hierarchy_keywords = {
-            'keywords': [mcf['wis2box']['topic_hierarchy']],
-            'keywords_type': 'theme',
-            'vocabulary': {
-                'name': 'WMO Core Metadata profile topic hierarchy',
-                'url': 'https://github.com/wmo-im/wis2-topic-hierarchy'
-            }
-        }
-
-        md['identification']['keywords']['wis2'] = topic_hierarchy_keywords
+        LOGGER.debug('Adding topic hierarchy')
+        md['identification']['wmo_topic_hierarchy'] = local_topic
 
         LOGGER.debug('Adding distribution links')
         oafeat_link = {
@@ -84,7 +75,7 @@ class DiscoveryMetadata(BaseMetadata):
             'name': mcf['wis2box']['topic_hierarchy'],
             'description': mcf['wis2box']['topic_hierarchy'],
             'rel': 'data',
-            'wmo_topic': mqtt_topic
+            'channel': mqtt_topic
         }
 
         canonical_link = {
