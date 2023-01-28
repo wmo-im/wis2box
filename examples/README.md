@@ -1,9 +1,6 @@
-# wis2box - Examples
+# Examples
 
-This folder contains the sub-folders:
+This directory contains the following examples:
 
-- config
-- scripts
-
-[config](config) has example files required to run wis2box: discovery metadata, environment, and station list files.
-[scripts](scripts) has example python scripts demonstrating pushing files to s3 and subscribing to the wis2box broker.
+- [`config/`](config): example configurations required to run wis2box (discovery metadata, environment, station list)
+- [`scripts/`](scripts): example Python scripts and utilities/helpers
