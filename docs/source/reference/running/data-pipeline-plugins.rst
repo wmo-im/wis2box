@@ -45,6 +45,17 @@ to filter on incoming data based on a regular expression.  Note that the regex m
 (for year and month), which are used as part of synop2bufr processing.  Consult the synop2bufr documentation
 for more information.
 
+``wis2box.data.bufr4.ObservationDataBUFR``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This plugin takes an incoming BUFR4 data file and separates it into individual BUFR bulletins if there
+is more than one in a file.  Those bulletins are then further divided into individual subsets for publication
+on WIS2.  As part of the process, files are quality checked for whitelisted WIGOS Station Identifiers and
+valid location information.  Where these are missing, the information is either infilled using the wis2box
+station list or the subset discarded if no match is found.  For processing efficiency, and to allow for
+concurrent processing, it is recommended that the input data to this plugin is already separated into one
+BUFR message per file and one subset per message.
+
 .. _`csv2bufr`: https://csv2bufr.readthedocs.io
 .. _`bufr2geojson`: https://github.com/wmo-im/bufr2geojson
 .. _`synop2bufr`: https://github.com/wmo-im/synop2bufr
