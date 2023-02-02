@@ -100,10 +100,15 @@ Broker
 
 The wis2box broker is powered by `MQTT`_ and can be found at:
 
+mqtt://everyone:everyone@mosquitto:1883
+
 mqtt://localhost:1883
 
 ...providing a PubSub capability for event driven subscription and access.
 
+.. note::
+
+   The ``everyone`` user is defined by default for public readonly access (``origin/#``) as per WIS2 Node requirements.
 
 Adding services
 ---------------

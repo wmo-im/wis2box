@@ -70,7 +70,7 @@ class DiscoveryMetadata(BaseMetadata):
         }
 
         mqp_link = {
-            'url': remove_auth_from_url(BROKER_PUBLIC),
+            'url': remove_auth_from_url(BROKER_PUBLIC, 'everyone:everyone'),
             'type': 'MQTT',
             'name': mcf['wis2box']['topic_hierarchy'],
             'description': mcf['wis2box']['topic_hierarchy'],

@@ -84,7 +84,7 @@ To allow the WIS2 Global Broker to subscribe to WIS2 notifications from your wis
 Internal broker
 ---------------
 
-The internal MQTT broker uses the username ``wis2box`` and password ``wis2box``.  Before opening the MQTT port for external access, it is recommended to set a unique password as follows:
+The internal MQTT broker uses the default username/password of ``wis2box/wis2box``.  Before opening the MQTT port for external access, it is recommended to set a unique password as follows:
 
 .. code-block:: bash
 
@@ -94,9 +94,13 @@ The internal MQTT broker uses the username ``wis2box`` and password ``wis2box``.
 
 The internal MQTT broker is accessible on the host ``mosquitto`` within the Docker network used by wis2box.
 
-By default port 1883 of the mosquitto-container is mapped to port 1883 of the host running wis2box. 
+By default port 1883 of the mosquitto container is mapped to port 1883 of the host running wis2box. 
 
-By exposing port 1883 on your host, the Global Broker can subscribe directly to the internal MQTT broker on the wis2box.
+By exposing port 1883 on your host, the Global Broker will be able to subscribe directly to the internal MQTT broker on the wis2box.
+
+.. note::
+
+   The ``everyone`` user is defined by default for public readonly access (``origin/#``) as per WIS2 Node requirements.
 
 External broker
 ---------------
@@ -105,8 +109,12 @@ If you do not wish to expose the internal MQTT broker on your wis2box, you can c
 
 .. code-block:: bash
 
-    # For example to use an external broker at host=external.broker.net
-    WIS2BOX_BROKER_PUBLIC=mqtts://username:password@external.broker.net:8883  
+    # For example to use an external broker at host=example.org
+    WIS2BOX_BROKER_PUBLIC=mqtts://username:password@example.org:8883  
+
+.. note::
+
+   The ``everyone`` user is defined by default for public readonly access (``origin/#``) as per WIS2 Node requirements.
 
 Sharing data with the WIS2 Global Broker
 ----------------------------------------

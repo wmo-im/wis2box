@@ -124,6 +124,7 @@ PubSub configuration provides connectivity information for the PubSub broker.
     WIS2BOX_BROKER_USERNAME=wis2box  # the username of the internal broker
     WIS2BOX_BROKER_PASSWORD=wis2box  # the password of the internal broker
     WIS2BOX_BROKER_PUBLIC=mqtt://foo:bar@localhost:1883  # RFC 1738 URL of public broker endpoint
+    WIS2BOX_BROKER_QUEUE_MAX=0  # maximum number of messages to hold in the queue per client
 
 
 Web application
