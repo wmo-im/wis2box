@@ -202,11 +202,12 @@ def is_dataset(collection_id: str) -> bool:
         return False
 
 
-def remove_auth_from_url(url: str) -> str:
+def remove_auth_from_url(url: str, replace_with: str = None) -> str:
     """
     Removes embedded auth from an RFC 1738 URL
 
     :param url: string of URL
+    :replace_with: credentials to replace with (default is `None`)
 
     :returns: URL with embedded auth removed
     """
@@ -214,4 +215,7 @@ def remove_auth_from_url(url: str) -> str:
     u = urlparse(url)
     auth = f'{u.username}:{u.password}@'
 
-    return url.replace(auth, '')
+    if replace_with is not None:
+        return url.replace(auth, f'{replace_with}@')
+    else:
+        return url.replace(auth, '')
