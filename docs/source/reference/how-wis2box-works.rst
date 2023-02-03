@@ -25,7 +25,7 @@ Core wis2box functionality includes the ability to:
 * integrate your existing data processing pipeline
 * process and transform your weather/climate/water data into official WMO data formats
 * create and publish discovery metadata of your datasets
-* provide your data via OGC and PubSub standards mechanisms to your data, enabling
+* provide your data via OGC and Pub/Sub standards mechanisms to your data, enabling
   easy access for web applications, desktop GIS tools, mobile applications
 * connect your wis2box to the WIS2 network
 * make your data and services available to market search engines
@@ -70,8 +70,8 @@ wis2box is built on free and open source (FOSS) technology.
    :align: left
 
    Storage,data and metadata storage,`MinIO`_ `Elasticsearch`_,`S3`_
-   Internal Message Broker,PubSub,`mosquitto`_, `MQTT`_
-   Public Message Broker,PubSub,`mosquitto`_, `MQTT`_
+   Internal Message Broker,Pub/Sub,`mosquitto`_, `MQTT`_
+   Public Message Broker,Pub/Sub,`mosquitto`_, `MQTT`_
    Data Management,data processing and publishing,`ecCodes`_ `csv2bufr`_ `bufr2geojson`_ `synop2bufr`_ `OWSLib`_ `pygeometa`_,:abbr:`WCMP (WMO Core Metadata Profile)` :abbr:`WMDR (WIGOS Metadata Record)`
    API Application,data discovery and access, `pygeoapi`_,`OGC API`_
    Web Application,data discovery and visualization,`Vue.js`_ `Leaflet`_,`OGC API`_

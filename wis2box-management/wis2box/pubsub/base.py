@@ -27,10 +27,10 @@ LOGGER = logging.getLogger(__name__)
 
 
 class BasePubSubClient:
-    """Abstract PubSub client"""
+    """Abstract Pub/Sub client"""
     def __init__(self, broker: str) -> None:
         """
-        PubSub initializer
+        Pub/Sub initializer
 
         :param broker: `str` of broker RFC1738 URL
 

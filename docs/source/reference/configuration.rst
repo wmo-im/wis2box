@@ -39,7 +39,7 @@ wis2box environment variables can be categorized via the following core sections
 - **Storage**: MinIO configuration
 - **API**: API configuration for provisioning the OGC API capabilities
 - **Logging**: logging configuaration for wis2box
-- **PubSub**: PubSub options
+- **Pub/Sub**: Pub/Sub options
 - **Other**: other miscellaneous options
 
 .. note::
@@ -100,7 +100,7 @@ API configurations drive control of the OGC API setup.
     WIS2BOX_API_URL=http://localhost:8999/pygeoapi  # public landing page endpoint
     WIS2BOX_API_BACKEND_TYPE=Elasticsearch  # backend provider type
     WIS2BOX_API_BACKEND_URL=http://elasticsearch:9200  # internal backend connection URL
-    WIS2BOX_DOCKER_API_URL  # container name of API container (for internal communications/workflow)
+    WIS2BOX_DOCKER_API_URL=http://wis2box-api:80/oapi  # container name of API container (for internal communications/workflow)
 
 Logging
 ^^^^^^^
@@ -112,10 +112,10 @@ The logging directives control logging level/severity and output.
     WIS2BOX_LOGGING_LOGLEVEL=ERROR  # the logging level (see https://docs.python.org/3/library/logging.html#logging-levels)
     WIS2BOX_LOGGING_LOGFILE=stdout  # the full file path to the logfile or ``stdout`` to display on console
 
-PubSub
-^^^^^^
+Pub/Sub
+^^^^^^^
 
-PubSub configuration provides connectivity information for the PubSub broker.
+Pub/Sub configuration provides connectivity information for the Pub/Sub broker.
 
 .. code-block:: bash
 
@@ -124,7 +124,12 @@ PubSub configuration provides connectivity information for the PubSub broker.
     WIS2BOX_BROKER_USERNAME=wis2box  # the username of the internal broker
     WIS2BOX_BROKER_PASSWORD=wis2box  # the password of the internal broker
     WIS2BOX_BROKER_PUBLIC=mqtt://foo:bar@localhost:1883  # RFC 1738 URL of public broker endpoint
-    WIS2BOX_BROKER_QUEUE_MAX=0  # maximum number of messages to hold in the queue per client
+    WIS2BOX_BROKER_QUEUE_MAX=1000  # maximum number of messages to hold in the queue per client
+
+.. note::
+
+   ``WIS2BOX_BROKER_QUEUE_MAX`` should be configured according to the setup of wis2box, relative to the number
+   of expected observations per day.  See :ref:`getting-started` for more information on system requirements.
 
 
 Web application

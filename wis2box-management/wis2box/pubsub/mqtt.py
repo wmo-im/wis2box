@@ -31,10 +31,10 @@ LOGGER = logging.getLogger(__name__)
 
 
 class MQTTPubSubClient(BasePubSubClient):
-    """MQTT PubSub client"""
+    """MQTT Pub/Sub client"""
     def __init__(self, broker: str) -> None:
         """
-        PubSub initializer
+        Pub/Sub initializer
 
         :param broker: `str` of broker RFC1738 URL
 
