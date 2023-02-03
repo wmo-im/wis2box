@@ -21,8 +21,8 @@ API
    qgis-api
 
 
-PubSub
-------
+Pub/Sub
+-------
 
 .. toctree::
    :maxdepth: 2

@@ -29,7 +29,7 @@ LOGGER = logging.getLogger(__name__)
 
 @click.group()
 def pubsub():
-    """PubSub workflow"""
+    """Pub/Sub workflow"""
     pass
 
 

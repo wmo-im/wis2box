@@ -12,7 +12,7 @@ WIS2BOX_DATA_RETENTION_DAYS=30
 WIS2BOX_URL=http://localhost:8999
 WIS2BOX_API_URL=${WIS2BOX_URL}/oapi
 
-# PubSub local broker setup for internal commmunication
+# Pub/Sub local broker setup for internal commmunication
 # please provide your own unique password
 WIS2BOX_BROKER_USERNAME=wis2box
 WIS2BOX_BROKER_PASSWORD=wis2box

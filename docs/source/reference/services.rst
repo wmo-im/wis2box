@@ -104,7 +104,7 @@ mqtt://everyone:everyone@mosquitto:1883
 
 mqtt://localhost:1883
 
-...providing a PubSub capability for event driven subscription and access.
+...providing a Pub/Sub capability for event driven subscription and access.
 
 .. note::
 
