@@ -68,7 +68,7 @@ class MQTTPubSubClient(BasePubSubClient):
         self.conn.connect(self.broker_url.hostname, self._port)
         LOGGER.debug('Connected to broker')
 
-    def pub(self, topic: str, message: str) -> bool:
+    def pub(self, topic: str, message: str, qos=1) -> bool:
         """
         Publish a message to a broker/topic
 
@@ -82,7 +82,7 @@ class MQTTPubSubClient(BasePubSubClient):
         LOGGER.debug(f'Topic: {topic}')
         LOGGER.debug(f'Message: {message}')
 
-        result = self.conn.publish(topic, message, qos=1)
+        result = self.conn.publish(topic, message, qos)
 
         # TODO: investigate implication
         # result.wait_for_publish()

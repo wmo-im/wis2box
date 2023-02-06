@@ -78,7 +78,8 @@ class BaseAbstractData:
             'client_type': 'failure-publisher'
         }
         local_broker = load_plugin('pubsub', defs)
-        local_broker.pub('wis2box/failure', json.dumps(message))
+        # publish with qos=0
+        local_broker.pub('wis2box/failure', json.dumps(message), qos=0)
 
     def setup_discovery_metadata(self, discovery_metadata: dict) -> None:
         """
@@ -173,7 +174,9 @@ class BaseAbstractData:
             'client_type': 'notify-publisher'
         }
         local_broker = load_plugin('pubsub', defs_local)
-        local_broker.pub('wis2box/notifications', json.dumps(notify_msg))
+        local_broker.pub('wis2box/notifications',
+                         json.dumps(notify_msg),
+                         qos=0)
 
         LOGGER.debug('Pushing message to API')
         upsert_collection_item('messages', wis_message.message)

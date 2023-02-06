@@ -22,13 +22,15 @@
 import os
 import logging
 
+import requests
+
 import paho.mqtt.client as mqtt
 import random
 
 import sys
 import json
 
-from prometheus_client import start_http_server, Counter
+from prometheus_client import start_http_server, Counter, Gauge
 
 # de-register default-collectors
 from prometheus_client import REGISTRY, PROCESS_COLLECTOR, PLATFORM_COLLECTOR
@@ -40,7 +42,6 @@ REGISTRY.unregister(PLATFORM_COLLECTOR)
 REGISTRY.unregister(
     REGISTRY._names_to_collectors['python_gc_objects_uncollectable_total'])
 
-
 WIS2BOX_LOGGING_LOGLEVEL = os.environ.get('WIS2BOX_LOGGING_LOGLEVEL')
 # gotta log to stdout so docker logs sees the python-logs
 logging.basicConfig(stream=sys.stdout)
@@ -49,6 +50,62 @@ logger = logging.getLogger('mqtt_metrics_collector')
 logger.setLevel(WIS2BOX_LOGGING_LOGLEVEL)
 
 INTERRUPT = False
+
+notify_total = Counter('wis2box_notify_total',
+                       'Total notifications sent by wis2box')
+notify_topic_wsi_total = Counter('wis2box_notify_topic_wsi_total',
+                                 'Total notifications sent by wis2box, by topic and WSI', # noqa
+                                 ["topic", "WSI"])
+
+failure_total = Counter('wis2box_failure_total',
+                        'Total failed actions reported by wis2box')
+failure_descr_wsi_total = Counter('wis2box_failure_wsi_total',
+                                    'Total failed actions sent by wis2box, by description and WSI', # noqa
+                                    ["description", "WSI"])
+
+storage_incoming_total = Counter('wis2box_storage_incoming_total',
+                                 'Total storage notifications received on incoming') # noqa
+storage_public_total = Counter('wis2box_storage_public_total',
+                               'Total storage notifications received on public') # noqa
+
+broker_msg_sent = Gauge('wis2box_broker_msg_sent',
+                        '$SYS/messages/sent')
+broker_msg_received = Gauge('wis2box_broker_msg_received',
+                            '$SYS/messages/received')
+broker_msg_stored = Gauge('wis2box_broker_msg_stored',
+                          '$SYS/messages/stored')
+broker_msg_dropped = Gauge('wis2box_broker_msg_dropped',
+                           '$SYS/messages/dropped')
+
+station_wsi = Gauge('wis2box_stations_wsi',
+                    'wis2box configured stations by WSI',
+                    ["WSI"])
+
+
+def update_stations_gauge(station_list):
+    station_wsi._metrics.clear()
+    for station in station_list:
+        station_wsi.labels(station).set(1)
+
+
+def init_stations_gauge():
+    station_list = []
+    # read currently configured stations from wis2box-api
+    url = 'http://wis2box-api:80/oapi/collections/stations/items?f=json'
+    res = requests.get(url)
+    try:
+        json_data = json.loads(res.content)
+        if 'description' in json_data:
+            if json_data['description'] == 'Collection not found':
+                logger.error("No stations configured yet")
+            else:
+                logger.error(json_data['description'])
+        else:
+            for item in json_data["features"]:
+                station_list.append(item['id'])
+    except Exception as e:
+        logger.error(f'Failed to update stations-gauge: {e}')
+    update_stations_gauge(station_list)
 
 
 def sub_connect(client, userdata, flags, rc, properties=None):
@@ -65,26 +122,9 @@ def sub_connect(client, userdata, flags, rc, properties=None):
     """
 
     logger.info(f"on connection to subscribe: {mqtt.connack_string(rc)}")
-    for s in ["wis2box/#", "wis2box-storage/#"]:
-        client.subscribe(s, qos=1)
-
-
-notify_total = Counter('wis2box_notify_total',
-                       'Total notifications sent by wis2box')
-notify_topic_wsi_total = Counter('wis2box_notify_topic_wsi_total',
-                                 'Total notifications sent by wis2box, by topic and WSI', # noqa
-                                 ["topic", "WSI"])
-
-failure_total = Counter('wis2box_failure_total',
-                        'Total failed actions reported by wis2box')
-failure_descr_wsi_total = Counter('wis2box_failure_detail_total',
-                                    'Total failed actions sent by wis2box, by description and WSI', # noqa
-                                    ["description", "WSI"])
-
-storage_incoming_total = Counter('wis2box_storage_incoming_total',
-                                 'Total storage notifications received on incoming') # noqa
-storage_public_total = Counter('wis2box_storage_public_total',
-                               'Total storage notifications received on public') # noqa
+    for s in ["wis2box/#", "wis2box-storage/#", '$SYS/broker/messages/#']:
+        print(f'subscribe to: {s}')
+        client.subscribe(s, qos=0)
 
 
 def sub_mqtt_metrics(client, userdata, msg):
@@ -98,23 +138,36 @@ def sub_mqtt_metrics(client, userdata, msg):
 
     :returns: `None`
     """
-    m = json.loads(msg.payload.decode('utf-8'))
-    logger.info(f"Received message on topic={msg.topic}")
 
-    if str(msg.topic).startswith('wis2box/notifications'):
+    logger.debug(f"Received message on topic={msg.topic}")
+
+    if str(msg.topic).startswith('$SYS/broker/messages/sent'):
+        broker_msg_sent.set(msg.payload)
+    elif str(msg.topic).startswith('$SYS/broker/messages/received'):
+        broker_msg_received.set(msg.payload)
+    elif str(msg.topic).startswith('$SYS/broker/messages/stored'):
+        broker_msg_received.set(msg.payload)
+    elif str(msg.topic).startswith('$SYS/broker/messages/dropped'):
+        broker_msg_received.set(msg.payload)
+
+    if str(msg.topic).startswith('$SYS'):
+        return
+
+    m = json.loads(msg.payload.decode('utf-8'))
+    if str(msg.topic).startswith('wis2box/stations'):
+        update_stations_gauge(m['station_list'])
+    elif str(msg.topic).startswith('wis2box/notifications'):
         notify_topic_wsi_total.labels(
             m['topic'], m['wigos_station_identifier']).inc(1)
         notify_total.inc(1)
-
-    if str(msg.topic).startswith('wis2box/failure'):
+    elif str(msg.topic).startswith('wis2box/failure'):
         descr = m['description']
         wsi = 'none'
         if 'wigos_station_identifier' in m:
             wsi = m['wigos_station_identifier']
         failure_descr_wsi_total.labels(descr, wsi).inc(1)
         failure_total.inc(1)
-
-    if str(msg.topic).startswith('wis2box-storage'):
+    elif str(msg.topic).startswith('wis2box-storage'):
         if str(m["Key"]).startswith('wis2box-incoming'):
             storage_incoming_total.inc(1)
         if str(m["Key"]).startswith('wis2box-public'):
@@ -152,6 +205,7 @@ def gather_mqtt_metrics():
 
 def main():
     start_http_server(8001)
+    init_stations_gauge()
     gather_mqtt_metrics()
 
 
