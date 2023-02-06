@@ -19,26 +19,28 @@
 #
 ###############################################################################
 
-import os
 import logging
+import os
 from pathlib import Path
 
 from wis2box.util import yaml_load
 
 LOGGER = logging.getLogger(__name__)
 
-if 'WIS2BOX_DATADIR_DATA_MAPPINGS' in os.environ:
-    LOGGER.debug('Overriding WIS2BOX_DATADIR_DATA_MAPPINGS')
-    try:
-        with open(os.environ.get('WIS2BOX_DATADIR_DATA_MAPPINGS')) as fh:
-            DATADIR_DATA_MAPPINGS = yaml_load(fh)
-            assert DATADIR_DATA_MAPPINGS is not None
-    except Exception as err:
-        DATADIR_DATA_MAPPINGS = None
-        msg = f'Missing data mappings: {err}'
-        LOGGER.error(msg)
-        raise EnvironmentError(msg)
-else:
-    data_mappings = Path(__file__).parent / 'resources' / 'data-mappings.yml'
-    with (data_mappings).open() as fh:
+DATADIR = os.environ.get('WIS2BOX_DATADIR')
+DATA_MAPPINGS = Path(DATADIR) / 'data-mappings.yml'
+
+if not DATA_MAPPINGS.exists():
+    msg = f'Please create a data mappings file in {DATADIR}'
+    LOGGER.error(msg)
+    raise RuntimeError(msg)
+
+try:
+    with DATA_MAPPINGS.open() as fh:
         DATADIR_DATA_MAPPINGS = yaml_load(fh)
+        assert DATADIR_DATA_MAPPINGS is not None
+except Exception as err:
+    DATADIR_DATA_MAPPINGS = None
+    msg = f'Missing data mappings: {err}'
+    LOGGER.error(msg)
+    raise EnvironmentError(msg)
