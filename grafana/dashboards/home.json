@@ -24,10 +24,235 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 4,
   "links": [],
   "liveNow": false,
   "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PABAFD29CE247021E"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "color-background",
+            "filterable": false,
+            "inspect": false
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              },
+              {
+                "color": "#a20618",
+                "value": 0
+              },
+              {
+                "color": "#b55617",
+                "value": 1
+              },
+              {
+                "color": "#a28204",
+                "value": 10
+              },
+              {
+                "color": "dark-green",
+                "value": 20
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "WIGOS-ID"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 191
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byType",
+              "options": "string"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "color-text"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Failed last 24 hrs"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "auto"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 21,
+        "w": 9,
+        "x": 0,
+        "y": 0
+      },
+      "id": 12,
+      "interval": "24h",
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "frameIndex": 0,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "WIGOS-ID"
+          }
+        ]
+      },
+      "pluginVersion": "9.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PABAFD29CE247021E"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "avg by(WSI) (wis2box_stations_wsi)",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PABAFD29CE247021E"
+          },
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "sum by(WSI) (increase(wis2box_notify_topic_wsi_total[$__interval]))",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "range": false,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PABAFD29CE247021E"
+          },
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "sum by(WSI, description) (increase(wis2box_failure_wsi_total{description=\"Not in station-list\"}[$__interval]))",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "C"
+        }
+      ],
+      "title": "Station data publishing status",
+      "transformations": [
+        {
+          "id": "seriesToColumns",
+          "options": {
+            "byField": "WSI"
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Published last 24 hrs",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "Value #B"
+              ],
+              "reducer": "sum"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Failed last 24 hrs",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "Value #C"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": false
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time 1": true,
+              "Time 2": true,
+              "Time 3": true,
+              "Value #A": true,
+              "Value #B": true,
+              "Value #C": true
+            },
+            "indexByName": {
+              "Failed last 24 hrs": 8,
+              "Published last 24 hrs": 7,
+              "Time 1": 1,
+              "Time 2": 3,
+              "Time 3": 5,
+              "Value #A": 2,
+              "Value #B": 4,
+              "Value #C": 6,
+              "WSI": 0,
+              "description": 9
+            },
+            "renameByName": {
+              "Time 3": "",
+              "Value #B": "",
+              "Value #C": "",
+              "WSI": "WIGOS-ID",
+              "description": "Failure-description"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
     {
       "datasource": {
         "type": "prometheus",
@@ -88,9 +313,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 5,
         "w": 15,
-        "x": 0,
+        "x": 9,
         "y": 0
       },
       "id": 2,
@@ -124,46 +349,6 @@
       ],
       "title": "New/updated files in wis2box-incoming storage",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P55348B596EBB51C3"
-      },
-      "description": "",
-      "gridPos": {
-        "h": 21,
-        "w": 9,
-        "x": 15,
-        "y": 0
-      },
-      "id": 8,
-      "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": false,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": true,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "wis2box-loki"
-          },
-          "editorMode": "builder",
-          "expr": "{compose_service=\"wis2box-management\"} |~ `ERROR`",
-          "hide": false,
-          "legendFormat": "",
-          "queryType": "range",
-          "refId": "B"
-        }
-      ],
-      "title": "wis2box ERRORs",
-      "type": "logs"
     },
     {
       "datasource": {
@@ -224,10 +409,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 5,
         "w": 15,
-        "x": 0,
-        "y": 7
+        "x": 9,
+        "y": 5
       },
       "id": 6,
       "interval": "1m",
@@ -319,10 +504,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 5,
         "w": 15,
-        "x": 0,
-        "y": 14
+        "x": 9,
+        "y": 10
       },
       "id": 10,
       "interval": "1m",
@@ -354,6 +539,46 @@
       ],
       "title": "Number of WIS2.0 notifications published by wis2box",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P55348B596EBB51C3"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 6,
+        "w": 15,
+        "x": 9,
+        "y": 15
+      },
+      "id": 8,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": false,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "wis2box-loki"
+          },
+          "editorMode": "builder",
+          "expr": "{compose_service=\"wis2box-management\"} |~ `ERROR`",
+          "hide": false,
+          "legendFormat": "",
+          "queryType": "range",
+          "refId": "B"
+        }
+      ],
+      "title": "wis2box ERRORs",
+      "type": "logs"
     }
   ],
   "refresh": "5s",
@@ -370,7 +595,7 @@
   "timepicker": {},
   "timezone": "",
   "title": "wis2box workflow monitoring",
-  "uid": "lIowuuP7k",
-  "version": 1,
+  "uid": "KkBocEA4k",
+  "version": 2,
   "weekStart": ""
 }

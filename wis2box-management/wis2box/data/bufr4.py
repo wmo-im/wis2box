@@ -168,7 +168,7 @@ class ObservationDataBUFR(BaseAbstractData):
         try:
             data_date = parser.get_time()
         except Exception as err:
-            LOGGER.warning(err)
+            LOGGER.error(err)
             self.publish_failure_message(
                         description="Failed to parse time",
                         wsi=temp_wsi)
@@ -179,10 +179,11 @@ class ObservationDataBUFR(BaseAbstractData):
         LOGGER.debug(f'Processing temp_wsi: {temp_wsi}, temp_tsi: {temp_tsi}')
         wsi = get_valid_wsi(wsi=temp_wsi, tsi=temp_tsi)
         if wsi is None:
-            msg = f'Failed to publish, wsi: {temp_wsi}, tsi: {temp_tsi}'
+            msg = 'Station not in station list: '
+            msg += f'wsi={temp_wsi} tsi={temp_tsi}; skipping'
             LOGGER.error(msg)
             self.publish_failure_message(
-                        description="Invalid station",
+                        description="Station not in station list",
                         wsi=temp_wsi)
             return
 

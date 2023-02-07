@@ -85,7 +85,7 @@ class Handler:
             'client_type': 'handler-publisher'
         }
         local_broker = load_plugin('pubsub', defs)
-        local_broker.pub('wis2box/failure', json.dumps(message))
+        local_broker.pub('wis2box/failure', json.dumps(message), qos=0)
 
     def handle(self) -> bool:
         for plugin in self.plugins:

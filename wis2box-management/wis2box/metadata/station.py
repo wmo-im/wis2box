@@ -21,6 +21,7 @@
 
 import click
 import csv
+import json
 import logging
 from typing import Iterator, Union
 
@@ -31,9 +32,13 @@ from wis2box import cli_helpers
 from wis2box.api import (
     setup_collection, remove_collection, upsert_collection_item
 )
-from wis2box.env import DATADIR, DOCKER_API_URL
+from wis2box.env import (DATADIR, DOCKER_API_URL,
+                         BROKER_HOST, BROKER_USERNAME, BROKER_PASSWORD,
+                         BROKER_PORT)
 from wis2box.metadata.base import BaseMetadata
 from wis2box.util import get_typed_value
+
+from wis2box.plugin import load_plugin, PLUGINS
 
 LOGGER = logging.getLogger(__name__)
 
@@ -151,11 +156,13 @@ def publish_station_collection() -> None:
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
     LOGGER.debug(f'Publishing station list from {STATIONS}')
+    station_list = []
     with STATIONS.open() as fh:
         reader = csv.DictReader(fh)
 
         for row in reader:
             wigos_station_identifier = row['wigos_station_identifier']
+            station_list.append(wigos_station_identifier)
             topics = list(check_station_datasets(wigos_station_identifier))
             topic = None if len(topics) == 0 else topics[0]['title']
             feature = {
@@ -186,7 +193,19 @@ def publish_station_collection() -> None:
             LOGGER.debug('Publishing to backend')
             upsert_collection_item('stations', feature)
 
-    return
+    LOGGER.info(f'Updated station list: {station_list}')
+    # inform mqtt-metrics-collector
+    notify_msg = {
+        'station_list': station_list
+    }
+    # load plugin for local broker
+    defs_local = {
+        'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
+        'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}', # noqa
+        'client_type': 'station-publisher'
+    }
+    local_broker = load_plugin('pubsub', defs_local)
+    local_broker.pub('wis2box/stations', json.dumps(notify_msg), qos=0)
 
 
 def get_valid_wsi(wsi: str = '', tsi: str = '') -> Union[str, None]:
