@@ -35,6 +35,7 @@ services:
   mqtt_metrics_collector:
     <<: *logging
     container_name: mqtt_metrics_collector
+    restart: unless-stopped
     env_file:
       - default.env
       - dev.env
