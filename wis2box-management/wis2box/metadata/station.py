@@ -192,15 +192,16 @@ def publish_station_collection() -> None:
 
             LOGGER.debug('Publishing to backend')
             upsert_collection_item('stations', feature)
-    LOGGER.info(f'Updated station-list: {station_list}')
+
+    LOGGER.info(f'Updated station list: {station_list}')
     # inform mqtt-metrics-collector
     notify_msg = {
-        'station_list': station_list,
+        'station_list': station_list
     }
     # load plugin for local broker
     defs_local = {
         'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-        'url': f"mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}", # noqa
+        'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}', # noqa
         'client_type': 'station-publisher'
     }
     local_broker = load_plugin('pubsub', defs_local)

@@ -79,10 +79,10 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
         for item in results:
             wsi = item['_meta']['properties']['wigos_station_identifier']
             if get_valid_wsi(wsi) is None:
-                msg = f'Station not in station list: wsi={wsi}, skipping'
+                msg = f'Station not in station list: wsi={wsi}; skipping'
                 LOGGER.error(msg)
                 self.publish_failure_message(
-                        description="Not in station-list",
+                        description="Station not in station list",
                         wsi=wsi)
                 continue
             LOGGER.debug('Setting obs date for filepath creation')

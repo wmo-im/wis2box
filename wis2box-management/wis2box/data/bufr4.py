@@ -179,11 +179,11 @@ class ObservationDataBUFR(BaseAbstractData):
         LOGGER.debug(f'Processing temp_wsi: {temp_wsi}, temp_tsi: {temp_tsi}')
         wsi = get_valid_wsi(wsi=temp_wsi, tsi=temp_tsi)
         if wsi is None:
-            msg = 'Station not in station-list:'
-            msg += f'wsi={temp_wsi} tsi={temp_tsi}, skipping'
+            msg = 'Station not in station list: '
+            msg += f'wsi={temp_wsi} tsi={temp_tsi}; skipping'
             LOGGER.error(msg)
             self.publish_failure_message(
-                        description="Not in station-list",
+                        description="Station not in station list",
                         wsi=temp_wsi)
             return
 
