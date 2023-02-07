@@ -24,6 +24,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
+    "id": 4,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -107,13 +108,13 @@
               "uid": "PABAFD29CE247021E"
             },
             "editorMode": "builder",
-            "expr": "wis2box_broker_msg_sent",
-            "legendFormat": "messages sent",
+            "expr": "increase(wis2box_broker_msg_sent[1m])",
+            "legendFormat": "messages sent rate",
             "range": true,
             "refId": "A"
           }
         ],
-        "title": "wis2box-broker: messages sent",
+        "title": "wis2box-broker: messages sent per minute",
         "type": "timeseries"
       },
       {
@@ -285,13 +286,13 @@
               "uid": "PABAFD29CE247021E"
             },
             "editorMode": "builder",
-            "expr": "wis2box_broker_msg_received",
+            "expr": "increase(wis2box_broker_msg_received[1m])",
             "legendFormat": "messages received",
             "range": true,
             "refId": "A"
           }
         ],
-        "title": "wis2box-broker: messages received",
+        "title": "wis2box-broker: messages received per minute",
         "type": "timeseries"
       },
       {
@@ -392,13 +393,13 @@
       "list": []
     },
     "time": {
-      "from": "now-1h",
+      "from": "now-3h",
       "to": "now"
     },
     "timepicker": {},
     "timezone": "",
     "title": "wis2box broker statistics $SYS/broker/messages",
     "uid": "LNKi9EA4z",
-    "version": 4,
+    "version": 1,
     "weekStart": ""
   }
