@@ -45,6 +45,7 @@
             "filterable": false,
             "inspect": false
           },
+          "decimals": 0,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -54,15 +55,15 @@
                 "value": null
               },
               {
-                "color": "dark-red",
+                "color": "#a20618",
                 "value": 0
               },
               {
-                "color": "dark-orange",
+                "color": "#b55617",
                 "value": 1
               },
               {
-                "color": "dark-yellow",
+                "color": "#a28204",
                 "value": 10
               },
               {
@@ -157,9 +158,9 @@
             "type": "prometheus",
             "uid": "PABAFD29CE247021E"
           },
-          "editorMode": "code",
+          "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum by(WSI) (wis2box_notify_topic_wsi_total)",
+          "expr": "sum by(WSI) (increase(wis2box_notify_topic_wsi_total[$__interval]))",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -173,7 +174,7 @@
           },
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum by(WSI, description) (wis2box_failure_wsi_total{description=\"Not in station-list\"})",
+          "expr": "sum by(WSI, description) (increase(wis2box_failure_wsi_total{description=\"Not in station-list\"}[$__interval]))",
           "format": "table",
           "hide": false,
           "instant": true,
