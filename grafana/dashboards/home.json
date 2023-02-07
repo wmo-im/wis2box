@@ -37,11 +37,11 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "fixed"
+            "mode": "thresholds"
           },
           "custom": {
             "align": "auto",
-            "displayMode": "auto",
+            "displayMode": "color-background",
             "filterable": false,
             "inspect": false
           },
@@ -50,12 +50,24 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "text",
                 "value": null
               },
               {
-                "color": "red",
-                "value": 2
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 1
+              },
+              {
+                "color": "dark-yellow",
+                "value": 10
+              },
+              {
+                "color": "dark-green",
+                "value": 20
               }
             ]
           }
@@ -70,6 +82,30 @@
               {
                 "id": "custom.width",
                 "value": 191
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byType",
+              "options": "string"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "color-text"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Failed last 24 hrs"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "auto"
               }
             ]
           }
@@ -552,7 +588,7 @@
     "list": []
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
