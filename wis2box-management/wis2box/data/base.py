@@ -127,6 +127,7 @@ class BaseAbstractData:
         raise NotImplementedError()
 
     def notify(self, identifier: str, storage_path: str,
+               datetime_: str,
                geometry: dict = None,
                wigos_station_identifier: str = None) -> bool:
         """
@@ -134,6 +135,7 @@ class BaseAbstractData:
 
         :param storage_path: path to data on storage
         :param identifier: identifier
+        :param datetime_: `datetime` object of temporal aspect of data
         :param geometry: `dict` of GeoJSON geometry object
         :param wigos_station_identifier: WSI associated with the data
 
@@ -147,7 +149,7 @@ class BaseAbstractData:
         data_id_topic = topic.replace('origin/a/', '')
 
         wis_message = WISNotificationMessage(
-            identifier, data_id_topic, storage_path, geometry,
+            identifier, data_id_topic, storage_path, datetime_, geometry,
             wigos_station_identifier)
 
         # load plugin for public broker
@@ -221,7 +223,14 @@ class BaseAbstractData:
                         wsi = item['_meta'].get('wigos_station_identifier')
 
                     LOGGER.debug('Sending notification to broker')
+
+                    try:
+                        datetime_ = item['_meta']['properties']['datetime']
+                    except KeyError:
+                        datetime_ = item['_meta'].get('data_date')
+
                     self.notify(identifier, storage_path,
+                                datetime_,
                                 item['_meta'].get('geometry'), wsi)
                 else:
                     LOGGER.debug('No notification sent')

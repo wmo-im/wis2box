@@ -25,6 +25,7 @@ import json
 import hashlib
 import logging
 from pathlib import Path
+import uuid
 
 from wis2box.util import json_serial
 from wis2box.env import STORAGE_PUBLIC, URL, STORAGE_SOURCE
@@ -51,7 +52,7 @@ class PubSubMessage:
     """
 
     def __init__(self, type_: str, identifier: str, topic: str, filepath: str,
-                 geometry: dict = None,
+                 datetime_: datetime, geometry: dict = None,
                  wigos_station_identifier: str = None) -> None:
         """
         Initializer
@@ -60,6 +61,7 @@ class PubSubMessage:
         :param identifier: identifier
         :param topic: topic
         :param filepath: `Path` of file
+        :param datetime_: `datetime` object of temporal aspect of data
         :param geometry: `dict` of GeoJSON geometry object
         :param wigos_station_identifier: WSI associated with the data
 
@@ -70,6 +72,7 @@ class PubSubMessage:
         self.identifier = identifier
         self.filepath = filepath
         self.geometry = geometry
+        self.datetime = datetime_.strftime('%Y-%m-%dT%H:%M:%SZ')
         self.publish_datetime = datetime.utcnow().strftime(
             '%Y-%m-%dT%H:%M:%SZ'
         )
@@ -121,11 +124,11 @@ class PubSubMessage:
 
 
 class WISNotificationMessage(PubSubMessage):
-    def __init__(self, identifier, topic, filepath, geometry=None,
-                 wigos_station_identifier=None):
+    def __init__(self, identifier: str, topic: str, filepath: str,
+                 datetime_: str, geometry=None, wigos_station_identifier=None):
 
         super().__init__('wis2-notification-message', identifier,
-                         topic, filepath, geometry)
+                         topic, filepath, datetime_, geometry)
 
         suffix = self.filepath.split('.')[-1]
         try:
@@ -137,13 +140,18 @@ class WISNotificationMessage(PubSubMessage):
         public_file_url = self.filepath.replace(
             f'{STORAGE_SOURCE}/{STORAGE_PUBLIC}', f'{URL}/data'
         )
+
+        if self.datetime is None:
+            LOGGER.warning('Missing data datetime')
+
         self.message = {
-            'id': self.identifier,
+            'id': str(uuid.uuid4()),
             'type': 'Feature',
             'version': 'v04',
             'geometry': self.geometry,
             'properties': {
                 'data_id': f'{topic}/{self.identifier}',
+                'datetime': self.datetime,
                 'pubtime': self.publish_datetime,
                 'integrity': {
                     'method': self.checksum_type,
