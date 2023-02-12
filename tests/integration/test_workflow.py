@@ -26,6 +26,7 @@
 import csv
 from pathlib import Path
 
+from pywis_pubsub.validation import validate_message
 from requests import Session, codes
 
 DATADIR = Path('.').parent.absolute() / 'tests/data'
@@ -190,13 +191,18 @@ def test_message_api():
     url = f'{API_URL}/collections/messages/items?sortby=wigos_station_identifier'  # noqa
     r = SESSION.get(url).json()
 
-    assert r['numberMatched'] == 197
+    assert r['numberMatched'] == 212
 
     msg = r['features'][0]
+
+    is_valid, _ = validate_message(msg)
+    assert is_valid
+
     assert msg['geometry'] is not None
 
     props = msg['properties']
-    assert props['wigos_station_identifier'] == '0-12-0-08BECCN60577'
+    assert props['datetime'] == '2023-01-18T00:00:00Z'
+    assert props['wigos_station_identifier'] == '0-20000-0-15015'
     assert props['integrity']['method'] == 'sha512'
     assert props['data_id'].startswith('wis2')
 
