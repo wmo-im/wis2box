@@ -4,7 +4,7 @@ verify_data: true
 
 #validate_message: true
 
-topics:
+subscribe_topics:
     - '#'
 
 # storage: filesystem
