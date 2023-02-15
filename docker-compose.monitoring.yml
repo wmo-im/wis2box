@@ -43,7 +43,7 @@ services:
     build:
       context: ./mqtt_metrics_collector
     depends_on:
-      - wis2box-broker
+      - mosquitto
       - wis2box-management
     ports:
       - 8001:8001
@@ -100,7 +100,7 @@ services:
       - 3000:3000
   wis2box-management:
     <<: *logging
-  wis2box-broker:
+  mosquitto:
     <<: *logging
   wis2box-api:
     <<: *logging

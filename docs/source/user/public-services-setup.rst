@@ -90,9 +90,9 @@ The internal MQTT broker uses the default username/password of ``wis2box/wis2box
 
     WIS2BOX_BROKER_USERNAME=wis2box-utopia
     WIS2BOX_BROKER_PASSWORD=myuniquepassword
-    WIS2BOX_BROKER_PUBLIC=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@wis2box-broker:1883
+    WIS2BOX_BROKER_PUBLIC=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@mosquitto:1883
 
-The internal MQTT broker is accessible on the host ``wis2box-broker`` within the Docker network used by wis2box.
+The internal MQTT broker is accessible on the host ``mosquitto`` within the Docker network used by wis2box.
 
 By default port 1883 of the mosquitto container is mapped to port 1883 of the host running wis2box. 
 

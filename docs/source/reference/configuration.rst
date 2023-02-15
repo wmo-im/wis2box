@@ -119,7 +119,7 @@ Pub/Sub configuration provides connectivity information for the Pub/Sub broker.
 
 .. code-block:: bash
 
-    WIS2BOX_BROKER_HOST=wis2box-broker  # the hostname of the internal broker
+    WIS2BOX_BROKER_HOST=mosquitto  # the hostname of the internal broker
     WIS2BOX_BROKER_PORT=1883  # the port of the internal broker
     WIS2BOX_BROKER_USERNAME=wis2box  # the username of the internal broker
     WIS2BOX_BROKER_PASSWORD=wis2box  # the password of the internal broker

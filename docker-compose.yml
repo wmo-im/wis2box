@@ -51,7 +51,7 @@ services:
       timeout: 1s
       retries: 3
     depends_on:
-      wis2box-broker:
+      mosquitto:
         condition: service_started
 
   elasticsearch:
@@ -81,8 +81,8 @@ services:
       interval: 5s
       retries: 100
 
-  wis2box-broker:
-    container_name: wis2box-broker
+  mosquitto:
+    container_name: mosquitto
     #image: ghcr.io/wmo-im/wis2box-broker:1.0.beta1
     build:
       context: ./wis2box-broker
@@ -107,7 +107,7 @@ services:
     depends_on:
       minio:
         condition: service_healthy
-      wis2box-broker:
+      mosquitto:
         condition: service_started
       wis2box-api:
         condition: service_started
