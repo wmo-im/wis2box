@@ -19,8 +19,7 @@
 #
 ###############################################################################
 
-#FROM python:3.9.13-slim
-FROM wmoim/dim_eccodes_baseimage:2.28.0
+FROM ghcr.io/wmo-im/dim_eccodes_baseimage:latest
 
 LABEL maintainer="tomkralidis@gmail.com"
 
