@@ -3,12 +3,12 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: publish image to ghcr.io
+name: publish images 
 
 on:
   push:
     branches:
-      - test
+      - main
   release:
     types: [published]
 
@@ -29,6 +29,7 @@ jobs:
           # - wis2box-api
           - wis2box-broker
           - wis2box-management
+          # - wis2box-mqtt-metrics-collector
           # - wis2box-ui
 
 
@@ -65,8 +66,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
-            type=raw,value=test
-            type=semver,pattern={{version}}
+            type=pep440,pattern={{version}}
 
       - name: Build and push
         uses: docker/build-push-action@v2.7.0
