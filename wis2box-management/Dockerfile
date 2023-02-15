@@ -19,39 +19,36 @@
 #
 ###############################################################################
 
-FROM python:3.9.13-slim
+FROM ghcr.io/wmo-im/dim_eccodes_baseimage:latest
 
 LABEL maintainer="tomkralidis@gmail.com"
 
 ARG WIS2BOX_PIP3_EXTRA_PACKAGES
 ENV TZ="Etc/UTC" \
     DEBIAN_FRONTEND="noninteractive" \
-    DEBIAN_PACKAGES="cron bash vim git libffi-dev libeccodes0 python3-eccodes python3-cryptography libssl-dev libudunits2-0 python3-paho-mqtt python3-dateparser python3-tz python3-setuptools"
+    DEBIAN_PACKAGES="cron bash vim git libffi-dev python3-cryptography libssl-dev libudunits2-0 python3-paho-mqtt python3-dateparser python3-tz python3-setuptools"
 
 RUN if [ "$WIS2BOX_PIP3_EXTRA_PACKAGES" = "None" ]; \
     then export WIS2BOX_PIP3_EXTRA_PACKAGES=echo; \
     else export WIS2BOX_PIP3_EXTRA_PACKAGES=pip3 install ${WIS2BOX_PIP3_EXTRA_PACKAGES}; \
     fi
 
-# We need latest version of BUFR tables, these are only available in bookworm release, add to sources
-RUN echo 'deb http://deb.debian.org/debian bookworm main' >> /etc/apt/sources.list
-
 # install dependencies
 # FIXME: csv2bufr/bufr2geojson: remove and install from requirements.txt once we have a stable release
 # FIXME: pygeometa: remove and install from requirements.txt once we have a stable release
-RUN apt-get update -y \
-    && apt-get install -y -t bookworm libeccodes-data \
-    && apt-get install -y ${DEBIAN_PACKAGES} \
+RUN apt-get install -y ${DEBIAN_PACKAGES} \
     # install wis2box data pipeline dependencies
-    && pip3 install --no-cache-dir https://github.com/wmo-im/csv2bufr/archive/refs/tags/v0.4.1.zip \
-    && pip3 install --no-cache-dir https://github.com/wmo-im/bufr2geojson/archive/refs/tags/v0.4.2.zip \
-    && pip3 install --no-cache-dir https://github.com/wmo-im/pymetdecoder/archive/master.zip \
-    && pip3 install --no-cache-dir https://github.com/wmo-im/synop2bufr/archive/main.zip \
-    # install geopython tooling
-    && pip3 install --no-cache-dir https://github.com/geopython/pygeometa/archive/master.zip \
+    && pip3 install --no-cache-dir \
+    https://github.com/wmo-im/csv2bufr/archive/refs/tags/v0.4.1.zip \
+    https://github.com/wmo-im/bufr2geojson/archive/refs/tags/v0.4.2.zip \
+    https://github.com/wmo-im/pymetdecoder/archive/master.zip \
+    https://github.com/wmo-im/synop2bufr/archive/main.zip \
+    https://github.com/geopython/pygeometa/archive/master.zip \
     # install shapely
-    && pip3 install cython pygeos==0.13 \
+    && pip3 install --no-cache-dir cython pygeos==0.13 \
     && pip3 install -U "shapely<2" --no-binary shapely \
+    # install boto3 and botocore
+    && pip3 install --no-cache-dir botocore boto3 \
     # cleanup
     && apt autoremove -y  \
     && apt-get -q clean \
