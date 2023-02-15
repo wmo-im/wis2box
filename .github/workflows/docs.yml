@@ -4,13 +4,13 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'docs/**'
+#    paths:
+#      - 'docs/**'
   pull_request:
     branches:
       - main
-    paths:
-      - 'docs/**'
+#    paths:
+#      - 'docs/**'
 
 jobs:
   main:
@@ -25,5 +25,5 @@ jobs:
     - name: build docs ⚙️
       uses: ammaraskar/sphinx-action@master
       with:
-        pre-build-command: "apt-get install -y pandoc && cp wis2box-management/requirements-dev.txt docs/requirements.txt"
+        pre-build-command: "apt-get install -y pandoc"
         docs-folder: "docs/"

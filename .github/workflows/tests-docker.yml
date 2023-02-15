@@ -12,10 +12,10 @@ jobs:
       name: setup Python
       with:
         python-version: 3.8
-    - name: install wis2box-management requirements 📦
+    - name: install testing requirements 📦
       working-directory: wis2box-management
       run: |
-        pip3 install -r requirements-dev.txt
+        pip3 install -r tests/requirements.txt
         python3 setup.py install
     - name: cache schemas 📦
       run: |
