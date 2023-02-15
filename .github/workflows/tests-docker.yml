@@ -12,11 +12,10 @@ jobs:
       name: setup Python
       with:
         python-version: 3.8
-    - name: install wis2box-management requirements 📦
-      working-directory: wis2box-management
+    - name: install testing requirements 📦
+      working-directory: tests
       run: |
-        pip3 install -r requirements-dev.txt
-        python3 setup.py install
+        pip3 install -r requirements.txt
     - name: cache schemas 📦
       run: |
         pywis-pubsub schema sync
@@ -90,11 +89,6 @@ jobs:
     - name: run flake8 ⚙️
       run: |
         find . -type f -name "*.py" | xargs flake8
-    - name: build docs ⚙️
-      uses: ammaraskar/sphinx-action@master
-      with:
-        pre-build-command: "apt-get install -y pandoc && cp wis2box-management/requirements-dev.txt docs/requirements.txt"
-        docs-folder: "docs/"
     - name: failed tests 🚩
       if: ${{ failure() }}
       run: |
