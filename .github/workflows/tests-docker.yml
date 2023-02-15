@@ -16,6 +16,9 @@ jobs:
       working-directory: tests
       run: |
         pip3 install -r requirements.txt
+    - name: cache schemas 📦
+      run: |
+        pywis-pubsub schema sync
     - name: display Docker and Python versions 📦
       run: |
         docker version
