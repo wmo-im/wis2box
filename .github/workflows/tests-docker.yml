@@ -90,11 +90,6 @@ jobs:
     - name: run flake8 ⚙️
       run: |
         find . -type f -name "*.py" | xargs flake8
-    - name: build docs ⚙️
-      uses: ammaraskar/sphinx-action@master
-      with:
-        pre-build-command: "apt-get install -y pandoc && cp wis2box-management/requirements-dev.txt docs/requirements.txt"
-        docs-folder: "docs/"
     - name: failed tests 🚩
       if: ${{ failure() }}
       run: |
