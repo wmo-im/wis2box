@@ -15,7 +15,7 @@ jobs:
     - name: install testing requirements 📦
       working-directory: wis2box-management
       run: |
-        pip3 install -r tests/requirements.txt
+        pip3 install -r requirements.txt
         python3 setup.py install
     - name: cache schemas 📦
       run: |
