@@ -18,7 +18,7 @@ WIS2BOX_BROKER_PASSWORD=wis2box
 
 # use local broker also for public message publishing
 # when using external broker, please replace this with the connection-string for your external broker
-WIS2BOX_BROKER_PUBLIC=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@mosquitto:1883
+WIS2BOX_BROKER_PUBLIC=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@wis2box-broker:1883
 
 # setup the wis2box storage username password
 # please provide your own unique password

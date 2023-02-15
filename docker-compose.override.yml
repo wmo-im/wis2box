@@ -14,7 +14,7 @@ services:
     deploy:
       replicas: 1
 
-  mosquitto:
+  wis2box-broker:
     ports:
       - 1883:1883
       - 8884:8884

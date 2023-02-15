@@ -195,7 +195,7 @@ Which should display the following:
    elasticsearch            /bin/tini -- /usr/local/bi ...   Up (healthy)   9200/tcp, 9300/tcp
    grafana                  /run.sh                          Up             0.0.0.0:3000->3000/tcp
    loki                     /usr/bin/loki -config.file ...   Up             3100/tcp
-   mosquitto                /docker-entrypoint.sh /usr ...   Up             0.0.0.0:1883->1883/tcp, 0.0.0.0:8884->8884/tcp
+   wis2box-broker           /docker-entrypoint.sh /usr ...   Up             0.0.0.0:1883->1883/tcp, 0.0.0.0:8884->8884/tcp
    mqtt_metrics_collector   python3 -u mqtt_metrics_co ...   Up             8000/tcp, 0.0.0.0:8001->8001/tcp
    nginx                    /docker-entrypoint.sh ngin ...   Up             0.0.0.0:80->80/tcp
    prometheus               /bin/prometheus --config.f ...   Up             9090/tcp

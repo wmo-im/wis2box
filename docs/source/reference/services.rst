@@ -100,7 +100,7 @@ Broker
 
 The wis2box broker is powered by `MQTT`_ and can be found at:
 
-mqtt://everyone:everyone@mosquitto:1883
+mqtt://everyone:everyone@localhost:1883
 
 mqtt://localhost:1883
 
