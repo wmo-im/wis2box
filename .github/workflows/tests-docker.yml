@@ -13,10 +13,9 @@ jobs:
       with:
         python-version: 3.8
     - name: install testing requirements 📦
-      working-directory: wis2box-management
+      working-directory: tests
       run: |
-        pip3 install -r ../tests/requirements.txt
-        python3 setup.py install
+        pip3 install -r requirements.txt
     - name: cache schemas 📦
       run: |
         pywis-pubsub schema sync
