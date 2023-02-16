@@ -9,7 +9,7 @@ services:
     depends_on:
       - wis2box-ui
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx-nossl.conf:/etc/nginx/conf.d/default.conf
 
   wis2box-ui:
     container_name: wis2box-ui

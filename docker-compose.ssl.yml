@@ -1,0 +1,11 @@
+services:
+  web-proxy:
+    volumes:
+      - ./nginx/nginx-ssl.conf:/etc/nginx/conf.d/ssl.conf
+      - ${WIS2BOX_SSL_KEY}:/etc/nginx/certs/wis2box.key:ro
+      - ${WIS2BOX_SSL_CERT}:/etc/nginx/certs/wis2box.crt:ro
+
+  mosquitto:
+    volumes:
+      - ${WIS2BOX_SSL_KEY}:/tmp/wis2box.key:ro
+      - ${WIS2BOX_SSL_CERT}:/tmp/wis2box.crt:ro

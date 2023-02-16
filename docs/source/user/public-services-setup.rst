@@ -8,6 +8,24 @@ To share your data with the WIS2 network, you need to expose some of your wis2bo
 * The Global Cache needs to be able to access to your HTTP endpoint to download data published by your wis2box instance
 * The Global Broker needs to be able to subscribe to your MQTT endpoint to receive WIS2 notifications published by your wis2box instance
 
+SSL
+^^^
+
+To enable HTTPS and MQTTS on your wis2box you can run wis2box with the option '--ssl':
+
+.. code-block:: bash
+
+   python3 wis2box-ctl.py --ssl start
+
+When running wis2box with SSL, you have to set additional environment variables in your dev.env defining the location of your SSL certificate and private key:
+
+.. code-block:: bash
+
+  WIS2BOX_SSL_CERT=/etc/letsencrypt/live/example.wis2box.io/fullchain.pem
+  WIS2BOX_SSL_KEY=/etc/letsencrypt/live/example.wis2box.io/privkey.pem
+
+Please remember to update the environment-variables WIS2BOX_URL after enabling SSL and ensure your url starts with 'https://"
+
 Nginx (HTTP)
 ^^^^^^^^^^^^
 

@@ -1,7 +1,8 @@
 services:
   web-proxy:
     ports:
-      - 8999:80
+      - 80:80
+      - 443:443
 
   wis2box-ui:
     ports:
