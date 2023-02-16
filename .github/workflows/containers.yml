@@ -29,7 +29,7 @@ jobs:
           # - wis2box-api
           - wis2box-broker
           - wis2box-management
-          # - wis2box-mqtt-metrics-collector
+          - wis2box-mqtt-metrics-collector
           # - wis2box-ui
 
 
