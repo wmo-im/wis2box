@@ -40,13 +40,31 @@ Updated variables in ``dev.env``, for example:
 
 .. code-block:: bash
 
+   # data-directory on your host machine that will map to /data/wis2box on the wis2box-container
    WIS2BOX_HOST_DATADIR=/home/wis2box-user/wis2box-data
    
-   WIS2BOX_BROKER_USERNAME=wis2box-mqtt-user
-   WIS2BOX_BROKER_PASSWORD=<your-unique-password>
-   
-   WIS2BOX_STORAGE_USERNAME=wis2box-storage-user
-   WIS2BOX_STORAGE_PASSWORD=<your-unique-password>
+   # update broker default credentials
+   WIS2BOX_BROKER_USERNAME=wis2box-user
+   WIS2BOX_BROKER_PASSWORD=wis2box123
+   WIS2BOX_BROKER_HOST=mosquitto
+   WIS2BOX_BROKER_PORT=1883
+
+   WIS2BOX_BROKER_PUBLIC=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@mosquitto:1883
+
+   # update storage default credentials
+   WIS2BOX_STORAGE_USERNAME=wis2box-user
+   WIS2BOX_STORAGE_PASSWORD=wis2box123
+
+   # set logging and data retention
+   WIS2BOX_LOGGING_LOGLEVEL=INFO
+   WIS2BOX_DATA_RETENTION_DAYS=30
+
+   # update minio settings after updating storage and broker defaults
+   MINIO_ROOT_USER=${WIS2BOX_STORAGE_USERNAME}
+   MINIO_ROOT_PASSWORD=${WIS2BOX_STORAGE_PASSWORD}
+   MINIO_NOTIFY_MQTT_USERNAME_WIS2BOX=${WIS2BOX_BROKER_USERNAME}
+   MINIO_NOTIFY_MQTT_PASSWORD_WIS2BOX=${WIS2BOX_BROKER_PASSWORD}
+   MINIO_NOTIFY_MQTT_BROKER_WIS2BOX=tcp://${WIS2BOX_BROKER_HOST}:${WIS2BOX_BROKER_PORT}
 
 Data mappings
 -------------

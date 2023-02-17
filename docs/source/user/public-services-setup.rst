@@ -92,6 +92,11 @@ The internal MQTT broker uses the default username/password of ``wis2box/wis2box
     WIS2BOX_BROKER_PASSWORD=myuniquepassword
     WIS2BOX_BROKER_PUBLIC=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@mosquitto:1883
 
+    # update minio settings after updating broker defaults
+    MINIO_NOTIFY_MQTT_USERNAME_WIS2BOX=${WIS2BOX_BROKER_USERNAME}
+    MINIO_NOTIFY_MQTT_PASSWORD_WIS2BOX=${WIS2BOX_BROKER_PASSWORD}
+    MINIO_NOTIFY_MQTT_BROKER_WIS2BOX=tcp://${WIS2BOX_BROKER_HOST}:${WIS2BOX_BROKER_PORT}
+
 The internal MQTT broker is accessible on the host ``mosquitto`` within the Docker network used by wis2box.
 
 By default port 1883 of the mosquitto container is mapped to port 1883 of the host running wis2box. 
