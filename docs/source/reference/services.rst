@@ -9,21 +9,21 @@ to users, applications and beyond.
 Discovery Catalogue
 -------------------
 
-The discovery catalogue is powered by `OGC API - Records`_ and is located at http://localhost:8999/oapi/collections/discovery-metadata
+The discovery catalogue is powered by `OGC API - Records`_ and is located at http://localhost/oapi/collections/discovery-metadata
 
-The OGC API endpoint is located by default at http://localhost:8999/oapi.  The discovery catalogue endpoint is located at http://localhost:8999/oapi/collections/discovery-metadata
+The OGC API endpoint is located by default at http://localhost/oapi.  The discovery catalogue endpoint is located at http://localhost/oapi/collections/discovery-metadata
 
 Below are some examples of working with the discovery catalogue.
 
-- description of catalogue: http://localhost:8999/oapi/collections/discovery-metadata
-- catalogue queryables: http://localhost:8999/oapi/collections/discovery-metadata/queryables
+- description of catalogue: http://localhost/oapi/collections/discovery-metadata
+- catalogue queryables: http://localhost/oapi/collections/discovery-metadata/queryables
 - catalogue queries
 
-  - records (browse): http://localhost:8999/oapi/collections/discovery-metadata/items
-  - query by spatial (bounding box): http://localhost:8999/oapi/collections/discovery-metadata/items?bbox=32,-17,36,-8
-  - query by temporal extent (since): http://localhost:8999/oapi/collections/discovery-metadata/items?datetime=2021/..
-  - query by temporal extent (before): http://localhost:8999/oapi/collections/discovery-metadata/items?datetime=../2022
-  - query by freetext: http://localhost:8999/oapi/collections/discovery-metadata/items?q=observations
+  - records (browse): http://localhost/oapi/collections/discovery-metadata/items
+  - query by spatial (bounding box): http://localhost/oapi/collections/discovery-metadata/items?bbox=32,-17,36,-8
+  - query by temporal extent (since): http://localhost/oapi/collections/discovery-metadata/items?datetime=2021/..
+  - query by temporal extent (before): http://localhost/oapi/collections/discovery-metadata/items?datetime=../2022
+  - query by freetext: http://localhost/oapi/collections/discovery-metadata/items?q=observations
 
 .. note::
 
@@ -36,10 +36,10 @@ Below are some examples of working with the discovery catalogue.
 Data API
 --------
 
-wis2box data is made available via `OGC API - Features`_ and is located at http://localhost:8999/oapi
+wis2box data is made available via `OGC API - Features`_ and is located at http://localhost/oapi
 standards.
 
-The OGC API endpoint is located by default at http://localhost:8999/oapi
+The OGC API endpoint is located by default at http://localhost/oapi
 
 Below are some examples of working with the discovery catalogue.
 
@@ -50,16 +50,16 @@ Below are some examples of working with the discovery catalogue.
      collection id accordingly
 
 
-- list of dataset collections: http://localhost:8999/oapi/collections
-- collection description: http://localhost:8999/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop
-- collection queryables: http://localhost:8999/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/queryables
-- collection items (browse): http://localhost:8999/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/items
+- list of dataset collections: http://localhost/oapi/collections
+- collection description: http://localhost/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop
+- collection queryables: http://localhost/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/queryables
+- collection items (browse): http://localhost/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/items
 - collection queries
 
-  - set limit/offset (paging): http://localhost:8999/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/items?limit=1&startindex=2
-  - query by spatial (bounding box): http://localhost:8999/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/items?bbox=32,-17,36,-8
-  - query by temporal extent (since): http://localhost:8999/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/items?datetime=2021/..
-  - query by temporal extent (before): http://localhost:8999/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/items?datetime=../2022
+  - set limit/offset (paging): http://localhost/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/items?limit=1&startindex=2
+  - query by spatial (bounding box): http://localhost/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/items?bbox=32,-17,36,-8
+  - query by temporal extent (since): http://localhost/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/items?datetime=2021/..
+  - query by temporal extent (before): http://localhost/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/items?datetime=../2022
 
 .. note::
 
@@ -72,7 +72,7 @@ Below are some examples of working with the discovery catalogue.
 Management API
 ^^^^^^^^^^^^^^
 
-The Data API also provides a management API to manage resources in alignment with `OGC API - Features - Part 4: Create, Replace, Update and Delete`_, which is available at http://localhost:8999/oapi/admin.
+The Data API also provides a management API to manage resources in alignment with `OGC API - Features - Part 4: Create, Replace, Update and Delete`_, which is available at http://localhost/oapi/admin.
 
 
 SpatioTemporal Asset Catalog (STAC)
@@ -80,7 +80,7 @@ SpatioTemporal Asset Catalog (STAC)
 
 The wis2box `SpatioTemporal Asset Catalog (STAC)`_ endpoint can be found at:
 
-http://localhost:8999/stac
+http://localhost/stac
 
 ...providing the user with a crawlable catalogue of all data on a wis2box.
 
@@ -90,7 +90,7 @@ Web Accessible Folder (WAF)
 
 The wis2box Web Accessible Folder publich bucket endpoint can be found at:
 
-http://localhost:8999/data/
+http://localhost/data/
 
 ...providing the user with a crawlable online folder of all data on a wis2box.
 

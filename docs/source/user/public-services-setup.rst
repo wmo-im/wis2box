@@ -11,8 +11,7 @@ To share your data with the WIS2 network, you need to expose some of your wis2bo
 Nginx (HTTP)
 ^^^^^^^^^^^^
 
-wis2box runs a local nginx container allowing access to the following HTTP based services on port 8999:
-
+wis2box runs a local nginx container allowing access to the following HTTP based services on port 80:
 
 .. csv-table::
    :header: Function, URL
@@ -38,7 +37,7 @@ After updating ``WIS2BOX_URL``, please stop and start your wis2box using ``wis2b
 
 .. note::
 
-   By default the environment variable ``WIS2BOX_URL`` resolves to ``http://localhost:8999``.
+   By default the environment variable ``WIS2BOX_URL`` resolves to ``http://localhost``.
    This URL will define the ``/data`` URL used in the canonical link as part of your data in MQTT, as well as the dataset location in your discovery metadata.
 
 wis2box API

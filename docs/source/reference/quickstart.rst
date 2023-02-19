@@ -6,6 +6,15 @@ Quickstart with test data
 The 'quickstart' deploys wis2box with test data and provides a vital reference for wis2box developers to validate their contributions do not break the wis2box core functionality.
 It is the minimal runtime configuration profile as used in wis2box GitHub CI/CD: `GitHub Actions`_.
 
+.. note:: wis2box web components are run on port 80 by default.  When using wis2box from source, the default port for web components is 8999, to be used for development.
+
+To download the wis2box from source: 
+
+.. code-block:: bash
+
+   git clone https://github.comn/wmo-in/wis2box.git
+
+
 The test enviroment file is provided in ``tests/test.env``.
 
 To run with the 'quickstart' configuration, copy this file to ``dev.env`` in your working directory:

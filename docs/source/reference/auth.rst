@@ -43,8 +43,8 @@ easily added to requests using `cURL`_.
 
 .. code-block:: bash
 
-    curl -H "Authorization: Bearer mytoken" "http://localhost:8999/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop"
-    curl -H "Authorization: Bearer notmytoken" "http://localhost:8999/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop"
+    curl -H "Authorization: Bearer mytoken" "http://localhost/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop"
+    curl -H "Authorization: Bearer notmytoken" "http://localhost/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop"
 
 
 Removing Access Control

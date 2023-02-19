@@ -58,7 +58,7 @@ A default wis2box installation utilizes the following ports for public services:
 Public services
 ^^^^^^^^^^^^^^^
 
-- ``8999``: Web application, API application, storage
+- ``80``: Web application, API application, storage
 - ``1883``: Message broker via MQTT
 - ``8884``: Message broker via MQTT/WebSockets
 
