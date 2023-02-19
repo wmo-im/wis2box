@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: publish image to ghcr.io
+name: publish images 
 
 on:
   push:
@@ -13,8 +13,7 @@ on:
     types: [published]
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: wmo-im/wis2box-management
+  DOCKER_ORG: wmoim
 
 jobs:
   # Push image to GitHub Packages.
@@ -24,6 +23,15 @@ jobs:
     permissions:
       packages: write
       contents: read
+    strategy:
+      matrix:
+        image:
+          # - wis2box-api
+          - wis2box-broker
+          - wis2box-management
+          - wis2box-mqtt-metrics-collector
+          # - wis2box-ui
+
 
     steps:
       - name: Checkout branch
@@ -33,11 +41,17 @@ jobs:
         uses: docker/setup-qemu-action@v1
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Set up Docker Buildx
         id: buildx
@@ -48,16 +62,17 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+            ${{ env.DOCKER_ORG }}/${{ matrix.image }}
+            ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
-            type=semver,pattern={{version}}
+            type=pep440,pattern={{version}}
 
       - name: Build and push
         uses: docker/build-push-action@v2.7.0
         with:
-          context: ./wis2box-management
-          file: ./wis2box-management/Dockerfile
+          context: ./${{ matrix.image }}
+          file: ./${{ matrix.image }}/Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/arm64, linux/amd64

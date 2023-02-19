@@ -85,7 +85,7 @@ services:
     container_name: mosquitto
     #image: ghcr.io/wmo-im/wis2box-broker:1.0.beta1
     build:
-      context: ./mosquitto
+      context: ./wis2box-broker
     env_file:
       - default.env
       - dev.env

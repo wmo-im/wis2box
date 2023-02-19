@@ -41,7 +41,7 @@ services:
       - dev.env
     #image: ghcr.io/wmo-im/wis2box-mqtt-metrics-collector:1.0.beta1
     build:
-      context: ./mqtt_metrics_collector
+      context: ./wis2box-mqtt-metrics-collector
     depends_on:
       - mosquitto
       - wis2box-management

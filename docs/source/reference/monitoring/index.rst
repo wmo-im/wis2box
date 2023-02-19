@@ -30,12 +30,12 @@ Loki logging
 
 The logs of the following Docker containers are sent to Loki:
 
+- mosquitto
 - mqp-publisher
 - wis2box
-- wis2box-ui
-- mosquitto
 - wis2box-api
 - wis2box-auth
+- wis2box-ui
 
 Monitoring topics
 -----------------
