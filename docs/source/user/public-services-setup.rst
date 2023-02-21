@@ -11,8 +11,7 @@ To share your data with the WIS2 network, you need to expose some of your wis2bo
 Nginx (HTTP)
 ^^^^^^^^^^^^
 
-wis2box runs a local nginx container allowing access to the following HTTP based services on port 8999:
-
+wis2box runs a local nginx container allowing access to the following HTTP based services on port 80:
 
 .. csv-table::
    :header: Function, URL
@@ -38,7 +37,7 @@ After updating ``WIS2BOX_URL``, please stop and start your wis2box using ``wis2b
 
 .. note::
 
-   By default the environment variable ``WIS2BOX_URL`` resolves to ``http://localhost:8999``.
+   By default the environment variable ``WIS2BOX_URL`` resolves to ``http://localhost``.
    This URL will define the ``/data`` URL used in the canonical link as part of your data in MQTT, as well as the dataset location in your discovery metadata.
 
 wis2box API
@@ -91,6 +90,11 @@ The internal MQTT broker uses the default username/password of ``wis2box/wis2box
     WIS2BOX_BROKER_USERNAME=wis2box-utopia
     WIS2BOX_BROKER_PASSWORD=myuniquepassword
     WIS2BOX_BROKER_PUBLIC=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@mosquitto:1883
+
+    # update minio settings after updating broker defaults
+    MINIO_NOTIFY_MQTT_USERNAME_WIS2BOX=${WIS2BOX_BROKER_USERNAME}
+    MINIO_NOTIFY_MQTT_PASSWORD_WIS2BOX=${WIS2BOX_BROKER_PASSWORD}
+    MINIO_NOTIFY_MQTT_BROKER_WIS2BOX=tcp://${WIS2BOX_BROKER_HOST}:${WIS2BOX_BROKER_PORT}
 
 The internal MQTT broker is accessible on the host ``mosquitto`` within the Docker network used by wis2box.
 

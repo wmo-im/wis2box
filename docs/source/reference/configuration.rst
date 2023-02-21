@@ -97,7 +97,7 @@ API configurations drive control of the OGC API setup.
 .. code-block:: bash
 
     WIS2BOX_API_TYPE=pygeoapi  # server tpye
-    WIS2BOX_API_URL=http://localhost:8999/pygeoapi  # public landing page endpoint
+    WIS2BOX_API_URL=http://localhost/pygeoapi  # public landing page endpoint
     WIS2BOX_API_BACKEND_TYPE=Elasticsearch  # backend provider type
     WIS2BOX_API_BACKEND_URL=http://elasticsearch:9200  # internal backend connection URL
     WIS2BOX_DOCKER_API_URL=http://wis2box-api:80/oapi  # container name of API container (for internal communications/workflow)
@@ -150,7 +150,7 @@ Additional directives provide various configurationscontrol of configuration opt
 
 .. code-block:: bash
 
-    WIS2BOX_URL=http://localhost:8999/  # public wis2box url
+    WIS2BOX_URL=http://localhost/  # public wis2box url
     WIS2BOX_AUTH_STORE=http://wis2box-auth # wis2box auth service location
 
 

@@ -40,13 +40,31 @@ Updated variables in ``dev.env``, for example:
 
 .. code-block:: bash
 
+   # data-directory on your host machine that will map to /data/wis2box on the wis2box-container
    WIS2BOX_HOST_DATADIR=/home/wis2box-user/wis2box-data
    
-   WIS2BOX_BROKER_USERNAME=wis2box-mqtt-user
-   WIS2BOX_BROKER_PASSWORD=<your-unique-password>
-   
-   WIS2BOX_STORAGE_USERNAME=wis2box-storage-user
-   WIS2BOX_STORAGE_PASSWORD=<your-unique-password>
+   # update broker default credentials
+   WIS2BOX_BROKER_USERNAME=wis2box-user
+   WIS2BOX_BROKER_PASSWORD=wis2box123
+   WIS2BOX_BROKER_HOST=mosquitto
+   WIS2BOX_BROKER_PORT=1883
+
+   WIS2BOX_BROKER_PUBLIC=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@mosquitto:1883
+
+   # update storage default credentials
+   WIS2BOX_STORAGE_USERNAME=wis2box-user
+   WIS2BOX_STORAGE_PASSWORD=wis2box123
+
+   # set logging and data retention
+   WIS2BOX_LOGGING_LOGLEVEL=INFO
+   WIS2BOX_DATA_RETENTION_DAYS=30
+
+   # update minio settings after updating storage and broker defaults
+   MINIO_ROOT_USER=${WIS2BOX_STORAGE_USERNAME}
+   MINIO_ROOT_PASSWORD=${WIS2BOX_STORAGE_PASSWORD}
+   MINIO_NOTIFY_MQTT_USERNAME_WIS2BOX=${WIS2BOX_BROKER_USERNAME}
+   MINIO_NOTIFY_MQTT_PASSWORD_WIS2BOX=${WIS2BOX_BROKER_PASSWORD}
+   MINIO_NOTIFY_MQTT_BROKER_WIS2BOX=tcp://${WIS2BOX_BROKER_HOST}:${WIS2BOX_BROKER_PORT}
 
 Data mappings
 -------------
@@ -207,7 +225,7 @@ Which should display the following:
 
 Refer to the :ref:`troubleshooting` section if this is not the case. 
 
-You should now be able to view collections on the wis2box API by visiting ``http://localhost:8999/oapi/collections`` in a web browser, which should appear as follows:
+You should now be able to view collections on the wis2box API by visiting ``http://localhost/oapi/collections`` in a web browser, which should appear as follows:
 
 .. image:: ../_static/wis2box-api-initial.png
   :width: 800
@@ -247,7 +265,7 @@ The first step is add the new dataset as defined by the YAML file for your disco
 
    If you see an error like ``ValueError: No plugins for XXX defined in data mappings``, exit the wis2box-container and edit the ``data-mappings.yml`` file in the directory defined by ``WIS2BOX_HOST_DATADIR``
 
-You can view the collection you just added, by re-visiting ``http://localhost:8999/oapi/collections`` in a web browser.
+You can view the collection you just added, by re-visiting ``http://localhost/oapi/collections`` in a web browser.
 
 .. image:: ../_static/wis2box-api-added-collection.png
   :width: 800
@@ -261,7 +279,7 @@ The second step is to publish discovery metadata and cache its content in the wi
 
 This command publishes an MQTT message with information about your dataset to the WIS2 Global Discovery Catalogue. Repeat this command whenever you have to provide updated metadata about your dataset.
 
-You can review the discovery metadata just cached through the new link in  ``http://localhost:8999/oapi/collections``:
+You can review the discovery metadata just cached through the new link in  ``http://localhost/oapi/collections``:
 
 .. image:: ../_static/wis2box-api-discovery-metadata.png
   :width: 800
@@ -273,7 +291,7 @@ The final step is to publish your station information to the wis2box API from th
 
    wis2box metadata station publish-collection
 
-You can review the stations you just cached through the new link in  ``http://localhost:8999/oapi/collections``:
+You can review the stations you just cached through the new link in  ``http://localhost/oapi/collections``:
 
 .. image:: ../_static/wis2box-api-stations.png
   :width: 800

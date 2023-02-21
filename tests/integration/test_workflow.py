@@ -188,7 +188,7 @@ def test_data_api():
 def test_message_api():
     """Test message API collection queries"""
 
-    url = f'{API_URL}/collections/messages/items?sortby=wigos_station_identifier'  # noqa
+    url = f'{API_URL}/collections/messages/items?sortby=-datetime'
     r = SESSION.get(url).json()
 
     assert r['numberMatched'] == 212
@@ -201,7 +201,8 @@ def test_message_api():
     assert msg['geometry'] is not None
 
     props = msg['properties']
-    assert props['datetime'] == '2023-01-18T00:00:00Z'
+    print(props)
+    assert props['datetime'] == '2023-01-18T12:00:00Z'
     assert props['wigos_station_identifier'] == '0-20000-0-15015'
     assert props['integrity']['method'] == 'sha512'
     assert props['data_id'].startswith('wis2')
