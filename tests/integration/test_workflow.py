@@ -201,7 +201,6 @@ def test_message_api():
     assert msg['geometry'] is not None
 
     props = msg['properties']
-    print(props)
     assert props['datetime'] == '2023-01-18T12:00:00Z'
     assert props['wigos_station_identifier'] == '0-20000-0-15015'
     assert props['integrity']['method'] == 'sha512'
