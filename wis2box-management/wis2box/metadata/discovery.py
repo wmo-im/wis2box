@@ -98,16 +98,6 @@ class DiscoveryMetadata(BaseMetadata):
         LOGGER.debug('Generating OARec discovery metadata')
         record = WMOWCMP2OutputSchema().write(md, stringify=False)
 
-        anytext_bag = [
-            md['identification']['title'],
-            md['identification']['abstract']
-        ]
-
-        for k, v in md['identification']['keywords'].items():
-            anytext_bag.extend(v['keywords'])
-
-        record['properties']['_metadata-anytext'] = ' '.join(anytext_bag)
-
         return record
 
 
