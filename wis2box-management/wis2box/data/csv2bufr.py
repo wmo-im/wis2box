@@ -46,7 +46,12 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
         super().__init__(defs)
 
         self.mappings = {}
-        mapping_bufr4 = Path(MAPPINGS) / self.template
+        
+        LOGGER.debug(f'Loading template {self.template}')
+        if self.template.startswith('/'):
+            mapping_bufr4 = self.template            
+        else:
+            mapping_bufr4 = Path(MAPPINGS) / self.template        
 
         with mapping_bufr4.open() as fh1:
             self.mappings['bufr4'] = json.load(fh1)
