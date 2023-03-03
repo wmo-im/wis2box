@@ -17,7 +17,7 @@ Each plugin is based on the file extension to be detected and processed, with th
 
 - ``plugin``: the codepath of the plugin
 - ``notify``: whether the plugin should publish a data notification
-- ``template``: additional argument allowing a mapping template name to be passed to the plugin
+- ``template``: additional argument allowing a mapping template name to be passed to the plugin.  Note that if the path is relative, the plugin must be able to locate the template accordingly
 - ``file-pattern``: additional argument allowing a file pattern to be passed to the plugin
 - ``buckets``: the name(s) of the storage bucket(s) that data should be saved to (See :ref:`configuration` for more information on buckets)
 

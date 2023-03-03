@@ -36,7 +36,7 @@ RUN if [ "$WIS2BOX_PIP3_EXTRA_PACKAGES" = "None" ]; \
 # install dependencies
 # FIXME: csv2bufr/bufr2geojson: remove and install from requirements.txt once we have a stable release
 # FIXME: pygeometa: remove and install from requirements.txt once we have a stable release
-RUN apt-get install -y ${DEBIAN_PACKAGES} \
+RUN apt-get update -y && apt-get install -y ${DEBIAN_PACKAGES} \
     # install wis2box data pipeline dependencies
     && pip3 install --no-cache-dir \
     https://github.com/wmo-im/csv2bufr/archive/refs/tags/v0.4.1.zip \
