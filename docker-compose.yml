@@ -62,8 +62,8 @@ services:
     restart: always
     environment:
       - discovery.type=single-node
+      - discovery.seed_hosts=[]
       - node.name=elasticsearch-01
-      - discovery.seed_hosts=elasticsearch-01
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - cluster.name=es-wis2box
