@@ -29,7 +29,7 @@ You can edit ``docker-compose.override.yml`` to change the port on which the ``w
 
 .. note::
     The WIS2 notifications published by the wis2box includes the path ``<wis2box-url>/data/``.
-    This path has to be publically accessible by the client receiving the WIS2 notification over MQTT, or the data referenced cannot be downloaded
+    This path has to be publicly accessible by the client receiving the WIS2 notification over MQTT, or the data referenced cannot be downloaded
 
 To share your data with the WIS2 network, ensure that ``WIS2BOX_URL`` as defined in ``dev.env`` points to the externally accessible URL for your HTTP services. 
 
