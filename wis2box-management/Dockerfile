@@ -26,7 +26,7 @@ LABEL maintainer="tomkralidis@gmail.com"
 ARG WIS2BOX_PIP3_EXTRA_PACKAGES
 ENV TZ="Etc/UTC" \
     DEBIAN_FRONTEND="noninteractive" \
-    DEBIAN_PACKAGES="cron bash vim git libffi-dev python3-cryptography libssl-dev libudunits2-0 python3-paho-mqtt python3-dateparser python3-tz python3-setuptools"
+    DEBIAN_PACKAGES="cron bash vim curl git libffi-dev python3-cryptography libssl-dev libudunits2-0 python3-paho-mqtt python3-dateparser python3-tz python3-setuptools unzip"
 
 RUN if [ "$WIS2BOX_PIP3_EXTRA_PACKAGES" = "None" ]; \
     then export WIS2BOX_PIP3_EXTRA_PACKAGES=echo; \
@@ -44,6 +44,7 @@ RUN apt-get update -y && apt-get install -y ${DEBIAN_PACKAGES} \
     https://github.com/wmo-im/pymetdecoder/archive/master.zip \
     https://github.com/wmo-im/synop2bufr/archive/main.zip \
     https://github.com/geopython/pygeometa/archive/master.zip \
+    https://github.com/wmo-im/pywcmp/archive/master.zip \
     # install shapely
     && pip3 install --no-cache-dir cython pygeos==0.13 \
     && pip3 install -U "shapely<2" --no-binary shapely \

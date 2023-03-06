@@ -1,2 +1,2 @@
-include LICENSE README.md requirements.txt
-recursive-include wis2box *.yml
+include README.md requirements.txt
+recursive-include wis2box

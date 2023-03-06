@@ -24,6 +24,8 @@ import logging
 from pathlib import Path
 from typing import Any, Tuple, Union
 
+# TODO: uncomment once topic hiearchy is approved
+# from pywcmp.wcmp2.topics import TopicHierarchy as pywcmp_th
 from wis2box.data_mappings import DATADIR_DATA_MAPPINGS
 from wis2box.plugin import load_plugin
 
@@ -52,7 +54,11 @@ class TopicHierarchy:
         :returns: `bool` of whether the topic hierarchy is valid
         """
 
-        # TODO: implement when WCMP 2.0 codelists are implemented
+        # TODO: uncomment once topic hiearchy is approved
+        # LOGGER.debug(f'Validating topic {self.dirpath} (fuzzy match)')
+        # th = pywcmp_th()
+        # return th.validate(self.dirpath, fuzzy=True)
+
         return True
 
 
