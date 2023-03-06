@@ -12,7 +12,7 @@ To download the wis2box from source:
 
 .. code-block:: bash
 
-   git clone https://github.comn/wmo-in/wis2box.git
+   git clone https://github.com/wmo-in/wis2box.git
 
 
 The test enviroment file is provided in ``tests/test.env``.

@@ -120,8 +120,6 @@ for a samba share or FTP server. Key considerations for adding services:
 - Storage buckets can be found at http://minio:9000
 - Elasticsearch indexes can be found at the container/URL ``http://elasticsearch:9200``
 
-Examples of additional services can be found in ``extras``.
-
 
 .. _`OGC API - Features`: https://ogcapi.ogc.org/features
 .. _`OGC API - Records`: https://ogcapi.ogc.org/records
