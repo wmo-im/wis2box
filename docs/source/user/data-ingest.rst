@@ -91,7 +91,26 @@ See below a Python example to upload data using the MinIO package:
     filename = filepath.split('/')[-1]
     client.fput_object('wis2box-incoming', minio_path+filename, filepath)
 
-Another example can be found in the GitHub `minio-ftp-forwarder`_ repository, demonstrating how to setup FTP forwarding workflow to MinIO.
+wis2box-ftp
+-----------
+
+You can add an additional service to allow your data to be accessible over FTP with the following command
+
+.. code-block:: bash
+
+    docker-compose -f docker-compose.wis2box-ftp.yml -p wis2box_project --env-file dev.env
+
+You will need to define the following additional environment-variables to your dev.env to define the FTP username and password:
+
+.. code-block:: bash
+
+    FTP_USER=<your-ftp-username>
+    FTP_PASSWORD=<your-ftp-password>
+
+See the GitHub repository `wis2box-ftp`_ for more information on this service.
+
+Next steps
+----------
 
 After you have successfully setup your data ingest process into the wis2box, you are ready to share your data with the global
 WIS2 network by enabling external access to your public services.
@@ -99,5 +118,5 @@ WIS2 network by enabling external access to your public services.
 Next: :ref:`public-services-setup`
 
 .. _`MinIO`: https://min.io/docs/minio/container/index.html
-.. _`minio-ftp-forwarder`: https://github.com/wmo-im/minio-ftp-forwarder
+.. _`wis2box-ftp`: https://github.com/wmo-im/wis2box-ftp
 .. _`WIS2 topic hierarchy`: https://github.com/wmo-im/wis2-topic-hierarchy
