@@ -40,7 +40,7 @@ parser.add_argument(
     '--ssl',
     dest='ssl',
     action='store_true',
-    help='run wis2box using SSL everywhere')
+    help='run wis2box with SSL enabled')
 
 parser.add_argument(
     '--simulate',
