@@ -11,7 +11,7 @@ To share your data with the WIS2 network, you need to expose some of your wis2bo
 SSL
 ^^^
 
-To enable HTTPS and MQTTS on your wis2box you can run wis2box with the option '--ssl':
+To enable HTTPS and MQTTS on your wis2box you can run wis2box with the option `--ssl`:
 
 .. code-block:: bash
 
@@ -24,7 +24,7 @@ When running wis2box with SSL, you have to set additional environment variables 
   WIS2BOX_SSL_CERT=/etc/letsencrypt/live/example.wis2box.io/fullchain.pem
   WIS2BOX_SSL_KEY=/etc/letsencrypt/live/example.wis2box.io/privkey.pem
 
-Please remember to update the environment-variables WIS2BOX_URL after enabling SSL and ensure your url starts with 'https://"
+Please remember to update the ``WIS2BOX_URL`` environment variable after enabling SSL, ensuring your URL starts with `https://`.
 
 Nginx (HTTP)
 ^^^^^^^^^^^^
