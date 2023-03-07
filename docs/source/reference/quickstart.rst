@@ -88,6 +88,6 @@ Logout of wis2box-management container:
 
 From here, you can run ``python3 wis2box-ctl.py status`` to confirm that containers are running properly.
 
-To explore your wis2box installation and services, visit http://localhost:8999 in your web browser.
+To explore your wis2box installation and services, visit http://localhost in your web browser.
 
 .. _`GitHub Actions`: https://github.com/wmo-im/wis2box/blob/main/.github/workflows/tests-docker.yml

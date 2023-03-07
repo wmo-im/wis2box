@@ -31,7 +31,7 @@ from requests import Session, codes
 
 DATADIR = Path('.').parent.absolute() / 'tests/data'
 
-URL = 'http://localhost:8999'
+URL = 'http://localhost'
 API_URL = f'{URL}/oapi'
 ID = 'urn:x-wmo:md:mwi:mwi_met_centre:surface-weather-observations'
 SESSION = Session()
