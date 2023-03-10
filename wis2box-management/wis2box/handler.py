@@ -64,10 +64,6 @@ class Handler:
                 th, self.filetype, fuzzy=fuzzy)
         except Exception as err:
             msg = f'Topic Hierarchy validation error: {err}'
-            LOGGER.error(msg)
-            self.publish_failure_message(
-                description='Topic hierarchy validation'
-            )
             raise ValueError(msg)
 
     def publish_failure_message(self, description, plugin=None):
