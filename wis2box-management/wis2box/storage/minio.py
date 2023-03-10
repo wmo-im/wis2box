@@ -143,9 +143,9 @@ class MinIOStorage(StorageBase):
             response = self.client.get_object(
                 self.name, object_name=identifier)
             data = response.data
-        except Exception as e:
-            LOGGER.error(e)
-            raise e
+        except Exception as err:
+            LOGGER.error(err)
+            raise err
         finally:
             response.close()
             response.release_conn()

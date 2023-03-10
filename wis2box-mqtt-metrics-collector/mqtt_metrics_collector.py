@@ -59,9 +59,12 @@ notify_topic_wsi_total = Counter('wis2box_notify_topic_wsi_total',
 
 failure_total = Counter('wis2box_failure_total',
                         'Total failed actions reported by wis2box')
-failure_descr_wsi_total = Counter('wis2box_failure_wsi_total',
+failure_descr_wsi_total = Counter('wis2box_failure_descr_wsi_total',
                                     'Total failed actions sent by wis2box, by description and WSI', # noqa
                                     ["description", "WSI"])
+failure_wsi_total = Counter('wis2box_failure_wsi_total',
+                                    'Total failed actions sent by wis2box, by WSI', # noqa
+                                    ["WSI"])
 
 storage_incoming_total = Counter('wis2box_storage_incoming_total',
                                  'Total storage notifications received on incoming') # noqa
@@ -86,6 +89,7 @@ def update_stations_gauge(station_list):
     station_wsi._metrics.clear()
     for station in station_list:
         station_wsi.labels(station).set(1)
+        failure_wsi_total.labels(station).inc(0)
 
 
 def init_stations_gauge():
@@ -98,13 +102,14 @@ def init_stations_gauge():
         if 'description' in json_data:
             if json_data['description'] == 'Collection not found':
                 logger.error("No stations configured yet")
+                station_list.append('none') # placeholder to init series
             else:
                 logger.error(json_data['description'])
         else:
             for item in json_data["features"]:
                 station_list.append(item['id'])
-    except Exception as e:
-        logger.error(f'Failed to update stations-gauge: {e}')
+    except Exception as err:
+        logger.error(f'Failed to update stations-gauge: {err}')
     update_stations_gauge(station_list)
 
 
@@ -166,6 +171,7 @@ def sub_mqtt_metrics(client, userdata, msg):
         if 'wigos_station_identifier' in m:
             wsi = m['wigos_station_identifier']
         failure_descr_wsi_total.labels(descr, wsi).inc(1)
+        failure_wsi_total.labels(wsi).inc(1)
         failure_total.inc(1)
     elif str(msg.topic).startswith('wis2box-storage'):
         if str(m["Key"]).startswith('wis2box-incoming'):
@@ -199,8 +205,8 @@ def gather_mqtt_metrics():
         client.username_pw_set(broker_username, broker_password)
         client.connect(broker_host, broker_port)
         client.loop_forever()
-    except Exception as e:
-        logger.error(f"Failed to setup MQTT-client with error: {e}")
+    except Exception as err:
+        logger.error(f"Failed to setup MQTT-client with error: {err}")
 
 
 def main():

@@ -194,6 +194,25 @@ class BaseAbstractData:
         LOGGER.info('Publishing output data')
 
         for identifier, item in self.output_data.items():
+            self.publish_item(identifier,item)
+        return True
+
+    def publish_item(self,identifier, item) -> bool:
+        """
+        Publish item in data
+        :param identifier: identifier
+        :param item: item to be published
+        
+        :returns: `bool` of result
+        """
+        LOGGER.info('Publishing output data')
+
+        try:
+            wsi = item['_meta']['properties']['wigos_station_identifier']  # noqa
+        except KeyError:
+            wsi = item['_meta'].get('wigos_station_identifier')
+
+        try:
             # get relative filepath
             rfp = item['_meta']['relative_filepath']
 
@@ -217,11 +236,6 @@ class BaseAbstractData:
                 put_data(data_bytes, storage_path)
 
                 if self.enable_notification:
-                    try:
-                        wsi = item['_meta']['properties']['wigos_station_identifier']  # noqa
-                    except KeyError:
-                        wsi = item['_meta'].get('wigos_station_identifier')
-
                     LOGGER.debug('Sending notification to broker')
 
                     try:
@@ -234,7 +248,12 @@ class BaseAbstractData:
                                 item['_meta'].get('geometry'), wsi)
                 else:
                     LOGGER.debug('No notification sent')
-
+        except Exception as err:
+            msg = f'Failed to publish item {identifier}: {err}'
+            LOGGER.error(msg, exc_info=True)
+            self.publish_failure_message(
+                    description="Failed to publish item",
+                    wsi=wsi)
         return True
 
     def validate_filename_pattern(

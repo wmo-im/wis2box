@@ -108,7 +108,7 @@ class Handler:
                 msg = f'Failed to transform file {self.filepath} : {err}'
                 LOGGER.error(msg, exc_info=True)
                 self.publish_failure_message(
-                    description="failed to transform file",
+                    description="Failed to transform file",
                     plugin=plugin)
                 return False
             try:
