@@ -86,7 +86,6 @@ def validate_and_load(
 
     if not th.is_valid():
         msg = 'Invalid topic hierarchy'
-        LOGGER.error(msg)
         raise ValueError(msg)
 
     if fuzzy:
@@ -116,7 +115,6 @@ def validate_and_load(
         msg = f'No plugins for {th.path} in data mappings. Did not match any of the following: '  # noqa
         for topic in data_mappings.keys():
             msg += f"{topic}, "
-        LOGGER.error(msg)
         raise ValueError(msg)
 
     if file_type is None:
@@ -128,7 +126,6 @@ def validate_and_load(
         msg = f'Unknown file type ({file_type}) for topic {th.dotpath}. Did not match any of the following:'  # noqa
         for ft in plugins:
             msg += f'{ft}, '
-        LOGGER.error(msg)
         raise ValueError(msg)
     
 
