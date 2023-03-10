@@ -187,50 +187,55 @@ class ObservationDataBUFR(BaseAbstractData):
                         wsi=temp_wsi)
             return
 
-        LOGGER.debug('Copying wsi to BUFR')
-        [series, issuer, number, tsi] = wsi.split('-')
-        codes_set(subset_out, '#1#wigosIdentifierSeries', int(series))
-        codes_set(subset_out, '#1#wigosIssuerOfIdentifier', int(issuer))
-        codes_set(subset_out, '#1#wigosIssueNumber', int(number))
-        codes_set(subset_out, '#1#wigosLocalIdentifierCharacter', tsi)
-        codes_bufr_copy_data(subset, subset_out)
+        try:
+            LOGGER.debug('Copying wsi to BUFR')
+            [series, issuer, number, tsi] = wsi.split('-')
+            codes_set(subset_out, '#1#wigosIdentifierSeries', int(series))
+            codes_set(subset_out, '#1#wigosIssuerOfIdentifier', int(issuer))
+            codes_set(subset_out, '#1#wigosIssueNumber', int(number))
+            codes_set(subset_out, '#1#wigosLocalIdentifierCharacter', tsi)
+            codes_bufr_copy_data(subset, subset_out)
 
-        if location is None or None in location['coordinates']:
-            msg = 'Missing coordinates in BUFR, setting from station report'
-            LOGGER.warning(msg)
-            location = get_geometry(wsi)
-            LOGGER.debug(f'New coordinates: {location}')
-            long, lat, elev = location.get('coordinates')
-            codes_set(subset_out, '#1#longitude', long)
-            codes_set(subset_out, '#1#latitude', lat)
-            codes_set(subset_out, '#1#heightOfStationGroundAboveMeanSeaLevel', elev)  # noqa
+            if None in location['coordinates']:
+                msg = 'Missing coordinates in BUFR, setting from station report'
+                LOGGER.warning(msg)
+                location = get_geometry(wsi)
+                long, lat, elev = location.get('coordinates')
+                codes_set(subset_out, '#1#longitude', long)
+                codes_set(subset_out, '#1#latitude', lat)
+                codes_set(subset_out, '#1#heightOfStationGroundAboveMeanSeaLevel', elev)  # noqa
 
-        if '/' in data_date:
-            data_date = data_date.split('/')[1]
+            if '/' in data_date:
+                data_date = data_date.split('/')
+                data_date = data_date[1]
+            isodate = datetime.strptime(
+                data_date, '%Y-%m-%dT%H:%M:%SZ'
+            )
+            for (name, p) in zip(TIME_NAMES, TIME_PATTERNS):
+                codes_set(subset_out, name, int(isodate.strftime(p)))
+            isodate = isodate.strftime('%Y%m%dT%H%M%S')
 
-        isodate = datetime.strptime(data_date, '%Y-%m-%dT%H:%M:%SZ')
+            rmk = f"WIGOS_{wsi}_{isodate}"
+            LOGGER.info(f'Publishing with identifier: {rmk}')
 
-        for (name, p) in zip(TIME_NAMES, TIME_PATTERNS):
-            codes_set(subset_out, name, int(isodate.strftime(p)))
-
-        isodate_str = isodate.strftime('%Y%m%dT%H%M%S')
-
-        rmk = f"WIGOS_{wsi}_{isodate_str}"
-        LOGGER.info(f'Publishing with identifier: {rmk}')
-
-        LOGGER.debug('Writing bufr4')
-        bufr4 = codes_get_message(subset_out)
-        self.output_data[rmk] = {
-            'bufr4': bufr4,
-            '_meta': {
-                'identifier': rmk,
-                'wigos_station_identifier': wsi,
-                'data_date': isodate,
-                'geometry': location,
-                'relative_filepath': self.get_local_filepath(isodate)
+            LOGGER.debug('Writing bufr4')
+            bufr4 = codes_get_message(subset_out)
+            self.output_data[rmk] = {
+                'bufr4': bufr4,
+                '_meta': {
+                    'identifier': rmk,
+                    'wigos_station_identifier': wsi,
+                    'data_date': data_date,
+                    'geometry': location,
+                    'relative_filepath': self.get_local_filepath(data_date)
+                }
             }
-        }
-        LOGGER.debug('Finished processing subset')
+            LOGGER.debug('Finished processing subset')
+        except Exception as err:
+            LOGGER.error(f'Failed processing subset: {err}')
+            self.publish_failure_message(
+                        description="Failed processing subset",
+                        wsi=wsi)
 
     def get_local_filepath(self, date_):
         yyyymmdd = date_.strftime('%Y-%m-%d')

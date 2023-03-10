@@ -113,7 +113,9 @@ def validate_and_load(
             plugins = data_mappings[th.dotpath]['plugins']
 
     if not found:
-        msg = f'No plugins for {th.path} in data mappings'
+        msg = f'No plugins for {th.path} in data mappings. Did not match any of the following: '  # noqa
+        for topic in data_mappings.keys():
+            msg += f"{topic}, "
         LOGGER.error(msg)
         raise ValueError(msg)
 
@@ -123,9 +125,12 @@ def validate_and_load(
         LOGGER.debug(f'File type set to first type: {file_type}')
 
     if file_type not in plugins:
-        msg = f'Unknown file type ({file_type}) for topic {th.dotpath}'  # noqa
+        msg = f'Unknown file type ({file_type}) for topic {th.dotpath}. Did not match any of the following:'  # noqa
+        for ft in plugins:
+            msg += f'{ft}, '
         LOGGER.error(msg)
         raise ValueError(msg)
+    
 
     LOGGER.debug(f'Adding plugin definition for {file_type}')
 

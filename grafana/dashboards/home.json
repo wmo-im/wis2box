@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 4,
+  "id": 2,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -51,7 +51,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "text",
+                "color": "transparent",
                 "value": null
               },
               {
@@ -59,12 +59,8 @@
                 "value": 0
               },
               {
-                "color": "#b55617",
+                "color": "semi-dark-orange",
                 "value": 1
-              },
-              {
-                "color": "#a28204",
-                "value": 10
               },
               {
                 "color": "dark-green",
@@ -88,33 +84,37 @@
           },
           {
             "matcher": {
-              "id": "byType",
-              "options": "string"
+              "id": "byName",
+              "options": "Fail last 24 hrs"
             },
             "properties": [
               {
                 "id": "custom.displayMode",
-                "value": "color-text"
+                "value": "auto"
+              },
+              {
+                "id": "custom.width",
+                "value": 112
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "Failed last 24 hrs"
+              "options": "Publish last 24 hrs"
             },
             "properties": [
               {
-                "id": "custom.displayMode",
-                "value": "auto"
+                "id": "custom.width",
+                "value": 137
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 21,
-        "w": 9,
+        "h": 15,
+        "w": 10,
         "x": 0,
         "y": 0
       },
@@ -132,8 +132,8 @@
         "showHeader": true,
         "sortBy": [
           {
-            "desc": true,
-            "displayName": "WIGOS-ID"
+            "desc": false,
+            "displayName": "WSI"
           }
         ]
       },
@@ -144,7 +144,7 @@
             "type": "prometheus",
             "uid": "PABAFD29CE247021E"
           },
-          "editorMode": "code",
+          "editorMode": "builder",
           "exemplar": false,
           "expr": "avg by(WSI) (wis2box_stations_wsi)",
           "format": "table",
@@ -152,6 +152,21 @@
           "interval": "",
           "range": false,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PABAFD29CE247021E"
+          },
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "sum by(WSI, description) (increase(wis2box_failure_descr_wsi_total[$__interval]))",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "D"
         },
         {
           "datasource": {
@@ -174,7 +189,7 @@
           },
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum by(WSI, description) (increase(wis2box_failure_wsi_total{description=\"Not in station-list\"}[$__interval]))",
+          "expr": "sum by(WSI) (increase(wis2box_failure_wsi_total[$__interval]))",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -194,7 +209,7 @@
         {
           "id": "calculateField",
           "options": {
-            "alias": "Published last 24 hrs",
+            "alias": "Publish last 24 hrs",
             "mode": "reduceRow",
             "reduce": {
               "include": [
@@ -207,7 +222,7 @@
         {
           "id": "calculateField",
           "options": {
-            "alias": "Failed last 24 hrs",
+            "alias": "Fail last 24 hrs",
             "mode": "reduceRow",
             "reduce": {
               "include": [
@@ -219,34 +234,34 @@
           }
         },
         {
+          "id": "calculateField",
+          "options": {
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "description"
+              ],
+              "reducer": "uniqueValues"
+            }
+          }
+        },
+        {
           "id": "organize",
           "options": {
             "excludeByName": {
               "Time 1": true,
               "Time 2": true,
               "Time 3": true,
+              "Time 4": true,
               "Value #A": true,
               "Value #B": true,
-              "Value #C": true
+              "Value #C": true,
+              "Value #D": true,
+              "description": true
             },
-            "indexByName": {
-              "Failed last 24 hrs": 8,
-              "Published last 24 hrs": 7,
-              "Time 1": 1,
-              "Time 2": 3,
-              "Time 3": 5,
-              "Value #A": 2,
-              "Value #B": 4,
-              "Value #C": 6,
-              "WSI": 0,
-              "description": 9
-            },
+            "indexByName": {},
             "renameByName": {
-              "Time 3": "",
-              "Value #B": "",
-              "Value #C": "",
-              "WSI": "WIGOS-ID",
-              "description": "Failure-description"
+              "All unique values": "Failure descriptions"
             }
           }
         }
@@ -314,8 +329,8 @@
       },
       "gridPos": {
         "h": 5,
-        "w": 15,
-        "x": 9,
+        "w": 14,
+        "x": 10,
         "y": 0
       },
       "id": 2,
@@ -410,8 +425,8 @@
       },
       "gridPos": {
         "h": 5,
-        "w": 15,
-        "x": 9,
+        "w": 14,
+        "x": 10,
         "y": 5
       },
       "id": 6,
@@ -505,8 +520,8 @@
       },
       "gridPos": {
         "h": 5,
-        "w": 15,
-        "x": 9,
+        "w": 14,
+        "x": 10,
         "y": 10
       },
       "id": 10,
@@ -547,9 +562,9 @@
       },
       "description": "",
       "gridPos": {
-        "h": 6,
-        "w": 15,
-        "x": 9,
+        "h": 8,
+        "w": 24,
+        "x": 0,
         "y": 15
       },
       "id": 8,
@@ -596,6 +611,6 @@
   "timezone": "",
   "title": "wis2box workflow monitoring",
   "uid": "KkBocEA4k",
-  "version": 2,
+  "version": 4,
   "weekStart": ""
 }
