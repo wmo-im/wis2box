@@ -94,18 +94,20 @@ See below a Python example to upload data using the MinIO package:
 wis2box-ftp
 -----------
 
-You can add an additional service to allow your data to be accessible over FTP with the following command:
+You can add an additional service to allow your data to be accessible over FTP.
 
-.. code-block:: bash
-
-    docker-compose -f docker-compose.wis2box-ftp.yml -p wis2box_project --env-file dev.env
-
-You will need to define the following additional environment variables to your dev.env to define the FTP username and password as follows:
+To define the FTP username and password, add the following additional environment variables to your dev.env:
 
 .. code-block:: bash
 
     FTP_USER=<your-ftp-username>
     FTP_PASSWORD=<your-ftp-password>
+
+Then start the 'wis2box-ftp'-service with the following command:
+
+.. code-block:: bash
+
+    docker-compose -f docker-compose.wis2box-ftp.yml -p wis2box_project --env-file dev.env up -d
 
 See the GitHub repository `wis2box-ftp`_ for more information on this service.
 
