@@ -53,9 +53,9 @@ INTERRUPT = False
 
 notify_total = Counter('wis2box_notify_total',
                        'Total notifications sent by wis2box')
-notify_topic_wsi_total = Counter('wis2box_notify_topic_wsi_total',
-                                 'Total notifications sent by wis2box, by topic and WSI', # noqa
-                                 ["topic", "WSI"])
+notify_wsi_total = Counter('wis2box_notify_wsi_total',
+                                 'Total notifications sent by wis2box, by WSI', # noqa
+                                 ["WSI"])
 
 failure_total = Counter('wis2box_failure_total',
                         'Total failed actions reported by wis2box')
@@ -89,6 +89,7 @@ def update_stations_gauge(station_list):
     station_wsi._metrics.clear()
     for station in station_list:
         station_wsi.labels(station).set(1)
+        notify_wsi_total.labels(station).inc(0)
         failure_wsi_total.labels(station).inc(0)
 
 
@@ -162,8 +163,8 @@ def sub_mqtt_metrics(client, userdata, msg):
     if str(msg.topic).startswith('wis2box/stations'):
         update_stations_gauge(m['station_list'])
     elif str(msg.topic).startswith('wis2box/notifications'):
-        notify_topic_wsi_total.labels(
-            m['topic'], m['wigos_station_identifier']).inc(1)
+        notify_wsi_total.labels(
+            m['wigos_station_identifier']).inc(1)
         notify_total.inc(1)
     elif str(msg.topic).startswith('wis2box/failure'):
         descr = m['description']
