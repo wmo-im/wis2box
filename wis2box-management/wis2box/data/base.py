@@ -191,18 +191,20 @@ class BaseAbstractData:
 
         :returns: `bool` of result
         """
+
         LOGGER.info('Publishing output data')
 
         for identifier, item in self.output_data.items():
-            self.publish_item(identifier,item)
+            self.publish_item(identifier, item)
         return True
 
-    def publish_item(self,identifier, item) -> bool:
+    def publish_item(self, identifier, item) -> bool:
         """
         Publish item in data
+
         :param identifier: identifier
         :param item: item to be published
-        
+
         :returns: `bool` of result
         """
         LOGGER.info('Publishing output data')
@@ -252,7 +254,7 @@ class BaseAbstractData:
             msg = f'Failed to publish item {identifier}: {err}'
             LOGGER.error(msg, exc_info=True)
             self.publish_failure_message(
-                    description="Failed to publish item",
+                    description='Failed to publish item',
                     wsi=wsi)
         return True
 
