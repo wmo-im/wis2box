@@ -132,8 +132,8 @@
         "showHeader": true,
         "sortBy": [
           {
-            "desc": false,
-            "displayName": "WSI"
+            "desc": true,
+            "displayName": "Publish last 24 hrs"
           }
         ]
       },
@@ -175,7 +175,7 @@
           },
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum by(WSI) (increase(wis2box_notify_topic_wsi_total[$__interval]))",
+          "expr": "sum by(WSI) (increase(wis2box_notify_wsi_total[$__interval]))",
           "format": "table",
           "hide": false,
           "instant": true,
