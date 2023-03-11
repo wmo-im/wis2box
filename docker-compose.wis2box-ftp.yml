@@ -1,7 +1,6 @@
 services:
   wis2box-ftp:
-    container_name: wis2box-ftp
-    build: ../.
+    image: ghcr.io/wmo-im/wis2box-ftp
     environment:
       - FTP_USER=${FTP_USER}
       - FTP_PASS=${FTP_PASS}
