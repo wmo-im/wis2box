@@ -190,7 +190,7 @@ def test_message_api():
 
     for c in ['mwi', 'ita', 'dza', 'rou']:
         url = f'{API_URL}/collections/messages/items?sortby=-datetime&q={c}&limit=1'  # noqa
-        print(url.json())
+        print(SESSION.get(url).json())
 
     url = f'{API_URL}/collections/messages/items?sortby=-datetime'
     r = SESSION.get(url).json()
