@@ -96,26 +96,26 @@ wis2box-ftp
 
 You can add an additional service to allow your data to be accessible over FTP.
 
-To define the FTP username and password, add the following additional environment variables to your dev.env:
+To define the FTP username and password, add the following additional environment variables to your `dev.env`:
 
 .. code-block:: bash
 
     FTP_USER=<your-ftp-username>
     FTP_PASSWORD=<your-ftp-password>
 
-Then start the 'wis2box-ftp'-service with the following command:
+Then start the 'wis2box-ftp' service with the following command:
 
 .. code-block:: bash
 
     docker-compose -f docker-compose.wis2box-ftp.yml -p wis2box_project --env-file dev.env up -d
 
-Note that the topic is determine by the directory-structure in which the data arrives.
+Note that the topic is determine by the directory structure in which the data arrives.
 
-For example to correctly ingest data on the topic 'ita.roma_met_centre.data.core.weather.surface-based-observations.synop' you need to copy the data into the directory '/ita/roma_met_centre/data/core/weather/surface-based-observations/synop' on the ftp:
+For example to correctly ingest data on the topic `ita.roma_met_centre.data.core.weather.surface-based-observations.synop` you need to copy the data into the directory `/ita/roma_met_centre/data/core/weather/surface-based-observations/synop` on the FTP server:
 
 .. image:: ../_static/winscp_wis2box-ftp_example
     :width: 600
-    :alt: Screenshot of winSCP showing directory structure in wis2box-ftp
+    :alt: Screenshot of WinSCP showing directory structure in wis2box-ftp
 
 See the GitHub repository `wis2box-ftp`_ for more information on this service.
 
