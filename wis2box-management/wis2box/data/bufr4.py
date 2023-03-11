@@ -197,7 +197,7 @@ class ObservationDataBUFR(BaseAbstractData):
             codes_bufr_copy_data(subset, subset_out)
 
             if None in location['coordinates']:
-                msg = 'Missing coordinates in BUFR, setting from station report'
+                msg = 'Missing coordinates in BUFR, setting from station report'  # noqa
                 LOGGER.warning(msg)
                 location = get_geometry(wsi)
                 long, lat, elev = location.get('coordinates')
@@ -215,7 +215,7 @@ class ObservationDataBUFR(BaseAbstractData):
                 codes_set(subset_out, name, int(isodate.strftime(p)))
             isodate = isodate.strftime('%Y%m%dT%H%M%S')
 
-            rmk = f"WIGOS_{wsi}_{isodate}"
+            rmk = f'WIGOS_{wsi}_{isodate}'
             LOGGER.info(f'Publishing with identifier: {rmk}')
 
             LOGGER.debug('Writing bufr4')
@@ -234,7 +234,7 @@ class ObservationDataBUFR(BaseAbstractData):
         except Exception as err:
             LOGGER.error(f'Failed processing subset: {err}')
             self.publish_failure_message(
-                        description="Failed processing subset",
+                        description='Failed processing subset',
                         wsi=wsi)
 
     def get_local_filepath(self, date_):

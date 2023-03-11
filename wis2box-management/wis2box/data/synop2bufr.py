@@ -81,19 +81,19 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
         LOGGER.debug('Iterating over BUFR messages')
         for item in results:
             wsi = item['_meta']['properties']['wigos_station_identifier']
-            if 'result' in item['_meta'] :
+            if 'result' in item['_meta']:
                 if item['_meta']['result']['code'] != 1:
                     msg = item['_meta']['result']['message']
-                    LOGGER.error(f"Transform returned {msg} for wsi={wsi}")
+                    LOGGER.error(f'Transform returned {msg} for wsi={wsi}')
                     self.publish_failure_message(
-                        description="CSV2BUFR transform error",
+                        description='CSV2BUFR transform error',
                         wsi=wsi)
                     continue
             if get_valid_wsi(wsi) is None:
                 msg = f'Station not in station list: wsi={wsi}; skipping'
                 LOGGER.error(msg)
                 self.publish_failure_message(
-                        description="Station not in station list",
+                        description='Station not in station list',
                         wsi=wsi)
                 continue
             LOGGER.debug('Setting obs date for filepath creation')
