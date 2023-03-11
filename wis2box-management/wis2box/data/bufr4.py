@@ -205,16 +205,16 @@ class ObservationDataBUFR(BaseAbstractData):
             codes_set(subset_out, '#1#heightOfStationGroundAboveMeanSeaLevel', elev)  # noqa
 
         if '/' in data_date:
-            data_date = data_date.split('/')
-            data_date = data_date[1]
-        isodate = datetime.strptime(
-            data_date, '%Y-%m-%dT%H:%M:%SZ'
-        )
+            data_date = data_date.split('/')[1]
+
+        isodate = datetime.strptime(data_date, '%Y-%m-%dT%H:%M:%SZ')
+
         for (name, p) in zip(TIME_NAMES, TIME_PATTERNS):
             codes_set(subset_out, name, int(isodate.strftime(p)))
-        isodate = isodate.strftime('%Y%m%dT%H%M%S')
 
-        rmk = f"WIGOS_{wsi}_{isodate}"
+        isodate_str = isodate.strftime('%Y%m%dT%H%M%S')
+
+        rmk = f"WIGOS_{wsi}_{isodate_str}"
         LOGGER.info(f'Publishing with identifier: {rmk}')
 
         LOGGER.debug('Writing bufr4')
@@ -224,13 +224,13 @@ class ObservationDataBUFR(BaseAbstractData):
             '_meta': {
                 'identifier': rmk,
                 'wigos_station_identifier': wsi,
-                'data_date': data_date,
+                'data_date': isodate,
                 'geometry': location,
-                'relative_filepath': self.get_local_filepath(data_date)
+                'relative_filepath': self.get_local_filepath(isodate)
             }
         }
         LOGGER.debug('Finished processing subset')
 
     def get_local_filepath(self, date_):
-        yyyymmdd = date_[0:10]  # date_.strftime('%Y-%m-%d')
+        yyyymmdd = date_.strftime('%Y-%m-%d')
         return Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath

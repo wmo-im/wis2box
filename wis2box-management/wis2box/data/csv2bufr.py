@@ -49,7 +49,7 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
 
         LOGGER.debug(f'Loading template {self.template}')
         if self.template.startswith('/'):
-            mapping_bufr4 = self.template
+            mapping_bufr4 = Path(self.template)
         else:
             mapping_bufr4 = Path(MAPPINGS) / self.template
 
@@ -79,12 +79,11 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
         results = transform_csv(input_bytes.decode(),
                                 self.mappings['bufr4'])
 
-        # convert to list
         LOGGER.debug('Iterating over BUFR messages')
         for item in results:
             wsi = item['_meta']['properties']['wigos_station_identifier']
             if get_valid_wsi(wsi) is None:
-                msg = f'Station not in station list: wsi={wsi}; skipping'
+                msg = f'Station {wsi} not in station list; skipping'
                 LOGGER.error(msg)
                 self.publish_failure_message(
                         description="Station not in station list",
