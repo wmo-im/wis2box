@@ -168,7 +168,7 @@ class ObservationDataBUFR(BaseAbstractData):
         try:
             data_date = parser.get_time()
         except Exception as err:
-            LOGGER.error(err)
+            LOGGER.error(err, exc_info=True)
             self.publish_failure_message(
                         description="Failed to parse time",
                         wsi=temp_wsi)
