@@ -147,7 +147,7 @@ class ObservationDataBUFR(BaseAbstractData):
         #   - if temporal extent, use end time
         #   - set times in header
         # - write a separate BUFR
-        parser = BUFRParser()
+        parser = BUFRParser(raise_on_error=True)
         LOGGER.debug('Parsing subset')
         try:
             parser.as_geojson(subset, id='')
@@ -168,7 +168,7 @@ class ObservationDataBUFR(BaseAbstractData):
         try:
             data_date = parser.get_time()
         except Exception as err:
-            LOGGER.error(err, exc_info=True)
+            LOGGER.error(err)
             self.publish_failure_message(
                         description="Failed to parse time",
                         wsi=temp_wsi)
@@ -199,6 +199,7 @@ class ObservationDataBUFR(BaseAbstractData):
             msg = 'Missing coordinates in BUFR, setting from station report'
             LOGGER.warning(msg)
             location = get_geometry(wsi)
+            LOGGER.debug(f'New coordinates: {location}')
             long, lat, elev = location.get('coordinates')
             codes_set(subset_out, '#1#longitude', long)
             codes_set(subset_out, '#1#latitude', lat)

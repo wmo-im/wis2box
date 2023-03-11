@@ -191,7 +191,7 @@ def test_message_api():
     url = f'{API_URL}/collections/messages/items?sortby=-datetime'
     r = SESSION.get(url).json()
 
-    assert r['numberMatched'] == 461
+    assert r['numberMatched'] == 272
 
     msg = r['features'][0]
 
