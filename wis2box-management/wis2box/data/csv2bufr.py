@@ -49,7 +49,7 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
 
         LOGGER.debug(f'Loading template {self.template}')
         if self.template.startswith('/'):
-            mapping_bufr4 = self.template
+            mapping_bufr4 = Path(self.template)
         else:
             mapping_bufr4 = Path(MAPPINGS) / self.template
 
