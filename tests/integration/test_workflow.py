@@ -190,7 +190,7 @@ def test_message_api():
 
     # test messages per test dataset
     counts = {
-        'mwi': 22,
+        'mwi': 23,
         'ita': 32,
         'dza': 28,
         'rou': 189
