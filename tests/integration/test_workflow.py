@@ -188,10 +188,22 @@ def test_data_api():
 def test_message_api():
     """Test message API collection queries"""
 
+    # test messages per test dataset
+    counts = {
+        'mwi': 23,
+        'ita': 32,
+        'dza': 28,
+        'rou': 189
+    }
+    for key, value in counts.items():
+        url = f'{API_URL}/collections/messages/items?sortby=-datetime&q={key}&limit=1'  # noqa
+        r = SESSION.get(url).json()
+        assert r['numberMatched'] == value
+
     url = f'{API_URL}/collections/messages/items?sortby=-datetime'
     r = SESSION.get(url).json()
 
-    assert r['numberMatched'] == 461
+    assert r['numberMatched'] == 272
 
     msg = r['features'][0]
 
