@@ -195,7 +195,7 @@ class ObservationDataBUFR(BaseAbstractData):
         codes_set(subset_out, '#1#wigosLocalIdentifierCharacter', tsi)
         codes_bufr_copy_data(subset, subset_out)
 
-        if None in location['coordinates']:
+        if location is None or None in location['coordinates']:
             msg = 'Missing coordinates in BUFR, setting from station report'
             LOGGER.warning(msg)
             location = get_geometry(wsi)
