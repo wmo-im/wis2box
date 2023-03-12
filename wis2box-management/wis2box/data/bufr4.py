@@ -193,7 +193,7 @@ class ObservationDataBUFR(BaseAbstractData):
             codes_bufr_copy_data(subset, subset_out)
 
             if location is None or None in location['coordinates']:
-                msg = 'Missing coordinates in BUFR, setting from station report'
+                msg = 'Missing coordinates in BUFR, setting from station report'  # noqa
                 LOGGER.warning(msg)
                 location = get_geometry(wsi)
                 LOGGER.debug(f'New coordinates: {location}')

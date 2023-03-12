@@ -103,7 +103,7 @@ def init_stations_gauge():
         if 'description' in json_data:
             if json_data['description'] == 'Collection not found':
                 logger.error("No stations configured yet")
-                station_list.append('none') # placeholder to init series
+                station_list.append('none')  # placeholder to init series
             else:
                 logger.error(json_data['description'])
         else:
