@@ -12,3 +12,7 @@ services:
     ports:
       - '20-21:20-21/tcp'
       - '21100-21110:21100-21110/tcp'
+    volumes:
+      - wis2box-ftp:/home/vsftpd/
+volumes:
+  wis2box-ftp:

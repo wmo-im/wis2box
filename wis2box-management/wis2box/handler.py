@@ -48,7 +48,7 @@ class Handler:
             self.filepath = self.filepath.as_posix()
         else:
             LOGGER.debug('filepath is a string')
-            self.filetype = self.filepath.split(".")[-1]
+            self.filetype = self.filepath.split('.')[-1]
 
         self.is_http = self.filepath.startswith('http')
 
@@ -64,10 +64,6 @@ class Handler:
                 th, self.filetype, fuzzy=fuzzy)
         except Exception as err:
             msg = f'Topic Hierarchy validation error: {err}'
-            LOGGER.error(msg)
-            self.publish_failure_message(
-                description='Topic hierarchy validation'
-            )
             raise ValueError(msg)
 
     def publish_failure_message(self, description, plugin=None):
@@ -77,11 +73,11 @@ class Handler:
         }
         if plugin is not None:
             cl = plugin.__class__
-            message['plugin'] = f"{cl.__module__ }.{cl.__name__}"
+            message['plugin'] = f'{cl.__module__ }.{cl.__name__}'
         # handler uses local broker to publish success/failure messages
         defs = {
             'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-            'url': f"mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}", # noqa
+            'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}', # noqa
             'client_type': 'handler-publisher'
         }
         local_broker = load_plugin('pubsub', defs)
@@ -93,7 +89,7 @@ class Handler:
                 msg = f'Filepath not accepted: {self.filepath}'
                 LOGGER.warning(msg)
                 self.publish_failure_message(
-                    description="filepath not accepted",
+                    description='filepath not accepted',
                     plugin=plugin)
                 continue
             try:
@@ -108,7 +104,7 @@ class Handler:
                 msg = f'Failed to transform file {self.filepath} : {err}'
                 LOGGER.error(msg, exc_info=True)
                 self.publish_failure_message(
-                    description="failed to transform file",
+                    description='Failed to transform file',
                     plugin=plugin)
                 return False
             try:
@@ -117,7 +113,7 @@ class Handler:
                 msg = f'Failed to publish file {self.filepath}: {err}'
                 LOGGER.error(msg, exc_info=True)
                 self.publish_failure_message(
-                    description="Failed to publish file to api-backend",
+                    description='Failed to publish file to api-backend',
                     plugin=plugin)
                 return False
 

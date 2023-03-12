@@ -53,9 +53,11 @@ Or by visiting the local Grafana instance running at ``http://localhost:3000``
 wis2box workflow monitoring
 ---------------------------
 
-The Grafana homepage shows an overview with the number of files received, new files produced and messages published.
+The Grafana homepage shows an overview with the number of files received, new files produced and WIS2-notifications published.
 
-Pay attention to the messages reported in the wis2box logs (right hand side) which indicates errors encountered during data processing:
+The `Station data publishing status`-panel (on the left side) shows an overview of notifications and failures per configured station.
+
+The `wis2box ERRORs`-panel (on the bottom) prints all ERROR-messages reported by the wis2box-management container.
 
 .. image:: ../_static/grafana-homepage.png
     :width: 800
