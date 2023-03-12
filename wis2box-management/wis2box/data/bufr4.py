@@ -166,7 +166,7 @@ class ObservationDataBUFR(BaseAbstractData):
         except Exception as err:
             LOGGER.error(err)
             self.publish_failure_message(
-                        description="Invalid datetime BUFR data",
+                        description="Invalid date in BUFR data",
                         wsi=temp_wsi)
             return
 
