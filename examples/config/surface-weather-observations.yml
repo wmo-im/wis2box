@@ -44,6 +44,7 @@ identification:
               end: null
               resolution: P1H
     url: https://example.org/surface-weather-observations-webpage
+    wmo_data_policy: core
 
 contact:
     pointOfContact: &contact_poc
