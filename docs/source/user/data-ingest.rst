@@ -115,7 +115,7 @@ Note that the topic is determine by the directory structure in which the data ar
 
 For example to correctly ingest data on the topic `ita.roma_met_centre.data.core.weather.surface-based-observations.synop` you need to copy the data into the directory `/ita/roma_met_centre/data/core/weather/surface-based-observations/synop` on the FTP server:
 
-.. image:: ../_static/winscp_wis2box-ftp_example
+.. image:: ../_static/winscp_wis2box-ftp_example.png
     :width: 600
     :alt: Screenshot of WinSCP showing directory structure in wis2box-ftp
 
