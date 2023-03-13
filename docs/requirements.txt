@@ -1,7 +1,7 @@
 ipython_genutils
 jinja2==3.0.3
 jupyter
-nbsphinx
+nbsphinx<0.9
 pyzmq==23.2.1
 pypandoc
 sphinx
