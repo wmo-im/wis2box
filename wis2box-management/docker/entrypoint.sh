@@ -43,6 +43,7 @@ cd ~/.pywcmp/wis2-topic-hierarchy && unzip -j /tmp/all.json.zip
 wis2box environment create
 wis2box environment show
 wis2box api setup
+wis2box metadata discovery setup
 wis2box metadata station publish-collection
 echo "END /entrypoint.sh"
 exec "$@"

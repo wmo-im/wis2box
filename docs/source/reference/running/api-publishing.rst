@@ -25,12 +25,10 @@ will generate local station collection GeoJSON for API publication.
    wis2box metadata station publish-collection
 
 
-.. note:: run the command ``wis2box metadata station publish-collection`` to
-          publish your stations as a collection to the wis2box API
-
+.. note:: This command also runs automatically at startup and thereafter every 10 minutes
+          to keep your stations up to date.
 
 .. seealso:: :ref:`station-metadata`
-
 
 
 Discovery metadata API publishing
