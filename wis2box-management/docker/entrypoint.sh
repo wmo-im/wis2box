@@ -35,6 +35,7 @@ service cron status
 
 echo "Caching topic hierarchy JSON"
 mkdir -p ~/.pywcmp/wis2-topic-hierarchy
+rm -f /tmp/all.json /tmp/all.json.zip
 curl https://wmo-im.github.io/wis2-topic-hierarchy/all.json.zip --output /tmp/all.json.zip
 cd ~/.pywcmp/wis2-topic-hierarchy && unzip -j /tmp/all.json.zip
 
