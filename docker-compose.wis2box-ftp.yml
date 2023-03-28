@@ -1,9 +1,11 @@
 services:
   wis2box-ftp:
+    container_name: wis2box-ftp
     image: ghcr.io/wmo-im/wis2box-ftp
     environment:
       - FTP_USER=${FTP_USER}
       - FTP_PASS=${FTP_PASS}
+      - PASV_ADDRESS=${FTP_HOST}
       - FTP_SSL_ENABLED=${FTP_SSL_ENABLED:-FALSE}
       - LOGGING_LEVEL=${LOGGING_LEVEL:-WARNING}
       - MINIO_ENDPOINT=${WIS2BOX_STORAGE_ENDPOINT:-http://minio:9000}
@@ -11,7 +13,7 @@ services:
       - MINIO_ROOT_PASSWORD=${WIS2BOX_STORAGE_PASSWORD:-minio123}
     ports:
       - '20-21:20-21/tcp'
-      - '21100-21110:21100-21110/tcp'
+      - '40000-40009:40000-40009/tcp'
     volumes:
       - wis2box-ftp:/home/vsftpd/
 volumes:
