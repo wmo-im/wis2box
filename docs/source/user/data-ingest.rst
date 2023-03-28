@@ -98,20 +98,31 @@ wis2box-ftp
 
 You can add an additional service to allow your data to be accessible over FTP.
 
-To define the FTP username and password, add the following additional environment variables to your `dev.env`:
+To use the 'docker-compose.wis2box-ftp.yml'-template included in the wis2box-release, create a new file `ftp.env` using any text editor, and add the following content:
 
 .. code-block:: bash
 
-    FTP_USER=<your-ftp-username>
-    FTP_PASSWORD=<your-ftp-password>
+    MYHOSTNAME=hostname.domain.tld
 
-Then start the 'wis2box-ftp' service with the following command:
+    FTP_USER=wis2box
+    FTP_PASS=wis2box123
+    FTP_HOST=${MYHOSTNAME}
+
+    WIS2BOX_STORAGE_ENDPOINT=http://${MYHOSTNAME}:9000
+    WIS2BOX_STORAGE_USER=minio
+    WIS2BOX_STORAGE_PASSWORD=minio123
+
+    LOGGING_LEVEL=INFO
+
+and ensure `MYHOSTNAME` is set to **your** hostname (Fully Qualified Domain Name).
+
+Then start the `wis2box-ftp` service with the following command:
 
 .. code-block:: bash
 
-    docker-compose -f docker-compose.wis2box-ftp.yml -p wis2box_project --env-file dev.env up -d
+    docker-compose -f docker-compose.wis2box-ftp.yml --env-file ftp.env up -d
 
-Note that the topic is determine by the directory structure in which the data arrives.
+When using the wis2box-ftp to ingest data, please note that the topic is determined by the directory structure in which the data arrives.
 
 For example to correctly ingest data on the topic `ita.roma_met_centre.data.core.weather.surface-based-observations.synop` you need to copy the data into the directory `/ita/roma_met_centre/data/core/weather/surface-based-observations/synop` on the FTP server:
 
