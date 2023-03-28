@@ -14,6 +14,7 @@ services:
   wis2box-ui:
     container_name: wis2box-ui
     image: ghcr.io/wmo-im/wis2box-ui:latest
+    restart: always
     env_file:
       - default.env
       - dev.env
@@ -23,6 +24,7 @@ services:
   wis2box-api:
     container_name: wis2box-api
     image: ghcr.io/wmo-im/wis2box-api:0.5.1
+    restart: always
     env_file:
       - default.env
       - dev.env
@@ -57,6 +59,7 @@ services:
   elasticsearch:
     container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    restart: always
     environment:
       - discovery.type=single-node
       - node.name=elasticsearch-01
@@ -84,6 +87,7 @@ services:
   mosquitto:
     container_name: mosquitto
     #image: ghcr.io/wmo-im/wis2box-broker:1.0.beta1
+    restart: always
     build:
       context: ./wis2box-broker
     env_file:
@@ -116,6 +120,7 @@ services:
   wis2box-auth:
     container_name: wis2box-auth
     image: ghcr.io/wmo-im/wis2box-auth:latest
+    restart: always
     env_file:
       - default.env
       - dev.env
