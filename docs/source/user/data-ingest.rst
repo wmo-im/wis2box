@@ -98,7 +98,7 @@ wis2box-ftp
 
 You can add an additional service to allow your data to be accessible over FTP.
 
-To use the 'docker-compose.wis2box-ftp.yml' template included in wis2box, create a new file called `ftp.env` using any text editor, and add the following content:
+To use the ``docker-compose.wis2box-ftp.yml`` template included in wis2box, create a new file called ``ftp.env`` using any text editor, and add the following content:
 
 .. code-block:: bash
 
@@ -114,9 +114,9 @@ To use the 'docker-compose.wis2box-ftp.yml' template included in wis2box, create
 
     LOGGING_LEVEL=INFO
 
-and ensure `MYHOSTNAME` is set to **your** hostname (fully qualified domain name).
+and ensure ``MYHOSTNAME`` is set to **your** hostname (fully qualified domain name).
 
-Then start the `wis2box-ftp` service with the following command:
+Then start the ``wis2box-ftp`` service with the following command:
 
 .. code-block:: bash
 
@@ -124,7 +124,7 @@ Then start the `wis2box-ftp` service with the following command:
 
 When using the wis2box-ftp service to ingest data, please note that the topic is determined by the directory structure in which the data arrives.
 
-For example to correctly ingest data on the topic `ita.roma_met_centre.data.core.weather.surface-based-observations.synop` you need to copy the data into the directory `/ita/roma_met_centre/data/core/weather/surface-based-observations/synop` on the FTP server:
+For example to correctly ingest data on the topic ``ita.roma_met_centre.data.core.weather.surface-based-observations.synop`` you need to copy the data into the directory ``/ita/roma_met_centre/data/core/weather/surface-based-observations/synop`` on the FTP server:
 
 .. image:: ../_static/winscp_wis2box-ftp_example.png
     :width: 600
