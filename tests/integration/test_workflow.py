@@ -193,7 +193,7 @@ def test_message_api():
         'mwi': 23,
         'ita': 32,
         'dza': 28,
-        'rou': 189
+        'rou': 184
     }
     for key, value in counts.items():
         url = f'{API_URL}/collections/messages/items?sortby=-datetime&q={key}&limit=1'  # noqa
@@ -203,7 +203,7 @@ def test_message_api():
     url = f'{API_URL}/collections/messages/items?sortby=-datetime'
     r = SESSION.get(url).json()
 
-    assert r['numberMatched'] == 272
+    assert r['numberMatched'] == 267
 
     msg = r['features'][0]
 

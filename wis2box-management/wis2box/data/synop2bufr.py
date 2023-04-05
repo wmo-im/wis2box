@@ -86,7 +86,7 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
                     msg = item['_meta']['result']['message']
                     LOGGER.error(f'Transform returned {msg} for wsi={wsi}')
                     self.publish_failure_message(
-                        description='CSV2BUFR transform error',
+                        description='csv2bufr transform error',
                         wsi=wsi)
                     continue
             if get_valid_wsi(wsi) is None:
