@@ -45,10 +45,41 @@ LOGGER = logging.getLogger(__name__)
 STATION_METADATA = DATADIR / 'metadata' / 'station'
 STATIONS = STATION_METADATA / 'station_list.csv'
 
+WMO_RAS = {
+    1: 'I',
+    2: 'II',
+    3: 'III',
+    4: 'IV',
+    5: 'V',
+    6: 'VI'
+}
+
 if not STATIONS.exists():
     msg = f'Please create a station metadata file in {STATION_METADATA}'
     LOGGER.error(msg)
     raise RuntimeError(msg)
+
+
+def get_wmo_ra_roman(ra: str) -> str:
+    """
+    Helper function to derive a WMO Regional Association roman numeral from
+    an integer.
+
+    :param ra: `str` of WMO RA
+
+    :returns: `str` of WMO RA as roman numeral
+    """
+
+    if ra in WMO_RAS.values():
+        return ra
+    if ra.isdigit():
+        try:
+            return WMO_RAS[int(ra)]
+        except KeyError:
+            LOGGER.debug(f'Invalid region: {ra}')
+            return None
+    else:
+        return None
 
 
 def gcm() -> dict:
@@ -181,7 +212,7 @@ def publish_station_collection() -> None:
                    'wigos_station_identifier': wigos_station_identifier,
                    'facility_type': row['facility_type'],
                    'territory_name': row['territory_name'],
-                   'wmo_region': row['wmo_region'],
+                   'wmo_region': get_wmo_ra_roman(row['wmo_region']),
                    'url': f"{oscar_baseurl}/{wigos_station_identifier}",
                    'topic': topic,
                    # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa

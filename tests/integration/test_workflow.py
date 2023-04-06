@@ -43,6 +43,8 @@ SESSION.hooks = {
 def test_metadata_station_cache():
     """Test station metadata caching"""
 
+    wmo_regions = ['I', 'II', 'III', 'IV', 'V', 'VI']
+
     with (DATADIR / 'metadata/station/station_list.csv').open() as fh:
         reader = csv.DictReader(fh)
         for row in reader:
@@ -54,10 +56,11 @@ def test_metadata_station_cache():
             station = r.json()
 
             assert station['properties']['wigos_station_identifier'] == wsi
+            assert station['properties']['wmo_region'] in wmo_regions
 
 
 def test_metadata_station_publish():
-    """Test discovery metadata publishing"""
+    """Test station metadata publishing"""
 
     r = SESSION.get(f'{API_URL}/collections/stations/items')
 
