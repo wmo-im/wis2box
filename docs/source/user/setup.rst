@@ -52,7 +52,9 @@ Updated variables in ``dev.env``, for example:
    WIS2BOX_BROKER_PUBLIC=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@mosquitto:1883
 
    # update storage default credentials
-   WIS2BOX_STORAGE_USERNAME=wis2box-user
+   # username should be 3 or more characters
+   WIS2BOX_STORAGE_USERNAME=wis2box
+   # password should be 8 or more characters
    WIS2BOX_STORAGE_PASSWORD=wis2box123
 
    # set logging and data retention

@@ -81,8 +81,8 @@ See below a Python example to upload data using the MinIO package:
     minio_path = '/ita/italy_wmo_demo/data/core/weather/surface-based-observations/synop/'
 
     endpoint = 'http://localhost:9000'
-    WIS2BOX_STORAGE_USERNAME = 'wis2box-storage-user'
-    WIS2BOX_STORAGE_PASSWORD = '<your-unique-password>'
+    WIS2BOX_STORAGE_USERNAME = '<your-wis2box-storage-username>'
+    WIS2BOX_STORAGE_PASSWORD = '<your-wis2box-storage-password>'
 
     client = Minio(
         endpoint=endpoint,
