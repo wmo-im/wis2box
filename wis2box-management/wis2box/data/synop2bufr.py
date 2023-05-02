@@ -71,8 +71,13 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
         LOGGER.debug('Generating BUFR4')
         input_bytes = self.as_bytes(input_data)
 
-        year = int(file_match.group(1))
-        month = int(file_match.group(2))
+        try:
+            year = int(file_match.group(1))
+            month = int(file_match.group(2))
+        except IndexError:
+            msg = 'Missing year and/or date in filename pattern'
+            LOGGER.error(msg)
+            raise ValueError(msg)
 
         LOGGER.debug('Transforming data')
         results = transform_synop(input_bytes.decode(), self.station_metadata,

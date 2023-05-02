@@ -62,9 +62,9 @@ This plugin is for the purposes of publishing GeoJSON data to the API.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This plugin converts SYNOP ASCII data into BUFR using ``synop2bufr``.  A ``file-pattern`` can be used
-to filter on incoming data based on a regular expression.  Note that the regex **must** contain two groups
-(for 4-digit year and 2-digit month), which are used as part of synop2bufr processing.  Consult the `synop2bufr`_ documentation
-for more information.
+to filter on incoming data based on a regular expression.
+
+Note that the regular expression **must** contain two groups (for 4-digit year and 2-digit month), which are used as part of synop2bufr processing.  Consult the `synop2bufr`_ documentation for more information.
 
 A typical synop2bufr plugin workflow would like:
 
@@ -73,7 +73,7 @@ A typical synop2bufr plugin workflow would like:
    txt:
        - plugin: wis2box.data.synop2bufr.ObservationDataSYNOP2BUFR
          notify: true  # trigger GeoJSON publishing for API and UI
-         file-pattern: '^A_SMR.*EDZW_(\d{4})(\d{2}).*.txt$'
+         file-pattern: '^station_123_(\d{4})(\d{2}).*.txt$'  # example: station_123_202305_112342.txt (where ``2023`` is the year and ``05`` is the month)
 
 
 ``wis2box.data.bufr4.ObservationDataBUFR``
