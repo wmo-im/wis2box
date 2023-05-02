@@ -73,7 +73,7 @@ A typical synop2bufr plugin workflow would like:
    txt:
        - plugin: wis2box.data.synop2bufr.ObservationDataSYNOP2BUFR
          notify: true  # trigger GeoJSON publishing for API and UI
-         file-pattern: '^station_123_(\d{4})(\d{2}).*.txt$'  # example: station_123_202305_112342.txt (where ``2023`` is the year and ``05`` is the month)
+         file-pattern: '^station_123_(\d{4})(\d{2}).*.txt$'  # example: station_123_202305_112342.txt (where 2023 is the year and 05 is the month)
 
 
 ``wis2box.data.bufr4.ObservationDataBUFR``
