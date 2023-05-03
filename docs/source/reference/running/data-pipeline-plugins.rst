@@ -4,7 +4,7 @@ Data pipeline plugins
 =====================
 
 Driven by topic hierarchies, wis2box is a plugin architecture orchestrating all the
-required components of a WIS2 node.  wis2box also provides a data pipeline plugin
+required components of a WIS2 Node.  wis2box also provides a data pipeline plugin
 architecture which allows for users to define a plugin based on a topic hierarchy to
 publish incoming data (see :ref:`data-mappings` for more information).
 
@@ -15,7 +15,8 @@ publish incoming data (see :ref:`data-mappings` for more information).
 Default pipeline plugins
 ------------------------
 
-wis2box provides a number of data pipeline plugins which users can be used "out of the box".
+wis2box provides a number of data pipeline plugins by default, which users can be used "out of the box".  The
+list below describes each plugin and provides an example data mappings configuration.
 
 ``wis2box.data.csv2bufr.ObservationDataCSV2BUFR``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -25,7 +26,7 @@ can be configured to process the data accordingly.  In addition, ``file-pattern`
 to filter on incoming data based on a regular expression.  Consult the `csv2bufr`_ documentation
 for more information on configuration and templating.
 
-A typical csv2bufr plugin workflow would like:
+A typical csv2bufr plugin workflow definition would by defined as follows:
 
 .. code-block:: yaml
 
@@ -44,7 +45,7 @@ observation data into GeoJSON using ``bufr2geojson``.  A ``file-pattern``
 can be used to filter on incoming data based on a regular expression.  Consult the `bufr2geojson`_ documentation
 for more information on configuration and templating.
 
-A typical bufr2geojson plugin workflow would like:
+A typical bufr2geojson plugin workflow definition would be defined as follows:
 
 .. code-block:: yaml
 
@@ -62,21 +63,21 @@ This plugin is for the purposes of publishing GeoJSON data to the API.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This plugin converts SYNOP ASCII data into BUFR using ``synop2bufr``.  A ``file-pattern`` can be used
-to filter on incoming data based on a regular expression.  Note that the regex **must** contain two groups
-(for 4-digit year and 2-digit month), which are used as part of synop2bufr processing.  Consult the `synop2bufr`_ documentation
-for more information.
+to filter on incoming data based on a regular expression.
 
-A typical synop2bufr plugin workflow would like:
+Note that the regular expression **must** contain two groups (for 4-digit year and 2-digit month), which are used as part of synop2bufr processing.  Consult the `synop2bufr`_ documentation for more information.
+
+A typical synop2bufr plugin workflow definition would be defined as follows:
 
 .. code-block:: yaml
 
    txt:
        - plugin: wis2box.data.synop2bufr.ObservationDataSYNOP2BUFR
          notify: true  # trigger GeoJSON publishing for API and UI
-         file-pattern: '^A_SMR.*EDZW_(\d{4})(\d{2}).*.txt$'
+         file-pattern: '^station_123_(\d{4})(\d{2}).*.txt$'  # example: station_123_202305_112342.txt (where 2023 is the year and 05 is the month)
 
 
-``wis2box.data.bufr4.ObservationDataBUFR``
+
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This plugin takes an incoming BUFR4 data file and separates it into individual BUFR bulletins if there
@@ -89,7 +90,7 @@ being discarded.
 For processing efficiency, and to allow for concurrent processing, it is recommended that the input data
 to this plugin is already separated into one BUFR message per file and one subset per message.
 
-A typical BUFR4 plugin workflow would like:
+A typical BUFR4 plugin workflow definition would be defined as follows:
 
 .. code-block:: yaml
 

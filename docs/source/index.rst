@@ -2,7 +2,7 @@
 Welcome
 =======
 
-WIS2 in a box (wis2box) is a Free and Open Source (FOSS) Reference Implementation of a WMO WIS2 node. The project provides a plug and play toolset to ingest, process, and publish weather/climate/water data using standards-based approaches in alignment with the WIS2 principles.  wis2box also provides access to all data in the `WIS2 network <https://community.wmo.int/activity-areas/wis>`_.  wis2box is designed to have a low barrier to entry for data providers, providing enabling infrastructure and services for data discovery, access, and visualization.
+WIS2 in a box (wis2box) is a Free and Open Source (FOSS) Reference Implementation of a WMO WIS2 Node. The project provides a plug and play toolset to ingest, process, and publish weather/climate/water data using standards-based approaches in alignment with the WIS2 principles.  wis2box also provides access to all data in the `WIS2 network <https://community.wmo.int/activity-areas/wis>`_.  wis2box is designed to have a low barrier to entry for data providers, providing enabling infrastructure and services for data discovery, access, and visualization.
 
 wis2box enables World Meteorological Organization (WMO) members to publish and download data through the WIS2 network. The main features are:
 
