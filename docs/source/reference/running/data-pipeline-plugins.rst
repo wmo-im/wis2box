@@ -4,7 +4,7 @@ Data pipeline plugins
 =====================
 
 Driven by topic hierarchies, wis2box is a plugin architecture orchestrating all the
-required components of a WIS2 node.  wis2box also provides a data pipeline plugin
+required components of a WIS2 Node.  wis2box also provides a data pipeline plugin
 architecture which allows for users to define a plugin based on a topic hierarchy to
 publish incoming data (see :ref:`data-mappings` for more information).
 
@@ -15,7 +15,8 @@ publish incoming data (see :ref:`data-mappings` for more information).
 Default pipeline plugins
 ------------------------
 
-wis2box provides a number of data pipeline plugins which users can be used "out of the box".
+wis2box provides a number of data pipeline plugins by default, which users can be used "out of the box".  The
+list below describes each plugin and provides an example data mappings configuration.
 
 ``wis2box.data.csv2bufr.ObservationDataCSV2BUFR``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
