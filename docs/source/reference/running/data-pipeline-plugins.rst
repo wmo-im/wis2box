@@ -25,7 +25,7 @@ can be configured to process the data accordingly.  In addition, ``file-pattern`
 to filter on incoming data based on a regular expression.  Consult the `csv2bufr`_ documentation
 for more information on configuration and templating.
 
-A typical csv2bufr plugin workflow would like:
+A typical csv2bufr plugin workflow definition would by defined as follows:
 
 .. code-block:: yaml
 
@@ -44,7 +44,7 @@ observation data into GeoJSON using ``bufr2geojson``.  A ``file-pattern``
 can be used to filter on incoming data based on a regular expression.  Consult the `bufr2geojson`_ documentation
 for more information on configuration and templating.
 
-A typical bufr2geojson plugin workflow would like:
+A typical bufr2geojson plugin workflow definition would be defined as follows:
 
 .. code-block:: yaml
 
@@ -66,7 +66,7 @@ to filter on incoming data based on a regular expression.
 
 Note that the regular expression **must** contain two groups (for 4-digit year and 2-digit month), which are used as part of synop2bufr processing.  Consult the `synop2bufr`_ documentation for more information.
 
-A typical synop2bufr plugin workflow would like:
+A typical synop2bufr plugin workflow definition would be defined as follows:
 
 .. code-block:: yaml
 
@@ -76,7 +76,7 @@ A typical synop2bufr plugin workflow would like:
          file-pattern: '^station_123_(\d{4})(\d{2}).*.txt$'  # example: station_123_202305_112342.txt (where 2023 is the year and 05 is the month)
 
 
-``wis2box.data.bufr4.ObservationDataBUFR``
+
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This plugin takes an incoming BUFR4 data file and separates it into individual BUFR bulletins if there
@@ -89,7 +89,7 @@ being discarded.
 For processing efficiency, and to allow for concurrent processing, it is recommended that the input data
 to this plugin is already separated into one BUFR message per file and one subset per message.
 
-A typical BUFR4 plugin workflow would like:
+A typical BUFR4 plugin workflow definition would be defined as follows:
 
 .. code-block:: yaml
 
