@@ -111,8 +111,9 @@ class PygeoapiConfig(BaseConfig):
         else:
             resource_id = meta['topic_hierarchy']
 
-        if meta['id'] in ['discovery-metadata', 'stations']:
-            editable = True
+        # TODO: uncomment once admin UI is implemented
+        # if meta['id'] in ['discovery-metadata', 'stations']:
+        #     editable = True
 
         LOGGER.debug(f'Resource id: {resource_id}')
 
