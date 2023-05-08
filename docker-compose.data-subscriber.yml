@@ -1,0 +1,14 @@
+services:
+  wis2box-data-subscriber:
+    container_name: wis2box-data-subscriber
+    image: ghcr.io/wmo-im/wis2box-data-subscriber
+    environment:
+      - LOGGING_LEVEL=${WIS2BOX_LOGGING_LOGLEVEL:-WARNING}
+      - CENTRE_ID=${CENTRE_ID}
+      - COUNTRY_ID=${COUNTRY_ID}
+      - AWS_BROKER=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@localhost:1883
+      - MINIO_BUCKET=wis2box-incoming
+      - MINIO_ENDPOINT=http://localhost:9000
+      - MINIO_USER=${WIS2BOX_STORAGE_USERNAME:-minio}
+      - MINIO_PASSWORD=${WIS2BOX_STORAGE_PASSWORD:-minio123}
+    network_mode: host
