@@ -98,16 +98,6 @@ class DiscoveryMetadata(BaseMetadata):
         LOGGER.debug('Generating OARec discovery metadata')
         record = WMOWCMP2OutputSchema().write(md, stringify=False)
 
-        anytext_bag = [
-            md['identification']['title'],
-            md['identification']['abstract']
-        ]
-
-        for k, v in md['identification']['keywords'].items():
-            anytext_bag.extend(v['keywords'])
-
-        record['properties']['_metadata-anytext'] = ' '.join(anytext_bag)
-
         return record
 
 
@@ -165,6 +155,16 @@ def discovery_metadata():
 
 @click.command()
 @click.pass_context
+@cli_helpers.OPTION_VERBOSITY
+def setup(ctx, verbosity):
+    """Initializes metadata repository"""
+
+    click.echo('Setting up discovery metadata repository')
+    setup_collection(meta=gcm())
+
+
+@click.command()
+@click.pass_context
 @cli_helpers.ARGUMENT_FILEPATH
 @cli_helpers.OPTION_VERBOSITY
 def publish(ctx, filepath, verbosity):
@@ -198,4 +198,5 @@ def unpublish(ctx, identifier, verbosity):
 
 
 discovery_metadata.add_command(publish)
+discovery_metadata.add_command(setup)
 discovery_metadata.add_command(unpublish)

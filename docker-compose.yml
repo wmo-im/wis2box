@@ -13,7 +13,7 @@ services:
 
   wis2box-ui:
     container_name: wis2box-ui
-    image: ghcr.io/wmo-im/wis2box-ui:latest
+    image: ghcr.io/wmo-im/wis2box-ui:0.5.3
     restart: always
     env_file:
       - default.env
@@ -21,9 +21,19 @@ services:
     depends_on:
       - wis2box-api
 
+#  wis2box-ui-admin:
+#    container_name: wis2box-ui-admin
+#    image: ghcr.io/wmo-im/wis2box-ui-admin:latest
+#    restart: always
+#    env_file:
+#      - default.env
+#      - dev.env
+#    depends_on:
+#      - wis2box-api
+
   wis2box-api:
     container_name: wis2box-api
-    image: ghcr.io/wmo-im/wis2box-api:0.5.1
+    image: ghcr.io/wmo-im/wis2box-api:latest
     restart: always
     env_file:
       - default.env
@@ -58,12 +68,12 @@ services:
 
   elasticsearch:
     container_name: elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.6.2
     restart: always
     environment:
       - discovery.type=single-node
+      - discovery.seed_hosts=[]
       - node.name=elasticsearch-01
-      - discovery.seed_hosts=elasticsearch-01
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - cluster.name=es-wis2box

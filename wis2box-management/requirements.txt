@@ -1,4 +1,4 @@
-elasticsearch<8
+elasticsearch
 isodate
 minio
 OWSLib

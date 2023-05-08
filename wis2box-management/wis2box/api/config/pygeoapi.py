@@ -104,10 +104,16 @@ class PygeoapiConfig(BaseConfig):
         :returns: `dict` of collection configuration
         """
 
+        editable = False
+
         if meta['id'] in ['discovery-metadata', 'messages', 'stations']:
             resource_id = meta['id']
         else:
             resource_id = meta['topic_hierarchy']
+
+        # TODO: uncomment once admin UI is implemented
+        # if meta['id'] in ['discovery-metadata', 'stations']:
+        #     editable = True
 
         LOGGER.debug(f'Resource id: {resource_id}')
 
@@ -131,6 +137,7 @@ class PygeoapiConfig(BaseConfig):
             },
             'providers': [{
                 'type': type_,
+                'editable': editable,
                 'name': provider_name,
                 'data': f'{API_BACKEND_URL}/{resource_id}',
                 'id_field': meta.get('id_field'),

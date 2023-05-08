@@ -19,7 +19,6 @@
 #
 ###############################################################################
 
-from copy import deepcopy
 import logging
 
 from elasticsearch import Elasticsearch, helpers
@@ -33,60 +32,59 @@ LOGGER = logging.getLogger(__name__)
 
 # default index settings
 SETTINGS = {
-    'settings': {
-        'number_of_shards': 1,
-        'number_of_replicas': 0
-    },
-    'mappings': {
-        'properties': {
-            'geometry': {
-                'type': 'geo_shape'
-            },
-            'reportId': {
-                'type': 'text',
-                'fields': {
-                    'raw': {
-                        'type': 'keyword'
-                    }
+    'number_of_shards': 1,
+    'number_of_replicas': 0
+}
+
+MAPPINGS = {
+    'properties': {
+        'geometry': {
+            'type': 'geo_shape'
+        },
+        'reportId': {
+            'type': 'text',
+            'fields': {
+                'raw': {
+                    'type': 'keyword'
                 }
-            },
+            }
+        },
+        'properties': {
             'properties': {
-                'properties': {
-                    'resultTime': {
-                        'type': 'date',
-                        'fields': {
-                            'raw': {
-                                'type': 'keyword'
-                            }
+                'resultTime': {
+                    'type': 'date',
+                    'fields': {
+                        'raw': {
+                            'type': 'keyword'
                         }
-                    },
-                    'pubTime': {
-                        'type': 'date',
-                        'fields': {
-                            'raw': {
-                                'type': 'keyword'
-                            }
+                    }
+                },
+                'pubTime': {
+                    'type': 'date',
+                    'fields': {
+                        'raw': {
+                            'type': 'keyword'
                         }
-                    },
-                    'phenomenonTime': {
-                        'type': 'text'
-                    },
-                    'wigos_station_identifier': {
-                        'type': 'text',
-                        'fields': {
-                            'raw': {'type': 'keyword'}
-                        }
-                    },
-                    'value': {
-                        'type': 'float',
-                        'coerce': True
-                    },
-                    'metadata': {
-                        'properties': {
-                            'value': {
-                                'type': 'float',
-                                'coerce': True
-                            }
+                    }
+                },
+                'phenomenonTime': {
+                    'type': 'text'
+                },
+                'wigos_station_identifier': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {'type': 'keyword'}
+                    }
+                },
+                'value': {
+                    'type': 'float',
+                    'coerce': True
+                },
+                'metadata': {
+                    'properties': {
+                        'value': {
+                            'type': 'float',
+                            'coerce': True
                         }
                     }
                 }
@@ -111,7 +109,7 @@ class ElasticBackend(BaseBackend):
         self.type = 'Elasticsearch'
         self.url = defs.get('url').rstrip('/')
 
-        self.conn = Elasticsearch([self.url], timeout=30,
+        self.conn = Elasticsearch(self.url, timeout=30,
                                   max_retries=10, retry_on_timeout=True)
 
     @staticmethod
@@ -140,10 +138,9 @@ class ElasticBackend(BaseBackend):
             LOGGER.error(msg)
             raise RuntimeError(msg)
 
-        settings = deepcopy(SETTINGS)
-
         LOGGER.debug('Creating index')
-        self.conn.indices.create(index=es_index, body=settings)
+        self.conn.options().indices.create(index=es_index, mappings=MAPPINGS,
+                                           settings=SETTINGS)
 
         return self.has_collection(collection_id)
 
@@ -162,7 +159,7 @@ class ElasticBackend(BaseBackend):
             LOGGER.error(msg)
             raise RuntimeError(msg)
 
-        if self.conn.indices.exists(es_index):
+        if self.conn.indices.exists(index=es_index):
             self.conn.indices.delete(index=es_index)
 
         return not self.has_collection(collection_id)
@@ -178,7 +175,7 @@ class ElasticBackend(BaseBackend):
         es_index = self.es_id(collection_id)
         indices = self.conn.indices
 
-        return indices.exists(es_index)
+        return indices.exists(index=es_index)
 
     def upsert_collection_items(self, collection_id: str, items: list) -> str:
         """
@@ -267,7 +264,7 @@ class ElasticBackend(BaseBackend):
 
         for index in indices:
             LOGGER.debug(f'deleting documents older than {days} days ({before})')  # noqa
-            self.conn.delete_by_query(index=index, body=query_by_date)
+            self.conn.delete_by_query(index=index, **query_by_date)
 
         return
 

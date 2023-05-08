@@ -8,7 +8,7 @@ It is the minimal runtime configuration profile as used in wis2box GitHub CI/CD:
 
 .. note:: wis2box web components are run on port 80 by default.  When using wis2box from source, the default port for web components is 8999, to be used for development.
 
-To download the wis2box from source: 
+To download wis2box from source:
 
 .. code-block:: bash
 
