@@ -36,59 +36,40 @@ Copy this file to your working directory, and update it to suit your needs.
    You must map ``WIS2BOX_HOST_DATADIR`` to the absolute path of a directory on your host machine. This path will be mapped to ``/data/wis2box`` inside the wis2box-management container
    To enable external data sharing you must set ``WIS2BOX_URL`` to the URL pointing to where your host is exposed on the public network.
 
-Updated variables in ``dev.env``, for example:
+.. note::
+   Please ensure you set WIS2BOX_BROKER_PASSWORD and WIS2BOX_STORAGE_PASSWORD to your own unique values !
+   
+   You will use these passwords to connect to your broker and MinIO-storage to help you debug your wis2box-services.
+   
+   Do not share these passwords with external parties.
+
+The next sections assume you use an environment variable for WIS2BOX_HOST_DATADIR that is set to same value used in your dev.env:
 
 .. code-block:: bash
 
-   # data-directory on your host machine that will map to /data/wis2box on the wis2box-container
-   WIS2BOX_HOST_DATADIR=/home/wis2box-user/wis2box-data
-   
-   # update broker default credentials
-   WIS2BOX_BROKER_USERNAME=wis2box-user
-   WIS2BOX_BROKER_PASSWORD=wis2box123
-   WIS2BOX_BROKER_HOST=mosquitto
-   WIS2BOX_BROKER_PORT=1883
-
-   WIS2BOX_BROKER_PUBLIC=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@mosquitto:1883
-
-   # update storage default credentials
-   # username should be 3 or more characters
-   WIS2BOX_STORAGE_USERNAME=wis2box
-   # password should be 8 or more characters
-   WIS2BOX_STORAGE_PASSWORD=wis2box123
-
-   # set logging and data retention
-   WIS2BOX_LOGGING_LOGLEVEL=INFO
-   WIS2BOX_DATA_RETENTION_DAYS=30
-
-   # update minio settings after updating storage and broker defaults
-   MINIO_ROOT_USER=${WIS2BOX_STORAGE_USERNAME}
-   MINIO_ROOT_PASSWORD=${WIS2BOX_STORAGE_PASSWORD}
-   MINIO_NOTIFY_MQTT_USERNAME_WIS2BOX=${WIS2BOX_BROKER_USERNAME}
-   MINIO_NOTIFY_MQTT_PASSWORD_WIS2BOX=${WIS2BOX_BROKER_PASSWORD}
-   MINIO_NOTIFY_MQTT_BROKER_WIS2BOX=tcp://${WIS2BOX_BROKER_HOST}:${WIS2BOX_BROKER_PORT}
+   export WIS2BOX_HOST_DATADIR=/home/example/wis2box-data
 
 Data mappings
 -------------
 
 wis2box configuration requires a data mappings file, which defines the plugins used to process your data.
-Example mapping files are provided in the current directory:
+Example mapping files are included in the release-archive:
 
-* ``synop-bufr-mappings.yml``, input is BUFR data containing surface synoptic observations
-* ``synop-csv-mappings.yml``, input is CSV data containing surface synoptic observations
+* ``synop-bufr-mappings.yml``, input is binary data (BUFR) defined by .bufr extension
+* ``synop-csv-mappings.yml``, input is comma-separated-values defined by .csv extension
+* ``synop-synop-mappings.yml``, input is SYNOP defined with .txt extension
 
-For example, if your incoming data contains ``.bufr4`` files containing synoptic observations, and your ``WIS2BOX_HOST_DATADIR`` environment variable
-is set to ``/home/wis2box-user/wis2box-data``, you can copy the following example:
+For example, if your incoming data contains ``.bufr4`` files containing synoptic observations, you can copy the following example:
 
 .. code-block:: bash
 
-   cat synop-bufr-mappings.yml >> /home/wis2box-user/wis2box-data/data-mappings.yml
+   cp synop-bufr-mappings.yml ${WIS2BOX_HOST_DATADIR}/data-mappings.yml
 
 .. note::
 
    The file should be called ``data-mappings.yml`` and should be placed in the directory you defined as ``WIS2BOX_HOST_DATADIR``.
 
-Edit ``/home/wis2box-user/wis2box-data/data-mappings.yml``:
+Edit ``${WIS2BOX_HOST_DATADIR}/data-mappings.yml``:
  
  * Replace ``country`` with your corresponding ISO 3166 alpha-3 country code in lowercase
  * Replace ``centre_id`` with the string identifying the centre running your wis2node in lowercase, alphanumeric characters
@@ -127,6 +108,31 @@ If you need to define multiple datasets, you can add multiple entries in your ``
       
 In this case the data mappings configuration has specified 2 datasets (SYNOP, and TEMP).
 
+You can also combine input for the same dataset provided in different formats.
+For example, if you want to process input data that is provided both as SYNOP and binary data :
+
+.. code-block:: bash
+
+   data:
+      ita.italy_wmo_demo.data.core.weather.surface-based-observations.synop:
+        plugins:
+            bufr:
+                - plugin: wis2box.data.bufr4.ObservationDataBUFR
+                  notify: true
+                  buckets:
+                    - ${WIS2BOX_STORAGE_INCOMING}
+                  file-pattern: '*'
+            csv:
+                - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
+                  template: synop_bufr.json
+                  notify: true
+                  file-pattern: '*'
+            bufr4:
+                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
+                  buckets:
+                    - ${WIS2BOX_STORAGE_PUBLIC}
+                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
+
 .. note::
 
    The dataset identifier is used to define the topic hierarchy for your data (see `WIS2 topic hierarchy`_).  The top 3 levels of the WIS2 topic hierarchy (``origin/a/wis2``) are automatically included by wis2box when publishing your data.
@@ -154,10 +160,10 @@ You can copy this file to ``metadata/station/station_list.csv`` in your $WIS2BOX
 
 .. code-block:: bash
 
-   mkdir -p /home/wis2box-user/wis2box-data/metadata/station
-   cp station_list.csv /home/wis2box-user/wis2box-data/metadata/station
+   mkdir -p ${WIS2BOX_HOST_DATADIR}/metadata/station
+   cp station_list.csv ${WIS2BOX_HOST_DATADIR}/metadata/station
 
-And edit ``metadata/station/station_list.csv`` to include the data for your stations.
+And edit ``${WIS2BOX_HOST_DATADIR}/metadata/station/station_list.csv`` to include the data for your stations.
 
 .. note::
 

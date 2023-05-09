@@ -117,3 +117,20 @@ ERROR - Failed to publish, wsi: ..., tsi: XXXXX
 
 Data arrived for a station that is not present in the station metadata cache. 
 To add missing stations, update the file ``metadata/station/station_list.csv`` in the wis2box data directory (see :ref:`setup`).
+
+Error: no such container: wis2box-management
+--------------------------------------------
+
+If the wis2box-management container is not running the 'login' command will fail. 
+The wis2box-management container depends on other services being available before it can successfully started.
+
+Please check all services are Running using the following command:
+
+.. code-block:: bash
+
+    python3 wis2box-ctl.py status
+
+Possible issues are:
+
+- port 80 is already in use, the nginx-service will fail to start if there is already a web-server running on your instance
+- WIS2BOX_STORAGE_PASSWORD is too short, minio will fail to start if you specify a WIS2BOX_STORAGE_PASSWORD of less than 8 characters
