@@ -132,6 +132,32 @@ For example to correctly ingest data on the topic ``ita.roma_met_centre.data.cor
 
 See the GitHub repository `wis2box-ftp`_ for more information on this service.
 
+wis2box-data-subscriber
+-----------------------
+
+You can add an additional service on the host running your wis2box instance to allow data to be ingested by publishing an MQTT message to the wis2box broker.
+
+This service subscribes to the topic ``data-incoming/#`` on the wis2box broker and parses the content of received messages and publishes the result in the ``wis2box-incoming`` bucket.
+
+To start the ``wis2box-data-subscriber``, add the following additional variables to ``dev.env``:
+
+.. code-block:: bash
+
+    COUNTRY_ID=zmb  # set country_id used in wis2-topic-hierarchy
+    CENTRE_ID=zmb_met_centre  # set centre_id for wis2-topic-hierarchy
+
+These variables determine the destination path in the ``wis2box-incoming`` bucket:
+
+``{COUNTRY_ID}/{CENTRE_ID}/data/core/weather/surface-based-observations/synop/``
+
+You then you can activate the optional 'wis2box-data-subscriber' service as follows:
+
+.. code-block:: bash
+
+    docker-compose -f docker-compose.data-subscriber.yml --env-file dev.env up -d
+
+See the GitHub `wis2box-data-subscriber`_ repository for more information on this service.
+
 Next steps
 ----------
 
@@ -142,4 +168,5 @@ Next: :ref:`public-services-setup`
 
 .. _`MinIO`: https://min.io/docs/minio/container/index.html
 .. _`wis2box-ftp`: https://github.com/wmo-im/wis2box-ftp
+.. _`wis2box-data-subscriber`: https://github.com/wmo-im/wis2box-data-subscriber
 .. _`WIS2 topic hierarchy`: https://github.com/wmo-im/wis2-topic-hierarchy
