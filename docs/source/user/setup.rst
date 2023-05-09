@@ -267,7 +267,7 @@ The first step is add the new dataset as defined by the YAML file for your disco
 
 .. code-block:: bash
 
-   wis2box data add-collection $WIS2BOX_DATADIR/surface-weather-observations.yml
+   wis2box data add-collection ${WIS2BOX_HOST_DATADIR}/surface-weather-observations.yml
 
 .. note::
 
@@ -283,7 +283,7 @@ The second step is to publish discovery metadata and cache its content in the wi
 
 .. code-block:: bash
 
-   wis2box metadata discovery publish $WIS2BOX_DATADIR/surface-weather-observations.yml
+   wis2box metadata discovery publish ${WIS2BOX_HOST_DATADIR}/surface-weather-observations.yml
 
 This command publishes an MQTT message with information about your dataset to the WIS2 Global Discovery Catalogue. Repeat this command whenever you have to provide updated metadata about your dataset.
 
