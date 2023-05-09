@@ -130,7 +130,7 @@ def gcm(mcf: Union[dict, str]) -> dict:
         'links': generated['links'],
         'id_field': 'id',
         'time_field': 'resultTime',
-        'title_field': 'id',
+        'title_field': 'id'
     }
 
 
@@ -204,8 +204,11 @@ def add_collection(ctx, filepath, verbosity):
 
     meta = gcm(filepath.read())
 
-    if meta['topic_hierarchy'] not in DATADIR_DATA_MAPPINGS['data'].keys():
-        raise click.ClickException('No matching topic hierarchy')
+    if meta['topic_hierarchy'] not in DATADIR_DATA_MAPPINGS['data']:
+        data_mappings_topics = '\n'.join(DATADIR_DATA_MAPPINGS['data'].keys())
+        msg = (f"topic_hierarchy={meta['topic_hierarchy']} not found"
+               f" in data-mappings:\n\n{data_mappings_topics}")
+        raise click.ClickException(msg)
 
     setup_collection(meta=meta)
 

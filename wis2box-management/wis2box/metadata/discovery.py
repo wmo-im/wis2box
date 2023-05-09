@@ -178,8 +178,11 @@ def publish(ctx, filepath, verbosity):
         dm = DiscoveryMetadata()
         record_mcf = dm.parse_record(filepath.read())
 
-        if record_mcf['wis2box']['topic_hierarchy'] not in DATADIR_DATA_MAPPINGS['data'].keys():  # noqa
-            raise click.ClickException('No matching topic hierarchy')
+        if record_mcf['wis2box']['topic_hierarchy'] not in DATADIR_DATA_MAPPINGS['data']:  # noqa
+            data_mappings_topics = '\n'.join(DATADIR_DATA_MAPPINGS['data'].keys())  # noqa
+            msg = (f"topic_hierarchy={record_mcf['wis2box']['topic_hierarchy']} not found"  # noqa
+                   f" in data-mappings:\n\n{data_mappings_topics}")
+            raise click.ClickException(msg)
 
         record = dm.generate(record_mcf)
         publish_broker_message(record, record_mcf['wis2box']['country'],
