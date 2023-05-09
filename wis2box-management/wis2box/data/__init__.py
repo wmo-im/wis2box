@@ -21,12 +21,14 @@
 
 from datetime import datetime, timedelta, timezone
 import logging
+from typing import Union
 
 import click
 
 from wis2box import cli_helpers
 from wis2box.api import (setup_collection, remove_collection,
                          delete_collections_by_retention)
+from wis2box.data_mappings import DATADIR_DATA_MAPPINGS
 from wis2box.env import (STORAGE_SOURCE, STORAGE_ARCHIVE, STORAGE_PUBLIC,
                          STORAGE_DATA_RETENTION_DAYS, STORAGE_INCOMING)
 from wis2box.handler import Handler
@@ -89,7 +91,7 @@ def clean_data(source_path: str, days: int) -> None:
     delete_collections_by_retention(days)
 
 
-def gcm(mcf: dict) -> dict:
+def gcm(mcf: Union[dict, str]) -> dict:
     """
     Generate collection metadata from metadata control file
 
@@ -201,11 +203,13 @@ def add_collection(ctx, filepath, verbosity):
     """Add collection index to API backend"""
 
     meta = gcm(filepath.read())
-    # topic_hierarchy = meta['id']
 
-    # th, _ = validate_and_load(topic_hierarchy)
+    if meta['topic_hierarchy'] not in DATADIR_DATA_MAPPINGS['data']:
+        data_mappings_topics = '\n'.join(DATADIR_DATA_MAPPINGS['data'].keys())
+        msg = (f"topic_hierarchy={meta['topic_hierarchy']} not found"
+               f" in data-mappings:\n\n{data_mappings_topics}")
+        raise click.ClickException(msg)
 
-    # click.echo(f'Adding collection: {th.dotpath}')
     setup_collection(meta=meta)
 
     click.echo("Done")
