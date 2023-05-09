@@ -135,28 +135,28 @@ See the GitHub repository `wis2box-ftp`_ for more information on this service.
 wis2box-data-subscriber
 -----------------------
 
-You can add an additional service on the host running your wis2box-instance to allow your data to be ingested by publishing an MQTT-message on the wis2box-broker.
+You can add an additional service on the host running your wis2box instance to allow data to be ingested by publishing an MQTT message to the wis2box broker.
 
-This service subscribes to the topic 'data-incoming/#' on the wis2box-broker and parses the content of received messages and publishes the result in the wis2box-incoming bucket.
+This service subscribes to the topic ``data-incoming/#`` on the wis2box broker and parses the content of received messages and publishes the result in the ``wis2box-incoming`` bucket.
 
-To start the wis2box-data-subscriber using the docker-compose file included in the repository, add the following additional variables to your dev.env:
+To start the ``wis2box-data-subscriber``, add the following additional variables to ``dev.env``:
 
 .. code-block:: bash
 
-    COUNTRY_ID=zmb # set country_id used in wis2-topic-hierarchy
-    CENTRE_ID=zmb_met_centre # set centre_id for wis2-topic-hierarchy
+    COUNTRY_ID=zmb  # set country_id used in wis2-topic-hierarchy
+    CENTRE_ID=zmb_met_centre  # set centre_id for wis2-topic-hierarchy
 
-These variables determine the destination path in the wis2box-incoming bucket:
+These variables determine the destination path in the ``wis2box-incoming`` bucket:
 
-`{COUNTRY_ID}/{CENTRE_ID}/data/core/weather/surface-based-observations/synop/`
+``{COUNTRY_ID}/{CENTRE_ID}/data/core/weather/surface-based-observations/synop/``
 
-You then you can activate the optional service 'wis2box-data-subscriber' as follows:
+You then you can activate the optional 'wis2box-data-subscriber' service as follows:
 
 .. code-block:: bash
 
     docker-compose -f docker-compose.data-subscriber.yml --env-file dev.env up -d
 
-See the GitHub repository `wis2box-data-subscriber`_ for more information on this service.
+See the GitHub `wis2box-data-subscriber`_ repository for more information on this service.
 
 Next steps
 ----------
