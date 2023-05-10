@@ -24,16 +24,16 @@ When running wis2box with SSL, you have to set additional environment variables 
   WIS2BOX_SSL_CERT=/etc/letsencrypt/live/example.wis2box.io/fullchain.pem
   WIS2BOX_SSL_KEY=/etc/letsencrypt/live/example.wis2box.io/privkey.pem
 
-Please remember to update the ``WIS2BOX_URL`` and ``WIS2BOX_API_URL``environment variable after enabling SSL, ensuring your URL starts with `https://`.
+Please remember to update the ``WIS2BOX_URL`` and ``WIS2BOX_API_URL``environment variable after enabling SSL, ensuring your URL starts with ``https://``.
 
-Please note that after changing the WIS2BOX_URL and WIS2BOX_API_URL, you will have to restart your wis2box:
+Please note that after changing the ``WIS2BOX_URL`` and ``WIS2BOX_API_URL`` environment variables, you will need to restart your wis2box:
 
 .. code-block:: bash
 
   python3 wis2box-ctl.py stop
   python3 wis2box-ctl.py --ssl start
 
-And repeat the commands for adding your dataset and publishing your metadata, to ensure the URLs are updated in the records:
+After restarting wis2box, repeat the commands for adding your dataset and publishing your metadata, to ensure the URLs are updated accordingly:
 
 .. code-block:: bash
 
