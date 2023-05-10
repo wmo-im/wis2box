@@ -5,7 +5,7 @@ data:
                 - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
                   template: synop_bufr.json
                   notify: true
-                  file-pattern: '*'
+                  file-pattern: '^.*\.csv$'
             bufr4:
                 - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
                   buckets:
