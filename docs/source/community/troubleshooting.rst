@@ -117,3 +117,40 @@ ERROR - Failed to publish, wsi: ..., tsi: XXXXX
 
 Data arrived for a station that is not present in the station metadata cache. 
 To add missing stations, update the file ``metadata/station/station_list.csv`` in the wis2box data directory (see :ref:`setup`).
+
+Error: no such container: wis2box-management
+--------------------------------------------
+
+If the wis2box-management container is not running the 'login' command will fail. 
+The wis2box-management container depends on other services being available before it can successfully started.
+
+Please check all services are Running using the following command:
+
+.. code-block:: bash
+
+    python3 wis2box-ctl.py status
+
+Possible issues are:
+
+- port 80 is already in use, the nginx-service will fail to start if there is already a web-server running on your instance
+- WIS2BOX_STORAGE_PASSWORD is too short, minio will fail to start if you specify a WIS2BOX_STORAGE_PASSWORD of less than 8 characters
+
+wisbox-UI is empty
+------------------
+
+If when you access the wis2box-UI you see the interface but no datasets are visible, check the WIS2BOX_URL and WIS2BOX_API_URL are set correctly.
+
+Please note that after changing the WIS2BOX_URL and WIS2BOX_API_URL, you will have to restart your wis2box:
+
+.. code-block:: bash
+
+  python3 wis2box-ctl.py stop
+  python3 wis2box-ctl.py start
+
+And repeat the commands for adding your dataset and publishing your metadata, to ensure the URLs are updated in the records:
+
+.. code-block:: bash
+
+  python3 wis2box-ctl.py login
+  wis2box data add-collection ${WIS2BOX_HOST_DATADIR}/surface-weather-observations.yml
+  wis2box metadata discovery publish ${WIS2BOX_HOST_DATADIR}/surface-weather-observations.yml
