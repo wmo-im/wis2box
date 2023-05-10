@@ -37,13 +37,13 @@ Copy this file to your working directory, and update it to suit your needs.
    To enable external data sharing you must set ``WIS2BOX_URL`` to the URL pointing to where your host is exposed on the public network.
 
 .. note::
-   Please ensure you set WIS2BOX_BROKER_PASSWORD and WIS2BOX_STORAGE_PASSWORD to your own unique values !
+   Please ensure you set ``WIS2BOX_BROKER_PASSWORD`` and ``WIS2BOX_STORAGE_PASSWORD`` to your own unique values.
    
-   You will use these passwords to connect to your broker and MinIO-storage to help you debug your wis2box-services.
+   You will use these passwords to connect to your broker and MinIO storage to help you debug your wis2box services.
    
    Do not share these passwords with external parties.
 
-The next sections assume you use an environment variable for WIS2BOX_HOST_DATADIR that is set to same value used in your dev.env:
+The next sections assume you use an environment variable for ``WIS2BOX_HOST_DATADIR`` that is set to same value used in ``dev.env``:
 
 .. code-block:: bash
 
@@ -53,11 +53,11 @@ Data mappings
 -------------
 
 wis2box configuration requires a data mappings file, which defines the plugins used to process your data.
-Example mapping files are included in the release-archive:
+Example mapping files are included in the release archive:
 
-* ``synop-bufr-mappings.yml``, input is binary data (BUFR) defined by .bufr extension
-* ``synop-csv-mappings.yml``, input is comma-separated-values defined by .csv extension
-* ``synop-synop-mappings.yml``, input is SYNOP defined with .txt extension
+* ``synop-bufr-mappings.yml``, input is binary data (BUFR) defined by a ``.bufr`` extension
+* ``synop-csv-mappings.yml``, input is comma-separated-values defined by a ``.csv`` extension
+* ``synop-synop-mappings.yml``, input is SYNOP defined with a ``.txt`` extension
 
 For example, if your incoming data contains ``.bufr4`` files containing synoptic observations, you can copy the following example:
 
@@ -109,7 +109,7 @@ If you need to define multiple datasets, you can add multiple entries in your ``
 In this case the data mappings configuration has specified 2 datasets (SYNOP, and TEMP).
 
 You can also combine input for the same dataset provided in different formats.
-For example, if you want to process input data that is provided both as SYNOP and binary data :
+For example, if you would like to process input data that is provided both as SYNOP and binary data:
 
 .. code-block:: bash
 
