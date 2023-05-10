@@ -39,12 +39,12 @@ RUN if [ "$WIS2BOX_PIP3_EXTRA_PACKAGES" = "None" ]; \
 RUN apt-get update -y && apt-get install -y ${DEBIAN_PACKAGES} \
     # install wis2box data pipeline dependencies
     && pip3 install --no-cache-dir \
-    https://github.com/wmo-im/csv2bufr/archive/main.zip \
-    https://github.com/wmo-im/bufr2geojson/archive/main.zip \
-    https://github.com/wmo-im/pymetdecoder/archive/master.zip \
-    https://github.com/wmo-im/synop2bufr/archive/master.zip \
-    https://github.com/geopython/pygeometa/archive/master.zip \
-    https://github.com/wmo-im/pywcmp/archive/master.zip \
+    https://github.com/wmo-im/csv2bufr/archive/refs/tags/v0.5.1.zip \
+    https://github.com/wmo-im/bufr2geojson/archive/refs/tags/v0.5.0.zip \
+    https://github.com/wmo-im/pymetdecoder/archive/refs/tags/v0.1.5.zip \
+    https://github.com/wmo-im/synop2bufr/archive/refs/tags/v0.2.0.zip \
+    https://github.com/geopython/pygeometa/archive/refs/tags/0.14.0.zip \
+    https://github.com/wmo-im/pywcmp/archive/refs/tags/0.4.0.zip \
     # install shapely
     && pip3 install --no-cache-dir cython pygeos==0.13 \
     && pip3 install -U "shapely<2" --no-binary shapely \
