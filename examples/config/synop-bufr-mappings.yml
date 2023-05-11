@@ -6,7 +6,7 @@ data:
                   notify: true
                   buckets:
                     - ${WIS2BOX_STORAGE_INCOMING}
-                  file-pattern: '*'
+                  file-pattern: '^.*\.bufr$'
             bufr4:
                 - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
                   buckets:
