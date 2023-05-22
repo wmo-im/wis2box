@@ -3,7 +3,7 @@ isodate
 minio
 OWSLib
 paho-mqtt
-pygeometa
+pygeometa<0.15
 pywis-pubsub
 PyYAML
 requests
