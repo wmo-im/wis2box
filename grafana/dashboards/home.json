@@ -249,6 +249,7 @@
           "id": "organize",
           "options": {
             "excludeByName": {
+              "All unique values": true,
               "Time 1": true,
               "Time 2": true,
               "Time 3": true,
@@ -259,10 +260,7 @@
               "Value #D": true,
               "description": true
             },
-            "indexByName": {},
-            "renameByName": {
-              "All unique values": "Failure descriptions"
-            }
+            "indexByName": {}
           }
         }
       ],
