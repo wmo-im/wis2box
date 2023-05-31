@@ -21,6 +21,7 @@
 
 import click
 from copy import deepcopy
+from datetime import datetime
 import json
 import logging
 
@@ -30,9 +31,11 @@ from wis2box import cli_helpers
 from wis2box.api import (setup_collection, upsert_collection_item,
                          delete_collection_item)
 from wis2box.data_mappings import DATADIR_DATA_MAPPINGS
-from wis2box.env import API_URL, BROKER_PUBLIC
+from wis2box.env import API_URL, BROKER_PUBLIC, STORAGE_PUBLIC, STORAGE_SOURCE
 from wis2box.metadata.base import BaseMetadata
 from wis2box.plugin import load_plugin, PLUGINS
+from wis2box.pubsub.message import WISNotificationMessage
+from wis2box.storage import put_data
 from wis2box.util import json_serial, remove_auth_from_url
 
 LOGGER = logging.getLogger(__name__)
@@ -102,18 +105,24 @@ class DiscoveryMetadata(BaseMetadata):
         return record
 
 
-def publish_broker_message(record, country: str, centre_id: str) -> bool:
+def publish_broker_message(record: dict, storage_path: str, country: str,
+                           centre_id: str) -> str:
     """
     Publish discovery metadata to broker
 
     :param record: `dict` of discovery metadata record
+    :param storage_path: `str` of storage path/object id
     :param country: ISO 3166 alpha 3
     :param centre_id: centre acronym
 
-    :returns: `bool` of publish result
+    :returns: `str` of WIS message
     """
 
     topic = f'origin/a/wis2/{country.lower()}/{centre_id.lower()}/metadata'  # noqa
+
+    datetime_ = datetime.strptime(record['properties']['created'], '%Y-%m-%dT%H:%M:%SZ')  # noqa
+    wis_message = WISNotificationMessage(record['id'], topic, storage_path,
+                                         datetime_, record['geometry']).dumps()
 
     # load plugin for broker
     defs = {
@@ -123,8 +132,10 @@ def publish_broker_message(record, country: str, centre_id: str) -> bool:
     }
     broker = load_plugin('pubsub', defs)
 
-    broker.pub(topic, json.dumps(record, default=json_serial))
+    broker.pub(topic, wis_message)
     LOGGER.info(f'Discovery metadata published to {topic}')
+
+    return wis_message
 
 
 def gcm() -> dict:
@@ -185,9 +196,18 @@ def publish(ctx, filepath, verbosity):
             raise click.ClickException(msg)
 
         record = dm.generate(record_mcf)
-        publish_broker_message(record, record_mcf['wis2box']['country'],
-                               record_mcf['wis2box']['centre_id'])
+
+        data_bytes = json.dumps(record_mcf,
+                                default=json_serial).encode('utf-8')
+        storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/metadata/{record['id']}"  # noqa
+
+        put_data(data_bytes, storage_path)
+
+        message = publish_broker_message(record, storage_path,
+                                         record_mcf['wis2box']['country'],
+                                         record_mcf['wis2box']['centre_id'])
         upsert_collection_item('discovery-metadata', record)
+        upsert_collection_item('messages', json.loads(message))
     except Exception as err:
         raise click.ClickException(err)
 
