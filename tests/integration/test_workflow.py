@@ -193,10 +193,10 @@ def test_message_api():
 
     # test messages per test dataset
     counts = {
-        'mwi': 23,
-        'ita': 32,
-        'dza': 28,
-        'rou': 184
+        'mwi': 24,
+        'ita': 33,
+        'dza': 29,
+        'rou': 185
     }
     for key, value in counts.items():
         url = f'{API_URL}/collections/messages/items?sortby=-datetime&q={key}&limit=1'  # noqa
@@ -206,9 +206,9 @@ def test_message_api():
     url = f'{API_URL}/collections/messages/items?sortby=-datetime'
     r = SESSION.get(url).json()
 
-    assert r['numberMatched'] == 267
+    assert r['numberMatched'] == 271
 
-    msg = r['features'][0]
+    msg = r['features'][4]
 
     is_valid, _ = validate_message(msg)
     assert is_valid
