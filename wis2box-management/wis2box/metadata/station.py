@@ -292,7 +292,7 @@ def get_geometry(wsi: str = '') -> Union[dict, None]:
 
                 if isinstance(station_elevation, (float, int)):
                     LOGGER.debug('Adding z value to geometry')
-                    feature['geometry']['coordinates'].append(station_elevation)  # noqa
+                    feature['coordinates'].append(station_elevation)
 
                 return feature
 
