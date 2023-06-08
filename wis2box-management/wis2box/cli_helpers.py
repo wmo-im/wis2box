@@ -47,7 +47,6 @@ def OPTION_VERBOSITY(f):
 
     def callback(ctx, param, value):
         if value is not None:
-            click.echo(f'Setting up logger with level: {value}')
             setup_logger(loglevel=value)
         return True
 

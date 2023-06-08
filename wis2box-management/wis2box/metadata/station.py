@@ -203,8 +203,7 @@ def publish_station_collection() -> None:
                     'type': 'Point',
                     'coordinates': [
                         get_typed_value(row['longitude']),
-                        get_typed_value(row['latitude']),
-                        get_typed_value(row['elevation'])
+                        get_typed_value(row['latitude'])
                     ]
                 },
                 'properties': {
@@ -220,6 +219,12 @@ def publish_station_collection() -> None:
                 },
                 'links': topics
             }
+
+            station_elevation = get_typed_value(row['elevation'])
+
+            if isinstance(station_elevation, (float, int)):
+                LOGGER.debug('Adding z value to geometry')
+                feature['geometry']['coordinates'].append(station_elevation)
 
             LOGGER.debug('Publishing to backend')
             upsert_collection_item('stations', feature)
@@ -275,14 +280,21 @@ def get_geometry(wsi: str = '') -> Union[dict, None]:
         for row in reader:
             if wsi == row['wigos_station_identifier']:
                 LOGGER.debug('Found matching WSI')
-                return {
+                feature = {
                     'type': 'Point',
                     'coordinates': [
                         get_typed_value(row['longitude']),
-                        get_typed_value(row['latitude']),
-                        get_typed_value(row['elevation'])
+                        get_typed_value(row['latitude'])
                     ]
                 }
+
+                station_elevation = get_typed_value(row['elevation'])
+
+                if isinstance(station_elevation, (float, int)):
+                    LOGGER.debug('Adding z value to geometry')
+                    feature['coordinates'].append(station_elevation)
+
+                return feature
 
     LOGGER.debug('No matching WSI')
     return None
