@@ -238,7 +238,7 @@ class ElasticBackend(BaseBackend):
         :returns: `None`
         """
 
-        indices = self.conn.indices.get('*').keys()
+        indices = self.conn.indices.get(index='*').keys()
 
         before = datetime_days_ago(days)
 
