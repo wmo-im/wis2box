@@ -55,12 +55,12 @@ def archive_data(source_path: str, archive_path: str) -> None:
     LOGGER.debug(f'Archive directory={today_dir}')
     datetime_now = datetime.now(timezone.utc)
     LOGGER.debug(f'datetime_now={datetime_now}')
-    for object in list_content(source_path):
-        storage_path = object['fullpath']
-        archive_path = f"{today_dir}/{object['filename']}"
-        LOGGER.debug(f"filename={object['filename']}")
-        LOGGER.debug(f"last_modified={object['last_modified']}")
-        if object['last_modified'] < datetime_now - timedelta(hours=1):
+    for obj in list_content(source_path):
+        storage_path = obj['fullpath']
+        archive_path = f"{today_dir}/{obj['filename']}"
+        LOGGER.debug(f"filename={obj['filename']}")
+        LOGGER.debug(f"last_modified={obj['last_modified']}")
+        if obj['last_modified'] < datetime_now - timedelta(hours=1):
             LOGGER.debug(f'Moving {storage_path} to {archive_path}')
             move_data(storage_path, archive_path)
         else:
@@ -78,14 +78,17 @@ def clean_data(source_path: str, days: int) -> None:
     """
 
     LOGGER.debug(f'Clean files in {source_path} older than {days} day(s)')
-    for object in list_content(source_path):
-        storage_path = object['fullpath']
-        if older_than(object['basedir'], days):
-            LOGGER.debug(f"{object['basedir']} is older than {days} days")
+    for obj in list_content(source_path):
+        if obj['basedir'] == 'metadata':
+            LOGGER.debug('Skipping metadata')
+            continue
+        storage_path = obj['fullpath']
+        if older_than(obj['basedir'], days):
+            LOGGER.debug(f"{obj['basedir']} is older than {days} days")
             LOGGER.debug(f'Deleting {storage_path}')
             delete_data(storage_path)
         else:
-            LOGGER.debug(f"{object['basedir']} less than {days} days old")
+            LOGGER.debug(f"{obj['basedir']} less than {days} days old")
 
     LOGGER.debug('Cleaning API indexes')
     delete_collections_by_retention(days)
