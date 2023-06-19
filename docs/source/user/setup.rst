@@ -32,22 +32,28 @@ Copy this file to your working directory, and update it to suit your needs.
    cp examples/config/wis2box.env dev.env
 
 .. note::
-
-   You must map ``WIS2BOX_HOST_DATADIR`` to the absolute path of a directory on your host machine. This path will be mapped to ``/data/wis2box`` inside the wis2box-management container
-   To enable external data sharing you must set ``WIS2BOX_URL`` to the URL pointing to where your host is exposed on the public network.
-
-.. note::
    Please ensure you set ``WIS2BOX_BROKER_PASSWORD`` and ``WIS2BOX_STORAGE_PASSWORD`` to your own unique values.
    
    You will use these passwords to connect to your broker and MinIO storage to help you debug your wis2box services.
    
    Do not share these passwords with external parties.
 
-The next sections assume you use an environment variable for ``WIS2BOX_HOST_DATADIR`` that is set to same value used in ``dev.env``:
+.. note::
+
+   You must map ``WIS2BOX_HOST_DATADIR`` to the absolute path of a directory on your host machine. This path will be mapped to ``/data/wis2box`` inside the wis2box-management container
+   To enable external data sharing you must set ``WIS2BOX_URL`` to the URL pointing to where your host is exposed on the public network.
+
+For example you can create a ``wis2box-data`` directory in your home directory as follows:
 
 .. code-block:: bash
 
-   export WIS2BOX_HOST_DATADIR=/home/example/wis2box-data
+   mkdir /home/<your-username>/wis2box-data
+
+And you can edit the dev.env to match the location
+
+.. code-block:: bash
+
+   WIS2BOX_HOST_DATADIR=/home/<your-username>/wis2box-data
 
 Data mappings
 -------------
@@ -63,13 +69,13 @@ For example, if your incoming data contains ``.bufr4`` files containing synoptic
 
 .. code-block:: bash
 
-   cp synop-bufr-mappings.yml ${WIS2BOX_HOST_DATADIR}/data-mappings.yml
+   cp synop-bufr-mappings.yml ~/wis2box-data/data-mappings.yml
 
 .. note::
 
    The file should be called ``data-mappings.yml`` and should be placed in the directory you defined as ``WIS2BOX_HOST_DATADIR``.
 
-Edit ``${WIS2BOX_HOST_DATADIR}/data-mappings.yml``:
+Edit ``~wis2box-data/data-mappings.yml``:
  
  * Replace ``country`` with your corresponding ISO 3166 alpha-3 country code in lowercase
  * Replace ``centre_id`` with the string identifying the centre running your wis2node in lowercase, alphanumeric characters
@@ -160,10 +166,10 @@ You can copy this file to ``metadata/station/station_list.csv`` in your $WIS2BOX
 
 .. code-block:: bash
 
-   mkdir -p ${WIS2BOX_HOST_DATADIR}/metadata/station
-   cp station_list.csv ${WIS2BOX_HOST_DATADIR}/metadata/station
+   mkdir -p ~/wis2box-data/metadata/station
+   cp station_list.csv ~/wis2box-data/metadata/station
 
-And edit ``${WIS2BOX_HOST_DATADIR}/metadata/station/station_list.csv`` to include the data for your stations.
+And edit ``~/wis2box-data/metadata/station/station_list.csv`` to include the data for your stations.
 
 .. note::
 
@@ -181,7 +187,13 @@ Discovery metadata records can be defined using the YAML syntax shared via ``WIS
 
 An example is provided in ``surface-weather-observations.yml``. Each dataset requires its own discovery metadata configuration file.
 
-You can copy the file ``surface-weather-observations.yml`` to the directory you defined for ``WIS2BOX_HOST_DATADIR`` and update it to provide the correct discovery metadata for your dataset:
+You can copy the file ``surface-weather-observations.yml`` to the directory you defined for ``WIS2BOX_HOST_DATADIR`` :
+
+.. code-block:: bash
+
+   cp examples/config/surface-weather-observations.yml ~/wis2box-data/metadata/station
+
+And update it to provide the correct discovery metadata for your dataset:
 
 * replace ``[country].[centre_id].data.core.weather.surface-based-observations.synop`` with the topic as previously used in ``$WIS2BOX_HOST_DATADIR/data-mappings.yml``
 * text provided in ``identification.title`` and ``identification.abstract`` will be displayed in the wis2box user interface
@@ -205,6 +217,16 @@ This might take a while the first time, as Docker images will be downloaded.
    The ``wis2box-ctl.py`` program is used as a convenience utility around a set of Docker Compose commands.
    You can customize the ports exposed on your host by editing ``docker-compose.override.yml``.
    
+.. note::
+
+   If you get the error:
+
+   ``docker.errors.DockerException: Error while fetching server API version: ('Connection aborted.', PermissionError(13, 'Permission denied'))``
+
+   Please ensure your used is added to the docker-group ``sudo usermod -aG docker <your-username>``.
+   Log out and log back in so that your group membership is re-evaluated.
+
+
 Once the command above is completed, check that all services are running (and healthy).
 
 .. code-block:: bash
