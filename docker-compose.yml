@@ -43,6 +43,10 @@ services:
         condition: service_healthy
     volumes:
       - api-config:/data/wis2box/config/pygeoapi/:rw
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/oapi/admin/resources"]
+      interval: 5s
+      retries: 100
 
   minio:
     container_name: wis2box-minio
@@ -90,7 +94,7 @@ services:
     #     soft: -1
     #     hard: -1
     healthcheck:
-      test: ["CMD", "curl", "http://localhost:9200"]
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
       interval: 5s
       retries: 100
 
@@ -124,7 +128,7 @@ services:
       mosquitto:
         condition: service_started
       wis2box-api:
-        condition: service_started
+        condition: service_healthy
     command: ["wis2box", "pubsub" , "subscribe", "--broker", "http://wis2box-minio:9000", "--topic", "wis2box-storage/#"]
 
   wis2box-auth:
