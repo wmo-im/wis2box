@@ -69,7 +69,7 @@ For example, if your incoming data contains ``.bufr4`` files containing synoptic
 
 .. code-block:: bash
 
-   cp synop-bufr-mappings.yml ~/wis2box-data/data-mappings.yml
+   cp examples/config/synop-bufr-mappings.yml ~/wis2box-data/data-mappings.yml
 
 .. note::
 
@@ -167,7 +167,7 @@ You can copy this file to ``metadata/station/station_list.csv`` in your $WIS2BOX
 .. code-block:: bash
 
    mkdir -p ~/wis2box-data/metadata/station
-   cp station_list.csv ~/wis2box-data/metadata/station
+   cp examples/config/station_list.csv ~/wis2box-data/metadata/station
 
 And edit ``~/wis2box-data/metadata/station/station_list.csv`` to include the data for your stations.
 
