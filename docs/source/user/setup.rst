@@ -40,7 +40,7 @@ Copy this file to your working directory, and update it to suit your needs.
 
 .. note::
 
-   You must map ``WIS2BOX_HOST_DATADIR`` to the absolute path of a directory on your host machine. This path will be mapped to ``/data/wis2box`` inside the wis2box-management container
+   You must map ``WIS2BOX_HOST_DATADIR`` to the absolute path of a directory on your host machine. This path will be mapped to ``/data/wis2box`` inside the **wis2box-management** container.
    To enable external data sharing you must set ``WIS2BOX_URL`` to the URL pointing to where your host is exposed on the public network.
 
 For example you can create a ``wis2box-data`` directory in your home directory as follows:
@@ -49,7 +49,7 @@ For example you can create a ``wis2box-data`` directory in your home directory a
 
    mkdir /home/<your-username>/wis2box-data
 
-And you can edit the dev.env to match the location
+And you can edit ``dev.env`` to match the location
 
 .. code-block:: bash
 
@@ -75,7 +75,7 @@ For example, if your incoming data contains ``.bufr4`` files containing synoptic
 
    The file should be called ``data-mappings.yml`` and should be placed in the directory you defined as ``WIS2BOX_HOST_DATADIR``.
 
-Edit ``~wis2box-data/data-mappings.yml``:
+Edit ``~/wis2box-data/data-mappings.yml``:
  
  * Replace ``country`` with your corresponding ISO 3166 alpha-3 country code in lowercase
  * Replace ``centre_id`` with the string identifying the centre running your wis2node in lowercase, alphanumeric characters
@@ -187,7 +187,7 @@ Discovery metadata records can be defined using the YAML syntax shared via ``WIS
 
 An example is provided in ``surface-weather-observations.yml``. Each dataset requires its own discovery metadata configuration file.
 
-You can copy the file ``surface-weather-observations.yml`` to the directory you defined for ``WIS2BOX_HOST_DATADIR`` :
+You can copy the file ``surface-weather-observations.yml`` to the directory defined for ``WIS2BOX_HOST_DATADIR``:
 
 .. code-block:: bash
 
@@ -223,8 +223,8 @@ This might take a while the first time, as Docker images will be downloaded.
 
    ``docker.errors.DockerException: Error while fetching server API version: ('Connection aborted.', PermissionError(13, 'Permission denied'))``
 
-   Please ensure your used is added to the docker-group ``sudo usermod -aG docker <your-username>``.
-   Log out and log back in so that your group membership is re-evaluated.
+   Please ensure your username is added to the docker group ``sudo usermod -aG docker <your-username>``.
+   Logout and log back in so that your group membership is re-evaluated.
 
 
 Once the command above is completed, check that all services are running (and healthy).
