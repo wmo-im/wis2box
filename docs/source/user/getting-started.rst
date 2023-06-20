@@ -39,7 +39,7 @@ wis2box requires the following prior to installation:
    Docker Engine, 20.10.14 or higher
    Docker Compose, 1.29.2
 
-The following commands be used to setup the required software on Ubuntu 20.04 LTS :
+The following commands be used to setup the required software on Ubuntu 20.04 LTS:
 
 .. code-block:: bash
     
