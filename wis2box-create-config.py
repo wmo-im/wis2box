@@ -3,6 +3,7 @@ import random
 import string
 import datetime
 
+
 def get_bounding_box(country_code):
     """
     provide the initial bounding box for the wis2box
@@ -48,7 +49,7 @@ def get_bounding_box(country_code):
                     MIN_LON = bbox["min_lon"]
                     MAX_LAT = bbox["max_lat"]
                     MAX_LON = bbox["max_lon"]
-                    # create bounding box as comma-separated list of four numbers
+                    # create bounding box as comma-separated list of four numbers # noqa
                     bounding_box = f"{MIN_LON},{MIN_LAT},{MAX_LON},{MAX_LAT}"
             else:
                 print(f"No bounding box found for '{country_code}'.")
@@ -127,8 +128,8 @@ def get_password(password_name):
         answer = input()
     if answer == "y":
         password = ''.join(random.choice(string.ascii_letters + string.digits) for i in range(8)) # noqa
-        print(f"{password_name}={password}")     
-    
+        print(f"{password_name}={password}")
+
     while answer != "y":
         if answer == "exit":
             exit()
@@ -143,7 +144,7 @@ def get_password(password_name):
         print(f"{password_name}={password}")
         print("Is this correct? (y/n/exit)")
         answer = input()
-    
+
     return f"{password_name}={password}\n"
 
 
