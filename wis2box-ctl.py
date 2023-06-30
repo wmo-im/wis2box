@@ -137,6 +137,13 @@ def run(args, cmd, asciiPipe=False) -> str:
             subprocess.run(cmd)
     return None
 
+def env_file_does_not_exist() -> bool:
+    """
+    Checks if dev.env file exists.
+
+    :returns: bool. True if dev.env file does not exist.
+    """
+    return not os.path.isfile('dev.env')
 
 def make(args) -> None:
     """
@@ -162,6 +169,9 @@ def make(args) -> None:
         run(args, split(
             f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} build {containers}'))
     elif args.command in ["up", "start", "start-dev"]:
+        if env_file_does_not_exist():
+            print("ERROR: dev.env file does not exist.  Please create one manually or by running `python3 wis2box-create-config.py`")
+            exit(1)
         run(args, split(
             'docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions > /dev/null 2>&1'))
         run(args, split(
