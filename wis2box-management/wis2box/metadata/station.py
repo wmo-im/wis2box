@@ -196,6 +196,15 @@ def publish_station_collection() -> None:
             station_list.append(wigos_station_identifier)
             topics = list(check_station_datasets(wigos_station_identifier))
             topic = None if len(topics) == 0 else topics[0]['title']
+
+            LOGGER.debug('Verifying station coordinate types')
+            for pc in ['longitude', 'latitude', 'elevation']:
+                value = get_typed_value(row[pc])
+                if not isinstance(value, (int, float)):
+                    msg = f'Invalid station {pc} value: {value}'
+                    LOGGER.error(msg)
+                    raise RuntimeError(msg)
+
             feature = {
                 'id': wigos_station_identifier,
                 'type': 'Feature',
