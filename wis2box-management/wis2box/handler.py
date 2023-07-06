@@ -59,6 +59,10 @@ class Handler:
             th = self.filepath
             fuzzy = True
 
+        if '/metadata/' in th:
+            msg = 'Passing on handling metadata in workflow'
+            raise NotHandledError(msg)
+
         try:
             self.topic_hierarchy, self.plugins = validate_and_load(
                 th, self.filetype, fuzzy=fuzzy)
@@ -130,3 +134,7 @@ class Handler:
                 upsert_collection_item(index_name, geojson)
 
         return True
+
+
+class NotHandledError(Exception):
+    pass

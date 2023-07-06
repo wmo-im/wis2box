@@ -31,7 +31,7 @@ from wis2box import cli_helpers
 from wis2box.api import setup_collection
 from wis2box.env import (BROKER_HOST, BROKER_PORT, BROKER_USERNAME,
                          BROKER_PASSWORD, STORAGE_SOURCE, STORAGE_ARCHIVE)
-from wis2box.handler import Handler
+from wis2box.handler import Handler, NotHandledError
 from wis2box.plugin import load_plugin, PLUGINS
 from wis2box.pubsub.message import gcm
 
@@ -47,6 +47,9 @@ def handle(filepath):
             for plugin in handler.plugins:
                 for filepath in plugin.files():
                     LOGGER.info(f'Public filepath: {filepath}')
+    except NotHandledError as err:
+        msg = f'not handled error: {err}'
+        LOGGER.debug(msg)
     except ValueError as err:
         msg = f'handle() error: {err}'
         LOGGER.error(msg)
