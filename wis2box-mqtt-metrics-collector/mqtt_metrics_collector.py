@@ -164,7 +164,7 @@ def sub_mqtt_metrics(client, userdata, msg):
         update_stations_gauge(m['station_list'])
     elif str(msg.topic).startswith('wis2box/notifications'):
         notify_wsi_total.labels(
-            m['wigos_station_identifier']).inc(1)
+            m['properties']['wigos_station_identifier']).inc(1)
         notify_total.inc(1)
     elif str(msg.topic).startswith('wis2box/failure'):
         descr = m['description']
