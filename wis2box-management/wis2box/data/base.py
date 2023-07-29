@@ -177,11 +177,12 @@ class BaseAbstractData:
         }
         local_broker = load_plugin('pubsub', defs_local)
         local_broker.pub('wis2box/notifications',
-                         json.dumps(notify_msg),
+                         json.dumps(wis_message),
                          qos=0)
 
-        LOGGER.debug('Pushing message to API')
-        upsert_collection_item('messages', wis_message.message)
+        # this will be handled by subscriber via the wis2box/notifications topic
+        # LOGGER.debug('Pushing message to API')
+        # upsert_collection_item('messages', wis_message.message)
 
         return True
 
