@@ -65,7 +65,6 @@ def on_message_handler(client, userdata, msg):
 
     topic = msg.topic
     message = json.loads(msg.payload)
-
     LOGGER.info(f'Incoming message on topic {topic}')
     if topic == 'wis2box/notifications':
         LOGGER.info(f'Notification: {message}')
