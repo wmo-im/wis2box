@@ -85,25 +85,20 @@ def on_message_handler(client, userdata, msg):
         else:
             LOGGER.warning('message payload could not be parsed')
             return
-
-    while len(mp.active_children()) == mp.cpu_count():
-        sleep(0.1)
-
-    p = mp.Process(target=handle, args=(filepath,))
-    p.start()
+        
+        while len(mp.active_children()) == mp.cpu_count():
+            sleep(0.1)
+            p = mp.Process(target=handle, args=(filepath,))
+            p.start()
 
 
 @click.command()
 @click.pass_context
-@click.option('--broker', '-b', help='URL to broker')
-@click.option('--topic', '-t', help='topic to subscribe to')
 @cli_helpers.OPTION_VERBOSITY
-def subscribe(ctx, broker, topic, verbosity):
-    """Subscribe to a broker/topic"""
+def subscribe(ctx, verbosity):
+    """Subscribe to the internal broker and process incoming messages"""
     click.echo('Adding messages collection')
     setup_collection(meta=gcm())
-
-    click.echo(f'Subscribing to broker {broker}, topic {topic}')
 
     defs = {
         'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
@@ -115,5 +110,5 @@ def subscribe(ctx, broker, topic, verbosity):
 
     broker.bind('on_message', on_message_handler)
 
-    broker.sub(topic)
-    broker.sub('wis2box/notifications')
+    click.echo(f'Subscribing to internal broker on topic wis2box/#')
+    broker.sub('wis2box/#')
