@@ -139,7 +139,7 @@ services:
         condition: service_started
       wis2box-api:
         condition: service_healthy
-    command: ["wis2box", "pubsub" , "subscribe", "--broker", "http://wis2box-minio:9000", "--topic", "wis2box-storage/#"]
+    command: ["wis2box", "pubsub" , "subscribe"]
 
   wis2box-auth:
     container_name: wis2box-auth
