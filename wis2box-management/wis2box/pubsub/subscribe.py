@@ -83,7 +83,7 @@ def on_message_handler(client, userdata, msg):
             LOGGER.debug('Incoming data is a filesystem path')
             filepath = Path(message['relPath'])
         else:
-            LOGGER.warning('message payload could not be parsed')
+            LOGGER.debug('ignore message')
             return
         
         while len(mp.active_children()) == mp.cpu_count():
