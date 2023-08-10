@@ -39,6 +39,11 @@ PLUGINS = {
             'plugin': 'wis2box.api.config.pygeoapi.PygeoapiConfig'
         }
     },
+    'api_process': {
+        'pygeoapi': {
+            'plugin': 'wis2box.api.process.pygeoapi.PygeoapiProcess'
+        }
+    },
     'pubsub': {
         'mqtt': {
             'plugin': 'wis2box.pubsub.mqtt.MQTTPubSubClient'
@@ -55,6 +60,7 @@ PLUGINS = {
 class PluginTypes(Enum):
     API_BACKEND = 'api_backend'
     API_CONFIG = 'api_config'
+    API_PROCESS = 'api_process'
     DATA = 'data'
     PUBSUB = 'pubsub'
     STORAGE = 'storage'
@@ -73,7 +79,7 @@ def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
     codepath = defs.get('codepath')
     fmt = defs.get('format')
 
-    if plugin_type in ['api_backend', 'api_config', 'pubsub', 'storage']:
+    if plugin_type in ['api_backend', 'api_config', 'api_process', 'pubsub', 'storage']: # noqa
         plugin_mappings = PLUGINS
     else:
         plugin_mappings = DATADIR_DATA_MAPPINGS
