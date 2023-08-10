@@ -1,6 +1,28 @@
 data:
+    cog.brazza_met_centre.data.core.weather.surface-based-observations.synop:
+        plugins:
+            bufr:
+                - plugin: wis2box.data.bufr4.ObservationDataBUFR
+                  notify: true
+                  buckets:
+                    - ${WIS2BOX_STORAGE_INCOMING}
+                  file-pattern: '^.*\.bufr$'
+            txt:
+                - plugin: wis2box.data.synop2bufr_api.ObservationDataSYNOP2BUFR
+                  notify: true
+                  file-pattern: '^.*_(\d{4})(\d{2}).*\.txt$'
+            bufr4:
+                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
+                  buckets:
+                    - ${WIS2BOX_STORAGE_PUBLIC}
+                  file-pattern: '^.*\.bufr4$' 
     rou.rnimh.data.core.weather.surface-based-observations.synop:
         plugins:
+            csv:
+                - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
+                  template: /data/wis2box/aws_default_mappings.json
+                  notify: true
+                  file-pattern: '^.*.csv$'
             txt:
                 - plugin: wis2box.data.synop2bufr.ObservationDataSYNOP2BUFR
                   notify: true
