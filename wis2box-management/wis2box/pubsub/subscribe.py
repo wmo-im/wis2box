@@ -65,7 +65,7 @@ def on_message_handler(client, userdata, msg):
 
     topic = msg.topic
     message = json.loads(msg.payload)
-    
+
     LOGGER.info(f'Incoming message on topic {topic}')
     if topic == 'wis2box/notifications':
         LOGGER.info(f'Notification: {message}')
@@ -85,11 +85,11 @@ def on_message_handler(client, userdata, msg):
         else:
             LOGGER.debug('ignore message')
             return
-        
+
         while len(mp.active_children()) == mp.cpu_count():
             sleep(0.1)
-            p = mp.Process(target=handle, args=(filepath,))
-            p.start()
+        p = mp.Process(target=handle, args=(filepath,))
+        p.start()
 
 
 @click.command()
