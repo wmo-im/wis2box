@@ -24,6 +24,8 @@ import logging
 
 from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
+from wis2box.api.process import load_process
+
 from wis2box import cli_helpers
 
 LOGGER = logging.getLogger(__name__)
@@ -141,6 +143,19 @@ def delete_collections_by_retention(days: int) -> None:
     """
     backend = load_backend()
     backend.delete_collections_by_retention(days)
+
+
+def execute_process(name: str, payload: dict) -> None:
+    """
+    Execute a process
+
+    :param name: name of process
+    :param payload: `dict` of process payload
+
+    :returns: `bool` of process result
+    """
+    process = load_process()
+    return process.execute(name, payload)
 
 
 @click.group()
