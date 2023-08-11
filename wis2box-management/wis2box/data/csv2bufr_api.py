@@ -29,11 +29,11 @@ from wis2box.api import execute_process
 LOGGER = logging.getLogger(__name__)
 
 
-class ObservationDataSYNOP2BUFR(BaseAbstractData):
+class ObservationDataCSV2BUFR(BaseAbstractData):
     """Synoptic observation data"""
     def __init__(self, defs: dict) -> None:
         """
-        ObservationDataSYNOP2BUFR data initializer
+        ObservationDataCSV2BUFR data initializer
 
         :param def: `dict` object of resource mappings
 
@@ -57,7 +57,7 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
     def transform(self, input_data: Union[Path, bytes],
                   filename: str = '') -> bool:
 
-        LOGGER.debug('Processing SYNOP ASCII data')
+        LOGGER.debug('Processing CSV data')
 
         if isinstance(input_data, Path):
             LOGGER.debug('input_data is a Path')
@@ -69,24 +69,15 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
             msg = f'Invalid filename format: {filename} ({self.file_filter})'
             LOGGER.error(msg)
             raise ValueError(msg)
-
+        
         input_bytes = self.as_bytes(input_data)
-        LOGGER.debug('extracting year and month from filename')
-        try:
-            year = int(file_match.group(1))
-            month = int(file_match.group(2))
-        except IndexError:
-            msg = 'Missing year and/or month in filename pattern'
-            LOGGER.error(msg)
-            raise ValueError(msg)
 
-        process_name = 'wis2box-synop-process'
+        process_name = 'wis2box-csv-process'
         # execute process
         inputs = {
             "data": input_bytes.decode(),
-            "year": year,
-            "month": month,
-            "channel": self.topic_hierarchy.dirpath,
+            "mapping": self.mappings['bufr4'],
+            "channel": self.topic_hierarchy,
             "notify": self.enable_notification
         }
         result = execute_process(process_name, inputs)
