@@ -35,7 +35,7 @@ In addition, the storage path should be updated to specify where downloaded data
    validate_message: true
 
    # list of 1..n topics to subscribe to
-   topics:
+   subscribe_topics:
        - 'cache/a/wis2/topic1/#'
        - 'cache/a/wis2/topic2/#'
 
