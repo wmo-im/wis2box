@@ -59,7 +59,8 @@ RUN apt-get update -y && apt-get install -y ${DEBIAN_PACKAGES} \
 COPY . /app
 # install wis2box
 RUN cd /app \
-    && python3 setup.py install \
+    # install wis2box as an editable package in /app/wis2box
+    && pip3 install -e . \
     # install wis2box plugins, if defined
     && $PIP_PLUGIN_PACKAGES \
     # add wis2box user
