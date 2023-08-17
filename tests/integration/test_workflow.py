@@ -193,10 +193,10 @@ def test_message_api():
 
     # test messages per test dataset
     counts = {
-        'mwi': 24,
-        'ita': 33,
-        'dza': 29,
-        'rou': 185
+        'mwi_met_centre': 24,
+        'roma_met_centre': 33,
+        'alger_met_centre': 29,
+        'rnimh': 185
     }
     for key, value in counts.items():
         url = f'{API_URL}/collections/messages/items?sortby=-datetime&q={key}&limit=1'  # noqa
