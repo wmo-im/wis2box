@@ -19,6 +19,7 @@
 #
 ###############################################################################
 
+import base64
 from datetime import datetime
 from enum import Enum
 import json
@@ -120,7 +121,7 @@ class PubSubMessage:
 
         sh = getattr(hashlib, algorithm)()
         sh.update(bytes)
-        return sh.hexdigest()
+        return base64.b64encode(sh.digest()).decode()
 
 
 class WISNotificationMessage(PubSubMessage):
