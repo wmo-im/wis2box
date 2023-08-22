@@ -25,6 +25,9 @@ wis2box also analyzes prometheus metrics from MinIO.
 
    For more information see the `list of supported MinIO metrics <https://github.com/minio/minio/blob/master/docs/metrics/prometheus/list.md>`_
 
+The default retention period for prometheus metrics is 10 days. 
+To change this, edit the prometheus configured defined in prometheus/prometheus.yml. 
+
 Loki logging
 ------------
 
@@ -36,6 +39,9 @@ The logs of the following Docker containers are sent to Loki:
 - wis2box-api
 - wis2box-auth
 - wis2box-ui
+
+The default retention period for loki logs is 10 days. 
+To change this, edit the loki configured defined in loki/loki-config.yml. 
 
 Monitoring topics
 -----------------
