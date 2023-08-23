@@ -6,7 +6,7 @@ Troubleshooting
 This page lists several commonly seen issues and how to address them.
 
 './docker-compose.yml' is invalid
-----------------------------------------
+---------------------------------
 
 When starting wis2box you see the errors:
 
@@ -16,17 +16,17 @@ When starting wis2box you see the errors:
     Unsupported config option for volumes: 'auth-data'
     Unsupported config option for services: 'wis2box-auth'
 
-check the version of docker-compose you are running with:
+check the version of docker compose you are running with:
 
 .. code-block:: bash
     
-    docker-compose --version
+    docker compose --version
 
-if not 1.29.2 you can install this using the following docker-compose :
+if not 1.29.2 you can install this using the following docker compose:
 
 .. code-block:: bash
 
-    # download docker-compose 1.29.2
+    # download docker compose 1.29.2
     sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     # set executable
     sudo chmod +x /usr/local/bin/docker-compose

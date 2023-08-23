@@ -49,13 +49,13 @@ To start a continuous subscribe and download process, run the ``wis2box-subscrib
 
 .. code-block:: bash
 
-   docker-compose -f docker.subscribe-download.yml up -d --build
+   docker compose -f docker.subscribe-download.yml up -d --build
 
 To stop the subscribe and download process, run the following command:
 
 .. code-block:: bash
 
-   docker-compose -f docker.subscribe-download.yml down
+   docker compose -f docker.subscribe-download.yml down
 
 
 Running pywis-pubsub interactively

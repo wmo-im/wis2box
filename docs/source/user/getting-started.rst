@@ -37,7 +37,7 @@ wis2box requires the following prior to installation:
 
    Python,3.8 or higher
    Docker Engine, 20.10.14 or higher
-   Docker Compose, 1.29.2
+   Docker Compose, 2.0 or higher
 
 The following commands be used to setup the required software on Ubuntu 20.04 LTS:
 
@@ -48,17 +48,17 @@ The following commands be used to setup the required software on Ubuntu 20.04 LT
     sudo chmod a+r /etc/apt/keyrings/docker.gpg
     sudo echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     sudo apt-get -y update
-    sudo apt-get install -y docker-ce unzip python3-pip
+    sudo apt-get install -y docker-ce docker-compose-plugin unzip python3-pip
     sudo pip3 install pip --upgrade
     sudo pip3 install pyopenssl --upgrade
-    sudo pip3 install docker-compose==1.29.2 requests==2.26.0 urllib3==1.26.0
+    sudo pip3 install requests==2.26.0 urllib3==1.26.0
 
 The following commands can be used to inspect the available versions of Python, Docker and Docker Compose on your system:
 
 .. code-block:: bash
 
     docker version
-    docker-compose version
+    docker compose version
     python3 -V
 
 Once you have verified these requirements, go to :ref:`setup` for a step-by-step guide to install and configure your wis2box.
