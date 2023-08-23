@@ -10,7 +10,6 @@ if [ -f /tmp/wis2box.crt ]; then
     cp /mosquitto/config/mosquitto-ssl.conf /mosquitto/config/mosquitto.conf
 else
     echo "SSL disabled"
-    cp /mosquitto/config/mosquitto.conf /mosquitto/config/mosquitto.conf
 fi
 
 echo "Setting mosquitto authentication"
