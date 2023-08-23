@@ -25,8 +25,7 @@ wis2box also analyzes prometheus metrics from MinIO.
 
    For more information see the `list of supported MinIO metrics <https://github.com/minio/minio/blob/master/docs/metrics/prometheus/list.md>`_
 
-The default retention period for Prometheus metrics is 10 days. 
-This value can be modified in the Prometheus configuration at ``prometheus/prometheus.yml``. 
+The default retention period for Prometheus metrics is 10 days.  This value can be modified in the Prometheus startup flag ``--storage.tsdb.retention.time`` in ``docker-compose.monitoring.yml``.
 
 Loki logging
 ------------

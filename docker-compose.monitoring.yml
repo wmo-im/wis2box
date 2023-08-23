@@ -58,6 +58,7 @@ services:
       - prometheus-data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=10d'
   # cadvisor to monitor our containers!
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.45.0
