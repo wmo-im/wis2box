@@ -5,36 +5,6 @@ Troubleshooting
 
 This page lists several commonly seen issues and how to address them.
 
-'./docker-compose.yml' is invalid
----------------------------------
-
-When starting wis2box you see the errors:
-
-.. code-block:: bash
-    
-    ERROR: The Compose file './docker-compose.yml' is invalid because:
-    Unsupported config option for volumes: 'auth-data'
-    Unsupported config option for services: 'wis2box-auth'
-
-check the version of docker compose you are running with:
-
-.. code-block:: bash
-    
-    docker compose --version
-
-if not 1.29.2 you can install this using the following docker compose:
-
-.. code-block:: bash
-
-    # download docker compose 1.29.2
-    sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    # set executable
-    sudo chmod +x /usr/local/bin/docker-compose
-    # remove current version
-    sudo rm /usr/bin/docker-compose
-    # set link to downloaded version
-    sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-
 	
 OSError: Missing data mappings
 ------------------------------
@@ -100,7 +70,7 @@ The Access Key Id you provided does not exist in our records
 ------------------------------------------------------------
 
 If you see this error when uploading data to the wis2box-incoming storage, you have provided the wrong username and/or password to access MinIO.
-Check the values for ``WIS2BOX_BROKER_USERNAME`` and ``WIS2BOX_BROKER_PASSWORD`` you have provided in your ``dev.env`` file. 
+Check the values for ``WIS2BOX_STORAGE_USERNAME`` and ``WIS2BOX_STORAGE_PASSWORD`` you have provided in your ``dev.env`` file. 
 The default username/password for MinIO is ``minio/minio123``.
 
 Topic Hierarchy validation error: No plugins for ... in data mappings
@@ -132,7 +102,8 @@ Please check all services are Running using the following command:
 
 Possible issues are:
 
-- port 80 is already in use, the nginx-service will fail to start if there is already a web-server running on your instance
+- The directory defined by WIS2BOX_HOST_DATADIR does not contain the file 'data-mappings.yml' or the file is invalid
+- The directory defined by WIS2BOX_HOST_DATADIR does not contain the file 'metastation/station/station_list.csv' or the file is invalid
 - WIS2BOX_STORAGE_PASSWORD is too short, minio will fail to start if you specify a WIS2BOX_STORAGE_PASSWORD of less than 8 characters
 
 wisbox-UI is empty
@@ -152,5 +123,5 @@ And repeat the commands for adding your dataset and publishing your metadata, to
 .. code-block:: bash
 
   python3 wis2box-ctl.py login
-  wis2box data add-collection ${WIS2BOX_HOST_DATADIR}/surface-weather-observations.yml
-  wis2box metadata discovery publish ${WIS2BOX_HOST_DATADIR}/surface-weather-observations.yml
+  wis2box data add-collection ${WIS2BOX_DATADIR}/surface-weather-observations.yml
+  wis2box metadata discovery publish ${WIS2BOX_DATADIR}/surface-weather-observations.yml
