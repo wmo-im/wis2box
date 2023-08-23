@@ -134,10 +134,11 @@ Pub/Sub configuration provides connectivity information for the Pub/Sub broker.
 
 Note that the ``WIS2BOX_BROKER_PUBLIC`` URL can be used to publish WIS2 notifications to an external broker. By default, the internal broker is used.
 
-Apart from the wis2box-internal-user defined by the ``WIS2BOX_BROKER_USERNAME`` and ``WIS2BOX_BROKER_PASSWORD`` environment variables, the wis2box-broker will also include the user 'everyone' with password 'everyone'.
-The 'everyone'-user has read-only access to the origin/# topic and can be used to allow the WIS2 Global Broker to subscribe to the wis2box.
+Apart from the wis2box internal user defined by the ``WIS2BOX_BROKER_USERNAME`` and ``WIS2BOX_BROKER_PASSWORD`` environment variables, the wis2box broker will also include the user ``everyone`` with password ``everyone``.
 
-To add additional users to the wis2box-broker, login to the mosquitto container with the following command:
+The ``everyone`` user has **read-only** access to the ``origin/#`` topic and can be used to allow the WIS2 Global Broker to subscribe to the wis2box.
+
+To add additional users to the wis2box broker, login to the mosquitto container with the following command:
 
 .. code-block:: bash
 
@@ -149,7 +150,7 @@ Then, to add a new user, use the following command:
 
     mosquitto_passwd -b /mosquitto/config/password.txt <username> <password>
 
-To add or change access rights for mosquitto users, you can edit the file /mosquitto/config/acl.conf from inside the mosquitto container using 'vi':
+To add or change access rights for mosquitto users, you can edit the file ``/mosquitto/config/acl.conf`` from inside the mosquitto container using the ``vi`` command:
 
 .. code-block:: bash
 
