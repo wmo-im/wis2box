@@ -22,7 +22,7 @@ jobs:
     - name: display Docker and Python versions 📦
       run: |
         docker version
-        docker-compose version
+        docker compose version
         python3 -V
     - name: setup wis2box configuration
       run: |
@@ -92,5 +92,5 @@ jobs:
     - name: failed tests 🚩
       if: ${{ failure() }}
       run: |
-        docker-compose --file docker-compose.yml --file docker-compose.override.yml --file docker-compose.monitoring.yml --env-file dev.env --project-name wis2box_project ps
-        docker-compose --file docker-compose.yml --file docker-compose.override.yml --file docker-compose.monitoring.yml --env-file dev.env --project-name wis2box_project logs
+        docker compose --file docker-compose.yml --file docker-compose.override.yml --file docker-compose.monitoring.yml --env-file dev.env --project-name wis2box_project ps
+        docker compose --file docker-compose.yml --file docker-compose.override.yml --file docker-compose.monitoring.yml --env-file dev.env --project-name wis2box_project logs
