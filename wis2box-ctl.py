@@ -172,7 +172,7 @@ def make(args) -> None:
             if args.command == 'start-dev':
                 run(args, split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} --file docker-compose.dev.yml up'))
             else:
-                run(args, split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} up'))
+                run(args, split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} up -d'))
     elif args.command == "execute":
         run(args, ['docker', 'exec', '-i', 'wis2box-management', 'sh', '-c', containers])
     elif args.command == "login":
