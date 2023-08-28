@@ -20,6 +20,9 @@
 ###############################################################################
 
 import logging
+from urllib.parse import urlparse
+
+
 from requests import Session
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
@@ -51,6 +54,34 @@ class PygeoapiConfig(BaseConfig):
         adapter = HTTPAdapter(max_retries=retry_strategy)
         self.http.mount('https://', adapter)
         self.http.mount('http://', adapter)
+
+    def get_collection(self, name: str) -> dict:
+        """
+        Get a collection
+
+        :param name: `str` of collection name
+
+        :returns: `dict` of collection configuration
+        """
+
+        r = self.http.get(f'{self.url}/{name}')
+        r.raise_for_status()
+
+        return r.json()
+
+    def get_collection_data(self, name: str) -> dict:
+        """
+        Get a collection's backend data configuration
+
+        :param name: `str` of collection name
+
+        :returns: `str` of collection backend data configuration
+        """
+
+        data = self.get_collection(name)['providers'][0]['data']
+
+        collection_data = urlparse(data).path.lstrip('/')
+        return collection_data
 
     def add_collection(self, name: str, collection: dict) -> bool:
         """

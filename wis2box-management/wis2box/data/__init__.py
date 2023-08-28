@@ -35,7 +35,6 @@ from wis2box.handler import Handler
 from wis2box.metadata.discovery import DiscoveryMetadata
 from wis2box.storage import put_data, move_data, list_content, delete_data
 from wis2box.util import older_than, walk_path
-from wis2box.topic_hierarchy import validate_and_load
 
 
 LOGGER = logging.getLogger(__name__)
@@ -220,18 +219,17 @@ def add_collection(ctx, filepath, verbosity):
 
 @click.command()
 @click.pass_context
-@cli_helpers.OPTION_TOPIC_HIERARCHY
+@click.option('--identifier', '-i', help='Collection identifier')
 @cli_helpers.OPTION_VERBOSITY
-def delete_collection(ctx, topic_hierarchy, verbosity):
-    """Delete collection from api backend"""
+def delete_collection(ctx, identifier, verbosity):
+    """Delete collection from API backend"""
 
-    if topic_hierarchy is None:
-        raise click.ClickException('Missing -th/--topic-hierarchy')
+    if identifier is None:
+        raise click.ClickException('Missing -i/--identifier')
 
-    click.echo(f'Deleting collection: {topic_hierarchy}')
+    click.echo(f'Deleting collection: {identifier}')
 
-    th, _ = validate_and_load(topic_hierarchy)
-    remove_collection(th.dotpath)
+    remove_collection(identifier)
 
     click.echo('Done')
 
