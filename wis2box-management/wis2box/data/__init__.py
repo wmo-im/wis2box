@@ -219,17 +219,14 @@ def add_collection(ctx, filepath, verbosity):
 
 @click.command()
 @click.pass_context
-@click.option('--identifier', '-i', help='Collection identifier')
+@click.argument('collection')
 @cli_helpers.OPTION_VERBOSITY
-def delete_collection(ctx, identifier, verbosity):
+def delete_collection(ctx, collection, verbosity):
     """Delete collection from API backend"""
 
-    if identifier is None:
-        raise click.ClickException('Missing -i/--identifier')
+    click.echo(f'Deleting collection: {collection}')
 
-    click.echo(f'Deleting collection: {identifier}')
-
-    remove_collection(identifier)
+    remove_collection(collection)
 
     click.echo('Done')
 
