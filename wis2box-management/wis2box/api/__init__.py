@@ -95,14 +95,16 @@ def remove_collection(collection_id: str, backend: bool = True,
             api_backend.delete_collection(collection_data)
 
     if api_backend is not None and api_backend.has_collection(collection_data):
-        LOGGER.error(f'Unable to remove collection backend for {collection_id}')
+        msg = f'Unable to remove collection backend for {collection_id}'
+        LOGGER.error(msg)
         return False
 
     if api_config is not None and api_config.has_collection(collection_data):
         LOGGER.error(f'Unable to remove collection for {collection_id}')
         return False
 
-    delete_collection_item('discovery-metadata', collection_id)
+    if collection_id not in ['discovery-metadata', 'stations', 'messages']:
+        delete_collection_item('discovery-metadata', collection_id)
 
     return True
 
