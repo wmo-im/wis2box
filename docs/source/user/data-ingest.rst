@@ -120,7 +120,7 @@ Then start the ``wis2box-ftp`` service with the following command:
 
 .. code-block:: bash
 
-    docker-compose -f docker-compose.wis2box-ftp.yml --env-file ftp.env up -d
+    docker compose -f docker-compose.wis2box-ftp.yml --env-file ftp.env up -d
 
 When using the wis2box-ftp service to ingest data, please note that the topic is determined by the directory structure in which the data arrives.
 
@@ -154,7 +154,7 @@ You then you can activate the optional 'wis2box-data-subscriber' service as foll
 
 .. code-block:: bash
 
-    docker-compose -f docker-compose.data-subscriber.yml --env-file dev.env up -d
+    docker compose -f docker-compose.data-subscriber.yml --env-file dev.env up -d
 
 See the GitHub `wis2box-data-subscriber`_ repository for more information on this service.
 
