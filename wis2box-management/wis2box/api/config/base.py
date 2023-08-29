@@ -33,6 +33,28 @@ class BaseConfig:
         :param defs: `dict` of connection parameters
         """
 
+    def get_collection(self, name: str) -> dict:
+        """
+        Get a collection
+
+        :param name: `str` of collection name
+
+        :returns: `dict` of collection configuration
+        """
+
+        raise NotImplementedError()
+
+    def get_collection_data(self, name: str) -> dict:
+        """
+        Get a collection's backend data configuration
+
+        :param name: `str` of collection name
+
+        :returns: `str` of collection backend data configuration
+        """
+
+        raise NotImplementedError()
+
     def add_collection(self, name: str, collection: dict) -> bool:
         """
         Add a collection

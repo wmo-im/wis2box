@@ -69,12 +69,12 @@ def setup_collection(meta: dict = {}) -> bool:
     return True
 
 
-def remove_collection(name: str, backend: bool = True,
+def remove_collection(collection_id: str, backend: bool = True,
                       config: bool = True) -> bool:
     """
     Remove collection from api backend and configuration
 
-    :param name: `str` of collection name
+    :param collection_id: `str` of collection id
 
     :returns: `bool` of API collection removal result
     """
@@ -82,23 +82,29 @@ def remove_collection(name: str, backend: bool = True,
     api_backend = None
     api_config = None
 
-    if backend:
-        api_backend = load_backend()
-        if api_backend.has_collection(name):
-            api_backend.delete_collection(name)
+    collection_data = load_config().get_collection_data(collection_id)
 
     if config:
         api_config = load_config()
-        if api_config.has_collection(name):
-            api_config.delete_collection(name)
+        if api_config.has_collection(collection_id):
+            api_config.delete_collection(collection_id)
 
-    if api_backend is not None and api_backend.has_collection(name):
-        LOGGER.error(f'Unable to remove collection for {name}')
+    if backend:
+        api_backend = load_backend()
+        if api_backend.has_collection(collection_data):
+            api_backend.delete_collection(collection_data)
+
+    if api_backend is not None and api_backend.has_collection(collection_data):
+        msg = f'Unable to remove collection backend for {collection_id}'
+        LOGGER.error(msg)
         return False
 
-    if api_config is not None and api_backend.has_collection(name):
-        LOGGER.error(f'Unable to remove collection for {name}')
+    if api_config is not None and api_config.has_collection(collection_data):
+        LOGGER.error(f'Unable to remove collection for {collection_id}')
         return False
+
+    if collection_id not in ['discovery-metadata', 'stations', 'messages']:
+        delete_collection_item('discovery-metadata', collection_id)
 
     return True
 

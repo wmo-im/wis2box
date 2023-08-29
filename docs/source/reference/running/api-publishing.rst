@@ -51,11 +51,15 @@ discovery metadata MCF created as described in the :ref:`discovery-metadata` sec
 
    wis2box data add-collection $WIS2BOX_DATADIR/data/config/foo/bar/baz/discovery-metadata.yml
 
-To delete the colection from the API backend and configuration:
+
+Deleting a dataset
+------------------
+
+To delete a dataset from the API backend and configuration:
 
 .. code-block:: bash
 
-   wis2box api delete-collection foo.bar.baz
+   wis2box data delete-collection dataset-id
 
 
 .. note::
