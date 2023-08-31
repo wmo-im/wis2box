@@ -1,0 +1,1562 @@
+{
+    "countries": {
+        "fji": {
+            "name": "Fiji",
+            "bbox": {
+                "minx": -180.0,
+                "miny": -21.9434274,
+                "maxx": 180.0,
+                "maxy": -12.2613866
+            }
+        },
+        "tza": {
+            "name": "Tanzania",
+            "bbox": {
+                "minx": 29.3269773,
+                "miny": -11.761254,
+                "maxx": 40.6584071,
+                "maxy": -0.9854812
+            }
+        },
+        "esh": {
+            "name": "W. Sahara",
+            "bbox": {
+                "minx": 15.5907052,
+                "miny": 60.3798713,
+                "maxx": 15.6024238,
+                "maxy": 60.3833937
+            }
+        },
+        "can": {
+            "name": "Canada",
+            "bbox": {
+                "minx": -141.00275,
+                "miny": 41.6765556,
+                "maxx": -52.3237664,
+                "maxy": 83.3362128
+            }
+        },
+        "usa": {
+            "name": "United States of America",
+            "bbox": {
+                "minx": -180.0,
+                "miny": -14.7608358,
+                "maxx": 180.0,
+                "maxy": 71.5889534
+            }
+        },
+        "kaz": {
+            "name": "Kazakhstan",
+            "bbox": {
+                "minx": 46.4932179,
+                "miny": 40.5686476,
+                "maxx": 87.3156336,
+                "maxy": 55.4421701
+            }
+        },
+        "uzb": {
+            "name": "Uzbekistan",
+            "bbox": {
+                "minx": 55.9985531,
+                "miny": 37.1816004,
+                "maxx": 73.2147728,
+                "maxy": 45.5906784
+            }
+        },
+        "png": {
+            "name": "Papua New Guinea",
+            "bbox": {
+                "minx": 140.8416553,
+                "miny": -11.8555739,
+                "maxx": 159.6934961,
+                "maxy": -0.5573576
+            }
+        },
+        "idn": {
+            "name": "Indonesia",
+            "bbox": {
+                "minx": 94.7717124,
+                "miny": -11.2085669,
+                "maxx": 141.0194444,
+                "maxy": 6.2744496
+            }
+        },
+        "arg": {
+            "name": "Argentina",
+            "bbox": {
+                "minx": -73.5605371,
+                "miny": -55.1925709,
+                "maxx": -53.6374515,
+                "maxy": -21.7808568
+            }
+        },
+        "chl": {
+            "name": "Chile",
+            "bbox": {
+                "minx": -109.6795789,
+                "miny": -56.725,
+                "maxx": -66.0753474,
+                "maxy": -17.4983832
+            }
+        },
+        "som": {
+            "name": "Somalia",
+            "bbox": {
+                "minx": 40.98918,
+                "miny": -1.8031969,
+                "maxx": 51.6177696,
+                "maxy": 12.1889121
+            }
+        },
+        "ken": {
+            "name": "Kenya",
+            "bbox": {
+                "minx": 33.9096888,
+                "miny": -4.8995204,
+                "maxx": 41.9067502,
+                "maxy": 4.62
+            }
+        },
+        "sdn": {
+            "name": "Sudan",
+            "bbox": {
+                "minx": 21.8143904,
+                "miny": 8.685278,
+                "maxx": 39.0576252,
+                "maxy": 22.224918
+            }
+        },
+        "tcd": {
+            "name": "Chad",
+            "bbox": {
+                "minx": 13.47348,
+                "miny": 7.44107,
+                "maxx": 24.0,
+                "maxy": 23.4507957
+            }
+        },
+        "hti": {
+            "name": "Haiti",
+            "bbox": {
+                "minx": -75.2384618,
+                "miny": 17.820859,
+                "maxx": -71.6217461,
+                "maxy": 20.2911852
+            }
+        },
+        "rus": {
+            "name": "Russia",
+            "bbox": {
+                "minx": -180.0,
+                "miny": 41.1850968,
+                "maxx": 180.0,
+                "maxy": 82.0586232
+            }
+        },
+        "bhs": {
+            "name": "Bahamas",
+            "bbox": {
+                "minx": -80.7001941,
+                "miny": 20.7059846,
+                "maxx": -72.4477521,
+                "maxy": 27.4734551
+            }
+        },
+        "flk": {
+            "name": "Falkland Is.",
+            "bbox": {
+                "minx": -3.0732108,
+                "miny": 56.4514328,
+                "maxx": -3.0731354,
+                "maxy": 56.4518577
+            }
+        },
+        "nor": {
+            "name": "Norway",
+            "bbox": {
+                "minx": -9.6846279,
+                "miny": -54.654,
+                "maxx": 34.6889114,
+                "maxy": 81.0280176
+            }
+        },
+        "grl": {
+            "name": "Greenland",
+            "bbox": {
+                "minx": -74.1250416,
+                "miny": 59.515387,
+                "maxx": -10.0288759,
+                "maxy": 83.875172
+            }
+        },
+        "atf": {
+            "name": "Fr. S. Antarctic Lands",
+            "bbox": {
+                "minx": 70.1274483,
+                "miny": -49.7098647,
+                "maxx": 70.1474483,
+                "maxy": -49.6898647
+            }
+        },
+        "tls": {
+            "name": "Timor-Leste",
+            "bbox": {
+                "minx": 124.0339863,
+                "miny": -9.6096854,
+                "maxx": 127.5433663,
+                "maxy": -8.1161123
+            }
+        },
+        "zaf": {
+            "name": "South Africa",
+            "bbox": {
+                "minx": 16.3335213,
+                "miny": -47.1788335,
+                "maxx": 38.2898954,
+                "maxy": -22.1250301
+            }
+        },
+        "lso": {
+            "name": "Lesotho",
+            "bbox": {
+                "minx": 27.0113763,
+                "miny": -30.6772773,
+                "maxx": 29.4557099,
+                "maxy": -28.5705652
+            }
+        },
+        "mex": {
+            "name": "Mexico",
+            "bbox": {
+                "minx": -118.599188,
+                "miny": 14.3886243,
+                "maxx": -86.493266,
+                "maxy": 32.7186679
+            }
+        },
+        "ury": {
+            "name": "Uruguay",
+            "bbox": {
+                "minx": -58.4947729,
+                "miny": -35.7824481,
+                "maxx": -53.0755833,
+                "maxy": -30.0853962
+            }
+        },
+        "bra": {
+            "name": "Brazil",
+            "bbox": {
+                "minx": -73.9830625,
+                "miny": -33.8689056,
+                "maxx": -28.6289646,
+                "maxy": 5.2695808
+            }
+        },
+        "bol": {
+            "name": "Bolivia",
+            "bbox": {
+                "minx": -69.6450073,
+                "miny": -22.8982742,
+                "maxx": -57.453,
+                "maxy": -9.6689438
+            }
+        },
+        "per": {
+            "name": "Peru",
+            "bbox": {
+                "minx": -84.6356535,
+                "miny": -20.1984472,
+                "maxx": -68.6519906,
+                "maxy": -0.0392818
+            }
+        },
+        "col": {
+            "name": "Colombia",
+            "bbox": {
+                "minx": -82.1243611,
+                "miny": -4.2294028,
+                "maxx": -66.8490386,
+                "maxy": 16.0495518
+            }
+        },
+        "pan": {
+            "name": "Panama",
+            "bbox": {
+                "minx": -83.0517245,
+                "miny": 7.0027171,
+                "maxx": -77.1585751,
+                "maxy": 9.8469028
+            }
+        },
+        "cri": {
+            "name": "Costa Rica",
+            "bbox": {
+                "minx": -87.2951397,
+                "miny": 5.2980534,
+                "maxx": -82.4299043,
+                "maxy": 11.2195684
+            }
+        },
+        "nic": {
+            "name": "Nicaragua",
+            "bbox": {
+                "minx": -87.8958171,
+                "miny": 10.7073945,
+                "maxx": -82.4767247,
+                "maxy": 15.0902778
+            }
+        },
+        "hnd": {
+            "name": "Honduras",
+            "bbox": {
+                "minx": -89.3568207,
+                "miny": 12.9808485,
+                "maxx": -82.18164,
+                "maxy": 17.619522
+            }
+        },
+        "slv": {
+            "name": "El Salvador",
+            "bbox": {
+                "minx": -90.2089183,
+                "miny": 12.9518017,
+                "maxx": -87.5971467,
+                "maxy": 14.4510488
+            }
+        },
+        "gtm": {
+            "name": "Guatemala",
+            "bbox": {
+                "minx": -92.3743889,
+                "miny": 13.5577935,
+                "maxx": -88.2134425,
+                "maxy": 17.8165947
+            }
+        },
+        "blz": {
+            "name": "Belize",
+            "bbox": {
+                "minx": -89.2275905,
+                "miny": 15.8857286,
+                "maxx": -87.2765017,
+                "maxy": 18.4959143
+            }
+        },
+        "ven": {
+            "name": "Venezuela",
+            "bbox": {
+                "minx": -73.3529632,
+                "miny": 0.6473964,
+                "maxx": -59.7707163,
+                "maxy": 15.9158431
+            }
+        },
+        "guy": {
+            "name": "Guyana",
+            "bbox": {
+                "minx": -61.3827449,
+                "miny": 1.1710017,
+                "maxx": -56.4689543,
+                "maxy": 8.6038842
+            }
+        },
+        "sur": {
+            "name": "Suriname",
+            "bbox": {
+                "minx": -58.0711851,
+                "miny": 1.8312802,
+                "maxx": -53.8601382,
+                "maxy": 6.2160842
+            }
+        },
+        "fra": {
+            "name": "France",
+            "bbox": {
+                "minx": -178.3873749,
+                "miny": -50.2187169,
+                "maxx": 172.3057152,
+                "maxy": 51.3055721
+            }
+        },
+        "ecu": {
+            "name": "Ecuador",
+            "bbox": {
+                "minx": -92.2072392,
+                "miny": -5.0159314,
+                "maxx": -75.192504,
+                "maxy": 1.8835964
+            }
+        },
+        "pri": {
+            "name": "Puerto Rico",
+            "bbox": {
+                "minx": -68.1109184,
+                "miny": 17.7306659,
+                "maxx": -65.1100908,
+                "maxy": 18.6663822
+            }
+        },
+        "jam": {
+            "name": "Jamaica",
+            "bbox": {
+                "minx": -78.5782366,
+                "miny": 16.5899443,
+                "maxx": -75.7541143,
+                "maxy": 18.7256394
+            }
+        },
+        "cub": {
+            "name": "Cuba",
+            "bbox": {
+                "minx": -85.1679702,
+                "miny": 19.6275294,
+                "maxx": -73.9190004,
+                "maxy": 23.4816972
+            }
+        },
+        "zwe": {
+            "name": "Zimbabwe",
+            "bbox": {
+                "minx": 25.2373,
+                "miny": -22.4241096,
+                "maxx": 33.0683501,
+                "maxy": -15.6097033
+            }
+        },
+        "bwa": {
+            "name": "Botswana",
+            "bbox": {
+                "minx": 19.9986486,
+                "miny": -26.9070073,
+                "maxx": 29.3738868,
+                "maxy": -17.778137
+            }
+        },
+        "nam": {
+            "name": "Namibia",
+            "bbox": {
+                "minx": 11.5280384,
+                "miny": -28.96945,
+                "maxx": 25.2617292,
+                "maxy": -16.9635105
+            }
+        },
+        "sen": {
+            "name": "Senegal",
+            "bbox": {
+                "minx": -17.7498686,
+                "miny": 12.2402664,
+                "maxx": -11.3459503,
+                "maxy": 16.6919712
+            }
+        },
+        "mli": {
+            "name": "Mali",
+            "bbox": {
+                "minx": -12.2402835,
+                "miny": 10.147811,
+                "maxx": 4.2673828,
+                "maxy": 25.001084
+            }
+        },
+        "mrt": {
+            "name": "Mauritania",
+            "bbox": {
+                "minx": -17.2380959,
+                "miny": 14.7209909,
+                "maxx": -4.8333344,
+                "maxy": 27.314942
+            }
+        },
+        "ben": {
+            "name": "Benin",
+            "bbox": {
+                "minx": 0.776667,
+                "miny": 6.0398696,
+                "maxx": 3.8451454,
+                "maxy": 12.4092028
+            }
+        },
+        "ner": {
+            "name": "Niger",
+            "bbox": {
+                "minx": 0.1689653,
+                "miny": 11.6936071,
+                "maxx": 15.996667,
+                "maxy": 23.517178
+            }
+        },
+        "nga": {
+            "name": "Nigeria",
+            "bbox": {
+                "minx": 2.676932,
+                "miny": 4.0690959,
+                "maxx": 14.678014,
+                "maxy": 13.885645
+            }
+        },
+        "cmr": {
+            "name": "Cameroon",
+            "bbox": {
+                "minx": 8.3822176,
+                "miny": 1.6517945,
+                "maxx": 16.1911011,
+                "maxy": 13.083333
+            }
+        },
+        "tgo": {
+            "name": "Togo",
+            "bbox": {
+                "minx": -0.1439746,
+                "miny": 5.926547,
+                "maxx": 1.8087257,
+                "maxy": 11.1395102
+            }
+        },
+        "gha": {
+            "name": "Ghana",
+            "bbox": {
+                "minx": -3.260786,
+                "miny": 4.5392525,
+                "maxx": 1.2732942,
+                "maxy": 11.1748562
+            }
+        },
+        "civ": {
+            "name": "C\u00f4te d'Ivoire",
+            "bbox": {
+                "minx": -8.6014675,
+                "miny": 4.1621205,
+                "maxx": -2.4948836,
+                "maxy": 10.740197
+            }
+        },
+        "gin": {
+            "name": "Guinea",
+            "bbox": {
+                "minx": -15.5680508,
+                "miny": 7.1906045,
+                "maxx": -7.6379222,
+                "maxy": 12.67563
+            }
+        },
+        "gnb": {
+            "name": "Guinea-Bissau",
+            "bbox": {
+                "minx": -16.897501,
+                "miny": 10.6514215,
+                "maxx": -13.6348777,
+                "maxy": 12.6862384
+            }
+        },
+        "lbr": {
+            "name": "Liberia",
+            "bbox": {
+                "minx": -11.6080764,
+                "miny": 4.1555907,
+                "maxx": -7.367323,
+                "maxy": 8.5519251
+            }
+        },
+        "sle": {
+            "name": "Sierra Leone",
+            "bbox": {
+                "minx": -13.5003389,
+                "miny": 6.755,
+                "maxx": -10.271683,
+                "maxy": 9.999973
+            }
+        },
+        "bfa": {
+            "name": "Burkina Faso",
+            "bbox": {
+                "minx": -5.513207,
+                "miny": 9.4104718,
+                "maxx": 2.4089717,
+                "maxy": 15.0840044
+            }
+        },
+        "cog": {
+            "name": "Congo",
+            "bbox": {
+                "minx": 12.039074,
+                "miny": -13.459035,
+                "maxx": 31.3056758,
+                "maxy": 5.3920026
+            }
+        },
+        "gab": {
+            "name": "Gabon",
+            "bbox": {
+                "minx": 8.5002246,
+                "miny": -4.1012261,
+                "maxx": 14.539444,
+                "maxy": 2.3192896
+            }
+        },
+        "zmb": {
+            "name": "Zambia",
+            "bbox": {
+                "minx": 21.9993509,
+                "miny": -18.0762145,
+                "maxx": 33.7095027,
+                "maxy": -8.2749338
+            }
+        },
+        "mwi": {
+            "name": "Malawi",
+            "bbox": {
+                "minx": 32.6718589,
+                "miny": -17.1296031,
+                "maxx": 35.9185731,
+                "maxy": -9.368301
+            }
+        },
+        "moz": {
+            "name": "Mozambique",
+            "bbox": {
+                "minx": 30.2121663,
+                "miny": -26.9209427,
+                "maxx": 41.0545908,
+                "maxy": -10.3252149
+            }
+        },
+        "swz": {
+            "name": "eSwatini",
+            "bbox": {
+                "minx": 30.7908,
+                "miny": -27.3175201,
+                "maxx": 32.1349834,
+                "maxy": -25.71876
+            }
+        },
+        "ago": {
+            "name": "Angola",
+            "bbox": {
+                "minx": 11.4609793,
+                "miny": -18.0393809,
+                "maxx": 24.0876359,
+                "maxy": -4.3458006
+            }
+        },
+        "bdi": {
+            "name": "Burundi",
+            "bbox": {
+                "minx": 29.000716,
+                "miny": -4.4693155,
+                "maxx": 30.8498462,
+                "maxy": -2.3096796
+            }
+        },
+        "isr": {
+            "name": "Israel",
+            "bbox": {
+                "minx": 34.2674994,
+                "miny": 29.4533796,
+                "maxx": 35.8950234,
+                "maxy": 33.3356317
+            }
+        },
+        "lbn": {
+            "name": "Lebanon",
+            "bbox": {
+                "minx": 34.8825667,
+                "miny": 33.0550325,
+                "maxx": 36.625,
+                "maxy": 34.6921448
+            }
+        },
+        "mdg": {
+            "name": "Madagascar",
+            "bbox": {
+                "minx": 42.9680076,
+                "miny": -25.784021,
+                "maxx": 50.6727307,
+                "maxy": -11.732889
+            }
+        },
+        "pse": {
+            "name": "Palestine",
+            "bbox": {
+                "minx": 34.0546906,
+                "miny": 31.2201289,
+                "maxx": 35.5403583,
+                "maxy": 32.5489422
+            }
+        },
+        "gmb": {
+            "name": "Gambia",
+            "bbox": {
+                "minx": -17.0223778,
+                "miny": 13.0558333,
+                "maxx": -13.797778,
+                "maxy": 13.8253137
+            }
+        },
+        "tun": {
+            "name": "Tunisia",
+            "bbox": {
+                "minx": 7.5219807,
+                "miny": 30.229061,
+                "maxx": 11.8801133,
+                "maxy": 37.7612052
+            }
+        },
+        "dza": {
+            "name": "Algeria",
+            "bbox": {
+                "minx": -8.668908,
+                "miny": 18.968147,
+                "maxx": 11.997337,
+                "maxy": 37.2962055
+            }
+        },
+        "jor": {
+            "name": "Jordan",
+            "bbox": {
+                "minx": 34.8844372,
+                "miny": 29.183401,
+                "maxx": 39.3012981,
+                "maxy": 33.3750617
+            }
+        },
+        "are": {
+            "name": "United Arab Emirates",
+            "bbox": {
+                "minx": 51.4160714,
+                "miny": 22.6316214,
+                "maxx": 56.6024458,
+                "maxy": 26.1517219
+            }
+        },
+        "qat": {
+            "name": "Qatar",
+            "bbox": {
+                "minx": 50.5675,
+                "miny": 24.4707534,
+                "maxx": 52.638011,
+                "maxy": 26.434565
+            }
+        },
+        "kwt": {
+            "name": "Kuwait",
+            "bbox": {
+                "minx": 46.5526837,
+                "miny": 28.5243622,
+                "maxx": 49.0046809,
+                "maxy": 30.1038082
+            }
+        },
+        "irq": {
+            "name": "Iraq",
+            "bbox": {
+                "minx": 38.7936719,
+                "miny": 29.0585661,
+                "maxx": 49.1067706,
+                "maxy": 37.3806687
+            }
+        },
+        "omn": {
+            "name": "Oman",
+            "bbox": {
+                "minx": 52.0000004,
+                "miny": 16.4649608,
+                "maxx": 60.054577,
+                "maxy": 26.7026737
+            }
+        },
+        "vut": {
+            "name": "Vanuatu",
+            "bbox": {
+                "minx": 166.3355255,
+                "miny": -20.4627425,
+                "maxx": 170.449982,
+                "maxy": -12.8713777
+            }
+        },
+        "khm": {
+            "name": "Cambodia",
+            "bbox": {
+                "minx": 102.3338282,
+                "miny": 9.4110961,
+                "maxx": 107.6276788,
+                "maxy": 14.6904224
+            }
+        },
+        "tha": {
+            "name": "Thailand",
+            "bbox": {
+                "minx": 97.3438072,
+                "miny": 5.612851,
+                "maxx": 105.636812,
+                "maxy": 20.4648337
+            }
+        },
+        "lao": {
+            "name": "Laos",
+            "bbox": {
+                "minx": 100.0843247,
+                "miny": 13.9096752,
+                "maxx": 107.6349989,
+                "maxy": 22.5086717
+            }
+        },
+        "mmr": {
+            "name": "Myanmar",
+            "bbox": {
+                "minx": 92.1729181,
+                "miny": 9.526084,
+                "maxx": 101.1700796,
+                "maxy": 28.547835
+            }
+        },
+        "vnm": {
+            "name": "Vietnam",
+            "bbox": {
+                "minx": 102.1438643,
+                "miny": 7.6920852,
+                "maxx": 114.8572578,
+                "maxy": 23.3926918
+            }
+        },
+        "prk": {
+            "name": "North Korea",
+            "bbox": {
+                "minx": 124.092355,
+                "miny": 37.5833302,
+                "maxx": 130.8861177,
+                "maxy": 43.0089642
+            }
+        },
+        "kor": {
+            "name": "South Korea",
+            "bbox": {
+                "minx": 124.3727348,
+                "miny": 32.9104556,
+                "maxx": 132.1467806,
+                "maxy": 38.61772
+            }
+        },
+        "mng": {
+            "name": "Mongolia",
+            "bbox": {
+                "minx": 87.7345852,
+                "miny": 41.5800276,
+                "maxx": 119.9322079,
+                "maxy": 52.1496
+            }
+        },
+        "ind": {
+            "name": "India",
+            "bbox": {
+                "minx": 67.9544415,
+                "miny": 6.5531169,
+                "maxx": 97.395561,
+                "maxy": 35.6745457
+            }
+        },
+        "bgd": {
+            "name": "Bangladesh",
+            "bbox": {
+                "minx": 88.007915,
+                "miny": 20.3679092,
+                "maxx": 92.6802967,
+                "maxy": 26.6382534
+            }
+        },
+        "btn": {
+            "name": "Bhutan",
+            "bbox": {
+                "minx": 88.7464856,
+                "miny": 26.7016859,
+                "maxx": 92.1252321,
+                "maxy": 28.2474194
+            }
+        },
+        "npl": {
+            "name": "Nepal",
+            "bbox": {
+                "minx": 80.0570812,
+                "miny": 26.3477581,
+                "maxx": 88.2015257,
+                "maxy": 30.471487
+            }
+        },
+        "pak": {
+            "name": "Pakistan",
+            "bbox": {
+                "minx": 60.872855,
+                "miny": 23.4341977,
+                "maxx": 77.1203914,
+                "maxy": 37.084107
+            }
+        },
+        "afg": {
+            "name": "Afghanistan",
+            "bbox": {
+                "minx": 60.5176034,
+                "miny": 29.3772926,
+                "maxx": 74.889862,
+                "maxy": 38.4910682
+            }
+        },
+        "tjk": {
+            "name": "Tajikistan",
+            "bbox": {
+                "minx": 67.3332775,
+                "miny": 36.6711153,
+                "maxx": 75.1539563,
+                "maxy": 41.0450935
+            }
+        },
+        "kgz": {
+            "name": "Kyrgyzstan",
+            "bbox": {
+                "minx": 69.2649523,
+                "miny": 39.1727382,
+                "maxx": 80.2295793,
+                "maxy": 43.2669041
+            }
+        },
+        "tkm": {
+            "name": "Turkmenistan",
+            "bbox": {
+                "minx": 52.2643526,
+                "miny": 35.129093,
+                "maxx": 66.6903725,
+                "maxy": 42.7996686
+            }
+        },
+        "irn": {
+            "name": "Iran",
+            "bbox": {
+                "minx": 44.0318908,
+                "miny": 24.8353084,
+                "maxx": 63.3332704,
+                "maxy": 39.7824624
+            }
+        },
+        "syr": {
+            "name": "Syria",
+            "bbox": {
+                "minx": 35.4714427,
+                "miny": 32.311354,
+                "maxx": 42.3745894,
+                "maxy": 37.3186563
+            }
+        },
+        "arm": {
+            "name": "Armenia",
+            "bbox": {
+                "minx": 43.4471395,
+                "miny": 38.8404775,
+                "maxx": 46.6333087,
+                "maxy": 41.3016463
+            }
+        },
+        "swe": {
+            "name": "Sweden",
+            "bbox": {
+                "minx": 10.5935025,
+                "miny": 55.1370957,
+                "maxx": 24.1776819,
+                "maxy": 69.0599735
+            }
+        },
+        "blr": {
+            "name": "Belarus",
+            "bbox": {
+                "minx": 23.1783313,
+                "miny": 51.2626864,
+                "maxx": 32.7627809,
+                "maxy": 56.1722484
+            }
+        },
+        "ukr": {
+            "name": "Ukraine",
+            "bbox": {
+                "minx": 22.137059,
+                "miny": 44.184598,
+                "maxx": 40.2275801,
+                "maxy": 52.3797464
+            }
+        },
+        "pol": {
+            "name": "Poland",
+            "bbox": {
+                "minx": 14.0696389,
+                "miny": 49.0020468,
+                "maxx": 24.145783,
+                "maxy": 55.03605
+            }
+        },
+        "aut": {
+            "name": "Austria",
+            "bbox": {
+                "minx": 9.5307487,
+                "miny": 46.3722987,
+                "maxx": 17.1607728,
+                "maxy": 49.0205249
+            }
+        },
+        "hun": {
+            "name": "Hungary",
+            "bbox": {
+                "minx": 16.1138866,
+                "miny": 45.737128,
+                "maxx": 22.8977094,
+                "maxy": 48.585257
+            }
+        },
+        "mda": {
+            "name": "Moldova",
+            "bbox": {
+                "minx": 26.6164054,
+                "miny": 45.4672099,
+                "maxx": 30.1637143,
+                "maxy": 48.4920527
+            }
+        },
+        "rou": {
+            "name": "Romania",
+            "bbox": {
+                "minx": 20.2619955,
+                "miny": 43.618682,
+                "maxx": 30.0454257,
+                "maxy": 48.2654738
+            }
+        },
+        "ltu": {
+            "name": "Lithuania",
+            "bbox": {
+                "minx": 20.6557167,
+                "miny": 53.8967893,
+                "maxx": 26.8355198,
+                "maxy": 56.4504213
+            }
+        },
+        "lva": {
+            "name": "Latvia",
+            "bbox": {
+                "minx": 20.6009852,
+                "miny": 55.6746505,
+                "maxx": 28.2414904,
+                "maxy": 58.0855688
+            }
+        },
+        "est": {
+            "name": "Estonia",
+            "bbox": {
+                "minx": 21.3826069,
+                "miny": 57.5093328,
+                "maxx": 28.2100175,
+                "maxy": 59.9383333
+            }
+        },
+        "deu": {
+            "name": "Germany",
+            "bbox": {
+                "minx": 5.8663153,
+                "miny": 47.2701114,
+                "maxx": 15.0419309,
+                "maxy": 55.099161
+            }
+        },
+        "bgr": {
+            "name": "Bulgaria",
+            "bbox": {
+                "minx": 22.3571459,
+                "miny": 41.2353678,
+                "maxx": 28.8875409,
+                "maxy": 44.2155388
+            }
+        },
+        "grc": {
+            "name": "Greece",
+            "bbox": {
+                "minx": 19.1127535,
+                "miny": 34.7188863,
+                "maxx": 29.68381,
+                "maxy": 41.7488889
+            }
+        },
+        "tur": {
+            "name": "Turkey",
+            "bbox": {
+                "minx": 25.5656305,
+                "miny": 35.8059015,
+                "maxx": 44.8176638,
+                "maxy": 42.297
+            }
+        },
+        "alb": {
+            "name": "Albania",
+            "bbox": {
+                "minx": 19.0009866,
+                "miny": 39.640394,
+                "maxx": 21.0574335,
+                "maxy": 42.6610848
+            }
+        },
+        "hrv": {
+            "name": "Croatia",
+            "bbox": {
+                "minx": 13.2104814,
+                "miny": 42.1765993,
+                "maxx": 19.4472713,
+                "maxy": 46.555029
+            }
+        },
+        "che": {
+            "name": "Switzerland",
+            "bbox": {
+                "minx": 5.9559113,
+                "miny": 45.8179716,
+                "maxx": 10.4922941,
+                "maxy": 47.8084597
+            }
+        },
+        "lux": {
+            "name": "Luxembourg",
+            "bbox": {
+                "minx": 5.7357006,
+                "miny": 49.4478587,
+                "maxx": 6.5312481,
+                "maxy": 50.1827726
+            }
+        },
+        "bel": {
+            "name": "Belgium",
+            "bbox": {
+                "minx": 2.3889137,
+                "miny": 49.4969821,
+                "maxx": 6.408097,
+                "maxy": 51.550781
+            }
+        },
+        "nld": {
+            "name": "Netherlands",
+            "bbox": {
+                "minx": -68.6255319,
+                "miny": 11.825,
+                "maxx": 7.2274985,
+                "maxy": 53.744395
+            }
+        },
+        "prt": {
+            "name": "Portugal",
+            "bbox": {
+                "minx": -31.5575303,
+                "miny": 29.828247,
+                "maxx": -6.1891593,
+                "maxy": 42.1543112
+            }
+        },
+        "esp": {
+            "name": "Spain",
+            "bbox": {
+                "minx": -18.3936845,
+                "miny": 27.4335426,
+                "maxx": 4.5918885,
+                "maxy": 43.9933088
+            }
+        },
+        "irl": {
+            "name": "Ireland",
+            "bbox": {
+                "minx": -11.0133788,
+                "miny": 51.222,
+                "maxx": -5.6582363,
+                "maxy": 55.636
+            }
+        },
+        "ncl": {
+            "name": "New Caledonia",
+            "bbox": {
+                "minx": 157.9847541,
+                "miny": -23.2217509,
+                "maxx": 172.3057152,
+                "maxy": -17.6868616
+            }
+        },
+        "slb": {
+            "name": "Solomon Is.",
+            "bbox": {
+                "minx": -83.4848851,
+                "miny": 35.8292625,
+                "maxx": -82.8448851,
+                "maxy": 36.4692625
+            }
+        },
+        "nzl": {
+            "name": "New Zealand",
+            "bbox": {
+                "minx": -179.059153,
+                "miny": -52.8213687,
+                "maxx": 179.3643594,
+                "maxy": -29.0303303
+            }
+        },
+        "aus": {
+            "name": "Australia",
+            "bbox": {
+                "minx": 72.2461932,
+                "miny": -55.3228175,
+                "maxx": 168.2261259,
+                "maxy": -9.0880125
+            }
+        },
+        "lka": {
+            "name": "Sri Lanka",
+            "bbox": {
+                "minx": 79.3959205,
+                "miny": 5.719,
+                "maxx": 82.0810141,
+                "maxy": 10.035
+            }
+        },
+        "chn": {
+            "name": "China",
+            "bbox": {
+                "minx": 73.4997347,
+                "miny": 8.6650385,
+                "maxx": 134.7754563,
+                "maxy": 53.5608154
+            }
+        },
+        "twn": {
+            "name": "Taiwan",
+            "bbox": {
+                "minx": 114.2857874,
+                "miny": 10.3267657,
+                "maxx": 122.3283,
+                "maxy": 26.4372222
+            }
+        },
+        "ita": {
+            "name": "Italy",
+            "bbox": {
+                "minx": 6.6272658,
+                "miny": 35.2889616,
+                "maxx": 18.7844746,
+                "maxy": 47.0921462
+            }
+        },
+        "dnk": {
+            "name": "Denmark",
+            "bbox": {
+                "minx": 7.7153255,
+                "miny": 54.4516667,
+                "maxx": 15.5530641,
+                "maxy": 57.9524297
+            }
+        },
+        "gbr": {
+            "name": "United Kingdom",
+            "bbox": {
+                "minx": -14.015517,
+                "miny": 49.674,
+                "maxx": 2.0919117,
+                "maxy": 61.061
+            }
+        },
+        "isl": {
+            "name": "Iceland",
+            "bbox": {
+                "minx": -25.0135069,
+                "miny": 63.0859177,
+                "maxx": -12.8046162,
+                "maxy": 67.353
+            }
+        },
+        "aze": {
+            "name": "Azerbaijan",
+            "bbox": {
+                "minx": 44.7633701,
+                "miny": 38.3929551,
+                "maxx": 51.1765554,
+                "maxy": 41.9646768
+            }
+        },
+        "geo": {
+            "name": "Georgia",
+            "bbox": {
+                "minx": 39.8844803,
+                "miny": 41.0551284,
+                "maxx": 46.7365373,
+                "maxy": 43.5864294
+            }
+        },
+        "phl": {
+            "name": "Philippines",
+            "bbox": {
+                "minx": 114.1036921,
+                "miny": 4.3833333,
+                "maxx": 126.803083,
+                "maxy": 21.321928
+            }
+        },
+        "mys": {
+            "name": "Malaysia",
+            "bbox": {
+                "minx": 98.7365109,
+                "miny": 0.8538205,
+                "maxx": 119.4699634,
+                "maxy": 8.3801468
+            }
+        },
+        "brn": {
+            "name": "Brunei",
+            "bbox": {
+                "minx": 113.017925,
+                "miny": 4.002508,
+                "maxx": 115.3635623,
+                "maxy": 6.546584
+            }
+        },
+        "svn": {
+            "name": "Slovenia",
+            "bbox": {
+                "minx": 13.3754696,
+                "miny": 45.4214242,
+                "maxx": 16.5968135,
+                "maxy": 46.8766816
+            }
+        },
+        "fin": {
+            "name": "Finland",
+            "bbox": {
+                "minx": 19.0832,
+                "miny": 59.4541578,
+                "maxx": 31.5867071,
+                "maxy": 70.0922939
+            }
+        },
+        "svk": {
+            "name": "Slovakia",
+            "bbox": {
+                "minx": 16.8331891,
+                "miny": 47.7311798,
+                "maxx": 22.56571,
+                "maxy": 49.6138162
+            }
+        },
+        "cze": {
+            "name": "Czechia",
+            "bbox": {
+                "minx": 12.0905752,
+                "miny": 48.5518081,
+                "maxx": 18.8592538,
+                "maxy": 51.0556945
+            }
+        },
+        "eri": {
+            "name": "Eritrea",
+            "bbox": {
+                "minx": 36.4333653,
+                "miny": 12.3548219,
+                "maxx": 43.3001714,
+                "maxy": 18.0709917
+            }
+        },
+        "jpn": {
+            "name": "Japan",
+            "bbox": {
+                "minx": 122.7141754,
+                "miny": 20.2145811,
+                "maxx": 154.205541,
+                "maxy": 45.7112046
+            }
+        },
+        "pry": {
+            "name": "Paraguay",
+            "bbox": {
+                "minx": -62.6406685,
+                "miny": -27.6063935,
+                "maxx": -54.258,
+                "maxy": -19.2876472
+            }
+        },
+        "yem": {
+            "name": "Yemen",
+            "bbox": {
+                "minx": 41.60825,
+                "miny": 11.9084802,
+                "maxx": 54.7389375,
+                "maxy": 19.0
+            }
+        },
+        "sau": {
+            "name": "Saudi Arabia",
+            "bbox": {
+                "minx": 34.4571718,
+                "miny": 16.29,
+                "maxx": 55.6666851,
+                "maxy": 32.1543377
+            }
+        },
+        "ata": {
+            "name": "Antarctica",
+            "bbox": {
+                "minx": -24.6850688,
+                "miny": -104.4063075,
+                "maxx": 25.3149312,
+                "maxy": -54.4063075
+            }
+        },
+        "cyn": {
+            "name": "N. Cyprus",
+            "bbox": {
+                "minx": 32.4871506,
+                "miny": 35.0030286,
+                "maxx": 34.8553182,
+                "maxy": 35.913252
+            }
+        },
+        "cyp": {
+            "name": "Cyprus",
+            "bbox": {
+                "minx": 32.0227581,
+                "miny": 34.4383706,
+                "maxx": 34.8553182,
+                "maxy": 35.913252
+            }
+        },
+        "mar": {
+            "name": "Morocco",
+            "bbox": {
+                "minx": -17.2448353,
+                "miny": 21.333462,
+                "maxx": -0.998429,
+                "maxy": 36.0021392
+            }
+        },
+        "egy": {
+            "name": "Egypt",
+            "bbox": {
+                "minx": 24.6499112,
+                "miny": 21.9936736,
+                "maxx": 37.1153517,
+                "maxy": 31.8330854
+            }
+        },
+        "lby": {
+            "name": "Libya",
+            "bbox": {
+                "minx": 9.391081,
+                "miny": 19.4999907,
+                "maxx": 25.3770629,
+                "maxy": 33.3545898
+            }
+        },
+        "eth": {
+            "name": "Ethiopia",
+            "bbox": {
+                "minx": 32.9975838,
+                "miny": 3.397448,
+                "maxx": 47.9823797,
+                "maxy": 14.8943383
+            }
+        },
+        "dji": {
+            "name": "Djibouti",
+            "bbox": {
+                "minx": 41.7713139,
+                "miny": 10.9149547,
+                "maxx": 43.6579046,
+                "maxy": 12.7923081
+            }
+        },
+        "sol": {
+            "name": "Somaliland",
+            "bbox": {
+                "minx": 42.708703,
+                "miny": 7.9998309,
+                "maxx": 49.0800591,
+                "maxy": 11.7160828
+            }
+        },
+        "uga": {
+            "name": "Uganda",
+            "bbox": {
+                "minx": 29.573433,
+                "miny": -1.4823179,
+                "maxx": 35.000308,
+                "maxy": 4.2340766
+            }
+        },
+        "rwa": {
+            "name": "Rwanda",
+            "bbox": {
+                "minx": 28.861696,
+                "miny": -2.8397581,
+                "maxx": 30.8990738,
+                "maxy": -1.0474083
+            }
+        },
+        "bih": {
+            "name": "Bosnia and Herz.",
+            "bbox": {
+                "minx": 18.4251913,
+                "miny": 43.8592358,
+                "maxx": 18.4255335,
+                "maxy": 43.8596085
+            }
+        },
+        "mkd": {
+            "name": "North Macedonia",
+            "bbox": {
+                "minx": 20.4529023,
+                "miny": 40.8536596,
+                "maxx": 23.034051,
+                "maxy": 42.3739044
+            }
+        },
+        "srb": {
+            "name": "Serbia",
+            "bbox": {
+                "minx": 18.8149945,
+                "miny": 42.2314466,
+                "maxx": 23.006309,
+                "maxy": 46.1902839
+            }
+        },
+        "mne": {
+            "name": "Montenegro",
+            "bbox": {
+                "minx": 18.4195781,
+                "miny": 41.6849866,
+                "maxx": 20.3529276,
+                "maxy": 43.5585061
+            }
+        },
+        "-99": {
+            "name": "Kosovo",
+            "bbox": {
+                "minx": 20.0142844,
+                "miny": 41.8576408,
+                "maxx": 21.7899366,
+                "maxy": 43.2733306
+            }
+        },
+        "tto": {
+            "name": "Trinidad and Tobago",
+            "bbox": {
+                "minx": -62.083056,
+                "miny": 9.8732106,
+                "maxx": -60.2895848,
+                "maxy": 11.5628372
+            }
+        },
+        "ssd": {
+            "name": "S. Sudan",
+            "bbox": {
+                "minx": 23.447778,
+                "miny": 3.48898,
+                "maxx": 35.948997,
+                "maxy": 12.236389
+            }
+        }
+    },
+    "_comment": "Generated on 2023-08-31 from geopandas, OpenStreetMap and Nominatim"
+}

@@ -29,7 +29,7 @@ from string import Template
 from typing import Tuple
 
 
-def get_bounding_box(country_code: str) -> Tuple[str, str, str, str]:
+def get_bounding_box(country_code: str) -> Tuple[str, str]:
     """
     provide the initial bounding box for the wis2box
     using the country's 3-letter ISO code
@@ -40,33 +40,35 @@ def get_bounding_box(country_code: str) -> Tuple[str, str, str, str]:
 
     :param country_code: `str` 3-letter ISO code for the country
 
-    :returns: `tuple` of (minx, miny, maxx, maxy)
+    :returns: `tuple` of (country_name, bbox)
     """
 
+    country_name = 'NA'
     bounding_box = [-180, -90, 180, 90]
 
     print(f"Getting bounding box for '{country_code}'.")
 
     # get the path to the data
-    data_path = Path(__file__).parent / 'config-templates' / 'bounding_box_lookup.json'  # noqa
+    data_path = Path(__file__).parent / 'config-templates' / 'countries.json'
 
     # open the file
     with data_path.open() as fh:
         # load the data
         data = json.load(fh)
         # get the bounding box for the country
-        if country_code in data and "bounding_box" in data[country_code]:
-            bbox = data[country_code]["bounding_box"]
-            if not {'min_lat', 'min_lon', 'max_lat', 'max_lon'} <= bbox.keys():
+        if country_code in data['countries'] and 'bbox' in data['countries'][country_code]:  # noqa
+            country_name = data['countries'][country_code]["name"]
+            bbox = data['countries'][country_code]["bbox"]
+            if not {'minx', 'miny', 'maxx', 'maxy'} <= bbox.keys():
                 print(f"Bounding box for '{country_code}' is invalid.")
                 print("Using global bounding box.")
             else:
-                MIN_LAT = bbox["min_lat"]
-                MIN_LON = bbox["min_lon"]
-                MAX_LAT = bbox["max_lat"]
-                MAX_LON = bbox["max_lon"]
-                # create bounding box as comma-separated list of four numbers # noqa
-                bounding_box = f"{MIN_LON},{MIN_LAT},{MAX_LON},{MAX_LAT}"
+                minx = bbox['minx']
+                miny = bbox['miny']
+                maxx = bbox['maxx']
+                maxy = bbox['maxy']
+                # create bounding box as a CSV of four numbers
+                bounding_box = f"{minx},{miny},{maxx},{maxy}"
         else:
             print(f"No bounding box found for '{country_code}'.")
             print("Using the bounding box for the whole world.")
@@ -89,7 +91,7 @@ def get_bounding_box(country_code: str) -> Tuple[str, str, str, str]:
     if answer == "exit":
         exit()
 
-    return bounding_box
+    return country_name, bounding_box
 
 
 def get_country_and_centre_id() -> Tuple[str, str]:
@@ -365,14 +367,15 @@ def create_datamappings_file(config_dir: str, country_code: str,
     print("*" * 80)
 
 
-def create_metadata_file(config_dir: str, country_code: str, centre_id: str,
-                         centre_name: str, wis2box_email: str,
+def create_metadata_file(config_dir: str, country_code: str, country_name,
+                         centre_id: str, centre_name: str, wis2box_email: str,
                          bounding_box: str, template: str) -> str:
     """
     creates the metadata file in the directory config_dir
 
     :param config_dir: `str` of the path to the directory where the configuration files are to be stored # noqa
     :param country_code: `str` of the country code of the wis2box
+    :param country_name: `str` of the country name of the wis2box
     :param centre_id: `str` of the centre id of the wis2box
     :param centre_name: `str` of centre name of the wis2box
     :param wis2box_email: `str` of centre email
@@ -400,6 +403,7 @@ def create_metadata_file(config_dir: str, country_code: str, centre_id: str,
         'START_DATE': current_date,
         'CREATION_DATE': current_date,
         'COUNTRY_CODE': country_code,
+        'COUNTRY_NAME': country_name,
         'CENTRE_ID': centre_id,
         'CENTRE_NAME': centre_name,
         'WIS2BOX_EMAIL': wis2box_email,
@@ -458,11 +462,12 @@ def create_metadata_files(config_dir: str, country_code: str,
         answer = input()
 
     # get an initial bounding box for the country
-    bounding_box = get_bounding_box(country_code)
+    country_name, bounding_box = get_bounding_box(country_code)
 
     create_metadata_file(
         config_dir,
         country_code,
+        country_name,
         centre_id,
         centre_name,
         wis2box_email,
@@ -472,6 +477,7 @@ def create_metadata_files(config_dir: str, country_code: str,
     create_metadata_file(
         config_dir,
         country_code,
+        country_name,
         centre_id,
         centre_name,
         wis2box_email,
