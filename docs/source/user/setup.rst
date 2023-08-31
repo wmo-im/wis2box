@@ -27,6 +27,7 @@ Create initial configuration files
 Run the following command to create the initial configuration files for your wis2box:
 
 .. code-block:: bash
+
    python3 wis2box-create-config.py
 
 .. note::
