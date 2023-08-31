@@ -43,6 +43,7 @@ RUN apt-get update -y && apt-get install -y ${DEBIAN_PACKAGES} \
     https://github.com/wmo-im/bufr2geojson/archive/refs/tags/v0.5.0.zip \
     https://github.com/wmo-im/pymetdecoder/archive/refs/tags/v0.1.7.zip \
     https://github.com/wmo-im/synop2bufr/archive/refs/tags/v0.4.1.zip \
+    https://github.com/wmo-cop/pyoscar/archive/refs/tags/0.5.0.zip \
     https://github.com/geopython/pygeometa/archive/refs/tags/0.14.0.zip \
     https://github.com/wmo-im/pywcmp/archive/refs/tags/0.4.0.zip \
     # install shapely

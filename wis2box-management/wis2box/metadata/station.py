@@ -20,6 +20,7 @@
 ###############################################################################
 
 import click
+from collections import OrderedDict
 import csv
 import json
 import logging
@@ -27,6 +28,7 @@ from typing import Iterator, Union
 
 from owslib.ogcapi.features import Features
 from pygeometa.schemas.wmo_wigos import WMOWIGOSOutputSchema
+from pyoscar import OSCARClient
 
 from wis2box import cli_helpers
 from wis2box.api import (
@@ -308,6 +310,42 @@ def get_geometry(wsi: str = '') -> Union[dict, None]:
 
     LOGGER.debug('No matching WSI')
     return None
+
+
+@click.command()
+@click.pass_context
+@click.option('--wigos-station-identifier', '-wsi',
+              help='WIGOS station identifier')
+@cli_helpers.OPTION_VERBOSITY
+def get(ctx, wigos_station_identifier, verbosity):
+    """Publishes collection of stations to API config and backend"""
+
+    client = OSCARClient(env='prod')
+
+    station = client.get_station_report(wigos_station_identifier)
+
+    results = OrderedDict({
+        'station_name': station['name'],
+        'wigos_station_identifier': wigos_station_identifier,
+        'traditional_station_identifier': None,
+        'facility_type': station['typeName'],
+        'latitude': station['locations'][0]['latitude'],
+        'longitude': station['locations'][0]['longitude'],
+        'elevation': station['locations'][0].get('elevation'),
+        'territory_name': station['territories'][0]['territoryName'],
+        'wmo_region': WMO_RAS[station['wmoRaId']]
+    })
+
+    if '0-2000' in station['wigosIds'][0]['wid']:
+        results['traditional_station_identifier'] = station['wigosIds'][0]['wid'].split('-')[-1]  # noqa
+
+    for v in ['station_name', 'territory_name']:
+        if ',' in results[v]:
+            results[v] = f'"{results[v]}"'
+
+    line = ','.join([(str(results[k]) if results[k] is not None else '') for k, v in results.items()])  # noqa
+
+    click.echo(line)
 
 
 @click.command()
