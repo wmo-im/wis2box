@@ -4,7 +4,7 @@ Installation and configuration
 ==============================
 
 This section summarizes the steps required to install a wis2box instance and setup your own datasets using initial configuration files 
-provided by using the 'wis2box-create-config.py' script.
+provided by using the ``wis2box-create-config.py`` script.
 
 Ensure you have Docker, Docker Compose and Python installed on your host, as detailed in :ref:`getting-started`.
 
@@ -38,7 +38,6 @@ Run the following command to create the initial configuration files for your wis
 Adding your own station data
 ----------------------------
 
-<<<<<<< HEAD
 wis2box requires information about the stations for which you will be sharing data.
 
 An example of the configuration file for the stations is provided in ``station_list.csv``. 
@@ -79,7 +78,7 @@ Discovery metadata provides the data description needed for users to discover yo
 
 The discovery metadata is provided in the form of a YAML file.
 
-If you used the 'python3 wis2box-create-config.py' command to initialize your wis2box, you will find two initial the discovery metadata files in
+If you used the ``python3 wis2box-create-config.py`` command to initialize your wis2box, you will find two initial the discovery metadata files in
 the directory you specified for your configuration files, under the ``metadata/discovery/`` directory:
    
 * ``metadata-synop.yml``: contains the discovery metadata for the ``synop`` dataset
@@ -172,15 +171,15 @@ Login to the wis2box-management container
 
 The first step is to add your collection to the wis2box API, using the discovery metadata file you created above.
 
-For example to add the data-collection defined in ``metadata/discovery/metadata-synop.yml`` in the directory you specified for your configuration files:
+For example to add the data collection defined in ``metadata/discovery/metadata-synop.yml`` in the directory you specified for your configuration files:
 
 .. code-block:: bash
 
    wis2box data add-collection /data/wis2box/metadata/discovery/metadata-synop.yml
 .. note::
 
-   If you see an error like ``ValueError: No plugins for XXX defined in data mappings``, exit the wis2box-container and edit the ``data-mappings.yml`` file
-    in your wis2box-configuration-directory.
+   If you see an error like ``ValueError: No plugins for XXX defined in data mappings``, exit the wis2box-management container and edit the ``data-mappings.yml`` file
+   in your wis2box configuration directory.
 
 You can view the collection you just added, by re-visiting ``/oapi/collections`` in a web browser.
 
