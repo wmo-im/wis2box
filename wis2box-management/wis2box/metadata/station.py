@@ -358,4 +358,5 @@ def publish_collection(ctx, verbosity):
     click.echo('Done')
 
 
+station.add_command(get)
 station.add_command(publish_collection)
