@@ -318,7 +318,7 @@ def get_geometry(wsi: str = '') -> Union[dict, None]:
               help='WIGOS station identifier')
 @cli_helpers.OPTION_VERBOSITY
 def get(ctx, wigos_station_identifier, verbosity):
-    """Publishes collection of stations to API config and backend"""
+    """Queries OSCAR/Surface for station information"""
 
     client = OSCARClient(env='prod')
 
