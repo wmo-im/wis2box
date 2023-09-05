@@ -30,7 +30,7 @@ from pygeometa.schemas.wmo_wigos import WMOWIGOSOutputSchema
 
 from wis2box import cli_helpers
 from wis2box.api import (
-    setup_collection, remove_collection, upsert_collection_item
+    delete_collection_item, setup_collection, upsert_collection_item
 )
 from wis2box.env import (DATADIR, DOCKER_API_URL,
                          BROKER_HOST, BROKER_USERNAME, BROKER_PASSWORD,
@@ -181,9 +181,6 @@ def publish_station_collection() -> None:
 
     setup_collection(meta=gcm())
 
-    LOGGER.debug('Flushing API backend index')
-    remove_collection('stations', config=False)
-
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
     LOGGER.debug(f'Publishing station list from {STATIONS}')
@@ -235,7 +232,11 @@ def publish_station_collection() -> None:
                 LOGGER.debug('Adding z value to geometry')
                 feature['geometry']['coordinates'].append(station_elevation)
 
-            LOGGER.debug('Publishing to backend')
+            LOGGER.debug('Updating backend')
+            try:
+                delete_collection_item('stations', feature['id'])
+            except RuntimeError as err:
+                LOGGER.debug(f'Station does not exist: {err}')
             upsert_collection_item('stations', feature)
 
     LOGGER.info(f'Updated station list: {station_list}')
