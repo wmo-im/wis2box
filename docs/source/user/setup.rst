@@ -162,7 +162,7 @@ wis2box requires information about the stations for which you will be sharing da
 
 An example of the configuration file for the stations is provided in ``station_list.csv``. 
 
-You can copy this file to ``metadata/station/station_list.csv`` in your $WIS2BOX_HOST_DATADIR :
+You can copy this file to ``metadata/station/station_list.csv`` in your $WIS2BOX_HOST_DATADIR:
 
 .. code-block:: bash
 
@@ -175,6 +175,18 @@ And edit ``~/wis2box-data/metadata/station/station_list.csv`` to include the dat
 
    The ``station_list.csv`` requires column names ``station_name`` and the ``wigos_station_identifier`` (WSI) with which the station is registered in `OSCAR`_.  Optionally, you can provide a ``traditional_station_identifier (TSI)`` column.
    The TSI can be left empty if your data contains a WSI. If your data contains a TSI but no WSI, the ``station_list.csv`` will be used to derive the corresponding WSI for that station.
+
+To verify station metadata from OSCAR/Surface, run the following command:
+
+.. code-block:: bash
+
+   wis2box metadata station get <WSI>
+
+Then to add to the station list:
+
+.. code-block:: bash
+
+   wis2box metadata station get <WSI> >> ~/wis2box-data/metadata/station/station_list.csv
 
 Discovery metadata
 ------------------
