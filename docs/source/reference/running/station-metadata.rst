@@ -27,7 +27,7 @@ wis2box can derive station information from `OSCAR/Surface`_.  To verify station
 
 .. code-block:: bash
 
-   wis2box metadata station WSI
+   wis2box metadata station get WSI
 
 
 where ``WSI`` is the WIGOS Station Identifier.  This command will return the information required in the
@@ -38,7 +38,7 @@ automatically:
 
 .. code-block:: bash
 
-   wis2box metadata station WSI >> ~/wis2box-data/metadata/station/station_list.csv
+   wis2box metadata station get WSI >> ~/wis2box-data/metadata/station/station_list.csv
 
 
 Summary
