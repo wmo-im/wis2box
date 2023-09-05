@@ -162,6 +162,9 @@ def make(args) -> None:
         run(args, split(
             f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} build {containers}'))
     elif args.command in ["up", "start", "start-dev"]:
+        if not os.path.exists('dev.env'):
+            print("ERROR: dev.env file does not exist.  Please create one manually or by running `python3 wis2box-create-config.py`")
+            exit(1)
         run(args, split(
             'docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions > /dev/null 2>&1'))
         run(args, split(

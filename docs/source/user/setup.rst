@@ -3,7 +3,8 @@
 Installation and configuration
 ==============================
 
-This section summarizes the steps required to install a wis2box instance and setup your own datasets using example configurations.
+This section summarizes the steps required to install a wis2box instance and setup your own datasets using initial configuration files 
+provided by using the ``wis2box-create-config.py`` script.
 
 Ensure you have Docker, Docker Compose and Python installed on your host, as detailed in :ref:`getting-started`.
 
@@ -15,148 +16,28 @@ and download the ``wis2box-setup-1.0b4.zip`` file from the Assets section.
 
 .. code-block:: bash
 
-   wget https://github.com/wmo-im/wis2box/releases/download/1.0b4/wis2box-setup-1.0b4.zip
-   unzip wis2box-setup-1.0b4.zip
-   cd wis2box-1.0b4
+   wget https://github.com/wmo-im/wis2box/releases/download/1.0b4/wis2box-setup-1.0b5.zip
+   unzip wis2box-setup-1.0b5.zip
+   cd wis2box-1.0b5
 
 
-Environment variables
----------------------
+Create initial configuration files
+----------------------------------
 
-wis2box uses environment variables from ``dev.env`` to its containers on startup.
-An example file is provided in ``examples/config/wis2box.extended.env``. 
-Copy this file to your working directory, and update it to suit your needs.
+Run the following command to create the initial configuration files for your wis2box:
 
 .. code-block:: bash
 
-   cp examples/config/wis2box.env dev.env
-
-.. note::
-   Please ensure you set ``WIS2BOX_BROKER_PASSWORD`` and ``WIS2BOX_STORAGE_PASSWORD`` to your own unique values.
-   
-   You will use these passwords to connect to your broker and MinIO storage to help you debug your wis2box services.
-   
-   Do not share these passwords with external parties.
+   python3 wis2box-create-config.py
 
 .. note::
 
-   You must map ``WIS2BOX_HOST_DATADIR`` to the absolute path of a directory on your host machine. This path will be mapped to ``/data/wis2box`` inside the **wis2box-management** container.
-   To enable external data sharing you must set ``WIS2BOX_URL`` to the URL pointing to where your host is exposed on the public network.
-
-For example you can create a ``wis2box-data`` directory in your home directory as follows:
-
-.. code-block:: bash
-
-   mkdir /home/<your-username>/wis2box-data
-
-And you can edit ``dev.env`` to match the location
-
-.. code-block:: bash
-
-   WIS2BOX_HOST_DATADIR=/home/<your-username>/wis2box-data
-
-Data mappings
--------------
-
-wis2box configuration requires a data mappings file, which defines the plugins used to process your data.
-Example mapping files are included in the release archive:
-
-* ``synop-bufr-mappings.yml``, input is binary data (BUFR) defined by a ``.bufr`` extension
-* ``synop-csv-mappings.yml``, input is comma-separated-values defined by a ``.csv`` extension
-* ``synop-synop-mappings.yml``, input is SYNOP defined with a ``.txt`` extension
-
-For example, if your incoming data contains ``.bufr4`` files containing synoptic observations, you can copy the following example:
-
-.. code-block:: bash
-
-   cp examples/config/synop-bufr-mappings.yml ~/wis2box-data/data-mappings.yml
-
-.. note::
-
-   The file should be called ``data-mappings.yml`` and should be placed in the directory you defined as ``WIS2BOX_HOST_DATADIR``.
-
-Edit ``~/wis2box-data/data-mappings.yml``:
- 
- * Replace ``country`` with your corresponding ISO 3166 alpha-3 country code in lowercase
- * Replace ``centre_id`` with the string identifying the centre running your wis2node in lowercase, alphanumeric characters
-
-If you need to define multiple datasets, you can add multiple entries in your ``data-mappings.yml``. For example:
-
-.. code-block:: bash
-
-   data:
-      ita.italy_wmo_demo.data.core.weather.surface-based-observations.synop:
-        plugins:
-            bufr:
-                - plugin: wis2box.data.bufr4.ObservationDataBUFR
-                  notify: true
-                  buckets:
-                    - ${WIS2BOX_STORAGE_INCOMING}
-                  file-pattern: '*'
-            bufr4:
-                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
-                  buckets:
-                    - ${WIS2BOX_STORAGE_PUBLIC}
-                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
-      ita.italy_wmo_demo.data.core.weather.surface-based-observations.temp:
-        plugins:
-            bufr:
-                - plugin: wis2box.data.bufr4.ObservationDataBUFR
-                  notify: true
-                  buckets:
-                    - ${WIS2BOX_STORAGE_INCOMING}
-                  file-pattern: '*'
-            bufr4:
-                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
-                  buckets:
-                    - ${WIS2BOX_STORAGE_PUBLIC}
-                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
-      
-In this case the data mappings configuration has specified 2 datasets (SYNOP, and TEMP).
-
-You can also combine input for the same dataset provided in different formats.
-For example, if you would like to process input data that is provided both as SYNOP and binary data:
-
-.. code-block:: bash
-
-   data:
-      ita.italy_wmo_demo.data.core.weather.surface-based-observations.synop:
-        plugins:
-            bufr:
-                - plugin: wis2box.data.bufr4.ObservationDataBUFR
-                  notify: true
-                  buckets:
-                    - ${WIS2BOX_STORAGE_INCOMING}
-                  file-pattern: '*'
-            csv:
-                - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
-                  template: synop_bufr.json
-                  notify: true
-                  file-pattern: '*'
-            bufr4:
-                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
-                  buckets:
-                    - ${WIS2BOX_STORAGE_PUBLIC}
-                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
-
-.. note::
-
-   The dataset identifier is used to define the topic hierarchy for your data (see `WIS2 topic hierarchy`_).  The top 3 levels of the WIS2 topic hierarchy (``origin/a/wis2``) are automatically included by wis2box when publishing your data.
-    
-   * dataset: ita.italy_wmo_demo.data.core.weather.surface-based-observations.synop
-   * topic-hierarchy: origin/a/wis2/ita/italy_wmo_demo/data/core/weather/surface-based-observations/synop
-
-.. note::
-   
-   In these examples, files in the ``wis2box-incoming`` storage bucket are processed to produce ``.bufr4`` stored in the ``wis2box-public`` storage bucket, using either the ``bufr4.ObservationDataBUFR`` or the ``wis2box.data.csv2bufr.ObservationDataCSV2BUFR`` plugins.
-
-   Files in the ``wis2box-public`` storage bucket are converted to GeoJSON and stored in the wis2box API backend using the ``wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON`` plugin.
-
-   You can provide your own plugins as needed; for more information (see :ref:`extending-wis2box`).
+    The ``wis2box-create-config.py`` program will ask for a directory to store the configuration files.
+    This directory will be mapped to ``/data/wis2box`` **inside** the wis2box-management container.
 
 
-Station metadata list
----------------------
+Adding your own station data
+----------------------------
 
 wis2box requires information about the stations for which you will be sharing data.
 
@@ -170,6 +51,9 @@ You can copy this file to ``metadata/station/station_list.csv`` in your $WIS2BOX
    cp examples/config/station_list.csv ~/wis2box-data/metadata/station
 
 And edit ``~/wis2box-data/metadata/station/station_list.csv`` to include the data for your stations.
+
+The 'wis2box-create-config.py' script will create the file ``metadata/station/station_list.csv`` file in the directory
+ you specified for your configuration files. You will have to edit this file to add your own station data using the examples provided.
 
 .. note::
 
@@ -193,23 +77,17 @@ Discovery metadata
 
 Discovery metadata provides the data description needed for users to discover your data when searching the WIS2 Global Discovery Catalogue.
 
-Updated discovery metadata records are shared globally through the MQTT endpoint defined in your wis2box.
+The discovery metadata is provided in the form of a YAML file.
 
-Discovery metadata records can be defined using the YAML syntax shared via ``WIS2BOX_HOST_DATADIR``.
+If you used the ``python3 wis2box-create-config.py`` command to initialize your wis2box, you will find two initial the discovery metadata files in
+the directory you specified for your configuration files, under the ``metadata/discovery/`` directory:
+   
+* ``metadata-synop.yml``: contains the discovery metadata for the ``synop`` dataset
+* ``metadata-temp.yml``: contains the discovery metadata for the ``temp`` dataset
 
-An example is provided in ``surface-weather-observations.yml``. Each dataset requires its own discovery metadata configuration file.
+Please review the content of these files and edit them as needed.
 
-You can copy the file ``surface-weather-observations.yml`` to the directory defined for ``WIS2BOX_HOST_DATADIR``:
-
-.. code-block:: bash
-
-   cp examples/config/surface-weather-observations.yml ~/wis2box-data/metadata/station
-
-And update it to provide the correct discovery metadata for your dataset:
-
-* replace ``[country].[centre_id].data.core.weather.surface-based-observations.synop`` with the topic as previously used in ``$WIS2BOX_HOST_DATADIR/data-mappings.yml``
-* text provided in ``identification.title`` and ``identification.abstract`` will be displayed in the wis2box user interface
-* provide a valid geographic bounding box in ``identification.extents.spatial.bbox``
+You can also add additional discovery metadata files for any other datasets you wish to publish.
 
 Starting wis2box
 ----------------
@@ -267,7 +145,8 @@ Which should display the following:
 
 Refer to the :ref:`troubleshooting` section if this is not the case. 
 
-You should now be able to view collections on the wis2box API by visiting ``http://localhost/oapi/collections`` in a web browser, which should appear as follows:
+You should now be able to view collections on the wis2box API by visiting the URL you specified during the configuration step,
+ and adding ``/oapi/collections`` to the URL.	
 
 .. image:: ../_static/wis2box-api-initial.png
   :width: 800
@@ -291,41 +170,41 @@ Login to the wis2box-management container
 
    python3 wis2box-ctl.py login
 
-.. note::
+The first step is to add your collection to the wis2box API, using the discovery metadata file you created above.
 
-   ``$WIS2BOX_DATADIR`` is the location that ``$WIS2BOX_HOST_DATADIR`` binds to **inside** the container. 
-   This allows wis2box to access the configuration files from **inside** the wis2box-management container.
-   By default, ``WIS2BOX_DATADIR`` points to ``/data/wis2box`` **inside** the wis2box-management container.
-
-The first step is add the new dataset as defined by the YAML file for your discovery metadata record defined previously, using the following command:
+For example to add the data collection defined in ``metadata/discovery/metadata-synop.yml`` in the directory you specified for your configuration files:
 
 .. code-block:: bash
 
-   wis2box data add-collection ${WIS2BOX_DATADIR}/surface-weather-observations.yml
-
+   wis2box data add-collection /data/wis2box/metadata/discovery/metadata-synop.yml
 .. note::
 
-   If you see an error like ``ValueError: No plugins for XXX defined in data mappings``, exit the wis2box-container and edit the ``data-mappings.yml`` file in the directory defined by ``WIS2BOX_HOST_DATADIR``
+   If you see an error like ``ValueError: No plugins for XXX defined in data mappings``, exit the wis2box-management container and edit the ``data-mappings.yml`` file
+   in your wis2box configuration directory.
 
-You can view the collection you just added, by re-visiting ``http://localhost/oapi/collections`` in a web browser.
+You can view the collection you just added, by re-visiting ``/oapi/collections`` in a web browser.
 
 .. image:: ../_static/wis2box-api-added-collection.png
   :width: 800
   :alt: wis2box API collections list with added collection
 
+Repeat this step for any other collections you wish to add, such as the ``temp`` dataset.
+
 The second step is to publish discovery metadata and cache its content in the wis2box API:
 
 .. code-block:: bash
 
-   wis2box metadata discovery publish ${WIS2BOX_DATADIR}/surface-weather-observations.yml
+   wis2box metadata discovery publish /data/wis2box/metadata/discovery/metadata-synop.yml
 
 This command publishes an MQTT message with information about your dataset to the WIS2 Global Discovery Catalogue. Repeat this command whenever you have to provide updated metadata about your dataset.
 
-You can review the discovery metadata just cached through the new link in  ``http://localhost/oapi/collections``:
+You can review the discovery metadata just cached through the new link at  ``/oapi/collections``:
 
 .. image:: ../_static/wis2box-api-discovery-metadata.png
   :width: 800
   :alt: wis2box API collections list with added discovery metadata
+
+Repeat this step for any other discovery metadata you wish to publish, such as the ``temp`` dataset.
 
 The final step is to publish your station information to the wis2box API from the station metadata list you prepared:
 
@@ -333,7 +212,7 @@ The final step is to publish your station information to the wis2box API from th
 
    wis2box metadata station publish-collection
 
-You can review the stations you just cached through the new link in  ``http://localhost/oapi/collections``:
+You can review the stations you just cached through the new link at  ``/oapi/collections``:
 
 .. image:: ../_static/wis2box-api-stations.png
   :width: 800
