@@ -56,6 +56,15 @@ WMO_RAS = {
     6: 'VI'
 }
 
+WMDR_RAS = {
+    'africa': 'I',
+    'asia': 'II',
+    'southAmerica': 'III',
+    'northCentralAmericaCaribbean': 'IV',
+    'southWestPacific': 'V',
+    'europe': 'VI'
+}
+
 if not STATIONS.exists():
     msg = f'Please create a station metadata file in {STATION_METADATA}'
     LOGGER.error(msg)
@@ -314,30 +323,33 @@ def get_geometry(wsi: str = '') -> Union[dict, None]:
 
 @click.command()
 @click.pass_context
-@click.option('--wigos-station-identifier', '-wsi',
-              help='WIGOS station identifier')
+@click.argument('wsi')
 @cli_helpers.OPTION_VERBOSITY
-def get(ctx, wigos_station_identifier, verbosity):
+def get(ctx, wsi, verbosity):
     """Queries OSCAR/Surface for station information"""
 
     client = OSCARClient(env='prod')
 
-    station = client.get_station_report(wigos_station_identifier)
+    station = client.get_station_report(wsi, format_='XML', summary=True)
 
     results = OrderedDict({
-        'station_name': station['name'],
-        'wigos_station_identifier': wigos_station_identifier,
+        'station_name': station['station_name'],
+        'wigos_station_identifier': station['wigos_station_identifier'],
         'traditional_station_identifier': None,
-        'facility_type': station['typeName'],
-        'latitude': station['locations'][0]['latitude'],
-        'longitude': station['locations'][0]['longitude'],
-        'elevation': station['locations'][0].get('elevation'),
-        'territory_name': station['territories'][0]['territoryName'],
-        'wmo_region': WMO_RAS[station['wmoRaId']]
+        'facility_type': station['facility_type'],
+        'latitude': station['latitude'],
+        'longitude': station['longitude'],
+        'elevation': station.get('elevation'),
+        'territory_name': station['territory_name']
     })
 
-    if '0-2000' in station['wigosIds'][0]['wid']:
-        results['traditional_station_identifier'] = station['wigosIds'][0]['wid'].split('-')[-1]  # noqa
+    try:
+        results['wmo_region'] = WMO_RAS[station['wmo_region']]
+    except KeyError:
+        results['wmo_region'] = WMDR_RAS[station['wmo_region']]
+
+    if station['wigos_station_identifier'].startswith('0-20000'):
+        results['traditional_station_identifier'] = station['wigos_station_identifier'].split('-')[-1]  # noqa
 
     for v in ['station_name', 'territory_name']:
         if ',' in results[v]:
