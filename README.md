@@ -16,3 +16,4 @@ and running wis2box.
 ## Contact
 
 * [Tom Kralidis](https://github.com/tomkralidis)
+* [Maaike Limper](https://github.com/maaikelimper)
