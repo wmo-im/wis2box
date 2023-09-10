@@ -191,8 +191,6 @@ def publish_station_collection() -> None:
     :returns: `None`
     """
 
-    setup_collection(meta=gcm())
-
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
     LOGGER.debug(f'Publishing station list from {STATIONS}')
@@ -232,6 +230,7 @@ def publish_station_collection() -> None:
                    'wmo_region': get_wmo_ra_roman(row['wmo_region']),
                    'url': f"{oscar_baseurl}/{wigos_station_identifier}",
                    'topic': topic,
+                   'topics': topics,
                    # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
                    'status': 'operational'
                 },
@@ -373,6 +372,16 @@ def get(ctx, wsi, verbosity):
     line = ','.join([(str(results[k]) if results[k] is not None else '') for k, v in results.items()])  # noqa
 
     click.echo(line)
+
+
+@click.command()
+@click.pass_context
+@cli_helpers.OPTION_VERBOSITY
+def setup(ctx, verbosity):
+    """Initializes metadata repository"""
+
+    click.echo('Setting up station metadata repository')
+    setup_collection(meta=gcm())
 
 
 @click.command()

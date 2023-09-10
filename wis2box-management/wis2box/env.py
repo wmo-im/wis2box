@@ -149,7 +149,12 @@ def show(ctx, verbosity):
 
     for key, value in os.environ.items():
         if key.startswith('WIS2BOX'):
-            click.echo(f'{key} => {value}')
+            if 'PASSWORD' in key:
+                value2 = '*' * len(key)
+            else:
+                value2 = value
+
+            click.echo(f'{key} => {value2}')
 
 
 environment.add_command(create)
