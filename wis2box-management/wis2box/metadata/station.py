@@ -330,23 +330,29 @@ def get(ctx, wsi, verbosity):
 
     client = OSCARClient(env='prod')
 
-    station = client.get_station_report(wsi, format_='XML', summary=True)
+    try:
+        station = client.get_station_report(wsi, format_='XML', summary=True)
+    except RuntimeError as err:
+        raise click.ClickException(err)
 
     results = OrderedDict({
         'station_name': station['station_name'],
         'wigos_station_identifier': station['wigos_station_identifier'],
         'traditional_station_identifier': None,
         'facility_type': station['facility_type'],
-        'latitude': station['latitude'],
-        'longitude': station['longitude'],
+        'latitude': station.get('latitude', ''),
+        'longitude': station.get('longitude', ''),
         'elevation': station.get('elevation'),
-        'territory_name': station['territory_name']
+        'territory_name': station.get('territory_name', '')
     })
 
     try:
         results['wmo_region'] = WMO_RAS[station['wmo_region']]
     except KeyError:
-        results['wmo_region'] = WMDR_RAS[station['wmo_region']]
+        try:
+            results['wmo_region'] = WMDR_RAS[station['wmo_region']]
+        except KeyError:
+            results['wmo_region'] = ''
 
     if station['wigos_station_identifier'].startswith('0-20000'):
         results['traditional_station_identifier'] = station['wigos_station_identifier'].split('-')[-1]  # noqa
