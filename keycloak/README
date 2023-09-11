@@ -1,0 +1,19 @@
+# Overview
+
+Currently, wis2box is using [oauth2-proxy](https://oauth2-proxy.github.io/oauth2-proxy/) to interface with [keycloak](https://www.keycloak.org) to reduce the complexity and risk when managing cookies and user sessions.
+
+oauth2-proxy provides a single configuration setting called `--oidc-issuer-url` to reference the keycloak instance. This creates a problem when deploying the system on `localhost`.
+
+1. **Inside the Container**: When oauth2-proxy attempts to make a connection directly to keycloak, it views `localhost` as the container's internal environment and therefore we cannot access keycloak at `localhost:8180`. Thus, for `--oidc-issuer-url`, we must provide the service's private network address (e.g., `http://keycloak:8180`).
+
+2. **User's Browser Context**: Once the direct connection is established, oauth2-proxy sends a redirect to the browser for logging in via the OIDC provider. Since the browser operates in your machine's context, and is not aware of `http://keycloak:8180`. The redirection needs to be to the host's `localhost`, e.g. `http://localhost:8180`.
+
+Unfortunately, a single `--oidc-issuer-url` cannot satisfy both requirements. 
+
+# Workaround
+
+The simplest short-term workaround is to include oauth2-proxy within the keycloak container to provide a comprehensive solution in a single location. This solves the `localhost` issue because direct connections from oauth2-proxy to keycloak at `localhost:8180` are fulfilled within the shared container, whereas redirects to `localhost:8180` can be fulfilled by the host machine.
+
+## Work in progress (WIP)
+
+The keycloak container is running a minimal installation of RHEL 8.7 and doesn't have a package manager or tools like `tar` (which would be needed to install `oauth2-proxy`). To resolve this issue we need to follow the instructions at https://www.keycloak.org/server/containers to install `tar`. However, the minimal RHEL image does have `curl` therefore, as a short-term workaround, we currently provide an uncompressed version of oauth2-proxy v7.5.0 (retrieved using `curl -L https://github.com/oauth2-proxy/oauth2-proxy/releases/download/v7.5.0/oauth2-proxy-v7.5.0.linux-amd64.tar.gz | tar xz`). The SHA for the uncompressed download can be checked on the oauth2-proxy [releases page](https://github.com/oauth2-proxy/oauth2-proxy/releases/tag/v7.5.0).

@@ -10,6 +10,8 @@ services:
       - wis2box-ui
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/oauth2-conf.inc:/etc/nginx/conf.d/oauth2-conf.inc
+      - ./nginx/protect-location.inc:/etc/nginx/conf.d/protect-location.inc
 
   wis2box-ui:
     container_name: wis2box-ui
@@ -131,6 +133,26 @@ services:
         condition: service_healthy
     command: ["wis2box", "pubsub" , "subscribe", "--broker", "http://wis2box-minio:9000", "--topic", "wis2box-storage/#"]
 
+  postgres:
+    container_name: postgres
+    image: postgres:13
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    env_file:
+      - default.env
+
+  keycloak:
+    # WIP-FIXME: --hostname-strict must be true in production (use docker-compose.ssl.yml)
+    container_name: keycloak
+    command: start --optimized --hostname-strict=false 
+    build: keycloak
+    volumes:
+      - keycloak-data-volume:/opt/keycloak/data
+    env_file:
+      - default.env
+    depends_on:
+      - postgres
+
   wis2box-auth:
     container_name: wis2box-auth
     image: ghcr.io/wmo-im/wis2box-auth:latest
@@ -148,3 +170,5 @@ volumes:
   minio-data:
   auth-data:
   api-config:
+  postgres-db-volume:
+  keycloak-data-volume:
