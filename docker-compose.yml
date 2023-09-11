@@ -24,17 +24,7 @@ services:
 
   wis2box-webapp:
     container_name: wis2box-webapp
-    image: wis2box-webapp:latest
-    env_file:
-      - default.env
-      - dev.env
-    depends_on:
-      wis2box-api:
-        condition: service_healthy
-
-  wis2box-webapp:
-    container_name: wis2box-webapp
-    image: wis2box-webapp:latest
+    image: wmoim/wis2box-webapp:wis2box-1.0b5 
     env_file:
       - default.env
       - dev.env
@@ -54,8 +44,8 @@ services:
 
   wis2box-api:
     container_name: wis2box-api
-    image: wis2box-api:latest
-    #image: ghcr.io/wmo-im/wis2box-api:latest
+    image: wis2box-api:test
+    #image: ghcr.io/wmo-im/wis2box-api:wis2box-1.0b5
     restart: always
     env_file:
       - default.env
@@ -63,8 +53,8 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
-    #volumes:
-    #  - api-config:/data/wis2box/config/pygeoapi/:rw
+    volumes:
+      - api-config:/data/wis2box/config/pygeoapi/:rw
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/oapi/admin/resources"]
       interval: 5s
