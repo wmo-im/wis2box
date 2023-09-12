@@ -40,10 +40,32 @@ curl https://wmo-im.github.io/wis2-topic-hierarchy/all.json.zip --output /tmp/al
 cd ~/.pywcmp/wis2-topic-hierarchy && unzip -j /tmp/all.json.zip
 
 # wis2box commands
+# TODO: avoid re-creating environment if it already exists
+# TODO: catch errors and avoid bounce in conjuction with restart: always
 wis2box environment create
-wis2box environment show
+wis2box environment show | grep -v "password" | grep -v "PASSWORD"  # avoid printing passwords in logs
 wis2box api setup
 wis2box metadata discovery setup
 wis2box metadata station publish-collection
+
+# Check if the path is restricted and capture the output
+is_restricted=$(wis2box auth is-restricted-path --path processes/wis2box)
+if [ "$is_restricted" = "True" ]; then
+    echo "processes/wis2box execution is restricted"
+else
+    echo "restricting processes/wis2box"
+    # Add the token
+    wis2box auth add-token --path processes/wis2box -y
+fi
+# repeat for collections/stations
+is_restricted=$(wis2box auth is-restricted-path --path collections/stations)
+if [ "$is_restricted" = "True" ]; then
+    echo "collections/stations execution is restricted"
+else
+    echo "restricting collections/stations"
+    # Add the token
+    wis2box auth add-token --path collections/stations -y
+fi
+
 echo "END /entrypoint.sh"
 exec "$@"
