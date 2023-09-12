@@ -117,12 +117,14 @@ def is_restricted_topic(ctx, topic_hierarchy):
     th, _ = validate_and_load(topic_hierarchy)
     click.echo(not is_resource_open(th.dotpath))
 
+
 @click.command()
 @click.pass_context
 @click.option('--path', '-p')
 def is_restricted_path(ctx, path):
     """Check if path has access control"""
     click.echo(not is_resource_open(path))
+
 
 @click.command()
 @click.pass_context
@@ -133,6 +135,7 @@ def has_access_topic(ctx, topic_hierarchy, token):
     th, _ = validate_and_load(topic_hierarchy)
     click.echo(is_token_authorized(th.dotpath, token))
 
+
 @click.command()
 @click.pass_context
 @click.option('--path', '-p')
@@ -140,6 +143,7 @@ def has_access_topic(ctx, topic_hierarchy, token):
 def has_access_path(ctx, path, token):
     """Check if a token has access to a path"""
     click.echo(is_token_authorized(path, token))
+
 
 @click.command()
 @click.pass_context
