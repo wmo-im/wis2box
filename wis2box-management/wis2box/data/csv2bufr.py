@@ -82,7 +82,7 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
         # execute process
         inputs = {
             "data": input_bytes.decode(),
-            "mapping": self.mappings['bufr4'],
+            "template": self.template,
             "channel": self.topic_hierarchy,
             "notify": self.enable_notification
         }
