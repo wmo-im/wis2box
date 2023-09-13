@@ -19,7 +19,18 @@ services:
       - default.env
       - dev.env
     depends_on:
-      - wis2box-api
+      wis2box-api:
+        condition: service_healthy
+
+  wis2box-webapp:
+    container_name: wis2box-webapp
+    image: ghcr.io/wmo-im/wis2box-webapp:1.0b5
+    env_file:
+      - default.env
+      - dev.env
+    depends_on:
+      wis2box-api:
+        condition: service_healthy
 
 #  wis2box-ui-admin:
 #    container_name: wis2box-ui-admin
@@ -33,7 +44,7 @@ services:
 
   wis2box-api:
     container_name: wis2box-api
-    image: ghcr.io/wmo-im/wis2box-api:latest
+    image: ghcr.io/wmo-im/wis2box-api:1.0b5
     restart: always
     env_file:
       - default.env
@@ -129,7 +140,7 @@ services:
         condition: service_started
       wis2box-api:
         condition: service_healthy
-    command: ["wis2box", "pubsub" , "subscribe", "--broker", "http://wis2box-minio:9000", "--topic", "wis2box-storage/#"]
+    command: ["wis2box", "pubsub" , "subscribe"]
 
   wis2box-auth:
     container_name: wis2box-auth

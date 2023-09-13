@@ -23,15 +23,10 @@ import logging
 from pathlib import Path
 from typing import Union
 
-from synop2bufr import transform as transform_synop
-
 from wis2box.data.base import BaseAbstractData
-from wis2box.env import DATADIR
-from wis2box.metadata.station import get_valid_wsi
+from wis2box.api import execute_process
 
 LOGGER = logging.getLogger(__name__)
-
-STATION_METADATA = DATADIR / 'metadata' / 'station' / 'station_list.csv'
 
 
 class ObservationDataSYNOP2BUFR(BaseAbstractData):
@@ -49,8 +44,15 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
 
         self.mappings = {}
 
-        with STATION_METADATA.open() as fh:
-            self.station_metadata = fh.read()
+    def publish(self) -> bool:
+        """
+        Publish data
+
+        :returns: `bool` of result
+        """
+
+        LOGGER.debug('skip publish for call_synop_publish-plugin')
+        return True
 
     def transform(self, input_data: Union[Path, bytes],
                   filename: str = '') -> bool:
@@ -68,9 +70,8 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
             LOGGER.error(msg)
             raise ValueError(msg)
 
-        LOGGER.debug('Generating BUFR4')
         input_bytes = self.as_bytes(input_data)
-
+        LOGGER.debug('extracting year and month from filename')
         try:
             year = int(file_match.group(1))
             month = int(file_match.group(2))
@@ -79,38 +80,16 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
             LOGGER.error(msg)
             raise ValueError(msg)
 
-        LOGGER.debug('Transforming data')
-        results = transform_synop(input_bytes.decode(), self.station_metadata,
-                                  year, month)
-
-        LOGGER.debug('Iterating over BUFR messages')
-        for item in results:
-            wsi = item['_meta']['properties']['wigos_station_identifier']
-            if 'result' in item['_meta']:
-                if item['_meta']['result']['code'] != 1:
-                    msg = item['_meta']['result']['message']
-                    LOGGER.error(f'Transform returned {msg} for wsi={wsi}')
-                    self.publish_failure_message(
-                        description='csv2bufr transform error',
-                        wsi=wsi)
-                    continue
-            if get_valid_wsi(wsi) is None:
-                msg = f'Station not in station list: wsi={wsi}; skipping'
-                LOGGER.error(msg)
-                self.publish_failure_message(
-                        description='Station not in station list',
-                        wsi=wsi)
-                continue
-            LOGGER.debug('Setting obs date for filepath creation')
-            identifier = item['_meta']['id']
-            data_date = item['_meta']['properties']['datetime']
-
-            self.output_data[identifier] = item
-            self.output_data[identifier]['_meta']['relative_filepath'] = \
-                self.get_local_filepath(data_date)
-
+        process_name = 'wis2box-synop-process'
+        # execute process
+        inputs = {
+            "data": input_bytes.decode(),
+            "year": year,
+            "month": month,
+            "channel": self.topic_hierarchy.dirpath,
+            "notify": self.enable_notification
+        }
+        result = execute_process(process_name, inputs)
+        for error in result['errors']:
+            LOGGER.error(f'{process_name} error: {error}')
         return True
-
-    def get_local_filepath(self, date_):
-        yyyymmdd = date_.strftime('%Y-%m-%d')
-        return (Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath)

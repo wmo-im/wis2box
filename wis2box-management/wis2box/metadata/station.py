@@ -56,6 +56,15 @@ WMO_RAS = {
     6: 'VI'
 }
 
+WMDR_RAS = {
+    'africa': 'I',
+    'asia': 'II',
+    'southAmerica': 'III',
+    'northCentralAmericaCaribbean': 'IV',
+    'southWestPacific': 'V',
+    'europe': 'VI'
+}
+
 if not STATIONS.exists():
     msg = f'Please create a station metadata file in {STATION_METADATA}'
     LOGGER.error(msg)
@@ -193,8 +202,8 @@ def publish_station_collection() -> None:
         for row in reader:
             wigos_station_identifier = row['wigos_station_identifier']
             station_list.append(wigos_station_identifier)
-            topics = list(check_station_datasets(wigos_station_identifier))
-            topic = None if len(topics) == 0 else topics[0]['title']
+            #topics = list(check_station_datasets(wigos_station_identifier))
+            #topic = None if len(topics) == 0 else topics[0]['title']
 
             LOGGER.debug('Verifying station coordinate types')
             for pc in ['longitude', 'latitude', 'elevation']:
@@ -219,13 +228,14 @@ def publish_station_collection() -> None:
                    'wigos_station_identifier': wigos_station_identifier,
                    'facility_type': row['facility_type'],
                    'territory_name': row['territory_name'],
+                   'barometer_height': None,
                    'wmo_region': get_wmo_ra_roman(row['wmo_region']),
                    'url': f"{oscar_baseurl}/{wigos_station_identifier}",
-                   'topic': topic,
+                   'topics': [],
                    # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
                    'status': 'operational'
                 },
-                'links': topics
+                'links': []
             }
 
             station_elevation = get_typed_value(row['elevation'])
@@ -314,30 +324,39 @@ def get_geometry(wsi: str = '') -> Union[dict, None]:
 
 @click.command()
 @click.pass_context
-@click.option('--wigos-station-identifier', '-wsi',
-              help='WIGOS station identifier')
+@click.argument('wsi')
 @cli_helpers.OPTION_VERBOSITY
-def get(ctx, wigos_station_identifier, verbosity):
+def get(ctx, wsi, verbosity):
     """Queries OSCAR/Surface for station information"""
 
     client = OSCARClient(env='prod')
 
-    station = client.get_station_report(wigos_station_identifier)
+    try:
+        station = client.get_station_report(wsi, format_='XML', summary=True)
+    except RuntimeError as err:
+        raise click.ClickException(err)
 
     results = OrderedDict({
-        'station_name': station['name'],
-        'wigos_station_identifier': wigos_station_identifier,
+        'station_name': station['station_name'],
+        'wigos_station_identifier': station['wigos_station_identifier'],
         'traditional_station_identifier': None,
-        'facility_type': station['typeName'],
-        'latitude': station['locations'][0]['latitude'],
-        'longitude': station['locations'][0]['longitude'],
-        'elevation': station['locations'][0].get('elevation'),
-        'territory_name': station['territories'][0]['territoryName'],
-        'wmo_region': WMO_RAS[station['wmoRaId']]
+        'facility_type': station['facility_type'],
+        'latitude': station.get('latitude', ''),
+        'longitude': station.get('longitude', ''),
+        'elevation': station.get('elevation'),
+        'territory_name': station.get('territory_name', '')
     })
 
-    if '0-2000' in station['wigosIds'][0]['wid']:
-        results['traditional_station_identifier'] = station['wigosIds'][0]['wid'].split('-')[-1]  # noqa
+    try:
+        results['wmo_region'] = WMO_RAS[station['wmo_region']]
+    except KeyError:
+        try:
+            results['wmo_region'] = WMDR_RAS[station['wmo_region']]
+        except KeyError:
+            results['wmo_region'] = ''
+
+    if station['wigos_station_identifier'].startswith('0-20000'):
+        results['traditional_station_identifier'] = station['wigos_station_identifier'].split('-')[-1]  # noqa
 
     for v in ['station_name', 'territory_name']:
         if ',' in results[v]:
