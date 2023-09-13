@@ -12,6 +12,11 @@ data:
                   file-pattern: '^.*\.bufr4$' 
     rou.rnimh.data.core.weather.surface-based-observations.synop:
         plugins:
+            csv:
+                - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
+                  template: /data/wis2box/aws_default_mappings.json
+                  notify: true
+                  file-pattern: '^.*.csv$'
             txt:
                 - plugin: wis2box.data.synop2bufr.ObservationDataSYNOP2BUFR
                   notify: true
