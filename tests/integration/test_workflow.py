@@ -68,15 +68,15 @@ def test_metadata_station_publish():
 
     stations = r.json()
 
-    assert stations['numberReturned'] == 79
-    assert stations['numberMatched'] == 79
+    assert stations['numberReturned'] == 96
+    assert stations['numberMatched'] == 96
 
 
 def test_metadata_discovery_publish():
     """Test discovery metadata publishing"""
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items').json()
-    assert r['numberMatched'] == 4
+    assert r['numberMatched'] == 5
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/{ID}').json()  # noqa
 
@@ -110,7 +110,7 @@ def test_metadata_discovery_publish():
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items',
                     params=params).json()
 
-    assert r['numberMatched'] == 4
+    assert r['numberMatched'] == 5
 
 
 def test_data_ingest():
