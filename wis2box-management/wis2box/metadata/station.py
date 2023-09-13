@@ -202,8 +202,8 @@ def publish_station_collection() -> None:
         for row in reader:
             wigos_station_identifier = row['wigos_station_identifier']
             station_list.append(wigos_station_identifier)
-            topics = list(check_station_datasets(wigos_station_identifier))
-            topic = None if len(topics) == 0 else topics[0]['title']
+            #topics = list(check_station_datasets(wigos_station_identifier))
+            #topic = None if len(topics) == 0 else topics[0]['title']
 
             try:
                 barometer_height = float(row['barometer_height'])
@@ -234,6 +234,7 @@ def publish_station_collection() -> None:
                    'barometer_height': barometer_height,
                    'facility_type': row['facility_type'],
                    'territory_name': row['territory_name'],
+                   'barometer_height': None,
                    'wmo_region': get_wmo_ra_roman(row['wmo_region']),
                    'url': f"{oscar_baseurl}/{wigos_station_identifier}",
                    'topic': topic,
@@ -241,7 +242,7 @@ def publish_station_collection() -> None:
                    # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
                    'status': 'operational'
                 },
-                'links': topics
+                'links': []
             }
 
             station_elevation = get_typed_value(row['elevation'])
