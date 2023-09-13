@@ -202,8 +202,8 @@ def publish_station_collection() -> None:
         for row in reader:
             wigos_station_identifier = row['wigos_station_identifier']
             station_list.append(wigos_station_identifier)
-            topics = list(check_station_datasets(wigos_station_identifier))
-            topic = None if len(topics) == 0 else topics[0]['title']
+            #topics = list(check_station_datasets(wigos_station_identifier))
+            #topic = None if len(topics) == 0 else topics[0]['title']
 
             LOGGER.debug('Verifying station coordinate types')
             for pc in ['longitude', 'latitude', 'elevation']:
@@ -228,13 +228,14 @@ def publish_station_collection() -> None:
                    'wigos_station_identifier': wigos_station_identifier,
                    'facility_type': row['facility_type'],
                    'territory_name': row['territory_name'],
+                   'barometer_height': None,
                    'wmo_region': get_wmo_ra_roman(row['wmo_region']),
                    'url': f"{oscar_baseurl}/{wigos_station_identifier}",
-                   'topic': topic,
+                   'topics': [],
                    # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
                    'status': 'operational'
                 },
-                'links': topics
+                'links': []
             }
 
             station_elevation = get_typed_value(row['elevation'])

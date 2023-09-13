@@ -14,6 +14,12 @@ data:
                   buckets:
                     - $${WIS2BOX_STORAGE_INCOMING}
                   file-pattern: '^.*\.csv$$'
+            b:
+                - plugin: wis2box.data.bufr4.ObservationDataBUFR
+                  notify: true
+                  buckets:
+                    - $${WIS2BOX_STORAGE_INCOMING}
+                  file-pattern: '^.*\.b$$'
             bin:
                 - plugin: wis2box.data.bufr4.ObservationDataBUFR
                   notify: true
