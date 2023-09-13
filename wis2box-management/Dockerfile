@@ -75,5 +75,6 @@ COPY ./docker/wis2box.cron /etc/cron.d/wis2box.cron
 RUN chmod 0644 /etc/cron.d/wis2box.cron && crontab /etc/cron.d/wis2box.cron
 
 COPY ./docker/entrypoint.sh /entrypoint.sh
+COPY ./docker/healthcheck.sh /healthcheck.sh
 
 ENTRYPOINT [ "/entrypoint.sh" ]

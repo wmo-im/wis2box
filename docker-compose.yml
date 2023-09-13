@@ -141,6 +141,10 @@ services:
       wis2box-api:
         condition: service_healthy
     command: ["wis2box", "pubsub" , "subscribe"]
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 5s
+      retries: 100
 
   wis2box-auth:
     container_name: wis2box-auth
