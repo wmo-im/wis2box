@@ -171,7 +171,7 @@ class BaseAbstractData:
         }
         local_broker = load_plugin('pubsub', defs_local)
         local_broker.pub('wis2box/notifications',
-                         json.dumps(wis_message),
+                         wis_message.dumps(),
                          qos=0)
         return True
 
