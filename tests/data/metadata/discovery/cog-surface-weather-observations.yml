@@ -1,0 +1,61 @@
+wis2box:
+    retention: P180D
+    topic_hierarchy: cog.brazza_met_centre.data.core.weather.surface-based-observations.synop
+    country: cog
+    centre_id: brazza_met_centre
+
+mcf:
+    version: 1.0
+
+metadata:
+    identifier: urn:x-wmo:md:cog:brazza_met_centre:surface-weather-observations
+    hierarchylevel: dataset
+
+identification:
+    title: Surface weather observations from Congo
+    abstract: Surface weather observations from Congo
+    dates:
+        creation: 2023-03-26
+    keywords:
+        default:
+            keywords:
+                - surface weather
+                - temperature
+                - observations
+        wmo:
+            keywords:
+                - weatherObservations
+            keywords_type: theme
+            vocabulary:
+                name: WMO Category Code
+                url: https://github.com/wmo-im/wcmp-codelists/blob/main/codelists/WMO_CategoryCode.csv
+    extents:
+        spatial:
+            - bbox: [11.0937728207,-5.03798674888,18.4530652198,3.72819651938]
+              crs: 4326
+        temporal:
+            - begin: 2023-03-26
+              end: null
+              resolution: P1H
+    url: https://example.org/malawi-surface-weather-observations
+    wmo_data_policy: core
+
+contact:
+    pointOfContact: &contact_poc
+        organization: Congo National Meteorological Service (DMN)
+        url: https://www.dirmet.cg
+        individualname: Francilly Lardin SAMBA
+        positionname: Head of Telecommunications and data processing
+        phone: null
+        fax: null
+        address: P.O. Box 208
+        city: Brazzaville
+        administrativearea: null
+        postalcode: null
+        country: Congo
+        email: sambafrancillylardin@gmail.com
+        hoursofservice: 0700h - 1500h UTC
+        contactinstructions: email
+
+    distributor: *contact_poc
+
