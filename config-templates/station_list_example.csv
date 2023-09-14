@@ -1,4 +1,4 @@
-station_name,wigos_station_identifier,traditional_station_identifier,facility_type,latitude,longitude,elevation,territory_name,wmo_region
+station_name,wigos_station_identifier,traditional_station_identifier,facility_type,latitude,longitude,elevation,barometer_height,territory_name,wmo_region
 EXAMPLE1-SURFACE,0-454-0-EXAMPLE,,Land (fixed),-14.98333,34.96666,618,,Malawi,I
 EXAMPLE2-SURFACE,0-20000-0-12345,12345,Land (fixed),41.56361,14.65500,793,807.0,Italy,VI
 EXAMPLE3-UPPERAIR,0-52-0-5432,54321,Air (fixed),13.08585,-59.48701,56.6,,Barbados,IV
