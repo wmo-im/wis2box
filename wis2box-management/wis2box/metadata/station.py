@@ -204,6 +204,11 @@ def publish_station_collection() -> None:
             topics = list(check_station_datasets(wigos_station_identifier))
             topic = None if len(topics) == 0 else topics[0]['title']
 
+            try:
+                barometer_height = float(row['barometer_height'])
+            except TypeError:
+                barometer_height = None
+
             LOGGER.debug('Verifying station coordinate types')
             for pc in ['longitude', 'latitude', 'elevation']:
                 value = get_typed_value(row[pc])
@@ -225,7 +230,7 @@ def publish_station_collection() -> None:
                 'properties': {
                    'name': row['station_name'],
                    'wigos_station_identifier': wigos_station_identifier,
-                   'barometer_height': float(row['barometer_height']),
+                   'barometer_height': barometer_height,
                    'facility_type': row['facility_type'],
                    'territory_name': row['territory_name'],
                    'wmo_region': get_wmo_ra_roman(row['wmo_region']),
