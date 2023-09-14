@@ -1,10 +1,32 @@
 data:
+    cog.brazza_met_centre.data.core.weather.surface-based-observations.synop:
+        plugins:
+            bufr:
+                - plugin: wis2box.data.bufr4.ObservationDataBUFR
+                  notify: true
+                  buckets:
+                    - ${WIS2BOX_STORAGE_INCOMING}
+                  file-pattern: '^.*\.bufr$'
+            txt:
+                - plugin: wis2box.data.synop2bufr_api.ObservationDataSYNOP2BUFR
+                  notify: true
+                  file-pattern: '^.*_(\d{4})(\d{2}).*\.txt$'
+            bufr4:
+                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
+                  buckets:
+                    - ${WIS2BOX_STORAGE_PUBLIC}
+                  file-pattern: '^.*\.bufr4$' 
     rou.rnimh.data.core.weather.surface-based-observations.synop:
         plugins:
             txt:
                 - plugin: wis2box.data.synop2bufr.ObservationDataSYNOP2BUFR
                   notify: true
                   file-pattern: '^A_SMR.*EDZW_(\d{4})(\d{2}).*.txt$'
+            csv:
+                - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
+                  template: aws-template
+                  notify: true
+                  file-pattern: '^.*\.csv$'
             bufr4:
                 - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
                   file-pattern: '^A_SMR.*EDZW_(\d{4})(\d{2}).*.bufr4$'
@@ -12,7 +34,7 @@ data:
         plugins:
             csv:
                 - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
-                  template: /data/wis2box/synop_bufr.json
+                  template: synop_bufr
                   notify: true
                   file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.csv$'
             bufr4:

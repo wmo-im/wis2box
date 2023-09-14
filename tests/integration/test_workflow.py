@@ -196,7 +196,7 @@ def test_message_api():
         'mwi_met_centre': 24,
         'roma_met_centre': 33,
         'alger_met_centre': 29,
-        'rnimh': 223,
+        'rnimh': 226,
         'brazza_met_centre': 14
     }
     for key, value in counts.items():
@@ -207,7 +207,8 @@ def test_message_api():
     url = f'{API_URL}/collections/messages/items?sortby=-datetime'
     r = SESSION.get(url).json()
 
-    assert r['numberMatched'] == 323
+    # should match sum of counts above
+    assert r['numberMatched'] == 326
 
     msg = r['features'][4]
 
