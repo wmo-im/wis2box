@@ -66,6 +66,15 @@ else
     # Add the token
     wis2box auth add-token --path collections/stations -y
 fi
+# repeat for collections/discovery-metadata
+is_restricted=$(wis2box auth is-restricted-path --path collections/discovery-metadata)
+if [ "$is_restricted" = "True" ]; then
+    echo "collections/discovery-metadata execution is restricted"
+else
+    echo "restricting collections/discovery-metadata"
+    # Add the token
+    wis2box auth add-token --path collections/discovery-metadata -y
+fi
 
 echo "END /entrypoint.sh"
 exec "$@"
