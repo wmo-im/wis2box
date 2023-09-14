@@ -21,10 +21,12 @@
 
 import json
 import logging
+import csv2bufr.templates as c2bt
+
 from pathlib import Path
 from typing import Union
 
-from csv2bufr import MAPPINGS, transform as transform_csv
+from csv2bufr import transform as transform_csv
 
 from wis2box.data.base import BaseAbstractData
 from wis2box.metadata.station import get_valid_wsi
@@ -50,11 +52,12 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
         LOGGER.debug(f'Loading template {self.template}')
         if self.template.startswith('/'):
             mapping_bufr4 = Path(self.template)
+            with mapping_bufr4.open() as fh1:
+                self.mappings['bufr4'] = json.load(fh1)
         else:
-            mapping_bufr4 = Path(MAPPINGS) / self.template
-
-        with mapping_bufr4.open() as fh1:
-            self.mappings['bufr4'] = json.load(fh1)
+            if self.template not in c2bt.list_templates():
+                raise Exception(f'Unknown template: {self.template}, options are: {c2bt.list_templates()}') # noqa
+            self.mappings['bufr4'] = c2bt.load_template(self.template)
 
         self.station_metadata = None
 
