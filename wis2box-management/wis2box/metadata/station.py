@@ -348,7 +348,7 @@ def get(ctx, wsi, verbosity):
         'territory_name': station.get('territory_name', '')
     })
 
-    if results['territory_name'] is not in [None, '']:
+    if results['territory_name'] not in [None, '']:
         results['territory_name'] = countries.get(
             results['territory_name']).name
 
