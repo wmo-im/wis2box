@@ -220,7 +220,7 @@ class BaseAbstractData:
 
             # now iterate over formats
             for format_, the_data in item.items():
-                if format_ == '_meta':
+                if format_ in ['_meta', 'errors', 'warnings']:
                     continue
 
                 LOGGER.debug(f'Processing format: {format_}')
