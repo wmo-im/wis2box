@@ -10,6 +10,10 @@ services:
     volumes:
       - ../wis2box-api/wis2box_api:/app/wis2box_api
 
+  wis2box-auth:
+    volumes:
+      - ../wis2box-auth/wis2box_auth:/app/wis2box_auth
+
   elasticsearch:
     ports:
       - 9200:9200
