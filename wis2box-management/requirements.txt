@@ -1,4 +1,5 @@
 elasticsearch
+iso3166
 isodate
 minio
 OWSLib

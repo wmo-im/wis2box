@@ -22,6 +22,7 @@
 import click
 from collections import OrderedDict
 import csv
+from iso3166 import countries
 import json
 import logging
 from typing import Iterator, Union
@@ -346,6 +347,10 @@ def get(ctx, wsi, verbosity):
         'elevation': station.get('elevation'),
         'territory_name': station.get('territory_name', '')
     })
+
+    if results['territory_name'] is not in [None, '']:
+        results['territory_name'] = countries.get(
+            results['territory_name']).name
 
     try:
         results['wmo_region'] = WMO_RAS[station['wmo_region']]
