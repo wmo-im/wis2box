@@ -25,7 +25,7 @@ import csv
 from iso3166 import countries
 import json
 import logging
-from typing import Iterator, Union
+from typing import Iterator, Tuple, Union
 
 from owslib.ogcapi.features import Features
 from pygeometa.schemas.wmo_wigos import WMOWIGOSOutputSchema
@@ -136,11 +136,11 @@ def station():
     pass
 
 
-def load_datasets() -> Iterator[dict]:
+def load_datasets() -> Iterator[Tuple[dict, str]]:
     """
     Load datasets from oapi
 
-    :returns: `list`, of link relations for all datasets
+    :returns: `list`, of link relations and topics for all datasets
     """
     oaf = Features(DOCKER_API_URL)
 
@@ -149,10 +149,10 @@ def load_datasets() -> Iterator[dict]:
         for topic in dm['features']:
             for link in topic['links']:
                 if link['rel'] == 'canonical':
-                    yield link
+                    yield link, topic['properties']['wmo:topicHierarchy']
     except RuntimeError:
         LOGGER.warning('discovery-metadata collection has not been created')
-        yield {}
+        yield {}, None
 
 
 def check_station_datasets(wigos_station_identifier: str) -> Iterator[dict]:
@@ -166,7 +166,7 @@ def check_station_datasets(wigos_station_identifier: str) -> Iterator[dict]:
 
     oaf = Features(DOCKER_API_URL)
 
-    for topic in load_datasets():
+    for topic, topic2 in load_datasets():
         if not topic:
             continue
 
@@ -181,6 +181,7 @@ def check_station_datasets(wigos_station_identifier: str) -> Iterator[dict]:
 
         if obs['numberMatched'] > 0:
             topic['type'] = 'application/json'
+            topic['topic'] = topic2.replace('origin/a/wis2/', '')
             yield topic
 
 
@@ -190,8 +191,6 @@ def publish_station_collection() -> None:
 
     :returns: `None`
     """
-
-    setup_collection(meta=gcm())
 
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
@@ -205,6 +204,11 @@ def publish_station_collection() -> None:
             station_list.append(wigos_station_identifier)
             topics = list(check_station_datasets(wigos_station_identifier))
             topic = None if len(topics) == 0 else topics[0]['title']
+
+            try:
+                barometer_height = float(row['barometer_height'])
+            except ValueError:
+                barometer_height = None
 
             LOGGER.debug('Verifying station coordinate types')
             for pc in ['longitude', 'latitude', 'elevation']:
@@ -227,11 +231,13 @@ def publish_station_collection() -> None:
                 'properties': {
                    'name': row['station_name'],
                    'wigos_station_identifier': wigos_station_identifier,
+                   'barometer_height': barometer_height,
                    'facility_type': row['facility_type'],
                    'territory_name': row['territory_name'],
                    'wmo_region': get_wmo_ra_roman(row['wmo_region']),
                    'url': f"{oscar_baseurl}/{wigos_station_identifier}",
                    'topic': topic,
+                   'topics': [x['topic'] for x in topics],
                    # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
                    'status': 'operational'
                 },
@@ -378,6 +384,16 @@ def get(ctx, wsi, verbosity):
 @click.command()
 @click.pass_context
 @cli_helpers.OPTION_VERBOSITY
+def setup(ctx, verbosity):
+    """Initializes metadata repository"""
+
+    click.echo('Setting up station metadata repository')
+    setup_collection(meta=gcm())
+
+
+@click.command()
+@click.pass_context
+@cli_helpers.OPTION_VERBOSITY
 def publish_collection(ctx, verbosity):
     """Publishes collection of stations to API config and backend"""
 
@@ -387,3 +403,4 @@ def publish_collection(ctx, verbosity):
 
 station.add_command(get)
 station.add_command(publish_collection)
+station.add_command(setup)

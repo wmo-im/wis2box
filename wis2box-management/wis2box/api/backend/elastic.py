@@ -93,6 +93,69 @@ MAPPINGS = {
     }
 }
 
+MAPPINGS_STATIONS = {
+    'properties': {
+        'geometry': {
+            'type': 'geo_shape'
+        },
+        'properties': {
+            'properties': {
+                'name': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {'type': 'keyword'}
+                    }
+                },
+                'wigos_station_identifier': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {'type': 'keyword'}
+                    }
+                },
+                'traditional_station_identifier': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {'type': 'keyword'}
+                    }
+                },
+                'barometer_height': {
+                    'type': 'float'
+                },
+                'facility_type': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {'type': 'keyword'}
+                    }
+                },
+                'territory_name': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {'type': 'keyword'}
+                    }
+                },
+                'wmo_region': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {'type': 'keyword'}
+                    }
+                },
+                'url': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {'type': 'keyword'}
+                    }
+                },
+                'topics': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {'type': 'keyword'}
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 class ElasticBackend(BaseBackend):
     """Elasticsearch API backend"""
@@ -131,6 +194,12 @@ class ElasticBackend(BaseBackend):
 
         :returns: `bool` of result
         """
+
+        if collection_id == 'stations':
+            mappings = MAPPINGS_STATIONS
+        else:
+            mappings = MAPPINGS
+
         es_index = self.es_id(collection_id)
 
         if self.has_collection(collection_id):
@@ -139,7 +208,7 @@ class ElasticBackend(BaseBackend):
             raise RuntimeError(msg)
 
         LOGGER.debug('Creating index')
-        self.conn.options().indices.create(index=es_index, mappings=MAPPINGS,
+        self.conn.options().indices.create(index=es_index, mappings=mappings,
                                            settings=SETTINGS)
 
         return self.has_collection(collection_id)

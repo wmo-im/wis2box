@@ -43,10 +43,10 @@ cd ~/.pywcmp/wis2-topic-hierarchy && unzip -j /tmp/all.json.zip
 # TODO: avoid re-creating environment if it already exists
 # TODO: catch errors and avoid bounce in conjuction with restart: always
 wis2box environment create
-wis2box environment show | grep -v "password" | grep -v "PASSWORD"  # avoid printing passwords in logs
+wis2box environment show
 wis2box api setup
 wis2box metadata discovery setup
-wis2box metadata station publish-collection
+wis2box metadata station setup
 
 # Check if the path is restricted and capture the output
 is_restricted=$(wis2box auth is-restricted-path --path processes/wis2box)
