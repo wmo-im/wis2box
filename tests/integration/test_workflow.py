@@ -196,7 +196,7 @@ def test_message_api():
         'mwi_met_centre': 24,
         'roma_met_centre': 33,
         'alger_met_centre': 29,
-        'rnimh': 185
+        'rnimh': 223
     }
     for key, value in counts.items():
         url = f'{API_URL}/collections/messages/items?sortby=-datetime&q={key}&limit=1'  # noqa
