@@ -225,7 +225,7 @@ def publish_station_collection() -> None:
                 'properties': {
                    'name': row['station_name'],
                    'wigos_station_identifier': wigos_station_identifier,
-                   'barometer_height': float(row['facility_type']),
+                   'barometer_height': float(row['barometer_height']),
                    'facility_type': row['facility_type'],
                    'territory_name': row['territory_name'],
                    'wmo_region': get_wmo_ra_roman(row['wmo_region']),
