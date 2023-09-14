@@ -1,5 +1,5 @@
 station_name,wigos_station_identifier,traditional_station_identifier,facility_type,latitude,longitude,elevation,barometer_height,territory_name,wmo_region
-BALAKA,0-454-2-AWSBALAKA,AWSBALAKA,Land (fixed),-14.983333,34.966666,,618,Malawi,I
-MALOMO,0-454-2-AWSMALOMO,AWSMALOMO,Land (fixed),-13.14202,33.83727,,1088,Malawi,I
-BENI-ABBES,0-20000-0-60602,60602,Land (fixed),30.12846,-2.14953,505.0,510,Algeria,I
-IN-GUEZZAM,0-20000-0-60690,60690,Land (fixed),19.56388,5.74887,403.0,399,Algeria,I
+BALAKA,0-454-2-AWSBALAKA,AWSBALAKA,Land (fixed),-14.983333,34.966666,618,,Malawi,I
+MALOMO,0-454-2-AWSMALOMO,AWSMALOMO,Land (fixed),-13.14202,33.83727,1088,,Malawi,I
+BENI-ABBES,0-20000-0-60602,60602,Land (fixed),30.12846,-2.14953,510,505.0,Algeria,I
+IN-GUEZZAM,0-20000-0-60690,60690,Land (fixed),19.56388,5.74887,399,403.0,Algeria,I
