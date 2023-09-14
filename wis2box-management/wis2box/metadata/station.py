@@ -396,3 +396,4 @@ def publish_collection(ctx, verbosity):
 
 station.add_command(get)
 station.add_command(publish_collection)
+station.add_command(setup)
