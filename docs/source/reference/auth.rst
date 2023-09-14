@@ -7,8 +7,23 @@ wis2box provides built in access control for the WAF and API on a topic hierarch
 using the wis2box command line utility. Authentication tokens are only required for topics that have access control
 configured.
 
-Adding Access Control
----------------------
+In addition, wis2box restricts access to the execution of wis2box processes and PUT/POST/DELETE requests to the stations collection.
+
+Access control on paths
+-----------------------
+
+To add a token to the execution of a wis2box process, use the following command:
+
+.. code-block:: bash
+
+    wis2box auth add-token --path processes/wis2box myexecutiontoken
+
+To add a token to PUT/POST/DELETE requests to the stations collection, use the following command:
+
+    wis2box auth add-token --path collections/stations mystationupdatetoken
+
+Adding Access Control on topics
+-------------------------------
 
 All topic hierarchies in wis2box are open by default. A topic becomes closed, with access control applied, the
 first time a token is generated for a topic hierarchy.
@@ -33,8 +48,8 @@ Token credentials can be validated using the wis2box command line utility.
 .. code-block:: bash
 
     wis2box auth show
-    wis2box auth has-access --topic-hierarchy mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop mytoken
-    wis2box auth has-access --topic-hierarchy mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop notmytoken
+    wis2box auth has-access-topic --topic-hierarchy mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop mytoken
+    wis2box auth has-access-topic --topic-hierarchy mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop notmytoken
 
 
 Once a token has been generated, access to any data of that topic in the WAF or API requires token authentication.
