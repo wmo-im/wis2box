@@ -22,6 +22,7 @@
 import click
 from collections import OrderedDict
 import csv
+from iso3166 import countries
 import json
 import logging
 from typing import Iterator, Union
@@ -54,6 +55,15 @@ WMO_RAS = {
     4: 'IV',
     5: 'V',
     6: 'VI'
+}
+
+WMDR_RAS = {
+    'africa': 'I',
+    'asia': 'II',
+    'southAmerica': 'III',
+    'northCentralAmericaCaribbean': 'IV',
+    'southWestPacific': 'V',
+    'europe': 'VI'
 }
 
 if not STATIONS.exists():
@@ -314,30 +324,47 @@ def get_geometry(wsi: str = '') -> Union[dict, None]:
 
 @click.command()
 @click.pass_context
-@click.option('--wigos-station-identifier', '-wsi',
-              help='WIGOS station identifier')
+@click.argument('wsi')
 @cli_helpers.OPTION_VERBOSITY
-def get(ctx, wigos_station_identifier, verbosity):
+def get(ctx, wsi, verbosity):
     """Queries OSCAR/Surface for station information"""
 
     client = OSCARClient(env='prod')
 
-    station = client.get_station_report(wigos_station_identifier)
+    try:
+        station = client.get_station_report(wsi, format_='XML', summary=True)
+    except RuntimeError as err:
+        raise click.ClickException(err)
 
     results = OrderedDict({
-        'station_name': station['name'],
-        'wigos_station_identifier': wigos_station_identifier,
+        'station_name': station['station_name'],
+        'wigos_station_identifier': station['wigos_station_identifier'],
+        'barometer_height': station['barometer_height'],
         'traditional_station_identifier': None,
-        'facility_type': station['typeName'],
-        'latitude': station['locations'][0]['latitude'],
-        'longitude': station['locations'][0]['longitude'],
-        'elevation': station['locations'][0].get('elevation'),
-        'territory_name': station['territories'][0]['territoryName'],
-        'wmo_region': WMO_RAS[station['wmoRaId']]
+        'facility_type': station['facility_type'],
+        'latitude': station.get('latitude', ''),
+        'longitude': station.get('longitude', ''),
+        'elevation': station.get('elevation'),
+        'territory_name': station.get('territory_name', '')
     })
 
-    if '0-2000' in station['wigosIds'][0]['wid']:
-        results['traditional_station_identifier'] = station['wigosIds'][0]['wid'].split('-')[-1]  # noqa
+    if results['territory_name'] not in [None, '']:
+        try:
+            results['territory_name'] = countries.get(
+               results['territory_name']).name
+        except KeyError:
+            results['territory_name'] = ''
+
+    try:
+        results['wmo_region'] = WMO_RAS[station['wmo_region']]
+    except KeyError:
+        try:
+            results['wmo_region'] = WMDR_RAS[station['wmo_region']]
+        except KeyError:
+            results['wmo_region'] = ''
+
+    if station['wigos_station_identifier'].startswith('0-20000'):
+        results['traditional_station_identifier'] = station['wigos_station_identifier'].split('-')[-1]  # noqa
 
     for v in ['station_name', 'territory_name']:
         if ',' in results[v]:
