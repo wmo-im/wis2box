@@ -101,6 +101,7 @@ class DiscoveryMetadata(BaseMetadata):
 
         LOGGER.debug('Generating OARec discovery metadata')
         record = WMOWCMP2OutputSchema().write(md, stringify=False)
+        record['properties']['wmo:topicHierarchy'] = mqtt_topic
 
         return record
 

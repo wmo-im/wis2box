@@ -25,7 +25,7 @@ import csv
 from iso3166 import countries
 import json
 import logging
-from typing import Iterator, Union
+from typing import Iterator, Tuple, Union
 
 from owslib.ogcapi.features import Features
 from pygeometa.schemas.wmo_wigos import WMOWIGOSOutputSchema
@@ -136,11 +136,11 @@ def station():
     pass
 
 
-def load_datasets() -> Iterator[dict]:
+def load_datasets() -> Iterator[Tuple[dict, str]]:
     """
     Load datasets from oapi
 
-    :returns: `list`, of link relations for all datasets
+    :returns: `list`, of link relations and topics for all datasets
     """
     oaf = Features(DOCKER_API_URL)
 
@@ -149,10 +149,10 @@ def load_datasets() -> Iterator[dict]:
         for topic in dm['features']:
             for link in topic['links']:
                 if link['rel'] == 'canonical':
-                    yield link
+                    yield link, topic['properties']['wmo:topicHierarchy']
     except RuntimeError:
         LOGGER.warning('discovery-metadata collection has not been created')
-        yield {}
+        yield {}, None
 
 
 def check_station_datasets(wigos_station_identifier: str) -> Iterator[dict]:
@@ -166,7 +166,7 @@ def check_station_datasets(wigos_station_identifier: str) -> Iterator[dict]:
 
     oaf = Features(DOCKER_API_URL)
 
-    for topic in load_datasets():
+    for topic, topic2 in load_datasets():
         if not topic:
             continue
 
@@ -181,6 +181,8 @@ def check_station_datasets(wigos_station_identifier: str) -> Iterator[dict]:
 
         if obs['numberMatched'] > 0:
             topic['type'] = 'application/json'
+            topic['topic'] = topic2
+            print("JJJ", topic)
             yield topic
 
 
@@ -236,7 +238,7 @@ def publish_station_collection() -> None:
                    'wmo_region': get_wmo_ra_roman(row['wmo_region']),
                    'url': f"{oscar_baseurl}/{wigos_station_identifier}",
                    'topic': topic,
-                   'topics': [x['title'] for x in topics],
+                   'topics': [x['topic'].replace('/', '.') for x in topics],
                    # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
                    'status': 'operational'
                 },
