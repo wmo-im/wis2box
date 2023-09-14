@@ -118,6 +118,12 @@ MAPPINGS_STATIONS = {
                         'raw': {'type': 'keyword'}
                     }
                 },
+                'barometer_height': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {'type': 'keyword'}
+                    }
+                },
                 'facility_type': {
                     'type': 'text',
                     'fields': {

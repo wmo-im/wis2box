@@ -28,6 +28,7 @@ from wis2box import cli_helpers
 from wis2box.log import setup_logger
 from wis2box.plugin import load_plugin
 from wis2box.plugin import PLUGINS
+from wis2box.util import remove_auth_from_url
 
 LOGGER = logging.getLogger(__name__)
 
@@ -150,7 +151,9 @@ def show(ctx, verbosity):
     for key, value in os.environ.items():
         if key.startswith('WIS2BOX'):
             if 'PASSWORD' in key:
-                value2 = '*' * len(key)
+                value2 = '*' * len(value)
+            elif key == 'WIS2BOX_BROKER_PUBLIC':
+                value2 = remove_auth_from_url(value)
             else:
                 value2 = value
 
