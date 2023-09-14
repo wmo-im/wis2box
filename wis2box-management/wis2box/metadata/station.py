@@ -225,12 +225,13 @@ def publish_station_collection() -> None:
                 'properties': {
                    'name': row['station_name'],
                    'wigos_station_identifier': wigos_station_identifier,
+                   'barometer_height': float(row['facility_type']),
                    'facility_type': row['facility_type'],
                    'territory_name': row['territory_name'],
                    'wmo_region': get_wmo_ra_roman(row['wmo_region']),
                    'url': f"{oscar_baseurl}/{wigos_station_identifier}",
                    'topic': topic,
-                   'topics': topics,
+                   'topics': [x['title'] for x in topics],
                    # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
                    'status': 'operational'
                 },
