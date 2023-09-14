@@ -181,8 +181,7 @@ def check_station_datasets(wigos_station_identifier: str) -> Iterator[dict]:
 
         if obs['numberMatched'] > 0:
             topic['type'] = 'application/json'
-            topic['topic'] = topic2
-            print("JJJ", topic)
+            topic['topic'] = topic2.replace('origin/a/wis2/', '')
             yield topic
 
 
