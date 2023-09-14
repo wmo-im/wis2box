@@ -1,4 +1,4 @@
-station_name,wigos_station_identifier,traditional_station_identifier,facility_type,latitude,longitude,elevation,territory_name,wmo_region
+station_name,wigos_station_identifier,traditional_station_identifier,facility_type,latitude,longitude,elevation,barometer_height,territory_name,wmo_region
 BONIFATI (16337-0),0-20000-0-16337,16337,Land (fixed),39.5847222222,15.8913888889,485.0,484,Italy,VI
 DECIMOMANNU,0-20000-0-16546,16546,Land (fixed),39.3461111111,8.9675,24.0,29,Italy,VI
 CAMPOBASSO,0-20000-0-16252,16252,Land (fixed),41.5636111111,14.655,807.0,793,Italy,VI
