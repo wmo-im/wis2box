@@ -1,14 +1,8 @@
 data:
     cog.brazza_met_centre.data.core.weather.surface-based-observations.synop:
         plugins:
-            bufr:
-                - plugin: wis2box.data.bufr4.ObservationDataBUFR
-                  notify: true
-                  buckets:
-                    - ${WIS2BOX_STORAGE_INCOMING}
-                  file-pattern: '^.*\.bufr$'
             txt:
-                - plugin: wis2box.data.synop2bufr_api.ObservationDataSYNOP2BUFR
+                - plugin: wis2box.data.synop2bufr.ObservationDataSYNOP2BUFR
                   notify: true
                   file-pattern: '^.*_(\d{4})(\d{2}).*\.txt$'
             bufr4:
