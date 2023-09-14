@@ -349,8 +349,11 @@ def get(ctx, wsi, verbosity):
     })
 
     if results['territory_name'] not in [None, '']:
-        results['territory_name'] = countries.get(
-            results['territory_name']).name
+        try:
+            results['territory_name'] = countries.get(
+               results['territory_name']).name
+        except KeyError:
+            results['territory_name'] = ''
 
     try:
         results['wmo_region'] = WMO_RAS[station['wmo_region']]
