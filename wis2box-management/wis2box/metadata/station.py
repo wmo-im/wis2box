@@ -206,7 +206,7 @@ def publish_station_collection() -> None:
 
             try:
                 barometer_height = float(row['barometer_height'])
-            except TypeError:
+            except ValueError:
                 barometer_height = None
 
             LOGGER.debug('Verifying station coordinate types')
