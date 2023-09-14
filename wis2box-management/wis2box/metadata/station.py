@@ -238,7 +238,7 @@ def publish_station_collection() -> None:
                    'wmo_region': get_wmo_ra_roman(row['wmo_region']),
                    'url': f"{oscar_baseurl}/{wigos_station_identifier}",
                    'topic': topic,
-                   'topics': [x['topic'].replace('/', '.') for x in topics],
+                   'topics': [x['topic'] for x in topics],
                    # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
                    'status': 'operational'
                 },
