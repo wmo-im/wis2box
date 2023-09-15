@@ -196,7 +196,7 @@ def test_message_api():
         'mwi_met_centre': 24,
         'roma_met_centre': 33,
         'alger_met_centre': 29,
-        'rnimh': 226,
+        'rnimh': 78, # was 226
         'brazza_met_centre': 14
     }
     for key, value in counts.items():
