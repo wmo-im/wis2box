@@ -21,12 +21,12 @@
 
 import json
 import logging
-import csv2bufr.templates as c2bt
 
 from pathlib import Path
 from typing import Union
 
 from csv2bufr import transform as transform_csv
+import csv2bufr.templates as c2bt
 
 from wis2box.data.base import BaseAbstractData
 from wis2box.metadata.station import get_valid_wsi
