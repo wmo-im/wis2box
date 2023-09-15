@@ -80,8 +80,9 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
             raise ValueError(msg)
 
         LOGGER.debug('Transforming data')
-        bufr_generator = transform_synop(input_bytes.decode(), self.station_metadata,
-                                  year, month)
+        bufr_generator = transform_synop(input_bytes.decode(),
+                                         self.station_metadata,
+                                         year, month)
         results = []
 
         try:
