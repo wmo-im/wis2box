@@ -80,8 +80,16 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
             raise ValueError(msg)
 
         LOGGER.debug('Transforming data')
-        results = transform_synop(input_bytes.decode(), self.station_metadata,
-                                  year, month)
+        bufr_generator = transform_synop(input_bytes.decode(),
+                                         self.station_metadata,
+                                         year, month)
+        results = []
+
+        try:
+            for item in bufr_generator:
+                results.append(item)
+        except Exception as err:
+            LOGGER.error(f'Error in bufr_generator: {err}')
 
         LOGGER.debug('Iterating over BUFR messages')
         for item in results:
@@ -91,7 +99,7 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
                     msg = item['_meta']['result']['message']
                     LOGGER.error(f'Transform returned {msg} for wsi={wsi}')
                     self.publish_failure_message(
-                        description='csv2bufr transform error',
+                        description='synop2bufr transform error',
                         wsi=wsi)
                     continue
             if get_valid_wsi(wsi) is None:
