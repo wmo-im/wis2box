@@ -38,8 +38,8 @@ After restarting wis2box, repeat the commands for adding your dataset and publis
 .. code-block:: bash
 
   python3 wis2box-ctl.py login
-  wis2box data add-collection ${WIS2BOX_HOST_DATADIR}/surface-weather-observations.yml
-  wis2box metadata discovery publish ${WIS2BOX_HOST_DATADIR}/surface-weather-observations.yml
+  wis2box data add-collection /data/wis2box/surface-weather-observations.yml
+  wis2box metadata discovery publish /data/wis2box/surface-weather-observations.yml
 
 Nginx (HTTP)
 ^^^^^^^^^^^^

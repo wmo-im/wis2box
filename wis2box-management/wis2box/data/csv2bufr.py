@@ -72,15 +72,16 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
 
         input_bytes = self.as_bytes(input_data)
 
-        process_name = 'wis2box-csv-process'
+        process_name = 'wis2box-csv2bufr'
         # execute process
         inputs = {
             "data": input_bytes.decode(),
             "template": self.template,
-            "channel": self.topic_hierarchy,
+            "channel": self.topic_hierarchy.dirpath,
             "notify": self.enable_notification
         }
         result = execute_process(process_name, inputs)
-        for error in result['errors']:
-            LOGGER.error(f'{process_name} error: {error}')
+        if 'errors' in result:	
+            for error in result['errors']:
+                LOGGER.error(f'{process_name} error: {error}')
         return True

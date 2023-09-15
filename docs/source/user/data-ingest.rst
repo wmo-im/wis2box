@@ -10,6 +10,22 @@ The wis2box storage is provided using a `MinIO`_ container that provides S3-comp
 Any file received in the ``wis2box-incoming`` storage bucket will trigger an action to process the file. 
 What action to take is determined by the ``data-mappings.yml`` you've setup in the previous section.
 
+wis2box-webapp
+--------------
+
+The wis2box-webapp is a web application that provides a user interface to ingest SYNOP data into the wis2box.
+
+It also provides an interface to validate the ingestion of CSV-files using the AWS-template for csv2bufr.
+
+The wis2box-webapp is available on your host at `http://<your-public-ip>/wis2box-webapp`.
+
+Interactive data-ingestiong requires an execution token, which can be generated using the ``wis2box auth add-token`` command inside the wis2box-management container:
+
+.. code-block:: bash
+
+    python3 wis2box-ctl.py login
+    wis2box auth add-token --path processes/wis2box myexecutiontoken
+
 MinIO user interface
 --------------------
 

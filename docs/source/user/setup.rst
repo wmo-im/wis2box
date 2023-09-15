@@ -35,43 +35,6 @@ Run the following command to create the initial configuration files for your wis
     The ``wis2box-create-config.py`` program will ask for a directory to store the configuration files.
     This directory will be mapped to ``/data/wis2box`` **inside** the wis2box-management container.
 
-
-Adding your own station data
-----------------------------
-
-wis2box requires information about the stations for which you will be sharing data.
-
-An example of the configuration file for the stations is provided in ``station_list.csv``. 
-
-You can copy this file to ``metadata/station/station_list.csv`` in your $WIS2BOX_HOST_DATADIR:
-
-.. code-block:: bash
-
-   mkdir -p ~/wis2box-data/metadata/station
-   cp examples/config/station_list.csv ~/wis2box-data/metadata/station
-
-And edit ``~/wis2box-data/metadata/station/station_list.csv`` to include the data for your stations.
-
-The 'wis2box-create-config.py' script will create the file ``metadata/station/station_list.csv`` file in the directory
- you specified for your configuration files. You will have to edit this file to add your own station data using the examples provided.
-
-.. note::
-
-   The ``station_list.csv`` requires column names ``station_name`` and the ``wigos_station_identifier`` (WSI) with which the station is registered in `OSCAR`_.  Optionally, you can provide a ``traditional_station_identifier (TSI)`` column.
-   The TSI can be left empty if your data contains a WSI. If your data contains a TSI but no WSI, the ``station_list.csv`` will be used to derive the corresponding WSI for that station.
-
-To verify station metadata from OSCAR/Surface, run the following command:
-
-.. code-block:: bash
-
-   wis2box metadata station get <WSI>
-
-Then to add to the station list:
-
-.. code-block:: bash
-
-   wis2box metadata station get <WSI> >> ~/wis2box-data/metadata/station/station_list.csv
-
 Discovery metadata
 ------------------
 
@@ -206,23 +169,31 @@ You can review the discovery metadata just cached through the new link at  ``/oa
 
 Repeat this step for any other discovery metadata you wish to publish, such as the ``temp`` dataset.
 
-The final step is to publish your station information to the wis2box API from the station metadata list you prepared:
-
-.. code-block:: bash
-
-   wis2box metadata station publish-collection
-
-You can review the stations you just cached through the new link at  ``/oapi/collections``:
-
-.. image:: ../_static/wis2box-api-stations.png
-  :width: 800
-  :alt: wis2box API collections list with added stations
-
 You can now logout of wis2box-management container:
 
 .. code-block:: bash
 
    exit
+
+Adding station metadata
+-----------------------
+
+The next step is to add station metadata to your wis2box. This can be done interactively in the wis2box-webapp UI on the 'stations' page.
+
+The wis2box-webapp can be accessed by visiting the URL you specified during the configuration step, and adding ``/wis2box-webapp`` to the URL.
+
+.. image:: ../_static/wis2box-webapp-stations.png
+  :width: 800
+  :alt: wis2box webapp stations page
+
+Please note only data for stations that have been added to the wis2box will be ingested and result in WIS2 notifications being published.
+
+You can also bulk-insert a set of stations from a CSV file, by specifying the stations in metadata/stations/station_list.csv in your wis2box-host-directory and running the following command:
+
+.. code-block:: bash
+
+   python3 wis2box-ctl.py login
+   wis2box metadata stations publish-collections /data/wis2box/metadata/stations/station_list.csv
 
 The next is the :ref:`data-ingest`.
 
