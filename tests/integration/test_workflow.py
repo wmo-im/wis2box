@@ -211,8 +211,6 @@ def test_message_api():
     assert r['numberMatched'] == 289
 
     msg = r['features'][5]
-    print("Validate msg:")
-    print(msg)
     is_valid, _ = validate_message(msg)
     assert is_valid
 
