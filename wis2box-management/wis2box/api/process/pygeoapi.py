@@ -61,7 +61,7 @@ class PygeoapiProcess(BaseConfig):
 
         :returns: `dict` with result
         """
-        synopUrl = f'{self.url}/{name}/execution'
+        exec_url = f'{self.url}/{name}/execution'
 
         # Set headers
         headers = {
@@ -74,7 +74,7 @@ class PygeoapiProcess(BaseConfig):
         }
 
         # Make the asynchronous HTTP POST request
-        response = self.http.post(synopUrl, headers=headers, json=payload)
+        response = self.http.post(exec_url, headers=headers, json=payload)
 
         # Handle the response
         if response.status_code == 200:
