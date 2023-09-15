@@ -210,7 +210,7 @@ def test_message_api():
     # should match sum of counts above
     assert r['numberMatched'] == 289
 
-    msg = r['features'][4]
+    msg = r['features'][5]
     print("Validate msg:")
     print(msg)
     is_valid, _ = validate_message(msg)
@@ -219,7 +219,7 @@ def test_message_api():
     assert msg['geometry'] is not None
 
     props = msg['properties']
-    assert props['datetime'] == '2023-01-18T12:00:00Z'
+    assert props['datetime'] == '2023-09-15T14:17:10Z'
     assert props['wigos_station_identifier'] == '0-20000-0-15015'
     assert props['integrity']['method'] == 'sha512'
     assert props['data_id'].startswith('wis2')
