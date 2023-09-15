@@ -24,11 +24,11 @@ identification:
                 - observations
         wmo:
             keywords:
-                - weatherObservations
+                - weather
             keywords_type: theme
             vocabulary:
-                name: WMO Category Code
-                url: https://github.com/wmo-im/wcmp-codelists/blob/main/codelists/WMO_CategoryCode.csv
+                name: WMO WIS2 Topic Hierarchy
+                url: https://github.com/wmo-im/wis2-topic-hierarchy/blob/main/topic-hierarchy/earth-system-discipline.csv
     extents:
         spatial:
             - bbox: [20.2201924985,43.6884447292,29.62654341,48.2208812526]
@@ -46,8 +46,8 @@ contact:
         url: https://www.meteoromania.ro
         individualname: Firstname Lastname
         positionname: Position Name
-        phone:  +40 21 318 32 40
-        fax: +40 21 316 31 43
+        phone: +40213183240
+        fax: +40213163143
         address: Building A, Șoseaua București-Ploiești 9
         city: Bucharest
         administrativearea: Municipality of Bucharest

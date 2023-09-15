@@ -24,11 +24,11 @@ identification:
                 - observations
         wmo:
             keywords:
-                - weatherObservations
+                - weather
             keywords_type: theme
             vocabulary:
-                name: WMO Category Code
-                url: https://github.com/wmo-im/wcmp-codelists/blob/main/codelists/WMO_CategoryCode.csv
+                name: WMO WIS2 Topic Hierarchy
+                url: https://github.com/wmo-im/wis2-topic-hierarchy/blob/main/topic-hierarchy/earth-system-discipline.csv
     extents:
         spatial:
             - bbox: [-8.68439978681, 19.0573642034, 11.9995056495, 37.1183806422]
@@ -43,16 +43,16 @@ identification:
 contact:
     pointOfContact: &contact_poc
         organization: Department of Climate Change and Meteorologial Services (DCCMS)
-        url: NA
+        url: null
         individualname: Firstname Lastname
         positionname: Position Name
-        phone: NA
-        fax: NA
-        address: NA
-        city: NA
-        administrativearea: NA
-        postalcode: NA
-        country: NA
+        phone: null
+        fax: null
+        address: null
+        city: null
+        administrativearea: null
+        postalcode: null
+        country: null
         email: you@example.org
         hoursofservice: 0700h - 1500h UTC
         contactinstructions: email

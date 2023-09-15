@@ -41,6 +41,16 @@ MAPPINGS = {
         'geometry': {
             'type': 'geo_shape'
         },
+        'time': {
+            'properties': {
+                'interval': {
+                    'type': 'date',
+                    'null_value': '1850',
+                    'format': 'year||year_month||year_month_day||date_time||t_time||t_time_no_millis',  # noqa
+                    'ignore_malformed': True
+                }
+            }
+        },
         'reportId': {
             'type': 'text',
             'fields': {
