@@ -80,7 +80,7 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
             LOGGER.error(msg)
             raise ValueError(msg)
 
-        process_name = 'wis2box-synop-process'
+        process_name = 'wis2box-synop2bufr'
         # execute process
         inputs = {
             "data": input_bytes.decode(),
@@ -90,6 +90,7 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
             "notify": self.enable_notification
         }
         result = execute_process(process_name, inputs)
-        for error in result['errors']:
-            LOGGER.error(f'{process_name} error: {error}')
+        if 'errors' in result:
+            for error in result['errors']:
+                LOGGER.error(f'{process_name} error: {error}')
         return True
