@@ -12,8 +12,8 @@ metadata:
     hierarchylevel: dataset
 
 identification:
-    title: Surface weather observations from Congo
-    abstract: Surface weather observations from Congo
+    title: Surface weather observations from Republic of Congo
+    abstract: Surface weather observations from Republic of Congo
     dates:
         creation: 2023-03-26
     keywords:
@@ -44,16 +44,16 @@ contact:
     pointOfContact: &contact_poc
         organization: Congo National Meteorological Service (DMN)
         url: https://www.dirmet.cg
-        individualname: Francilly Lardin SAMBA
-        positionname: Head of Telecommunications and data processing
+        individualname: Firstname Lastname
+        positionname: Position Name
         phone: null
         fax: null
         address: P.O. Box 208
         city: Brazzaville
         administrativearea: null
         postalcode: null
-        country: Congo
-        email: sambafrancillylardin@gmail.com
+        country: Republic of Congo
+        email: you@example.com
         hoursofservice: 0700h - 1500h UTC
         contactinstructions: email
 
