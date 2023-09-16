@@ -43,7 +43,7 @@ identification:
 contact:
     pointOfContact: &contact_poc
         organization: Department of Climate Change and Meteorologial Services (DCCMS)
-        url: null
+        url: https://www.meteo.dz
         individualname: Firstname Lastname
         positionname: Position Name
         phone: null

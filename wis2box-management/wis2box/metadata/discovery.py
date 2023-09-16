@@ -104,6 +104,12 @@ class DiscoveryMetadata(BaseMetadata):
         record['properties']['wmo:topicHierarchy'] = mqtt_topic
         record['properties']['contacts'][0]['organization'] = record['properties']['contacts'][0].pop('name')  # noqa
 
+        phone = record['properties']['contacts'][0]['phones'][0]['value']
+
+        if not phone.startswith('+'):
+            LOGGER.debug('Casting phone to string')
+            record['properties']['contacts'][0]['phones'][0]['value'] = f'+{phone}'  # noqa
+
         return record
 
 
