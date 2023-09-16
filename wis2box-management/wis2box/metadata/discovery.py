@@ -104,7 +104,6 @@ class DiscoveryMetadata(BaseMetadata):
         record['properties']['wmo:topicHierarchy'] = mqtt_topic
         record['properties']['contacts'][0]['organization'] = record['properties']['contacts'][0].pop('name')  # noqa
 
-
         try:
             phone = record['properties']['contacts'][0]['phones'][0]['value']
             if isinstance(phone, int):
