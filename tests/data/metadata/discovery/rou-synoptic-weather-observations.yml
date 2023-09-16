@@ -46,8 +46,8 @@ contact:
         url: https://www.meteoromania.ro
         individualname: Firstname Lastname
         positionname: Position Name
-        phone: +40213183240
-        fax: +40213163143
+        phone: "+40213183240"
+        fax: "+40213163143"
         address: Building A, Șoseaua București-Ploiești 9
         city: Bucharest
         administrativearea: Municipality of Bucharest

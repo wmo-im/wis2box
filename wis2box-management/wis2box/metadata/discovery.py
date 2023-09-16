@@ -106,9 +106,14 @@ class DiscoveryMetadata(BaseMetadata):
 
         phone = record['properties']['contacts'][0]['phones'][0]['value']
 
-        if not phone.startswith('+'):
-            LOGGER.debug('Casting phone to string')
-            record['properties']['contacts'][0]['phones'][0]['value'] = f'+{phone}'  # noqa
+        try:
+            if isinstance(phone, int):
+                record['properties']['contacts'][0]['phones'][0]['value'] = f'+{phone}'  # noqa
+            elif not phone.startswith('+'):
+                LOGGER.debug('Casting phone to string')
+                record['properties']['contacts'][0]['phones'][0]['value'] = f'+{phone}'  # noqa
+        except KeyError:
+            LOGGER.debug('No phone number defined')
 
         return record
 
