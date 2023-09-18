@@ -20,6 +20,7 @@
 ###############################################################################
 import time
 import io
+import requests
 
 import click
 from collections import OrderedDict
