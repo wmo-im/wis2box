@@ -175,7 +175,7 @@ def load_stations(self, wsi='') -> dict:
         for feature in r['features']:
             wsi = feature['properties']['wigos_station_identifier']
             stations[wsi] = feature
-    LOGGER.info(f"Loaded {len(self.stations.keys())} stations from API")
+    LOGGER.info(f"Loaded {len(stations.keys())} stations from API")
 
     return stations
 

@@ -24,14 +24,11 @@ services:
 
   wis2box-webapp:
     container_name: wis2box-webapp
-    #image: wis2box-webapp:test
-    image: ghcr.io/wmo-im/wis2box-webapp:latest
+    image: wis2box-webapp:main
+    #image: ghcr.io/wmo-im/wis2box-webapp:latest
     env_file:
       - default.env
       - dev.env
-    depends_on:
-      wis2box-api:
-        condition: service_healthy
 
 #  wis2box-ui-admin:
 #    container_name: wis2box-ui-admin
