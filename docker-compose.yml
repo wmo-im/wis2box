@@ -24,8 +24,8 @@ services:
 
   wis2box-webapp:
     container_name: wis2box-webapp
-    image: wis2box-webapp:test
-    #image: ghcr.io/wmo-im/wis2box-webapp:latest
+    #image: wis2box-webapp:test
+    image: ghcr.io/wmo-im/wis2box-webapp:latest
     env_file:
       - default.env
       - dev.env
