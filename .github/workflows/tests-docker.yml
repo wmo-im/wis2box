@@ -16,9 +16,11 @@ jobs:
       working-directory: tests
       run: |
         pip3 install -r requirements.txt
+        pip3 install check-jsonschema
     - name: cache schemas 📦
       run: |
         pywis-pubsub schema sync
+        curl https://raw.githubusercontent.com/wmo-im/wcmp2/main/schemas/wcmp2-bundled.json --output /tmp/wcm2-bundled.json
     - name: display Docker and Python versions 📦
       run: |
         docker version
