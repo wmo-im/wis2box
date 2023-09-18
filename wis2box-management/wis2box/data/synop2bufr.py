@@ -26,7 +26,7 @@ from typing import Union
 from synop2bufr import transform as transform_synop
 
 from wis2box.data.base import BaseAbstractData
-from wis2box.metadata.station import get_valid_wsi, get_station_csv
+from wis2box.metadata.station import get_valid_wsi, get_stations_csv
 
 LOGGER = logging.getLogger(__name__)
 
@@ -46,7 +46,7 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
 
         self.mappings = {}
 
-        self.station_metadata = get_station_csv()
+        self.station_metadata = get_stations_csv()
 
     def transform(self, input_data: Union[Path, bytes],
                   filename: str = '') -> bool:

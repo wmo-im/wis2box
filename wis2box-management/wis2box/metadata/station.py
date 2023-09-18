@@ -134,7 +134,7 @@ def station():
     pass
 
 
-def load_stations(self, wsi='') -> dict:
+def load_stations(wsi='') -> dict:
     """Load stations from API
 
     param wsi: `str` of WIGOS Station Identifier
@@ -149,10 +149,14 @@ def load_stations(self, wsi='') -> dict:
     stations_url = f"{DOCKER_API_URL}/collections/stations/items"
     if wsi != '':
         stations_url = f"{stations_url}/{wsi}?f=json"
+    else:
+        stations_url = f"{stations_url}?f=json&limit=9999"
     LOGGER.info(stations_url)
 
     try:
-        r = requests.get(stations_url, params={'f': 'json', 'limit': 9999}).json() # noqa
+        res = requests.get(stations_url)
+        res.raise_for_status()
+        r = res.json()
     except Exception as err:
         # wait and try again
         LOGGER.error(err)
@@ -160,27 +164,38 @@ def load_stations(self, wsi='') -> dict:
         LOGGER.error('Waiting 3 seconds and trying again')
         time.sleep(3)
         try:
-            r = requests.get(stations_url, params={'f': 'json', 'limit': 9999}).json() # noqa
+            res = requests.get(stations_url)
+            res.raise_for_status()
+            r = res.json()
         except Exception as err:
             LOGGER.error(err)
             LOGGER.error('Error getting stations')
 
-    if 'features' not in r:
-        LOGGER.error("No features in response")
-        raise Exception(f"No features in response from {stations_url}")
-    elif len(r['features']) == 0:
-        LOGGER.error("No features in response")
-        raise Exception(f"No features in response from {stations_url}")
+    if wsi != '':
+        if 'properties' not in r:
+            LOGGER.error("No properties in response")
+            raise Exception(f"No properties in response from {stations_url}")
+        else:
+            wsi = r['properties']['wigos_station_identifier']
+            stations[wsi] = r
     else:
-        for feature in r['features']:
-            wsi = feature['properties']['wigos_station_identifier']
-            stations[wsi] = feature
+        if 'features' not in r:
+            LOGGER.error("Missing features in response")
+            return stations
+        elif len(r['features']) == 0:
+            LOGGER.debug("No stations found")
+            return stations
+        else:
+            for feature in r['features']:
+                wsi = feature['properties']['wigos_station_identifier']
+                stations[wsi] = feature
+    
     LOGGER.info(f"Loaded {len(stations.keys())} stations from API")
 
     return stations
 
 
-def get_station_csv(self, wsi='') -> str:
+def get_stations_csv(wsi='') -> str:
     """Load stations into csv-string
 
     param wsi: `str` of WIGOS Station Identifier
