@@ -20,7 +20,7 @@ jobs:
     - name: cache schemas 📦
       run: |
         pywis-pubsub schema sync
-        curl https://raw.githubusercontent.com/wmo-im/wcmp2/main/schemas/wcmp2-bundled.json --output /tmp/wcm2-bundled.json
+        curl https://raw.githubusercontent.com/wmo-im/wcmp2/main/schemas/wcmp2-bundled.json --output /tmp/wcmp2-bundled.json
     - name: display Docker and Python versions 📦
       run: |
         docker version
@@ -53,6 +53,7 @@ jobs:
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data add-collection $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
+        check-jsonschema --schemafile /tmp/wcmp2-bundled.json $DISCOVERY_METADATA
     - name: add Italy data 🇮🇹
       env:
         TOPIC_HIERARCHY: ita.roma_met_centre.data.core.weather.surface-based-observations.synop
