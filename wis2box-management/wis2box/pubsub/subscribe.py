@@ -109,5 +109,5 @@ def subscribe(ctx, verbosity):
 
     broker.bind('on_message', on_message_handler)
 
-    click.echo(f'Subscribing to internal broker on topic wis2box/#')
+    click.echo('Subscribing to internal broker on topic wis2box/#')
     broker.sub('wis2box/#')
