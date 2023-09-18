@@ -48,12 +48,14 @@ jobs:
       env:
         TOPIC_HIERARCHY: mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/mwi-surface-weather-observations.yml
+        DISCOVERY_METADATA_ID: urn:x-wmo:md:mwi:mwi_met_centre:surface-weather-observations
         TEST_DATA: /data/wis2box/observations/malawi
       run: |
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data add-collection $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
-        check-jsonschema --schemafile /tmp/wcmp2-bundled.json $DISCOVERY_METADATA
+        curl http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output-file /tmp/$DISCOVERY_METADATA_ID
+        check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
     - name: add Italy data 🇮🇹
       env:
         TOPIC_HIERARCHY: ita.roma_met_centre.data.core.weather.surface-based-observations.synop
