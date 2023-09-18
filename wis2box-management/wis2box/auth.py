@@ -128,46 +128,12 @@ def is_restricted_path(ctx, path):
 
 @click.command()
 @click.pass_context
-@click.option('--path', '-p')
-def is_restricted_path(ctx, path):
-    """Check if path has access control"""
-    click.echo(not is_resource_open(path))
-
-
-@click.command()
-@click.pass_context
-@click.option('--path', '-p')
-def is_restricted_path(ctx, path):
-    """Check if path has access control"""
-    click.echo(not is_resource_open(path))
-
-
-@click.command()
-@click.pass_context
 @cli_helpers.OPTION_TOPIC_HIERARCHY
 @click.argument('token')
 def has_access_topic(ctx, topic_hierarchy, token):
     """Check if a token has access to a topic"""
     th, _ = validate_and_load(topic_hierarchy)
     click.echo(is_token_authorized(th.dotpath, token))
-
-
-@click.command()
-@click.pass_context
-@click.option('--path', '-p')
-@click.argument('token')
-def has_access_path(ctx, path, token):
-    """Check if a token has access to a path"""
-    click.echo(is_token_authorized(path, token))
-
-
-@click.command()
-@click.pass_context
-@click.option('--path', '-p')
-@click.argument('token')
-def has_access_path(ctx, path, token):
-    """Check if a token has access to a path"""
-    click.echo(is_token_authorized(path, token))
 
 
 @click.command()
