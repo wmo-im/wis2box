@@ -18,9 +18,7 @@
 # under the License.
 #
 ###############################################################################
-import time
 import io
-import requests
 
 import click
 from collections import OrderedDict
@@ -38,12 +36,13 @@ from wis2box import cli_helpers
 from wis2box.api import (
     delete_collection_item, setup_collection, upsert_collection_item
 )
-from wis2box.env import (DATADIR, DOCKER_API_URL,
+from wis2box.env import (DATADIR, API_BACKEND_URL, DOCKER_API_URL,
                          BROKER_HOST, BROKER_USERNAME, BROKER_PASSWORD,
                          BROKER_PORT)
 from wis2box.metadata.base import BaseMetadata
 from wis2box.util import get_typed_value
 
+from elasticsearch import Elasticsearch
 from wis2box.plugin import load_plugin, PLUGINS
 
 LOGGER = logging.getLogger(__name__)
@@ -144,53 +143,30 @@ def load_stations(wsi='') -> dict:
 
     stations = {}
 
-    LOGGER.info("Loading stations from API")
-
-    stations_url = f"{DOCKER_API_URL}/collections/stations/items"
-    if wsi != '':
-        stations_url = f"{stations_url}/{wsi}?f=json"
-    else:
-        stations_url = f"{stations_url}?f=json&limit=9999"
-    LOGGER.info(stations_url)
-
     try:
-        res = requests.get(stations_url)
-        res.raise_for_status()
-        r = res.json()
+        es = Elasticsearch(API_BACKEND_URL)
+        if wsi != '':
+            res = es.search(index="stations", query={"match": {"id": wsi}})
+            if len(res['hits']['hits']) == 0:
+                LOGGER.debug(f'No station found for {wsi}')
+                return stations
+            stations[wsi] = res['hits']['hits'][0]['_source']
+        else:
+            nbatch = 50
+            res = es.search(index="stations", query={"match_all": {}}, size=nbatch) # noqa
+            if len(res['hits']['hits']) == 0:
+                LOGGER.debug('No stations found')
+                return stations
+            for hit in res['hits']['hits']:
+                stations[hit['_source']['id']] = hit['_source']
+            while len(res['hits']['hits']) > 0:
+                res = es.search(index="stations", query={"match_all": {}}, size=nbatch, from_=len(stations)) # noqa
+                for hit in res['hits']['hits']:
+                    stations[hit['_source']['id']] = hit['_source']
     except Exception as err:
-        # wait and try again
-        LOGGER.error(err)
-        LOGGER.error('Error getting stations')
-        LOGGER.error('Waiting 3 seconds and trying again')
-        time.sleep(3)
-        try:
-            res = requests.get(stations_url)
-            res.raise_for_status()
-            r = res.json()
-        except Exception as err:
-            LOGGER.error(err)
-            LOGGER.error('Error getting stations')
+        LOGGER.error(f'Failed to load stations from backend: {err}')
 
-    if wsi != '':
-        if 'properties' not in r:
-            LOGGER.error("No properties in response")
-            raise Exception(f"No properties in response from {stations_url}")
-        else:
-            wsi = r['properties']['wigos_station_identifier']
-            stations[wsi] = r
-    else:
-        if 'features' not in r:
-            LOGGER.error("Missing features in response")
-            return stations
-        elif len(r['features']) == 0:
-            LOGGER.debug("No stations found")
-            return stations
-        else:
-            for feature in r['features']:
-                wsi = feature['properties']['wigos_station_identifier']
-                stations[wsi] = feature
-    
-    LOGGER.info(f"Loaded {len(stations.keys())} stations from API")
+    LOGGER.info(f"Loaded {len(stations.keys())} stations from backend")
 
     return stations
 
