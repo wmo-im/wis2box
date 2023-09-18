@@ -54,7 +54,7 @@ jobs:
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data add-collection $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
-        curl http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output-file /tmp/$DISCOVERY_METADATA_ID
+        curl http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
     - name: add Italy data 🇮🇹
       env:
