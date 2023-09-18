@@ -25,7 +25,6 @@ from pathlib import Path
 import re
 from typing import Iterator, Union
 
-from wis2box.api import upsert_collection_item
 from wis2box.env import (STORAGE_INCOMING, STORAGE_PUBLIC,
                          STORAGE_SOURCE, BROKER_PUBLIC,
                          BROKER_HOST, BROKER_USERNAME, BROKER_PASSWORD,
@@ -164,11 +163,6 @@ class BaseAbstractData:
         broker.pub(topic, wis_message.dumps())
         LOGGER.info(f'WISNotificationMessage published for {identifier}')
 
-        # message for internal monitoring
-        notify_msg = {
-            'topic': topic,
-            'wigos_station_identifier': wigos_station_identifier
-        }
         # load plugin for local broker
         defs_local = {
             'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
@@ -177,12 +171,8 @@ class BaseAbstractData:
         }
         local_broker = load_plugin('pubsub', defs_local)
         local_broker.pub('wis2box/notifications',
-                         json.dumps(notify_msg),
+                         wis_message.dumps(),
                          qos=0)
-
-        LOGGER.debug('Pushing message to API')
-        upsert_collection_item('messages', wis_message.message)
-
         return True
 
     def publish(self) -> bool:

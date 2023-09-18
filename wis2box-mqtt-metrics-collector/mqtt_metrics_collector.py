@@ -128,7 +128,7 @@ def sub_connect(client, userdata, flags, rc, properties=None):
     """
 
     logger.info(f"on connection to subscribe: {mqtt.connack_string(rc)}")
-    for s in ["wis2box/#", "wis2box-storage/#", '$SYS/broker/messages/#']:
+    for s in ["wis2box/#", '$SYS/broker/messages/#']:
         print(f'subscribe to: {s}')
         client.subscribe(s, qos=0)
 
@@ -164,7 +164,7 @@ def sub_mqtt_metrics(client, userdata, msg):
         update_stations_gauge(m['station_list'])
     elif str(msg.topic).startswith('wis2box/notifications'):
         notify_wsi_total.labels(
-            m['wigos_station_identifier']).inc(1)
+            m['properties']['wigos_station_identifier']).inc(1)
         notify_total.inc(1)
     elif str(msg.topic).startswith('wis2box/failure'):
         descr = m['description']
@@ -174,7 +174,7 @@ def sub_mqtt_metrics(client, userdata, msg):
         failure_descr_wsi_total.labels(descr, wsi).inc(1)
         failure_wsi_total.labels(wsi).inc(1)
         failure_total.inc(1)
-    elif str(msg.topic).startswith('wis2box-storage'):
+    elif str(msg.topic).startswith('wis2box/storage'):
         if str(m["Key"]).startswith('wis2box-incoming'):
             storage_incoming_total.inc(1)
         if str(m["Key"]).startswith('wis2box-public'):
