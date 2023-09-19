@@ -39,27 +39,28 @@ except (OSError, TypeError):
     LOGGER.error(msg)
     raise EnvironmentError(msg)
 
-API_TYPE = os.environ.get('WIS2BOX_API_TYPE')
-API_URL = os.environ.get('WIS2BOX_API_URL')
-API_BACKEND_TYPE = os.environ.get('WIS2BOX_API_BACKEND_TYPE')
-API_BACKEND_URL = os.environ.get('WIS2BOX_API_BACKEND_URL').rstrip('/')
-DOCKER_API_URL = os.environ.get('WIS2BOX_DOCKER_API_URL')
-AUTH_URL = os.environ.get('WIS2BOX_AUTH_URL')
-URL = os.environ.get('WIS2BOX_URL')
+API_TYPE = os.environ.get('WIS2BOX_API_TYPE', 'pygeoapi')
+API_URL = os.environ.get('WIS2BOX_API_URL', 'http://localhost/oapi')
+API_BACKEND_TYPE = os.environ.get('WIS2BOX_API_BACKEND_TYPE', 'Elasticsearch')
+API_BACKEND_URL = os.environ.get('WIS2BOX_API_BACKEND_URL', 'http://elasticsearch:9200').rstrip('/') # noqa
+DOCKER_API_URL = os.environ.get('WIS2BOX_DOCKER_API_URL', 'http://wis2box-api:80') # noqa
+AUTH_URL = os.environ.get('WIS2BOX_AUTH_URL', 'http://wis2box-auth')
+URL = os.environ.get('WIS2BOX_URL', 'http://localhost')
 
-BROKER_USERNAME = os.environ.get('WIS2BOX_BROKER_USERNAME')
-BROKER_PASSWORD = os.environ.get('WIS2BOX_BROKER_PASSWORD')
-BROKER_HOST = os.environ.get('WIS2BOX_BROKER_HOST')
-BROKER_PORT = os.environ.get('WIS2BOX_BROKER_PORT')
-BROKER_PUBLIC = os.environ.get('WIS2BOX_BROKER_PUBLIC')
+BROKER_USERNAME = os.environ.get('WIS2BOX_BROKER_USERNAME', 'wis2box')
+BROKER_PASSWORD = os.environ.get('WIS2BOX_BROKER_PASSWORD', 'wis2box')
+BROKER_HOST = os.environ.get('WIS2BOX_BROKER_HOST', 'mosquitto')
+BROKER_PORT = os.environ.get('WIS2BOX_BROKER_PORT', 1883)
+BROKER_PUBLIC = os.environ.get('WIS2BOX_BROKER_PUBLIC',
+                               f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}') # noqa
 
-STORAGE_TYPE = os.environ.get('WIS2BOX_STORAGE_TYPE')
-STORAGE_SOURCE = os.environ.get('WIS2BOX_STORAGE_SOURCE')
-STORAGE_USERNAME = os.environ.get('WIS2BOX_STORAGE_USERNAME')
-STORAGE_PASSWORD = os.environ.get('WIS2BOX_STORAGE_PASSWORD')
-STORAGE_INCOMING = os.environ.get('WIS2BOX_STORAGE_INCOMING')
-STORAGE_ARCHIVE = os.environ.get('WIS2BOX_STORAGE_ARCHIVE')
-STORAGE_PUBLIC = os.environ.get('WIS2BOX_STORAGE_PUBLIC')
+STORAGE_TYPE = os.environ.get('WIS2BOX_STORAGE_TYPE', 'S3')
+STORAGE_SOURCE = os.environ.get('WIS2BOX_STORAGE_SOURCE', 'http://minio:9000')
+STORAGE_USERNAME = os.environ.get('WIS2BOX_STORAGE_USERNAME', 'wis2box')
+STORAGE_PASSWORD = os.environ.get('WIS2BOX_STORAGE_PASSWORD', 'minio123')
+STORAGE_INCOMING = os.environ.get('WIS2BOX_STORAGE_INCOMING', 'wis2box-incoming') # noqa
+STORAGE_ARCHIVE = os.environ.get('WIS2BOX_STORAGE_ARCHIVE', 'wis2box-archive')
+STORAGE_PUBLIC = os.environ.get('WIS2BOX_STORAGE_PUBLIC', 'wis2box-public')
 
 try:
     STORAGE_DATA_RETENTION_DAYS = int(os.environ.get('WIS2BOX_STORAGE_DATA_RETENTION_DAYS')) # noqa

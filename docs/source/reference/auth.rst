@@ -20,6 +20,8 @@ To add a token to the execution of a wis2box process, use the following command:
 
 To add a token to PUT/POST/DELETE requests to the stations collection, use the following command:
 
+.. code-block:: bash
+
     wis2box auth add-token --path collections/stations mystationupdatetoken
 
 Adding Access Control on topics

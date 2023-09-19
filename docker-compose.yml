@@ -4,8 +4,7 @@ services:
     image: nginx:alpine
     restart: always
     env_file:
-      - default.env
-      - dev.env
+      - wis2box.env
     depends_on:
       - wis2box-ui
     volumes:
@@ -16,8 +15,7 @@ services:
     image: ghcr.io/wmo-im/wis2box-ui:0.5.3
     restart: always
     env_file:
-      - default.env
-      - dev.env
+      - wis2box.env
     depends_on:
       - wis2box-api
 
@@ -26,8 +24,7 @@ services:
 #    image: ghcr.io/wmo-im/wis2box-ui-admin:latest
 #    restart: always
 #    env_file:
-#      - default.env
-#      - dev.env
+#      - wis2box.env
 #    depends_on:
 #      - wis2box-api
 
@@ -36,8 +33,7 @@ services:
     image: ghcr.io/wmo-im/wis2box-api:latest
     restart: always
     env_file:
-      - default.env
-      - dev.env
+      - wis2box.env
     depends_on:
       elasticsearch:
         condition: service_healthy
@@ -55,8 +51,7 @@ services:
     memswap_limit: 512m
     restart: always
     env_file:
-      - default.env
-      - dev.env
+      - wis2box.env
     command: server --console-address ":9001" /data
     # in a production-setup minio needs to be
     volumes:
@@ -105,8 +100,7 @@ services:
     build:
       context: ./wis2box-broker
     env_file:
-      - default.env
-      - dev.env
+      - wis2box.env
 
   wis2box-management:
     container_name: wis2box-management
@@ -118,8 +112,7 @@ services:
       context: ./wis2box-management
     #user: wis2box:wis2box
     env_file:
-      - default.env
-      - dev.env
+      - wis2box.env
     volumes:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
     depends_on:
@@ -136,8 +129,7 @@ services:
     image: ghcr.io/wmo-im/wis2box-auth:latest
     restart: always
     env_file:
-      - default.env
-      - dev.env
+      - wis2box.env
     volumes:
       - auth-data:/data/wis2box:rw
     depends_on:

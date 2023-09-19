@@ -17,7 +17,7 @@ To enable HTTPS and MQTTS on your wis2box you can run wis2box with the option `-
 
    python3 wis2box-ctl.py --ssl start
 
-When running wis2box with SSL, you have to set additional environment variables in your dev.env defining the location of your SSL certificate and private key:
+When running wis2box with SSL, you have to set additional environment variables in your wis2box.env defining the location of your SSL certificate and private key:
 
 .. code-block:: bash
 
@@ -64,7 +64,7 @@ You can edit ``docker-compose.override.yml`` to change the port on which the ``w
     The WIS2 notifications published by the wis2box includes the path ``<wis2box-url>/data/``.
     This path has to be publicly accessible by the client receiving the WIS2 notification over MQTT, or the data referenced cannot be downloaded
 
-To share your data with the WIS2 network, ensure that ``WIS2BOX_URL`` as defined in ``dev.env`` points to the externally accessible URL for your HTTP services. 
+To share your data with the WIS2 network, ensure that ``WIS2BOX_URL`` as defined in ``wis2box.env`` points to the externally accessible URL for your HTTP services. 
 
 After updating ``WIS2BOX_URL``, please stop and start your wis2box using ``wis2box-ctl.py`` and republish your data using the command ``wis2box metadata discovery publish``.
 
@@ -116,19 +116,6 @@ To allow the WIS2 Global Broker to subscribe to WIS2 notifications from your wis
 Internal broker
 ---------------
 
-The internal MQTT broker uses the default username/password of ``wis2box/wis2box``.  Before opening the MQTT port for external access, it is recommended to set a unique password as follows:
-
-.. code-block:: bash
-
-    WIS2BOX_BROKER_USERNAME=wis2box-utopia
-    WIS2BOX_BROKER_PASSWORD=myuniquepassword
-    WIS2BOX_BROKER_PUBLIC=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@mosquitto:1883
-
-    # update minio settings after updating broker defaults
-    MINIO_NOTIFY_MQTT_USERNAME_WIS2BOX=${WIS2BOX_BROKER_USERNAME}
-    MINIO_NOTIFY_MQTT_PASSWORD_WIS2BOX=${WIS2BOX_BROKER_PASSWORD}
-    MINIO_NOTIFY_MQTT_BROKER_WIS2BOX=tcp://${WIS2BOX_BROKER_HOST}:${WIS2BOX_BROKER_PORT}
-
 The internal MQTT broker is accessible on the host ``mosquitto`` within the Docker network used by wis2box.
 
 By default port 1883 of the mosquitto container is mapped to port 1883 of the host running wis2box. 
@@ -153,13 +140,12 @@ If you do not wish to expose the internal MQTT broker on your wis2box, you can c
 
    The ``everyone`` user is defined by default for public readonly access (``origin/#``) as per WIS2 Node requirements.
 
-Sharing data with the WIS2 Global Broker
-----------------------------------------
+Registering your WIS2 Node
+--------------------------
 
-The official procedure for a WIS2 Node to share data with the WIS2 network is currently in development.  Contact wis at wmo.int for more information on connectivity with the WIS2 network.
+Contact wis2-support@wmo.int for the procedure to register your WIS2 Node with the WIS2 network.
 
 Next: :ref:`downloading-data`
-
 
 .. _`Mosquitto`: https://mosquitto.org/
 .. _`pygeoapi`: https://pygeoapi.io/

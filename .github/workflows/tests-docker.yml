@@ -26,8 +26,8 @@ jobs:
         python3 -V
     - name: setup wis2box configuration
       run: |
-        cp tests/test.env dev.env
-        cat dev.env
+        cp tests/test.env wis2box.env
+        cat wis2box.env
         python3 wis2box-ctl.py config
     - name: build wis2box
       run: |
@@ -101,5 +101,6 @@ jobs:
     - name: failed tests 🚩
       if: ${{ failure() }}
       run: |
-        docker compose --file docker-compose.yml --file docker-compose.override.yml --file docker-compose.monitoring.yml --env-file dev.env --project-name wis2box_project ps
-        docker compose --file docker-compose.yml --file docker-compose.override.yml --file docker-compose.monitoring.yml --env-file dev.env --project-name wis2box_project logs
+        docker logs wis2box-management
+        docker logs wis2box-api
+        docker logs wis2box-minio

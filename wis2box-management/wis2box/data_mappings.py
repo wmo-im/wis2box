@@ -27,7 +27,7 @@ from wis2box.util import yaml_load
 
 LOGGER = logging.getLogger(__name__)
 
-DATADIR = os.environ.get('WIS2BOX_DATADIR')
+DATADIR = os.environ.get('WIS2BOX_DATADIR', '/data/wis2box')
 DATA_MAPPINGS = Path(DATADIR) / 'data-mappings.yml'
 
 if not DATA_MAPPINGS.exists():

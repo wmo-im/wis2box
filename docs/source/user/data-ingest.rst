@@ -21,6 +21,9 @@ You can login with your ``WIS2BOX_STORAGE_USERNAME`` and ``WIS2BOX_STORAGE_PASSW
     :width: 400
     :alt: MinIO login screen
 
+.. note::
+    The ``WIS2BOX_STORAGE_USERNAME`` and ``WIS2BOX_STORAGE_PASSWORD`` are defined in the ``wis2box.env`` file.
+
 To test the data ingest, add a sample file for your observations in the ``wis2box-incoming`` storage bucket.
 
 Select 'browse' on the ``wis2box-incoming`` bucket and select 'Choose or create a new path' to define a new folder path:
@@ -109,12 +112,12 @@ To use the ``docker-compose.wis2box-ftp.yml`` template included in wis2box, crea
     FTP_HOST=${MYHOSTNAME}
 
     WIS2BOX_STORAGE_ENDPOINT=http://${MYHOSTNAME}:9000
-    WIS2BOX_STORAGE_USER=minio
-    WIS2BOX_STORAGE_PASSWORD=minio123
+    WIS2BOX_STORAGE_USER=wis2box
+    WIS2BOX_STORAGE_PASSWORD=XXXXXXXX
 
     LOGGING_LEVEL=INFO
 
-and ensure ``MYHOSTNAME`` is set to **your** hostname (fully qualified domain name).
+ensure ``MYHOSTNAME`` is set to **your** hostname (fully qualified domain name) and ``WIS2BOX_STORAGE_PASSWORD`` is set to **your** MinIO password.
 
 Then start the ``wis2box-ftp`` service with the following command:
 
@@ -135,11 +138,14 @@ See the GitHub repository `wis2box-ftp`_ for more information on this service.
 wis2box-data-subscriber
 -----------------------
 
-You can add an additional service on the host running your wis2box instance to allow data to be ingested by publishing an MQTT message to the wis2box broker.
+.. note::
+    This service currently only works with Campbell scientific data loggers version CR1000X.
+
+You can add an additional service on the host running your wis2box instance to allow data to be received over MQTT.
 
 This service subscribes to the topic ``data-incoming/#`` on the wis2box broker and parses the content of received messages and publishes the result in the ``wis2box-incoming`` bucket.
 
-To start the ``wis2box-data-subscriber``, add the following additional variables to ``dev.env``:
+To start the ``wis2box-data-subscriber``, add the following additional variables to ``wis2box.env``:
 
 .. code-block:: bash
 
@@ -154,7 +160,7 @@ You then you can activate the optional 'wis2box-data-subscriber' service as foll
 
 .. code-block:: bash
 
-    docker compose -f docker-compose.data-subscriber.yml --env-file dev.env up -d
+    docker compose -f docker-compose.data-subscriber.yml --env-file wis2box.env up -d
 
 See the GitHub `wis2box-data-subscriber`_ repository for more information on this service.
 

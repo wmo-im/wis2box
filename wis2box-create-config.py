@@ -46,7 +46,7 @@ def get_bounding_box(country_code: str) -> Tuple[str, str]:
     country_name = 'NA'
     bounding_box = [-180, -90, 180, 90]
 
-    print(f"Getting bounding box for '{country_code}'.")
+    print(f'Getting bounding box for "{country_code}".')
 
     # get the path to the data
     data_path = Path(__file__).parent / 'config-templates' / 'countries.json'
@@ -57,38 +57,38 @@ def get_bounding_box(country_code: str) -> Tuple[str, str]:
         data = json.load(fh)
         # get the bounding box for the country
         if country_code in data['countries'] and 'bbox' in data['countries'][country_code]:  # noqa
-            country_name = data['countries'][country_code]["name"]
-            bbox = data['countries'][country_code]["bbox"]
+            country_name = data['countries'][country_code]['name']
+            bbox = data['countries'][country_code]['bbox']
             if not {'minx', 'miny', 'maxx', 'maxy'} <= bbox.keys():
-                print(f"Bounding box for '{country_code}' is invalid.")
-                print("Using global bounding box.")
+                print(f'Bounding box for "{country_code}" is invalid.')
+                print('Using global bounding box.')
             else:
                 minx = bbox['minx']
                 miny = bbox['miny']
                 maxx = bbox['maxx']
                 maxy = bbox['maxy']
                 # create bounding box as a CSV of four numbers
-                bounding_box = f"{minx},{miny},{maxx},{maxy}"
+                bounding_box = f'{minx},{miny},{maxx},{maxy}'
         else:
-            print(f"No bounding box found for '{country_code}'.")
-            print("Using the bounding box for the whole world.")
+            print(f'No bounding box found for "{country_code}".')
+            print('Using the bounding box for the whole world.')
 
     # ask the user to accept the bounding box or to enter a new one
-    print(f"bounding box: {bounding_box}.")
-    print("Do you want to use this bounding box? (y/n/exit)")
+    print(f'bounding box: {bounding_box}.')
+    print('Do you want to use this bounding box? (y/n/exit)')
     answer = input()
 
     while answer not in ['y', 'exit']:
-        print("Please enter the bounding box as a comma-separated list of four numbers:") # noqa
-        print("The first two numbers are the coordinates of the lower left corner of the bounding box.") # noqa
-        print("The last two numbers are the coordinates of the upper right corner of the bounding box.") # noqa
-        print("For example: 5.5,47.2,15.5,55.2")
+        print('Please enter the bounding box as a comma-separated list of four numbers:') # noqa
+        print('The first two numbers are the coordinates of the lower left corner of the bounding box.') # noqa
+        print('The last two numbers are the coordinates of the upper right corner of the bounding box.') # noqa
+        print('For example: 5.5,47.2,15.5,55.2')
         bounding_box = input()
-        print(f"bounding box: {bounding_box}.")
-        print("Do you want to use this bounding box? (y/n/exit)")
+        print(f'bounding box: {bounding_box}.')
+        print('Do you want to use this bounding box? (y/n/exit)')
         answer = input()
 
-    if answer == "exit":
+    if answer == 'exit':
         exit()
 
     return country_name, bounding_box
@@ -102,42 +102,42 @@ def get_country_and_centre_id() -> Tuple[str, str]:
     :returns: `tuple` of (country_code, centre_id)
     """
 
-    answer = ""
+    answer = ''
 
-    while answer != "y":
-        if answer == "exit":
+    while answer != 'y':
+        if answer == 'exit':
             exit()
 
-        print("Please enter your 3-letter ISO country code:")
+        print('Please enter your 3-letter ISO country code:')
         country_code = input()
 
         # check that the input is a 3-letter string
         # if not repeat the question
         while len(country_code) != 3:
-            print("The country code must be a 3-letter string.")
-            print("Please enter your 3-letter ISO country code:")
+            print('The country code must be a 3-letter string.')
+            print('Please enter your 3-letter ISO country code:')
             country_code = input()
 
         # make sure the country code is lowercase
         country_code = country_code.lower()
 
-        print("Please enter the centre-id for your wis2box:")
+        print('Please enter the centre-id for your wis2box:')
         centre_id = str(input()).lower()
 
         # check that the input is valid
         # if not repeat the question
         while any([x in centre_id for x in ['#', '+', ' ']]) or len(centre_id) < 3:  # noqa
-            print("The centre-id cannot contain spaces or the '+' or '#' characters, and must be at least 3 characters long.") # noqa
-            print("Please enter the string identifying the centre hosting the wis2box:") # noqa
+            print('The centre-id cannot contain spaces or the "+" or "#" characters, and must be at least 3 characters long.') # noqa
+            print('Please enter the string identifying the centre hosting the wis2box:') # noqa
             centre_id = str(input()).lower()
 
         # ask the user to confirm their choice and give them the option to change it # noqa
         # and give them the option to exit the script
-        print("The country-code will be set to:")
-        print(f"  {country_code}")
-        print("The centre-id will be set to:")
-        print(f"  {centre_id}")
-        print("Is this correct? (y/n/exit)")
+        print('The country-code will be set to:')
+        print(f'  {country_code}')
+        print('The centre-id will be set to:')
+        print(f'  {centre_id}')
+        print('Is this correct? (y/n/exit)')
         answer = input()
 
     return (country_code, centre_id)
@@ -154,34 +154,34 @@ def get_password(password_name: str) -> str:
 
     password = None
 
-    answer = ""
+    answer = ''
     while answer not in ['y', 'n']:
-        if answer == "exit":
+        if answer == 'exit':
             exit()
 
-        print(f"Do you want to use a randomly generated password for {password_name} (y/n/exit)") # noqa
+        print(f'Do you want to use a randomly generated password for {password_name} (y/n/exit)') # noqa
         answer = input()
 
-    if answer == "y":
+    if answer == 'y':
         password = ''.join(random.choice(string.ascii_letters + string.digits) for i in range(8)) # noqa
-        print(f"{password_name}={password}")
+        print(f'{password_name}={password}')
 
-    while answer != "y":
-        if answer == "exit":
+    while answer != 'y':
+        if answer == 'exit':
             exit()
 
-        print("Please enter the password to be used for the WIS2BOX_STORAGE_PASSWORD:") # noqa
+        print('Please enter the password to be used for the WIS2BOX_STORAGE_PASSWORD:') # noqa
         password = input()
 
         # check if the password is at least 8 characters long
         # if not repeat the question
         while len(password) < 8:
-            print("The password must be at least 8 characters long.")
-            print(f"Please enter the password to be used for the {password_name}:") # noqa
+            print('The password must be at least 8 characters long.')
+            print(f'Please enter the password to be used for the {password_name}:') # noqa
             password = input()
 
-        print(f"{password_name}={password}")
-        print("Is this correct? (y/n/exit)")
+        print(f'{password_name}={password}')
+        print('Is this correct? (y/n/exit)')
         answer = input()
 
     return f"{password_name}={password}\n"
@@ -195,82 +195,117 @@ def get_wis2box_url() -> str:
     """
 
     wis2box_url = None
-    answer = ""
+    answer = ''
 
-    while answer != "y":
-        if answer == "exit":
+    while answer != 'y':
+        if answer == 'exit':
             exit()
 
         # ask for the WIS2BOX_URL, use http://localhost as the default
-        print("Please enter the URL of the wis2box:")
-        print(" When running the wis2box locally, the default is http://localhost") # noqa
-        print(" To enable remote access, please enter the public IP address or domain name of the server hosting the wis2box.") # noqa
+        print('Please enter the URL of the wis2box:')
+        print(' For local testing the URL is http://localhost') # noqa
+        print(' To enable remote access, the URL should point to the public IP address or domain name of the server hosting the wis2box.') # noqa
 
         # check if the URL starts with http:// or https://
         # if not, ask the user to enter the URL again
-        wis2box_url = ""
+        wis2box_url = ''
         wis2box_url = input()
 
-        while not wis2box_url.startswith(("http://", "https://")):
-            print("The URL must start with http:// or https://")
-            print("Please enter the URL of the wis2box:")
+        while not wis2box_url.startswith(('http://', 'https://')):
+            print('The URL must start with http:// or https://')
+            print('Please enter the URL of the wis2box:')
             wis2box_url = input()
 
         # ask the user to confirm their choice and give them the option to change it # noqa
-        print("The URL of the wis2box will be set to:")
-        print(f"  {wis2box_url}")
-        print("Is this correct? (y/n/exit)")
+        print('The URL of the wis2box will be set to:')
+        print(f'  {wis2box_url}')
+        print('Is this correct? (y/n/exit)')
         answer = input()
 
     return wis2box_url
 
 
-def create_dev_env(config_dir: str) -> None:
+def create_wis2box_env(config_dir: str) -> None:
     """
-    creates the dev.env file in the config_dir
+    creates the wis2box.env file in the config_dir
 
     :param config_dir: `str` of path to the config directory
 
     :returns: None
     """
 
-    dev_env = Path("dev.env")
+    wis2box_env = Path('wis2box.env')
 
-    with dev_env.open("w") as fh:
-        fh.write(f"WIS2BOX_HOST_DATADIR={config_dir}\n")
-        fh.write("\n")
+    with wis2box_env.open('w') as fh:
+        fh.write('# directory on the host with wis2box-configuration\n') # noqa
+        fh.write(f'WIS2BOX_HOST_DATADIR={config_dir}\n')
+        fh.write(f'# directory in the wis2box container with wis2box-configuration\n') # noqa
+        fh.write('WIS2BOX_DATADIR=/data/wis2box\n')
+        fh.write('\n')
         wis2box_url = get_wis2box_url()
-        fh.write(f"WIS2BOX_URL={wis2box_url}\n")
-        fh.write(f"WIS2BOX_API_URL={wis2box_url}/oapi\n")
-        fh.write("\n")
+        fh.write('# wis2box public URL\n')
+        fh.write(f'WIS2BOX_URL={wis2box_url}\n')
+        fh.write('\n')
+        fh.write('# api\n')
+        fh.write('WIS2BOX_API_TYPE=pygeoapi\n')
+        fh.write(f'WIS2BOX_API_URL={wis2box_url}/oapi\n')
+        fh.write('WIS2BOX_DOCKER_API_URL=http://wis2box-api:80/oapi\n')
+        fh.write('\n')
+        fh.write('# backend\n')
+        fh.write('WIS2BOX_API_BACKEND_TYPE=Elasticsearch\n')
+        fh.write('WIS2BOX_API_BACKEND_URL=http://elasticsearch:9200\n')
+        fh.write('\n')
+        fh.write('# logging\n')
+        fh.write('WIS2BOX_LOGGING_LOGLEVEL=ERROR\n')
+        fh.write('WIS2BOX_LOGGING_LOGFILE=stdout\n')
+        fh.write('\n')
+        fh.write('# map settings for wis2box-ui, wis2box-api and wis2box-webapp\n')
+        fh.write('WIS2BOX_BASEMAP_URL=https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png\n') # noqa
+        fh.write('WIS2BOX_BASEMAP_ATTRIBUTION=<a href=\'https://osm.org/copyright\'>OpenStreetMap</a> contributors\n') # noqa
+        fh.write('\n')
+        fh.write('# storage, default is S3 provided by minio\n')
+        fh.write('WIS2BOX_STORAGE_TYPE=S3\n')
+        fh.write('WIS2BOX_STORAGE_SOURCE=http://minio:9000\n')
+        fh.write('WIS2BOX_STORAGE_INCOMING=wis2box-incoming\n')
+        fh.write('WIS2BOX_STORAGE_ARCHIVE=wis2box-archive\n')
+        fh.write('WIS2BOX_STORAGE_PUBLIC=wis2box-public\n')
+        fh.write('WIS2BOX_STORAGE_DATA_RETENTION_DAYS=7\n')
         # use the default username wis2box for WIS2BOX_STORAGE_USERNAME
-        fh.write("WIS2BOX_STORAGE_USERNAME=wis2box\n")
-        # get password for WIS2BOX_STORAGE_PASSWORD and write it to dev.env
-        fh.write(get_password("WIS2BOX_STORAGE_PASSWORD"))
-        fh.write("\n")
+        fh.write('WIS2BOX_STORAGE_USERNAME=wis2box\n')
+        # get password for WIS2BOX_STORAGE_PASSWORD and write it to wis2box.env
+        fh.write(get_password('WIS2BOX_STORAGE_PASSWORD'))
+        fh.write('\n')
         # write default port and host for WIS2BOX_BROKER
-        fh.write("WIS2BOX_BROKER_PORT=1883\n")
-        fh.write("WIS2BOX_BROKER_HOST=mosquitto\n")
+        fh.write('# broker settings\n')
+        fh.write('WIS2BOX_BROKER_PORT=1883\n')
+        fh.write('WIS2BOX_BROKER_HOST=mosquitto\n')
         # use the default username wis2box for WIS2BOX_BROKER_USERNAME
-        fh.write("WIS2BOX_BROKER_USERNAME=wis2box\n")
-        # get password for WIS2BOX_BROKER_PASSWORD and write it to dev.env
-        fh.write(get_password("WIS2BOX_BROKER_PASSWORD"))
-        fh.write("\n")
+        fh.write('WIS2BOX_BROKER_USERNAME=wis2box\n')
+        fh.write('WIS2BOX_BROKER_QUEUE_MAX=1000\n')
+        # get password for WIS2BOX_BROKER_PASSWORD and write it to wis2box.env
+        fh.write(get_password('WIS2BOX_BROKER_PASSWORD'))
+        fh.write('\n')
         # update WIS2BOX_PUBLIC_BROKER settings after updating broker defaults
-        fh.write("# update WIS2BOX_PUBLIC_BROKER settings after updating broker defaults\n") # noqa
-        fh.write("WIS2BOX_BROKER_PUBLIC=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@mosquitto:1883\n") # noqa
+        fh.write('# update WIS2BOX_PUBLIC_BROKER settings after updating broker defaults\n') # noqa
+        fh.write('WIS2BOX_BROKER_PUBLIC=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@mosquitto:1883\n') # noqa
         # update minio settings after updating storage and broker defaults
-        fh.write("\n")
-        fh.write("# update minio settings after updating storage and broker defaults\n") # noqa
-        fh.write("MINIO_ROOT_USER=${WIS2BOX_STORAGE_USERNAME}\n")
-        fh.write("MINIO_ROOT_PASSWORD=${WIS2BOX_STORAGE_PASSWORD}\n")
-        fh.write("MINIO_NOTIFY_MQTT_USERNAME_WIS2BOX=${WIS2BOX_BROKER_USERNAME}\n") # noqa
-        fh.write("MINIO_NOTIFY_MQTT_PASSWORD_WIS2BOX=${WIS2BOX_BROKER_PASSWORD}\n") # noqa
-        fh.write("MINIO_NOTIFY_MQTT_BROKER_WIS2BOX=tcp://${WIS2BOX_BROKER_HOST}:${WIS2BOX_BROKER_PORT}\n") # noqa
+        fh.write('\n')
+        fh.write('# minio settings\n') # noqa
+        # MinIO
+        fh.write('MINIO_ROOT_USER=${WIS2BOX_STORAGE_USERNAME}\n')
+        fh.write('MINIO_ROOT_PASSWORD=${WIS2BOX_STORAGE_PASSWORD}\n')
+        fh.write('MINIO_PROMETHEUS_AUTH_TYPE=public\n')
+        fh.write('MINIO_NOTIFY_MQTT_ENABLE_WIS2BOX=on\n')
+        fh.write('MINIO_NOTIFY_MQTT_USERNAME_WIS2BOX=${WIS2BOX_BROKER_USERNAME}\n') # noqa
+        fh.write('MINIO_NOTIFY_MQTT_PASSWORD_WIS2BOX=${WIS2BOX_BROKER_PASSWORD}\n') # noqa
+        fh.write('MINIO_NOTIFY_MQTT_BROKER_WIS2BOX=tcp://${WIS2BOX_BROKER_HOST}:${WIS2BOX_BROKER_PORT}\n') # noqa
+        fh.write('MINIO_NOTIFY_MQTT_TOPIC_WIS2BOX=wis2box-storage/minio\n')
+        fh.write('MINIO_NOTIFY_MQTT_QOS_WIS2BOX=1\n')
+        fh.write('\n')
 
-    print("*" * 80)
-    print("The file dev.env has been created in the current directory.")
-    print("*" * 80)
+    print('*' * 80)
+    print('The file wis2box.env has been created in the current directory.')
+    print('*' * 80)
 
 
 def create_config_dir() -> str:
@@ -303,26 +338,32 @@ def create_config_dir() -> str:
         print("Is this correct? (y/n/exit)")
         answer = input()
 
-    config_dir = Path(config_dir)
-
     # check if the directory exists
-    if config_dir.is_dir():
-        # if it exists warn the user
-        # tell them that the directory needs to be remove to continue
-        print("WARNING:")
-        print(f"The directory {config_dir} already exists.")
-        print("Please remove the directory to restart the configuration process.") # noqa
-        exit()
-    else:
-        # if it does not exist, create it
-        config_dir.mkdir()
-        # check if the directory was created
-        if not config_dir.is_dir():
-            print("ERROR:")
-            print(f"The directory {config_dir} could not be created.")
-            print("Please check the path and your permissions.")
+    try:
+        config_dir = Path(config_dir)
+        if config_dir.is_dir():
+            # if it exists warn the user
+            # tell them that the directory needs to be remove to continue
+            print("WARNING:")
+            print(f"The directory {config_dir} already exists.")
+            print("Please remove the directory to restart the configuration process.") # noqa
             exit()
-    print(f"The directory {config_dir} has been created.")
+        else:
+            # if it does not exist, create it
+            config_dir.mkdir()
+            # check if the directory was created
+            if not config_dir.is_dir():
+                print("ERROR:")
+                print(f"The directory {config_dir} could not be created.")
+                print("Please check the path and your permissions.")
+                exit()
+        print(f"The directory {config_dir} has been created.")
+    except Exception:
+        print("ERROR:")
+        print(f"The directory {config_dir} could not be created.")
+        print("Please provide an absolute path to the directory.")
+        print("and check your permissions.")
+        exit()
 
     return config_dir
 
@@ -342,8 +383,6 @@ def create_datamappings_file(config_dir: str, country_code: str,
 
     template_file = Path("config-templates/data-mappings.yml.tmpl")
     new_config_file = Path(config_dir) / "data-mappings.yml"
-    csv2bufr_mappings_template_file = Path("config-templates/csv2bufr_mappings.json")  # noqa
-    csv2bufr_mappings_file = Path(config_dir) / 'csv2bufr_mappings.json'
 
     template_vars = {
         'COUNTRY_CODE': country_code,
@@ -355,15 +394,9 @@ def create_datamappings_file(config_dir: str, country_code: str,
         with new_config_file.open("w") as fh2:
             fh2.write(result)
 
-    # also add mappings.json from config-templates to config_dir
-    with csv2bufr_mappings_template_file.open() as fh:
-        mappings_file = fh.read()
-        with csv2bufr_mappings_file.open("w") as fh2:
-            fh2.write(mappings_file)
-
     print("*" * 80)
-    print("Initial data_mappings.yml and csv2bufr_mappings.json have been created") # noqa
-    print("Please review the files and update as needed.")
+    print("Initial data_mappings.yml have been created") # noqa
+    print("Please review the file and update as needed.")
     print("*" * 80)
 
 
@@ -516,15 +549,15 @@ def create_station_list(config_dir: str) -> None:
         with new_config_file.open("w") as fh2:
             fh2.write(config_file)
 
-    print("*" * 80)
-    print(f"Created the file {new_config_file}.")
-    print("Please add your stations to this file.")
-    print("*" * 80)
+    # print("*" * 80)
+    # print(f"Created the file {new_config_file}.")
+    # print("Please add your stations to this file.")
+    # print("*" * 80)
 
 
 def get_config_dir() -> str:
     """
-    reads the value of WIS2BOX_HOST_DATADIR from dev.env
+    reads the value of WIS2BOX_HOST_DATADIR from wis2box.env
 
     returns: `str` of path to directory where configuration files
              are to be stored
@@ -532,7 +565,7 @@ def get_config_dir() -> str:
 
     config_dir = None
 
-    with Path("dev.env").open() as fh:
+    with Path("wis2box.env").open() as fh:
         lines = fh.readlines()
 
         for line in lines:
@@ -541,9 +574,9 @@ def get_config_dir() -> str:
 
         if not config_dir:
             print("WARNING:")
-            print("The file dev.env does not contain the variable WIS2BOX_HOST_DATADIR.") # noqa
+            print("The file wis2box.env does not contain the variable WIS2BOX_HOST_DATADIR.") # noqa
             print("Please edit the file and add the variable WIS2BOX_HOST_DATADIR.") # noqa
-            print("Or remove dev.env and run 'python3 wis2box-create-config.py' again.") # noqa
+            print("Or remove wis2box.env and run 'python3 wis2box-create-config.py' again.") # noqa
             exit()
 
     return config_dir
@@ -557,18 +590,18 @@ def main():
     """
 
     config_dir = None
-    dev_env = Path("dev.env")
+    dev_env = Path("wis2box.env")
 
-    # check if dev.env exists
+    # check if wis2box.env exists
     # if it does, read the value for WIS2BOX_HOST_DATADIR
-    # or give the user the option to recreate dev.env
+    # or give the user the option to recreate wis2box.env
     if dev_env.is_file():
-        print("The file dev.env already exists in the current directory.")
-        print("Do you want to recreate dev.env? (y/n/exit)")
+        print("The file wis2box.env already exists in the current directory.")
+        print("Do you want to recreate wis2box.env? (y/n/exit)")
         answer = input()
 
         if answer == "y":
-            os.remove("dev.env")
+            os.remove("wis2box.env")
         elif answer == "exit":
             exit()
         else:
@@ -578,10 +611,10 @@ def main():
     if not config_dir:
         config_dir = create_config_dir()
 
-    # if dev.env does not exist
-    # create it and write config_dir as the value for WIS2BOX_HOST_DATADIR to dev.env # noqa
+    # if wis2box.env does not exist
+    # create it and write config_dir as the value for WIS2BOX_HOST_DATADIR to wis2box.env # noqa
     if not dev_env.is_file():
-        create_dev_env(config_dir)
+        create_wis2box_env(config_dir)
 
     country_code, centre_id = get_country_and_centre_id()
 
