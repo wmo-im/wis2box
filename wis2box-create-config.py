@@ -259,7 +259,7 @@ def create_wis2box_env(config_dir: str) -> None:
         fh.write('WIS2BOX_LOGGING_LOGLEVEL=ERROR\n')
         fh.write('WIS2BOX_LOGGING_LOGFILE=stdout\n')
         fh.write('\n')
-        fh.write('# map settings for wis2box-ui, wis2box-api and wis2box-webapp\n')
+        fh.write('# map settings for wis2box-ui, wis2box-api and wis2box-webapp\n') # noqa
         fh.write('WIS2BOX_BASEMAP_URL=https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png\n') # noqa
         fh.write('WIS2BOX_BASEMAP_ATTRIBUTION=<a href=\'https://osm.org/copyright\'>OpenStreetMap</a> contributors\n') # noqa
         fh.write('\n')
