@@ -13,10 +13,11 @@ wis2box implements the core WIS2 requirements of a WIS2 Node:
 * MQTT broker
 * HTTP endpoint to enable data download
 
-Additional services included in wis2box include:
+Additional services included in wis2box:
 
-* Customizable plugins to transform input data
-* API exposing data in GeoJSON using `pygeoapi`_
+* Customizable plugins to transform input data: default plugins for synop2bufr, csv2bufr and bufr2geojson
+* API using `pygeoapi`_ : to enable interaction with the wis2box-backend and exposing data in GeoJSON 
+* Web application to enable configuration of station metadata and posting SYNOP and CSV data
 * Monitoring functions using `Prometheus`_ and `Grafana`_
 * Data visualization through the wis2box user interface
 

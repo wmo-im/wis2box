@@ -5,24 +5,13 @@ Public services setup
 
 To share your data with the WIS2 network, you need to expose some of your wis2box services to the Global Services:
 
-* The Global Cache needs to be able to access to your HTTP endpoint to download data published by your wis2box instance
-* The Global Broker needs to be able to subscribe to your MQTT endpoint to receive WIS2 notifications published by your wis2box instance
+* The Global Cache needs to be able to access to your HTTP endpoint at port 80 to download data published by your wis2box instance
+* The Global Broker needs to be able to subscribe to your MQTT endpoint at port 1883 to receive WIS2 notifications published by your wis2box instance
 
 SSL
 ^^^
 
-To enable HTTPS and MQTTS on your wis2box you can run wis2box with the option `--ssl`:
-
-.. code-block:: bash
-
-   python3 wis2box-ctl.py --ssl start
-
-When running wis2box with SSL, you have to set additional environment variables in your wis2box.env defining the location of your SSL certificate and private key:
-
-.. code-block:: bash
-
-  WIS2BOX_SSL_CERT=/etc/letsencrypt/live/example.wis2box.io/fullchain.pem
-  WIS2BOX_SSL_KEY=/etc/letsencrypt/live/example.wis2box.io/privkey.pem
+It is recommended to use a reverse proxy to route HTTP and MQTT traffic from/to your wis2box, and to enable TLS (HTTPS/MQTTS) on your wis2box.
 
 Please remember to update the ``WIS2BOX_URL`` and ``WIS2BOX_API_URL``environment variable after enabling SSL, ensuring your URL starts with ``https://``.
 
@@ -31,7 +20,7 @@ Please note that after changing the ``WIS2BOX_URL`` and ``WIS2BOX_API_URL`` envi
 .. code-block:: bash
 
   python3 wis2box-ctl.py stop
-  python3 wis2box-ctl.py --ssl start
+  python3 wis2box-ctl.py start
 
 After restarting wis2box, repeat the commands for adding your dataset and publishing your metadata, to ensure the URLs are updated accordingly:
 
@@ -54,7 +43,6 @@ wis2box runs a local nginx container allowing access to the following HTTP based
    UI (wis2box-ui),`WIS2BOX_URL/`
    Storage (incoming data) (minio:wis2box-incoming),`WIS2BOX_URL/wis2box-incoming`
    Storage (public data) (minio:wis2box-public),`WIS2BOX_URL/data`
-
 
 You can edit ``nginx/nginx.conf`` to control which services are exposed through the nginx-container include in your stack.
 

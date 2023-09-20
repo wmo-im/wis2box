@@ -32,8 +32,21 @@ Run the following command to create the initial configuration files for your wis
 
 .. note::
 
-    The ``wis2box-create-config.py`` program will ask for a directory to store the configuration files.
+    The ``wis2box-create-config.py`` script will ask for a directory to store the configuration files. 
+    Please provide the **absolute** path to the directory where you want to store the configuration files, for example ``/home/wis2box-user/wis2box-data``.
     This directory will be mapped to ``/data/wis2box`` **inside** the wis2box-management container.
+
+   The script will also ask for the URL of your wis2box. Please provide the public URL of your wis2box, for example ``http://mywis2box.example.com``. 
+   For testing purpose you can also provide the internal IP address you use to access the host, for example ``http://192.168.0.3`` and you change the URL in configuration files later.
+
+   The script will propose to automatically create passwords for WIS2BOX_STORAGE_PASSWORD and WIS2BOX_BROKER_PASSWORD. 
+   These passwords are for internal use only within the wis2box, and it is recommended to accept the randomly generated passwords.
+
+   The script will ask for 3-letter ISO country code for your wis2box. Please provide the 3-letter ISO country code for your country, for example ``FRA``. 
+   It will also ask for a center-id. Please provide a string that identifies your organization and does not use spaces or special characters, for example ``meteofrance``. 
+   These fields will be automatically converted to lowercase.
+
+   The remaining questions will be used in the creation the discovery metadata files for the ``synop`` and ``temp`` datasets.
 
 Discovery metadata
 ------------------

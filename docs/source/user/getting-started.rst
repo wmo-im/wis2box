@@ -57,7 +57,9 @@ wis2box requires the following prior to installation:
    Docker Engine, 20.10.14 or higher
    Docker Compose, 2.0 or higher
 
-The following commands be used to setup the required software on Ubuntu 20.04 LTS:
+The following commands be used to setup the required software on Ubuntu (20.04 LTS, 22.04 LTS) systems:
+
+(please execute the commands one by one, and do not copy-paste the entire block)
 
 .. code-block:: bash
     
@@ -90,7 +92,26 @@ Switch to this user and check that you can run docker hello-world:
 
 .. code-block:: bash
 
+    sudo su - $USER
     docker run hello-world
+
+You should see the following output:
+
+.. code-block:: bash
+
+    Hello from Docker!
+    This message shows that your installation appears to be working correctly.
+
+    To generate this message, Docker took the following steps:
+     1. The Docker client contacted the Docker daemon.
+     2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+        (amd64)
+     3. The Docker daemon created a new container from that image which runs the
+        executable that produces the output you are currently reading.
+     4. The Docker daemon streamed that output to the Docker client, which sent it
+        to your terminal.
+
+    (...)
 
 Once you have verified these requirements, go to :ref:`setup` for a step-by-step guide to install and configure your wis2box.
 

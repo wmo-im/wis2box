@@ -619,7 +619,7 @@ def main():
     country_code, centre_id = get_country_and_centre_id()
 
     print("*" * 80)
-    print("Creating initial configuration for surface and upper-air data.")
+    print("Creating discovery metadata files for surface and upper-air data.")
     print("*" * 80)
 
     create_metadata_files(config_dir, country_code, centre_id)
