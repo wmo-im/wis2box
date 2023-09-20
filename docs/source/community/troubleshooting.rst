@@ -15,7 +15,7 @@ The wis2box logging displays the error:
     
     OSError: Missing data mappings: [Errno 2] No such file or directory: '/data/wis2box/data-mappings.yml'
 
-Check your dev.env and check value that was set for WIS2BOX_HOST_DATADIR
+Check your wis2box.env and check value that was set for WIS2BOX_HOST_DATADIR
 
 .. code-block:: bash
     
@@ -70,8 +70,7 @@ The Access Key Id you provided does not exist in our records
 ------------------------------------------------------------
 
 If you see this error when uploading data to the wis2box-incoming storage, you have provided the wrong username and/or password to access MinIO.
-Check the values for ``WIS2BOX_STORAGE_USERNAME`` and ``WIS2BOX_STORAGE_PASSWORD`` you have provided in your ``dev.env`` file. 
-The default username/password for MinIO is ``minio/minio123``.
+Check the values for ``WIS2BOX_STORAGE_USERNAME`` and ``WIS2BOX_STORAGE_PASSWORD`` set in your ``wis2box.env`` file. 
 
 Topic Hierarchy validation error: No plugins for ... in data mappings
 ---------------------------------------------------------------------

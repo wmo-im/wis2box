@@ -17,11 +17,11 @@ To download wis2box from source:
 
 The test enviroment file is provided in ``tests/test.env``.
 
-To run with the 'quickstart' configuration, copy this file to ``dev.env`` in your working directory:
+To run with the 'quickstart' configuration, copy this file to ``wis2box.env`` in your working directory:
 
 .. code-block:: bash
 
-    cp tests/test.env dev.env
+    cp tests/test.env wis2box.env
 
 
 Build and update wis2box:

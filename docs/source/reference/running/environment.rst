@@ -15,5 +15,5 @@ directory for all data managed in wis2box.
 
 The default enviroment variables are below.
 
-.. literalinclude:: ../../../../default.env
+.. literalinclude:: ../../../../wis2box_example.env
    :language: bash

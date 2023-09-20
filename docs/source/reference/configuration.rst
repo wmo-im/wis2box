@@ -9,19 +9,24 @@ a simple configuration that can be adjusted depending the user's needs and deplo
 Environment variables
 ---------------------
 
-wis2box configuration is driven primarily by a small set of environment variables. The runtime
-configuration is defined in the `Env`_ format in a plain text file named ``dev.env`` and ``default.env``.
+wis2box configuration is driven primarily by a set of environment variables. The runtime
+configuration is defined in the `Env`_ format in a plain text file named ``wis2box.env``. 
+An example is provided in ``wis2box_example.env``.
 
-Any values set in ``dev.env`` override the default environment variables in ``default.env``. For further / specialized
-configuration, see the sections below.
+You can either copy the example-file to ``wis2box.env`` and adjust the values to your needs or run the following command
+to create a new ``wis2box.env`` file by answering a few questions on the command line:
+
+.. code-block:: bash
+
+    python3 wis2box-create-config.py
+
+For further / specialized configuration, see the sections below.
 
 ``WIS2BOX_HOST_DATADIR``
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-The minimum required setting in ``dev.env`` is the ``WIS2BOX_HOST_DATADIR`` environment variable. Setting this
-value is **required** to map the wis2box data directory from the host system to the containers.
+The value of ``WIS2BOX_HOST_DATADIR`` maps the wis2box data directory from the host system to the containers.
 
-It is recommended to set this value to an absolute path on your system.
 
 Sections
 --------
@@ -29,10 +34,7 @@ Sections
 .. note::
 
    A reference configuration can always be found in the wis2box `GitHub`_ repository. The :ref:`quickstart`
-   uses a variant of ``wis2box.env`` with mappings to the test data, as an example. For complex installations,
-   it is recommended to start configuring wis2box by copying the example ``wis2box.env`` file and modifying
-   accordingly.
-
+   uses a variant of ``wis2box_example.env`` with mappings to the test data, as an example. 
 
 wis2box environment variables can be categorized via the following core sections:
 
@@ -64,7 +66,7 @@ The following environment variables can be used to configure `WIS2BOX_STORAGE`.
 
     WIS2BOX_STORAGE_TYPE=S3
     WIS2BOX_STORAGE_SOURCE=http://minio:9000
-    WIS2BOX_STORAGE_USERNAME=minio  # username for the storage-layer
+    WIS2BOX_STORAGE_USERNAME=wis2box  # username for the storage-layer
     WIS2BOX_STORAGE_PASSWORD=minio123  # password for the storage-layer
     WIS2BOX_STORAGE_INCOMING=wis2box-incoming  # name of the storage-bucket/folder for incoming files
     WIS2BOX_STORAGE_PUBLIC=wis2box-public  # name of the storage-bucket/folder for public files
@@ -178,7 +180,7 @@ Web application configuration provides the ability to customize web components.
 Other
 ^^^^^
 
-Additional directives provide various configurationscontrol of configuration options for the deployment of wis2box.
+Additional directives provide various configuration options for the deployment of wis2box.
 
 .. code-block:: bash
 
@@ -193,16 +195,13 @@ Additional directives provide various configurationscontrol of configuration opt
 
 A full configuration example can be found below:
 
-.. literalinclude:: ../../../examples/config/wis2box.env
-   :language: bash
-
-.. literalinclude:: ../../../default.env
+.. literalinclude:: ../../../wis2box_example.env
    :language: bash
 
 Docker Compose
 --------------
 
-The Docker Compose setup is driven from the resulting ``dev.env`` file created. For advanced cases and/or power users,
+The Docker Compose setup is driven from the resulting ``wis2box.env`` file created. For advanced cases and/or power users,
 updates can also be made to ``docker-compose.yml`` or ``docker-compose.override.yml`` (for changes to ports).
 
 .. _`Env`: https://en.wikipedia.org/wiki/Env

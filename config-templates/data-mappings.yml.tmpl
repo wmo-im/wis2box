@@ -9,7 +9,7 @@ data:
                   file-pattern: '^.*-(\d{4})(\d{2}).*\.txt$$'
             csv:
                 - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
-                  template: /data/wis2box/csv2bufr_mappings.json
+                  template: aws-template
                   notify: true
                   buckets:
                     - $${WIS2BOX_STORAGE_INCOMING}
