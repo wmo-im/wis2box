@@ -13,18 +13,23 @@ What action to take is determined by the ``data-mappings.yml`` you've setup in t
 wis2box-webapp
 --------------
 
-The wis2box-webapp is a web application that provides a user interface to ingest SYNOP data into the wis2box.
+The wis2box-webapp is a web application that includes the following forms for data ingestion:
 
-It also provides an interface to validate the ingestion of CSV-files using the AWS-template for csv2bufr.
+* user interface to ingest SYNOP data
+* user interface to ingest CSV data 
 
 The wis2box-webapp is available on your host at `http://<your-public-ip>/wis2box-webapp`.
 
-Interactive data-ingestiong requires an execution token, which can be generated using the ``wis2box auth add-token`` command inside the wis2box-management container:
+Interactive data-ingestion requires an execution token, which can be generated using the ``wis2box auth add-token`` command inside the wis2box-management container:
 
 .. code-block:: bash
 
     python3 wis2box-ctl.py login
-    wis2box auth add-token --path processes/wis2box myexecutiontoken
+    wis2box auth add-token --path processes/wis2box
+
+.. note::
+
+    Be sure to record the token value, as it will not be shown again. If you lose the token, you can generate a new one.
 
 MinIO user interface
 --------------------

@@ -169,6 +169,24 @@ You can review the discovery metadata just cached through the new link at  ``/oa
 
 Repeat this step for any other discovery metadata you wish to publish, such as the ``temp`` dataset.
 
+Finally it is recommended to prepare authentication tokens for updating your stations and ingesting data using the wis2box-webapp.
+
+To create a token for ingesting data:
+
+.. code-block:: bash
+
+   wis2box auth add-token --path processes/wis2box
+
+Record the token value displayed in a safe place, you will need for the :ref:`data-ingest`.
+
+To create a token for updating stations:
+
+.. code-block:: bash
+
+   wis2box auth add-token --path collections/stations
+
+Record the token value displayed in the output of the command above. You will use this token to update stations in the next section.
+
 You can now logout of wis2box-management container:
 
 .. code-block:: bash
