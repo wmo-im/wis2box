@@ -174,11 +174,7 @@ The second step is to publish discovery metadata and cache its content in the wi
 
 This command publishes an MQTT message with information about your dataset to the WIS2 Global Discovery Catalogue. Repeat this command whenever you have to provide updated metadata about your dataset.
 
-You can review the discovery metadata just cached through the new link at  ``/oapi/collections``:
-
-.. image:: ../_static/wis2box-api-discovery-metadata.png
-  :width: 800
-  :alt: wis2box API collections list with added discovery metadata
+You can review the discovery metadata just cached through the new item at  ``/oapi/collections/discovery-metadata/items``:
 
 Repeat this step for any other discovery metadata you wish to publish, such as the ``temp`` dataset.
 
