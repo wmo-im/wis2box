@@ -261,7 +261,7 @@ def create_wis2box_env(config_dir: str) -> None:
         fh.write('\n')
         fh.write('# map settings for wis2box-ui, wis2box-api and wis2box-webapp\n') # noqa
         fh.write('WIS2BOX_BASEMAP_URL=https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png\n') # noqa
-        fh.write('WIS2BOX_BASEMAP_ATTRIBUTION=<a href=\'https://osm.org/copyright\'>OpenStreetMap</a> contributors\n') # noqa
+        fh.write('WIS2BOX_BASEMAP_ATTRIBUTION=<a href="https://osm.org/copyright">OpenStreetMap</a> contributors\n') # noqa
         fh.write('\n')
         fh.write('# storage, default is S3 provided by minio\n')
         fh.write('WIS2BOX_STORAGE_TYPE=S3\n')
