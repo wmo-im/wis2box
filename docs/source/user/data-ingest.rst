@@ -10,10 +10,31 @@ The wis2box storage is provided using a `MinIO`_ container that provides S3-comp
 Any file received in the ``wis2box-incoming`` storage bucket will trigger an action to process the file. 
 What action to take is determined by the ``data-mappings.yml`` you've setup in the previous section.
 
+wis2box-webapp
+--------------
+
+The wis2box-webapp is a web application that includes the following forms for data ingestion:
+
+* user interface to ingest SYNOP data
+* user interface to ingest CSV data 
+
+The wis2box-webapp is available on your host at `http://<your-public-ip>/wis2box-webapp`.
+
+Interactive data-ingestion requires an execution token, which can be generated using the ``wis2box auth add-token`` command inside the wis2box-management container:
+
+.. code-block:: bash
+
+    python3 wis2box-ctl.py login
+    wis2box auth add-token --path processes/wis2box
+
+.. note::
+
+    Be sure to record the token value, as it will not be shown again. If you lose the token, you can generate a new one.
+
 MinIO user interface
 --------------------
 
-To access the MinIO user interface, visit ``http://localhost:9001`` in your web browser.
+To access the MinIO user interface, visit ``http://<your-host-ip>:9001`` in your web browser.
 
 You can login with your ``WIS2BOX_STORAGE_USERNAME`` and ``WIS2BOX_STORAGE_PASSWORD``:
 
@@ -51,7 +72,7 @@ If no data appears in the ``wis2box-public`` storage bucket, you can inspect the
 
    python3 wis2box-ctl.py logs wis2box
 
-Or by visiting the local Grafana instance running at ``http://localhost:3000``
+Or by visiting the local Grafana instance running at ``http://<your-host-ip>:3000``
 
 wis2box workflow monitoring
 ---------------------------
@@ -84,7 +105,7 @@ See below a Python example to upload data using the MinIO package:
     minio_path = '/ita/italy_wmo_demo/data/core/weather/surface-based-observations/synop/'
 
     endpoint = 'http://localhost:9000'
-    WIS2BOX_STORAGE_USERNAME = '<your-wis2box-storage-username>'
+    WIS2BOX_STORAGE_USERNAME = 'wis2box'
     WIS2BOX_STORAGE_PASSWORD = '<your-wis2box-storage-password>'
 
     client = Minio(
@@ -95,6 +116,12 @@ See below a Python example to upload data using the MinIO package:
     
     filename = filepath.split('/')[-1]
     client.fput_object('wis2box-incoming', minio_path+filename, filepath)
+
+.. note::
+    
+    In the example the file ``mydata.bin`` in ingested from the directory ``/home/wis2box-user/local-data/`` on the host running wis2box.
+    If you are running the script on the same host as wis2box, you can use the endpoint ``http://localhost:9000`` as in the example. 
+    Otherwise, replace localhost with the IP address of the host running wis2box. 
 
 wis2box-ftp
 -----------

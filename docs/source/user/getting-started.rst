@@ -10,6 +10,24 @@ The recommended OS is Ubuntu 20.04 LTS.
 
    wis2box may work on other operating systems (for example AlmaLinux), but the officially supported OS is Ubuntu.
 
+Network requirements
+--------------------
+
+The wis2box-software requires the following network ports to be available on the host system:
+
+* 80/tcp (HTTP)
+* 1883/tcp (MQTT)
+* 3000/tcp (Grafana)
+* 9000/tcp (MinIO)
+* 9001/tcp (MinIO Console)
+
+In order for the wis2box to be accessible from the Internet, the following ports on the host should be routed to a public IP address:
+
+* 80/tcp (HTTP)
+* 1883/tcp (MQTT)
+
+It is recommended to use a reverse proxy (for example `NGINX`_) to provide HTTPS access to the wis2box.
+
 System requirements
 -------------------
 
@@ -39,7 +57,9 @@ wis2box requires the following prior to installation:
    Docker Engine, 20.10.14 or higher
    Docker Compose, 2.0 or higher
 
-The following commands be used to setup the required software on Ubuntu 20.04 LTS:
+The following commands be used to setup the required software on Ubuntu (20.04 LTS, 22.04 LTS) systems:
+
+(please execute the commands one by one, and do not copy-paste the entire block)
 
 .. code-block:: bash
     
@@ -60,6 +80,38 @@ The following commands can be used to inspect the available versions of Python, 
     docker version
     docker compose version
     python3 -V
+
+The wis2box software should be run by system user that is part of the `docker` group.  
+The following command can be used to add the current user to the `docker` group:	
+
+.. code-block:: bash
+
+    sudo usermod -aG docker $USER
+
+Switch to this user and check that you can run docker hello-world:
+
+.. code-block:: bash
+
+    sudo su - $USER
+    docker run hello-world
+
+You should see the following output:
+
+.. code-block:: bash
+
+    Hello from Docker!
+    This message shows that your installation appears to be working correctly.
+
+    To generate this message, Docker took the following steps:
+     1. The Docker client contacted the Docker daemon.
+     2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+        (amd64)
+     3. The Docker daemon created a new container from that image which runs the
+        executable that produces the output you are currently reading.
+     4. The Docker daemon streamed that output to the Docker client, which sent it
+        to your terminal.
+
+    (...)
 
 Once you have verified these requirements, go to :ref:`setup` for a step-by-step guide to install and configure your wis2box.
 
