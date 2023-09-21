@@ -215,7 +215,7 @@ The wis2box-webapp can be accessed by visiting the URL you specified during the 
 
 Please note only data for stations that have been added to the wis2box will be ingested and result in WIS2 notifications being published.
 
-You can also bulk-insert a set of stations from a CSV file, by specifying the stations in metadata/stations/station_list.csv in your wis2box-host-directory and running the following command:
+You can also bulk-insert a set of stations from a CSV file, by defining the stations in metadata/stations/station_list.csv in your wis2box-host-directory and running the following command:
 
 .. code-block:: bash
 

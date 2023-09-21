@@ -85,7 +85,7 @@ ERROR - Failed to publish, wsi: ..., tsi: XXXXX
 -----------------------------------------------
 
 Data arrived for a station that is not present in the station metadata cache. 
-To add missing stations, update the file ``metadata/station/station_list.csv`` in the wis2box data directory (see :ref:`setup`).
+To add missing stations, use the station-editor in wis2box-webapp (from wis2box-1.0b5) or update the file ``metadata/station/station_list.csv`` in the wis2box data directory (see :ref:`setup`).
 
 Error: no such container: wis2box-management
 --------------------------------------------
@@ -101,6 +101,7 @@ Please check all services are Running using the following command:
 
 Possible issues are:
 
+- The host ran out of disk-space, check the output of 'df -h' and ensure there is sufficient space available
 - The directory defined by WIS2BOX_HOST_DATADIR does not contain the file 'data-mappings.yml' or the file is invalid
 - The directory defined by WIS2BOX_HOST_DATADIR does not contain the file 'metastation/station/station_list.csv' or the file is invalid
 - WIS2BOX_STORAGE_PASSWORD is too short, minio will fail to start if you specify a WIS2BOX_STORAGE_PASSWORD of less than 8 characters
@@ -122,5 +123,5 @@ And repeat the commands for adding your dataset and publishing your metadata, to
 .. code-block:: bash
 
   python3 wis2box-ctl.py login
-  wis2box data add-collection ${WIS2BOX_DATADIR}/surface-weather-observations.yml
-  wis2box metadata discovery publish ${WIS2BOX_DATADIR}/surface-weather-observations.yml
+  wis2box data add-collection /data/wis2box/metadata/discovery/metadata-synop.yml
+  wis2box metadata discovery publish /data/wis2box/metadata/discovery/metadata-synop.yml
