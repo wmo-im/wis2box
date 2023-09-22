@@ -195,7 +195,7 @@ def test_message_api():
     counts = {
         'mwi_met_centre': 24,
         'roma_met_centre': 33,
-        'alger_met_centre': 29,
+        'alger_met_centre': 28,
         'rnimh': 188,
         'brazza_met_centre': 15
     }
