@@ -299,7 +299,7 @@ def create_wis2box_env(config_dir: str) -> None:
         fh.write('MINIO_NOTIFY_MQTT_USERNAME_WIS2BOX=${WIS2BOX_BROKER_USERNAME}\n') # noqa
         fh.write('MINIO_NOTIFY_MQTT_PASSWORD_WIS2BOX=${WIS2BOX_BROKER_PASSWORD}\n') # noqa
         fh.write('MINIO_NOTIFY_MQTT_BROKER_WIS2BOX=tcp://${WIS2BOX_BROKER_HOST}:${WIS2BOX_BROKER_PORT}\n') # noqa
-        fh.write('MINIO_NOTIFY_MQTT_TOPIC_WIS2BOX=wis2box/minio\n')
+        fh.write('MINIO_NOTIFY_MQTT_TOPIC_WIS2BOX=wis2box/storage\n')
         fh.write('MINIO_NOTIFY_MQTT_QOS_WIS2BOX=1\n')
         fh.write('\n')
 
