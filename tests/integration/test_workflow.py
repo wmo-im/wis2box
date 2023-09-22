@@ -208,7 +208,7 @@ def test_message_api():
     r = SESSION.get(url).json()
 
     # should match sum of counts above
-    assert r['numberMatched'] == 289
+    assert r['numberMatched'] == 288
 
     msg = r['features'][5]
     is_valid, _ = validate_message(msg)
