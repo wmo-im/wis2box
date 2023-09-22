@@ -54,11 +54,16 @@ Select 'browse' on the ``wis2box-incoming`` bucket and select 'Choose or create 
     :alt: MinIO new folder path
 
 .. note::
-    The folder in which the file is placed defines the dataset for the data you are sharing.  For example, for dataset ``foo.bar``, store your file in the path ``/foo/bar/``. 
+    The folder in which the file is placed defines the topic you want to share the data on and should match the datasets defined in data-mappings.yml  
     
-    The path is also used to define the topic hierarchy for your data (see `WIS2 topic hierarchy`_). The first 3 levels of the WIS2 topic hierarchy ``origin/a/wis2`` are automatically included by wis2box when publishing data notification messages.
+    The first 3 levels of the WIS2 topic hierarchy ``origin/a/wis2`` are automatically included by wis2box when publishing data notification messages.
 
-    * The error message ``Topic Hierarchy validation error: No plugins for minio:9000/wis2box-incoming/... in data mappings`` indicates you stored a file in a folder for which no matching dataset was defined in your ``data-mappings.yml``.
+    For example:
+    
+    * data to be published on:  ``origin/a/wis2/cog/brazza_met_centre/data/core/weather/surface-based-observations/synop``
+    * upload data in the path: ``cog/brazza_met_centre/data/core/weather/surface-based-observations/synop``. 
+    
+    The error message ``Topic Hierarchy validation error: No plugins for minio:9000/wis2box-incoming/... in data mappings`` indicates you stored a file in a folder for which no matching dataset was defined in your ``data-mappings.yml``.
 
 After uploading a file to ``wis2box-incoming`` storage bucket, you can browse the content in the ``wis2box-public`` bucket.  If the data ingest was successful, new data will appear as follows:
 
