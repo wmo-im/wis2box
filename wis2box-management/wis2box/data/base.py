@@ -163,10 +163,6 @@ class BaseAbstractData:
         broker.pub(topic, wis_message.dumps())
         LOGGER.info(f'WISNotificationMessage published for {identifier}')
 
-        # publish using filename as identifier
-        broker.pub(topic, wis_message.dumps())
-        LOGGER.info(f'WISNotificationMessage published for {identifier}')
-
         # load plugin for local broker
         defs_local = {
             'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
