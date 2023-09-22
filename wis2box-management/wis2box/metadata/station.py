@@ -145,24 +145,25 @@ def load_stations(wsi='') -> dict:
 
     try:
         es = Elasticsearch(API_BACKEND_URL)
+        nbatch = 50
+        res = es.search(index="stations", query={"match_all": {}}, size=nbatch) # noqa
+        if len(res['hits']['hits']) == 0:
+            LOGGER.debug('No stations found')
+            return stations
+        for hit in res['hits']['hits']:
+            stations[hit['_source']['id']] = hit['_source']
+        if wsi != '' and wsi in stations:
+            return {wsi: stations[wsi]}
         if wsi != '':
-            res = es.search(index="stations", query={"match": {"id": wsi}})
-            if len(res['hits']['hits']) == 0:
-                LOGGER.debug(f'No station found for {wsi}')
-                return stations
-            stations[wsi] = res['hits']['hits'][0]['_source']
-        else:
-            nbatch = 50
-            res = es.search(index="stations", query={"match_all": {}}, size=nbatch) # noqa
-            if len(res['hits']['hits']) == 0:
-                LOGGER.debug('No stations found')
-                return stations
+            stations = {}
+        while len(res['hits']['hits']) > 0:
+            res = es.search(index="stations", query={"match_all": {}}, size=nbatch, from_=len(stations)) # noqa
             for hit in res['hits']['hits']:
                 stations[hit['_source']['id']] = hit['_source']
-            while len(res['hits']['hits']) > 0:
-                res = es.search(index="stations", query={"match_all": {}}, size=nbatch, from_=len(stations)) # noqa
-                for hit in res['hits']['hits']:
-                    stations[hit['_source']['id']] = hit['_source']
+            if wsi != '' and wsi in stations:
+                return {wsi: stations[wsi]}
+            if wsi != '':
+                stations = {}
     except Exception as err:
         LOGGER.error(f'Failed to load stations from backend: {err}')
 
