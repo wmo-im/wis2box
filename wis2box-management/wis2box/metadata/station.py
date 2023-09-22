@@ -153,7 +153,7 @@ def load_stations(wsi='') -> dict:
         for hit in res['hits']['hits']:
             stations[hit['_source']['id']] = hit['_source']
         while len(res['hits']['hits']) > 0:
-            res = es.search(index="stations", query={"match_all": {}}, size=nbatch, from_=len(stations))
+            res = es.search(index="stations", query={"match_all": {}}, size=nbatch, from_=len(stations)) # noqa
             for hit in res['hits']['hits']:
                 stations[hit['_source']['id']] = hit['_source']
     except Exception as err:
