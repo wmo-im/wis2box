@@ -16,23 +16,25 @@ metadata:
 identification:
     language: en
     charset: utf8
-    title: Upper-air weather observations from $CENTRE_NAME
-    abstract: Upper-air weather observations from $CENTRE_NAME
+    title: Upper-level temperature/humidity/wind reports from fixed-land stations (TEMP) ($COUNTRY_NAME)
+    abstract: Upper-level temperature/humidity/wind reports from fixed-land stations (TEMP) ($COUNTRY_NAME)
     dates:
         creation: $CREATION_DATE
         publication: $PUBLICATION_DATE
     keywords:
         default:
             keywords:
-                - upper-air weather
+                - upper air
+                - humidity
+                - wind
                 - observations
         wmo:
             keywords:
-                - weatherObservations
+                - weather
             keywords_type: theme
             vocabulary:
-                name: WMO Category Code
-                url: https://github.com/wmo-im/wcmp-codelists/blob/main/codelists/WMO_CategoryCode.csv
+                name: WMO WIS2 Topic Hierarchy
+                url: https://github.com/wmo-im/wis2-topic-hierarchy/blob/main/topic-hierarchy/earth-system-discipline.csv
     extents:
         spatial:
             - bbox: [$BOUNDING_BOX]
@@ -46,18 +48,18 @@ identification:
 contact:
     pointOfContact: &contact_poc
         organization: $CENTRE_NAME
-        url: NA
-        individualname: NA
-        positionname: NA
-        phone: NA
-        fax: NA
-        address: NA
-        city: NA
-        administrativearea: NA
-        postalcode: NA
+        url: null
+        individualname: null
+        positionname: null
+        phone: null
+        fax: null
+        address: null
+        city: null
+        administrativearea: null
+        postalcode: null
         country: $COUNTRY_NAME
         email: $WIS2BOX_EMAIL
-        hoursofservice: NA
+        hoursofservice: null
         contactinstructions: email
 
     distributor: *contact_poc

@@ -42,9 +42,9 @@ RUN apt-get update -y && apt-get install -y ${DEBIAN_PACKAGES} \
     https://github.com/wmo-im/csv2bufr/archive/refs/tags/v0.7.4.zip \
     https://github.com/wmo-im/bufr2geojson/archive/refs/tags/v0.5.0.zip \
     https://github.com/wmo-im/pymetdecoder/archive/refs/tags/v0.1.10.zip  \
-    https://github.com/wmo-cop/pyoscar/archive/refs/tags/0.6.3.zip \
+    https://github.com/wmo-cop/pyoscar/archive/refs/tags/0.6.4.zip \
     https://github.com/wmo-im/synop2bufr/archive/refs/tags/v0.6.2.zip \
-    https://github.com/geopython/pygeometa/archive/refs/tags/0.14.0.zip \
+    https://github.com/geopython/pygeometa/archive/refs/tags/0.15.3.zip \
     https://github.com/wmo-im/pywcmp/archive/refs/tags/0.4.0.zip \
     # install shapely
     && pip3 install --no-cache-dir cython pygeos==0.13 \
