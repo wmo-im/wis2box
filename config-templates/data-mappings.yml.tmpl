@@ -37,7 +37,7 @@ data:
                   buckets:
                     - $${WIS2BOX_STORAGE_PUBLIC}
                   file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$$'
-    COUNTRY_CODE.CENTRE_ID.data.core.weather.surface-based-observations.temp:
+    $COUNTRY_CODE.$CENTRE_ID.data.core.weather.surface-based-observations.temp:
         plugins:
             b:
                 - plugin: wis2box.data.bufr4.ObservationDataBUFR
