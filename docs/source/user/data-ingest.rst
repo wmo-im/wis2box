@@ -10,16 +10,41 @@ The wis2box storage is provided using a `MinIO`_ container that provides S3-comp
 Any file received in the ``wis2box-incoming`` storage bucket will trigger an action to process the file. 
 What action to take is determined by the ``data-mappings.yml`` you've setup in the previous section.
 
+wis2box-webapp
+--------------
+
+The wis2box-webapp is a web application that includes the following forms for data validation and ingestion:
+
+* user interface to ingest SYNOP data
+* user interface to ingest CSV data 
+
+The wis2box-webapp is available on your host at `http://<your-public-ip>/wis2box-webapp`.
+
+Interactive data ingestion requires an execution token, which can be generated using the ``wis2box auth add-token`` command inside the wis2box-management container:
+
+.. code-block:: bash
+
+    python3 wis2box-ctl.py login
+    wis2box auth add-token --path processes/wis2box
+
+.. note::
+
+   Be sure to record the token value, as it will not be shown again. If you lose the token, you can generate a new one.
+
 MinIO user interface
 --------------------
 
-To access the MinIO user interface, visit ``http://localhost:9001`` in your web browser.
+To access the MinIO user interface, visit ``http://<your-host-ip>:9001`` in your web browser.
 
 You can login with your ``WIS2BOX_STORAGE_USERNAME`` and ``WIS2BOX_STORAGE_PASSWORD``:
 
 .. image:: ../_static/minio-login-screen2.png
     :width: 400
     :alt: MinIO login screen
+
+.. note::
+
+   The ``WIS2BOX_STORAGE_USERNAME`` and ``WIS2BOX_STORAGE_PASSWORD`` are defined in the ``wis2box.env`` file.
 
 To test the data ingest, add a sample file for your observations in the ``wis2box-incoming`` storage bucket.
 
@@ -30,11 +55,16 @@ Select 'browse' on the ``wis2box-incoming`` bucket and select 'Choose or create 
     :alt: MinIO new folder path
 
 .. note::
-    The folder in which the file is placed defines the dataset for the data you are sharing.  For example, for dataset ``foo.bar``, store your file in the path ``/foo/bar/``. 
+    The folder in which the file is placed defines the topic you want to share the data on and should match the datasets defined in ``data-mappings.yml``
     
-    The path is also used to define the topic hierarchy for your data (see `WIS2 topic hierarchy`_). The first 3 levels of the WIS2 topic hierarchy ``origin/a/wis2`` are automatically included by wis2box when publishing data notification messages.
+    The first 3 levels of the WIS2 topic hierarchy ``origin/a/wis2`` are automatically included by wis2box when publishing data notification messages.
 
-    * The error message ``Topic Hierarchy validation error: No plugins for minio:9000/wis2box-incoming/... in data mappings`` indicates you stored a file in a folder for which no matching dataset was defined in your ``data-mappings.yml``.
+    For example:
+    
+    * data to be published on:  ``origin/a/wis2/cog/brazza_met_centre/data/core/weather/surface-based-observations/synop``
+    * upload data in the path: ``cog/brazza_met_centre/data/core/weather/surface-based-observations/synop``. 
+    
+    The error message ``Topic Hierarchy validation error: No plugins for minio:9000/wis2box-incoming/... in data mappings`` indicates you stored a file in a folder for which no matching dataset was defined in ``data-mappings.yml``.
 
 After uploading a file to ``wis2box-incoming`` storage bucket, you can browse the content in the ``wis2box-public`` bucket.  If the data ingest was successful, new data will appear as follows:
 
@@ -48,7 +78,7 @@ If no data appears in the ``wis2box-public`` storage bucket, you can inspect the
 
    python3 wis2box-ctl.py logs wis2box
 
-Or by visiting the local Grafana instance running at ``http://localhost:3000``
+Or by visiting the local Grafana instance running at ``http://<your-host-ip>:3000``
 
 wis2box workflow monitoring
 ---------------------------
@@ -81,7 +111,7 @@ See below a Python example to upload data using the MinIO package:
     minio_path = '/ita/italy_wmo_demo/data/core/weather/surface-based-observations/synop/'
 
     endpoint = 'http://localhost:9000'
-    WIS2BOX_STORAGE_USERNAME = '<your-wis2box-storage-username>'
+    WIS2BOX_STORAGE_USERNAME = 'wis2box'
     WIS2BOX_STORAGE_PASSWORD = '<your-wis2box-storage-password>'
 
     client = Minio(
@@ -92,6 +122,12 @@ See below a Python example to upload data using the MinIO package:
     
     filename = filepath.split('/')[-1]
     client.fput_object('wis2box-incoming', minio_path+filename, filepath)
+
+.. note::
+    
+    In the example the file ``mydata.bin`` in ingested from the directory ``/home/wis2box-user/local-data/`` on the host running wis2box.
+    If you are running the script on the same host as wis2box, you can use the endpoint ``http://localhost:9000`` as in the example. 
+    Otherwise, replace localhost with the IP address of the host running wis2box. 
 
 wis2box-ftp
 -----------
@@ -109,12 +145,12 @@ To use the ``docker-compose.wis2box-ftp.yml`` template included in wis2box, crea
     FTP_HOST=${MYHOSTNAME}
 
     WIS2BOX_STORAGE_ENDPOINT=http://${MYHOSTNAME}:9000
-    WIS2BOX_STORAGE_USER=minio
-    WIS2BOX_STORAGE_PASSWORD=minio123
+    WIS2BOX_STORAGE_USER=wis2box
+    WIS2BOX_STORAGE_PASSWORD=XXXXXXXX
 
     LOGGING_LEVEL=INFO
 
-and ensure ``MYHOSTNAME`` is set to **your** hostname (fully qualified domain name).
+ensure ``MYHOSTNAME`` is set to **your** hostname (fully qualified domain name) and ``WIS2BOX_STORAGE_PASSWORD`` is set to **your** MinIO password.
 
 Then start the ``wis2box-ftp`` service with the following command:
 
@@ -135,11 +171,15 @@ See the GitHub repository `wis2box-ftp`_ for more information on this service.
 wis2box-data-subscriber
 -----------------------
 
-You can add an additional service on the host running your wis2box instance to allow data to be ingested by publishing an MQTT message to the wis2box broker.
+.. note::
+
+   This service currently only works with Campbell scientific data loggers version CR1000X.
+
+You can add an additional service on the host running your wis2box instance to allow data to be received over MQTT.
 
 This service subscribes to the topic ``data-incoming/#`` on the wis2box broker and parses the content of received messages and publishes the result in the ``wis2box-incoming`` bucket.
 
-To start the ``wis2box-data-subscriber``, add the following additional variables to ``dev.env``:
+To start the ``wis2box-data-subscriber``, add the following additional variables to ``wis2box.env``:
 
 .. code-block:: bash
 
@@ -154,7 +194,7 @@ You then you can activate the optional 'wis2box-data-subscriber' service as foll
 
 .. code-block:: bash
 
-    docker compose -f docker-compose.data-subscriber.yml --env-file dev.env up -d
+    docker compose -f docker-compose.data-subscriber.yml --env-file wis2box.env up -d
 
 See the GitHub `wis2box-data-subscriber`_ repository for more information on this service.
 

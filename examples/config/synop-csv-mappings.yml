@@ -3,7 +3,7 @@ data:
         plugins:
             csv:
                 - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
-                  template: synop_bufr.json
+                  template: aws-template
                   notify: true
                   file-pattern: '^.*\.csv$'
             bufr4:

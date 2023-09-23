@@ -5,24 +5,13 @@ Public services setup
 
 To share your data with the WIS2 network, you need to expose some of your wis2box services to the Global Services:
 
-* The Global Cache needs to be able to access to your HTTP endpoint to download data published by your wis2box instance
-* The Global Broker needs to be able to subscribe to your MQTT endpoint to receive WIS2 notifications published by your wis2box instance
+* The Global Cache needs to be able to access to your HTTP endpoint at port 80 to download data published by your wis2box instance
+* The Global Broker needs to be able to subscribe to your MQTT endpoint at port 1883 to receive WIS2 notifications published by your wis2box instance
 
 SSL
 ^^^
 
-To enable HTTPS and MQTTS on your wis2box you can run wis2box with the option `--ssl`:
-
-.. code-block:: bash
-
-   python3 wis2box-ctl.py --ssl start
-
-When running wis2box with SSL, you have to set additional environment variables in your dev.env defining the location of your SSL certificate and private key:
-
-.. code-block:: bash
-
-  WIS2BOX_SSL_CERT=/etc/letsencrypt/live/example.wis2box.io/fullchain.pem
-  WIS2BOX_SSL_KEY=/etc/letsencrypt/live/example.wis2box.io/privkey.pem
+It is recommended to use a reverse proxy to route HTTP and MQTT traffic from/to your wis2box, and to enable TLS (HTTPS/MQTTS) on your wis2box.
 
 Please remember to update the ``WIS2BOX_URL`` and ``WIS2BOX_API_URL``environment variable after enabling SSL, ensuring your URL starts with ``https://``.
 
@@ -31,15 +20,15 @@ Please note that after changing the ``WIS2BOX_URL`` and ``WIS2BOX_API_URL`` envi
 .. code-block:: bash
 
   python3 wis2box-ctl.py stop
-  python3 wis2box-ctl.py --ssl start
+  python3 wis2box-ctl.py start
 
 After restarting wis2box, repeat the commands for adding your dataset and publishing your metadata, to ensure the URLs are updated accordingly:
 
 .. code-block:: bash
 
   python3 wis2box-ctl.py login
-  wis2box data add-collection ${WIS2BOX_HOST_DATADIR}/surface-weather-observations.yml
-  wis2box metadata discovery publish ${WIS2BOX_HOST_DATADIR}/surface-weather-observations.yml
+  wis2box data add-collection /data/wis2box/metadata/discovery/metadata-synop.yml
+  wis2box metadata discovery publish /data/wis2box/metadata/discovery/metadata-synop.yml
 
 Nginx (HTTP)
 ^^^^^^^^^^^^
@@ -55,7 +44,6 @@ wis2box runs a local nginx container allowing access to the following HTTP based
    Storage (incoming data) (minio:wis2box-incoming),`WIS2BOX_URL/wis2box-incoming`
    Storage (public data) (minio:wis2box-public),`WIS2BOX_URL/data`
 
-
 You can edit ``nginx/nginx.conf`` to control which services are exposed through the nginx-container include in your stack.
 
 You can edit ``docker-compose.override.yml`` to change the port on which the ``web-proxy`` service exposes HTTP on the localhost.
@@ -64,7 +52,7 @@ You can edit ``docker-compose.override.yml`` to change the port on which the ``w
     The WIS2 notifications published by the wis2box includes the path ``<wis2box-url>/data/``.
     This path has to be publicly accessible by the client receiving the WIS2 notification over MQTT, or the data referenced cannot be downloaded
 
-To share your data with the WIS2 network, ensure that ``WIS2BOX_URL`` as defined in ``dev.env`` points to the externally accessible URL for your HTTP services. 
+To share your data with the WIS2 network, ensure that ``WIS2BOX_URL`` as defined in ``wis2box.env`` points to the externally accessible URL for your HTTP services. 
 
 After updating ``WIS2BOX_URL``, please stop and start your wis2box using ``wis2box-ctl.py`` and republish your data using the command ``wis2box metadata discovery publish``.
 
@@ -116,19 +104,6 @@ To allow the WIS2 Global Broker to subscribe to WIS2 notifications from your wis
 Internal broker
 ---------------
 
-The internal MQTT broker uses the default username/password of ``wis2box/wis2box``.  Before opening the MQTT port for external access, it is recommended to set a unique password as follows:
-
-.. code-block:: bash
-
-    WIS2BOX_BROKER_USERNAME=wis2box-utopia
-    WIS2BOX_BROKER_PASSWORD=myuniquepassword
-    WIS2BOX_BROKER_PUBLIC=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@mosquitto:1883
-
-    # update minio settings after updating broker defaults
-    MINIO_NOTIFY_MQTT_USERNAME_WIS2BOX=${WIS2BOX_BROKER_USERNAME}
-    MINIO_NOTIFY_MQTT_PASSWORD_WIS2BOX=${WIS2BOX_BROKER_PASSWORD}
-    MINIO_NOTIFY_MQTT_BROKER_WIS2BOX=tcp://${WIS2BOX_BROKER_HOST}:${WIS2BOX_BROKER_PORT}
-
 The internal MQTT broker is accessible on the host ``mosquitto`` within the Docker network used by wis2box.
 
 By default port 1883 of the mosquitto container is mapped to port 1883 of the host running wis2box. 
@@ -153,13 +128,12 @@ If you do not wish to expose the internal MQTT broker on your wis2box, you can c
 
    The ``everyone`` user is defined by default for public readonly access (``origin/#``) as per WIS2 Node requirements.
 
-Sharing data with the WIS2 Global Broker
-----------------------------------------
+Registering your WIS2 Node
+--------------------------
 
-The official procedure for a WIS2 Node to share data with the WIS2 network is currently in development.  Contact wis at wmo.int for more information on connectivity with the WIS2 network.
+Contact wis2-support@wmo.int for the procedure to register your WIS2 Node with the WIS2 network.
 
 Next: :ref:`downloading-data`
-
 
 .. _`Mosquitto`: https://mosquitto.org/
 .. _`pygeoapi`: https://pygeoapi.io/

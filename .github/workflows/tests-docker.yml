@@ -28,8 +28,8 @@ jobs:
         python3 -V
     - name: setup wis2box configuration
       run: |
-        cp tests/test.env dev.env
-        cat dev.env
+        cp tests/test.env wis2box.env
+        cat wis2box.env
         python3 wis2box-ctl.py config
     - name: build wis2box
       run: |
@@ -44,6 +44,9 @@ jobs:
       run: |
         sleep 30
         python3 wis2box-ctl.py execute wis2box environment show
+    - name: populate stations from CSV 📡
+      run: |
+        python3 wis2box-ctl.py execute wis2box metadata station publish-collection
     - name: add Malawi data 🇲🇼
       env:
         TOPIC_HIERARCHY: mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop
@@ -110,7 +113,7 @@ jobs:
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection
     - name: run integration tests ⚙️
       run: |
-        sleep 10
+        sleep 15
         pytest -s tests/integration
     - name: run flake8 ⚙️
       run: |
@@ -118,5 +121,6 @@ jobs:
     - name: failed tests 🚩
       if: ${{ failure() }}
       run: |
-        docker compose --file docker-compose.yml --file docker-compose.override.yml --file docker-compose.monitoring.yml --env-file dev.env --project-name wis2box_project ps
-        docker compose --file docker-compose.yml --file docker-compose.override.yml --file docker-compose.monitoring.yml --env-file dev.env --project-name wis2box_project logs
+        docker logs wis2box-management
+        docker logs wis2box-api
+        docker logs wis2box-minio

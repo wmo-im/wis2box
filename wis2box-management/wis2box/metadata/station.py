@@ -23,10 +23,12 @@ import click
 from collections import OrderedDict
 import csv
 from iso3166 import countries
+import io
 import json
 import logging
 from typing import Iterator, Tuple, Union
 
+from elasticsearch import Elasticsearch
 from owslib.ogcapi.features import Features
 from pygeometa.schemas.wmo_wigos import WMOWIGOSOutputSchema
 from pyoscar import OSCARClient
@@ -35,13 +37,13 @@ from wis2box import cli_helpers
 from wis2box.api import (
     delete_collection_item, setup_collection, upsert_collection_item
 )
-from wis2box.env import (DATADIR, DOCKER_API_URL,
+from wis2box.env import (DATADIR, API_BACKEND_URL, DOCKER_API_URL,
                          BROKER_HOST, BROKER_USERNAME, BROKER_PASSWORD,
                          BROKER_PORT)
 from wis2box.metadata.base import BaseMetadata
+from wis2box.plugin import load_plugin, PLUGINS
 from wis2box.util import get_typed_value
 
-from wis2box.plugin import load_plugin, PLUGINS
 
 LOGGER = logging.getLogger(__name__)
 
@@ -65,11 +67,6 @@ WMDR_RAS = {
     'southWestPacific': 'V',
     'europe': 'VI'
 }
-
-if not STATIONS.exists():
-    msg = f'Please create a station metadata file in {STATION_METADATA}'
-    LOGGER.error(msg)
-    raise RuntimeError(msg)
 
 
 def get_wmo_ra_roman(ra: str) -> str:
@@ -136,6 +133,86 @@ def station():
     pass
 
 
+def load_stations(wsi: str = '') -> dict:
+    """Load stations from API
+
+    param wsi: `str` of WIGOS Station Identifier
+
+    :returns: `dict` of stations
+    """
+
+    stations = {}
+
+    try:
+        es = Elasticsearch(API_BACKEND_URL)
+        nbatch = 500  # TODO: make configurable
+        res = es.search(index='stations', query={'match_all': {}}, size=nbatch)
+        if len(res['hits']['hits']) == 0:
+            LOGGER.debug('No stations found')
+            return stations
+        for hit in res['hits']['hits']:
+            stations[hit['_source']['id']] = hit['_source']
+        while len(res['hits']['hits']) > 0:
+            res = es.search(
+                index='stations', query={'match_all': {}},
+                size=nbatch, from_=len(stations)) # noqa
+
+            for hit in res['hits']['hits']:
+                stations[hit['_source']['id']] = hit['_source']
+
+    except Exception as err:
+        LOGGER.error(f'Failed to load stations from backend: {err}')
+
+    LOGGER.info(f'Loaded {len(stations.keys())} stations from backend')
+
+    return stations
+
+
+def get_stations_csv(wsi: str = '') -> str:
+    """Load stations into csv-string
+
+    param wsi: `str` of WIGOS Station Identifier
+
+    :returns: `str` of CSV with station data
+    """
+
+    LOGGER.info('Loading stations into csv-string')
+
+    csv_output = []
+    stations = load_stations(wsi)
+
+    for station in stations.values():
+        wsi = station['properties']['wigos_station_identifier']
+        if '-' in wsi and len(wsi.split('-')) == 4:
+            tsi = wsi.split('-')[3]
+
+        barometer_height = station['properties'].get(
+            'barometer_height',
+            station['geometry']['coordinates'][2] + 1.25)
+
+        obj = {
+            'station_name': station['properties']['name'],
+            'wigos_station_identifier': wsi,
+            'traditional_station_identifier': tsi,
+            'facility_type': station['properties']['facility_type'],
+            'latitude': station['geometry']['coordinates'][1],
+            'longitude': station['geometry']['coordinates'][0],
+            'elevation': station['geometry']['coordinates'][2],
+            'barometer_height': barometer_height,
+            'territory_name': station['properties']['territory_name'],
+            'wmo_region': station['properties']['wmo_region']
+        }
+        csv_output.append(obj)
+
+    string_buffer = io.StringIO()
+    csv_writer = csv.DictWriter(string_buffer, fieldnames=csv_output[0].keys())
+    csv_writer.writeheader()
+    csv_writer.writerows(csv_output)
+    csv_string = string_buffer.getvalue()
+    string_buffer.close()
+    return csv_string
+
+
 def load_datasets() -> Iterator[Tuple[dict, str]]:
     """
     Load datasets from oapi
@@ -192,6 +269,11 @@ def publish_station_collection() -> None:
     :returns: `None`
     """
 
+    if not STATIONS.exists():
+        msg = f'Please create a station metadata file in {STATION_METADATA}'
+        LOGGER.error(msg)
+        raise RuntimeError(msg)
+
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
     LOGGER.debug(f'Publishing station list from {STATIONS}')
@@ -231,6 +313,7 @@ def publish_station_collection() -> None:
                 'properties': {
                    'name': row['station_name'],
                    'wigos_station_identifier': wigos_station_identifier,
+                   'traditional_station_identifier': row['traditional_station_identifier'],  # noqa
                    'barometer_height': barometer_height,
                    'facility_type': row['facility_type'],
                    'territory_name': row['territory_name'],
@@ -283,12 +366,10 @@ def get_valid_wsi(wsi: str = '', tsi: str = '') -> Union[str, None]:
     """
 
     LOGGER.info(f'Validating WIGOS Station Identifier: {wsi}')
-    with STATIONS.open(newline='') as fh:
-        reader = csv.DictReader(fh)
-        for row in reader:
-            if wsi == row['wigos_station_identifier'] or \
-               (tsi == row['traditional_station_identifier'] and tsi != ''):
-                return row['wigos_station_identifier']
+    stations = load_stations(wsi)
+
+    if wsi in stations:
+        return wsi
 
     return None
 
@@ -302,27 +383,9 @@ def get_geometry(wsi: str = '') -> Union[dict, None]:
     :returns: `dict`, of station geometry or `None`
     """
 
-    LOGGER.info(f'Validating WIGOS Station Identifier: {wsi}')
-    with STATIONS.open(newline='') as fh:
-        reader = csv.DictReader(fh)
-        for row in reader:
-            if wsi == row['wigos_station_identifier']:
-                LOGGER.debug('Found matching WSI')
-                feature = {
-                    'type': 'Point',
-                    'coordinates': [
-                        get_typed_value(row['longitude']),
-                        get_typed_value(row['latitude'])
-                    ]
-                }
-
-                station_elevation = get_typed_value(row['elevation'])
-
-                if isinstance(station_elevation, (float, int)):
-                    LOGGER.debug('Adding z value to geometry')
-                    feature['coordinates'].append(station_elevation)
-
-                return feature
+    stations = load_stations(wsi)
+    if wsi in stations:
+        return stations[wsi]['geometry']
 
     LOGGER.debug('No matching WSI')
     return None
@@ -345,12 +408,12 @@ def get(ctx, wsi, verbosity):
     results = OrderedDict({
         'station_name': station['station_name'],
         'wigos_station_identifier': station['wigos_station_identifier'],
-        'barometer_height': station['barometer_height'],
         'traditional_station_identifier': None,
         'facility_type': station['facility_type'],
         'latitude': station.get('latitude', ''),
         'longitude': station.get('longitude', ''),
         'elevation': station.get('elevation'),
+        'barometer_height': station['barometer_height'],
         'territory_name': station.get('territory_name', '')
     })
 

@@ -36,8 +36,9 @@ if len(filepaths) == 0:
     print(f'No files found for pattern={local_path}')
 
 S3_ENDPOINT = 'http://localhost:9000'
-S3_USER = 'minio'
-S3_PASSWORD = 'minio123'
+S3_USER = 'wis2box'
+# replace with the value of WIS2BOX_STORAGE_PASSWORD in your wis2box.env file
+S3_PASSWORD = 'XXXXXXXX'
 S3_BUCKET_INCOMING = 'wis2box-incoming'
 
 if S3_ENDPOINT != '':

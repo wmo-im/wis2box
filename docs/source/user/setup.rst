@@ -32,45 +32,24 @@ Run the following command to create the initial configuration files for your wis
 
 .. note::
 
-    The ``wis2box-create-config.py`` program will ask for a directory to store the configuration files.
+    The ``wis2box-create-config.py`` script will ask for a directory to store the configuration files. 
+    Please provide the **absolute** path to the directory where you want to store the configuration files, for example ``/home/wis2box-user/wis2box-data``.
     This directory will be mapped to ``/data/wis2box`` **inside** the wis2box-management container.
 
+   The script will also ask for the URL of your wis2box. Please provide the public URL of your wis2box, for example ``http://mywis2box.example.com``. 
+   For testing purpose you can also provide the internal IP address you use to access the host, for example ``http://192.168.0.3`` and you change the URL in configuration files at a later point in time.
 
-Adding your own station data
-----------------------------
+   The script will propose to automatically create passwords for ``WIS2BOX_STORAGE_PASSWORD`` and ``WIS2BOX_BROKER_PASSWORD``.
+   These passwords are for internal use only within the wis2box, and it is recommended to accept the randomly generated passwords.
 
-wis2box requires information about the stations for which you will be sharing data.
-
-An example of the configuration file for the stations is provided in ``station_list.csv``. 
-
-You can copy this file to ``metadata/station/station_list.csv`` in your $WIS2BOX_HOST_DATADIR:
-
-.. code-block:: bash
-
-   mkdir -p ~/wis2box-data/metadata/station
-   cp examples/config/station_list.csv ~/wis2box-data/metadata/station
-
-And edit ``~/wis2box-data/metadata/station/station_list.csv`` to include the data for your stations.
-
-The 'wis2box-create-config.py' script will create the file ``metadata/station/station_list.csv`` file in the directory
- you specified for your configuration files. You will have to edit this file to add your own station data using the examples provided.
+   The script will ask for 3-letter ISO country code for your wis2box. Please provide the 3-letter ISO country code for your country, for example ``FRA``.
+   It will also ask for a centre-id. Please provide a string that identifies your organization and does not use spaces or special characters, for example ``meteofrance``.
 
 .. note::
 
-   The ``station_list.csv`` requires column names ``station_name`` and the ``wigos_station_identifier`` (WSI) with which the station is registered in `OSCAR`_.  Optionally, you can provide a ``traditional_station_identifier (TSI)`` column.
-   The TSI can be left empty if your data contains a WSI. If your data contains a TSI but no WSI, the ``station_list.csv`` will be used to derive the corresponding WSI for that station.
+   In alignment with WMO WIS2 Guidance, the above fields are automatically converted to lowercase when saved in wis2box.
 
-To verify station metadata from OSCAR/Surface, run the following command:
-
-.. code-block:: bash
-
-   wis2box metadata station get <WSI>
-
-Then to add to the station list:
-
-.. code-block:: bash
-
-   wis2box metadata station get <WSI> >> ~/wis2box-data/metadata/station/station_list.csv
+   The remaining questions will be used in the creation the discovery metadata files for the ``synop`` and ``temp`` datasets.
 
 Discovery metadata
 ------------------
@@ -198,31 +177,53 @@ The second step is to publish discovery metadata and cache its content in the wi
 
 This command publishes an MQTT message with information about your dataset to the WIS2 Global Discovery Catalogue. Repeat this command whenever you have to provide updated metadata about your dataset.
 
-You can review the discovery metadata just cached through the new link at  ``/oapi/collections``:
-
-.. image:: ../_static/wis2box-api-discovery-metadata.png
-  :width: 800
-  :alt: wis2box API collections list with added discovery metadata
+You can review the discovery metadata just cached through the new item at  ``/oapi/collections/discovery-metadata/items``:
 
 Repeat this step for any other discovery metadata you wish to publish, such as the ``temp`` dataset.
 
-The final step is to publish your station information to the wis2box API from the station metadata list you prepared:
+Finally it is recommended to prepare authentication tokens for updating your stations and ingesting data using the wis2box-webapp.
+
+To create a token for ingesting data:
 
 .. code-block:: bash
 
-   wis2box metadata station publish-collection
+   wis2box auth add-token --path processes/wis2box
 
-You can review the stations you just cached through the new link at  ``/oapi/collections``:
+Record the token value displayed in a safe place, you will need for the :ref:`data-ingest`.
 
-.. image:: ../_static/wis2box-api-stations.png
-  :width: 800
-  :alt: wis2box API collections list with added stations
+To create a token for updating stations:
+
+.. code-block:: bash
+
+   wis2box auth add-token --path collections/stations
+
+Record the token value displayed in the output of the command above. You will use this token to update stations in the next section.
 
 You can now logout of wis2box-management container:
 
 .. code-block:: bash
 
    exit
+
+Adding station metadata
+-----------------------
+
+The next step is to add station metadata to your wis2box. This can be done interactively in the wis2box-webapp UI on the 'stations' page.
+
+The wis2box-webapp can be accessed by visiting the URL you specified during the configuration step, and adding ``/wis2box-webapp`` to the URL.
+
+.. image:: ../_static/wis2box-webapp-stations.png
+  :width: 800
+  :alt: wis2box webapp stations page
+
+Please note only data for stations that have been added to the wis2box will be ingested and result in WIS2 notifications being published.
+
+You can also bulk insert a set of stations from a CSV file, by defining the stations in ``metadata/stations/station_list.csv`` in your wis2box host directory and running the following command:
+
+.. code-block:: bash
+
+   python3 wis2box-ctl.py login
+   wis2box metadata stations publish-collections
 
 The next is the :ref:`data-ingest`.
 
