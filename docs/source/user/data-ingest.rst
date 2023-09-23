@@ -13,14 +13,14 @@ What action to take is determined by the ``data-mappings.yml`` you've setup in t
 wis2box-webapp
 --------------
 
-The wis2box-webapp is a web application that includes the following forms for data ingestion:
+The wis2box-webapp is a web application that includes the following forms for data validation and ingestion:
 
 * user interface to ingest SYNOP data
 * user interface to ingest CSV data 
 
 The wis2box-webapp is available on your host at `http://<your-public-ip>/wis2box-webapp`.
 
-Interactive data-ingestion requires an execution token, which can be generated using the ``wis2box auth add-token`` command inside the wis2box-management container:
+Interactive data ingestion requires an execution token, which can be generated using the ``wis2box auth add-token`` command inside the wis2box-management container:
 
 .. code-block:: bash
 
@@ -29,7 +29,7 @@ Interactive data-ingestion requires an execution token, which can be generated u
 
 .. note::
 
-    Be sure to record the token value, as it will not be shown again. If you lose the token, you can generate a new one.
+   Be sure to record the token value, as it will not be shown again. If you lose the token, you can generate a new one.
 
 MinIO user interface
 --------------------
@@ -43,7 +43,8 @@ You can login with your ``WIS2BOX_STORAGE_USERNAME`` and ``WIS2BOX_STORAGE_PASSW
     :alt: MinIO login screen
 
 .. note::
-    The ``WIS2BOX_STORAGE_USERNAME`` and ``WIS2BOX_STORAGE_PASSWORD`` are defined in the ``wis2box.env`` file.
+
+   The ``WIS2BOX_STORAGE_USERNAME`` and ``WIS2BOX_STORAGE_PASSWORD`` are defined in the ``wis2box.env`` file.
 
 To test the data ingest, add a sample file for your observations in the ``wis2box-incoming`` storage bucket.
 
@@ -54,7 +55,7 @@ Select 'browse' on the ``wis2box-incoming`` bucket and select 'Choose or create 
     :alt: MinIO new folder path
 
 .. note::
-    The folder in which the file is placed defines the topic you want to share the data on and should match the datasets defined in data-mappings.yml  
+    The folder in which the file is placed defines the topic you want to share the data on and should match the datasets defined in ``data-mappings.yml``
     
     The first 3 levels of the WIS2 topic hierarchy ``origin/a/wis2`` are automatically included by wis2box when publishing data notification messages.
 
@@ -63,7 +64,7 @@ Select 'browse' on the ``wis2box-incoming`` bucket and select 'Choose or create 
     * data to be published on:  ``origin/a/wis2/cog/brazza_met_centre/data/core/weather/surface-based-observations/synop``
     * upload data in the path: ``cog/brazza_met_centre/data/core/weather/surface-based-observations/synop``. 
     
-    The error message ``Topic Hierarchy validation error: No plugins for minio:9000/wis2box-incoming/... in data mappings`` indicates you stored a file in a folder for which no matching dataset was defined in your ``data-mappings.yml``.
+    The error message ``Topic Hierarchy validation error: No plugins for minio:9000/wis2box-incoming/... in data mappings`` indicates you stored a file in a folder for which no matching dataset was defined in ``data-mappings.yml``.
 
 After uploading a file to ``wis2box-incoming`` storage bucket, you can browse the content in the ``wis2box-public`` bucket.  If the data ingest was successful, new data will appear as follows:
 
@@ -171,7 +172,8 @@ wis2box-data-subscriber
 -----------------------
 
 .. note::
-    This service currently only works with Campbell scientific data loggers version CR1000X.
+
+   This service currently only works with Campbell scientific data loggers version CR1000X.
 
 You can add an additional service on the host running your wis2box instance to allow data to be received over MQTT.
 

@@ -11,7 +11,7 @@ Environment variables
 
 wis2box configuration is driven primarily by a set of environment variables. The runtime
 configuration is defined in the `Env`_ format in a plain text file named ``wis2box.env``. 
-An example is provided in ``wis2box_example.env``.
+An example is provided in ``wis2box.env.example``.
 
 You can either copy the example-file to ``wis2box.env`` and adjust the values to your needs or run the following command
 to create a new ``wis2box.env`` file by answering a few questions on the command line:
@@ -34,7 +34,7 @@ Sections
 .. note::
 
    A reference configuration can always be found in the wis2box `GitHub`_ repository. The :ref:`quickstart`
-   uses a variant of ``wis2box_example.env`` with mappings to the test data, as an example. 
+   uses a variant of ``wis2box.env.example`` with mappings to the test data, as an example.
 
 wis2box environment variables can be categorized via the following core sections:
 
@@ -195,7 +195,7 @@ Additional directives provide various configuration options for the deployment o
 
 A full configuration example can be found below:
 
-.. literalinclude:: ../../../wis2box_example.env
+.. literalinclude:: ../../../wis2box.env.example
    :language: bash
 
 Docker Compose

@@ -27,8 +27,8 @@ After restarting wis2box, repeat the commands for adding your dataset and publis
 .. code-block:: bash
 
   python3 wis2box-ctl.py login
-  wis2box data add-collection /data/wis2box/metadata/discovery/metadata-synop.yml 
-  wis2box metadata discovery publish /data/wis2box/metadata/discovery/metadata-synop.yml 
+  wis2box data add-collection /data/wis2box/metadata/discovery/metadata-synop.yml
+  wis2box metadata discovery publish /data/wis2box/metadata/discovery/metadata-synop.yml
 
 Nginx (HTTP)
 ^^^^^^^^^^^^

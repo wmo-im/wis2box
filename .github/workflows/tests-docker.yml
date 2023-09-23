@@ -44,7 +44,7 @@ jobs:
       run: |
         sleep 30
         python3 wis2box-ctl.py execute wis2box environment show
-    - name: populate stations from csv 📡
+    - name: populate stations from CSV 📡
       run: |
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection
     - name: add Malawi data 🇲🇼

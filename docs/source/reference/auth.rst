@@ -19,7 +19,10 @@ To add a token to the execution of a wis2box process, use the following command:
     wis2box auth add-token --path processes/wis2box
 
 This will generate a random token that can be used to execute ``wis2box-synop2bufr`` and ``wis2box-csv2bufr``.
-Be sure to record the token now, there is no way to retrieve it once it is lost.
+
+.. note::
+
+   Be sure to record the token now, there is no way to retrieve it once it is lost.
 
 To add a token to PUT/POST/DELETE requests to the stations collection, use the following command:
 
@@ -28,7 +31,6 @@ To add a token to PUT/POST/DELETE requests to the stations collection, use the f
     wis2box auth add-token --path collections/stations
 
 This will generate a random token that can be use to update the stations collection.
-Be sure to record the token now, there is no way to retrieve it once it is lost. 
 
 Adding Access Control on topics
 -------------------------------

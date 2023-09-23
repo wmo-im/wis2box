@@ -59,7 +59,9 @@ wis2box requires the following prior to installation:
 
 The following commands be used to setup the required software on Ubuntu (20.04 LTS, 22.04 LTS) systems:
 
-(please execute the commands one by one, and do not copy-paste the entire block)
+.. note::
+
+   Execute the below commands one by one, and do not copy / paste the entire block
 
 .. code-block:: bash
     
@@ -81,8 +83,8 @@ The following commands can be used to inspect the available versions of Python, 
     docker compose version
     python3 -V
 
-The wis2box software should be run by system user that is part of the `docker` group.  
-The following command can be used to add the current user to the `docker` group:	
+The wis2box software should be run by system user that is part of the ``docker`` group.  
+The following command can be used to add the current user to the ``docker`` group:	
 
 .. code-block:: bash
 
@@ -117,3 +119,4 @@ Once you have verified these requirements, go to :ref:`setup` for a step-by-step
 
 .. _`Docker`: https://docs.docker.com/get-started/overview
 .. _`Docker Compose`: https://github.com/docker/compose/releases
+.. _`NGINX`: https://nginx.org

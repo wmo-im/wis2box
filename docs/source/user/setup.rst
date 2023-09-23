@@ -37,14 +37,17 @@ Run the following command to create the initial configuration files for your wis
     This directory will be mapped to ``/data/wis2box`` **inside** the wis2box-management container.
 
    The script will also ask for the URL of your wis2box. Please provide the public URL of your wis2box, for example ``http://mywis2box.example.com``. 
-   For testing purpose you can also provide the internal IP address you use to access the host, for example ``http://192.168.0.3`` and you change the URL in configuration files later.
+   For testing purpose you can also provide the internal IP address you use to access the host, for example ``http://192.168.0.3`` and you change the URL in configuration files at a later point in time.
 
-   The script will propose to automatically create passwords for WIS2BOX_STORAGE_PASSWORD and WIS2BOX_BROKER_PASSWORD. 
+   The script will propose to automatically create passwords for ``WIS2BOX_STORAGE_PASSWORD`` and ``WIS2BOX_BROKER_PASSWORD``.
    These passwords are for internal use only within the wis2box, and it is recommended to accept the randomly generated passwords.
 
-   The script will ask for 3-letter ISO country code for your wis2box. Please provide the 3-letter ISO country code for your country, for example ``FRA``. 
-   It will also ask for a center-id. Please provide a string that identifies your organization and does not use spaces or special characters, for example ``meteofrance``. 
-   These fields will be automatically converted to lowercase.
+   The script will ask for 3-letter ISO country code for your wis2box. Please provide the 3-letter ISO country code for your country, for example ``FRA``.
+   It will also ask for a centre-id. Please provide a string that identifies your organization and does not use spaces or special characters, for example ``meteofrance``.
+
+.. note::
+
+   In alignment with WMO WIS2 Guidance, the above fields are automatically converted to lowercase when saved in wis2box.
 
    The remaining questions will be used in the creation the discovery metadata files for the ``synop`` and ``temp`` datasets.
 
@@ -215,7 +218,7 @@ The wis2box-webapp can be accessed by visiting the URL you specified during the 
 
 Please note only data for stations that have been added to the wis2box will be ingested and result in WIS2 notifications being published.
 
-You can also bulk-insert a set of stations from a CSV file, by defining the stations in metadata/stations/station_list.csv in your wis2box-host-directory and running the following command:
+You can also bulk insert a set of stations from a CSV file, by defining the stations in ``metadata/stations/station_list.csv`` in your wis2box host directory and running the following command:
 
 .. code-block:: bash
 
