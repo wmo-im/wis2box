@@ -269,7 +269,7 @@ def create_wis2box_env(config_dir: str) -> None:
         fh.write('WIS2BOX_STORAGE_INCOMING=wis2box-incoming\n')
         fh.write('WIS2BOX_STORAGE_ARCHIVE=wis2box-archive\n')
         fh.write('WIS2BOX_STORAGE_PUBLIC=wis2box-public\n')
-        fh.write('WIS2BOX_STORAGE_DATA_RETENTION_DAYS=7\n')
+        fh.write('WIS2BOX_STORAGE_DATA_RETENTION_DAYS=30\n')
         # use the default username wis2box for WIS2BOX_STORAGE_USERNAME
         fh.write('WIS2BOX_STORAGE_USERNAME=wis2box\n')
         # get password for WIS2BOX_STORAGE_PASSWORD and write it to wis2box.env
