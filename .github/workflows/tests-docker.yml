@@ -54,7 +54,6 @@ jobs:
         DISCOVERY_METADATA_ID: urn:x-wmo:md:mwi:mwi_met_centre:surface-weather-observations
         TEST_DATA: /data/wis2box/observations/malawi
       run: |
-        sleep 5
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data add-collection $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
@@ -67,7 +66,6 @@ jobs:
         DISCOVERY_METADATA_ID: urn:x-wmo:md:ita:roma_met_centre:surface-weather-observations
         TEST_DATA: /data/wis2box/observations/italy
       run: |
-        sleep 5
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data add-collection $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
@@ -80,7 +78,6 @@ jobs:
         DISCOVERY_METADATA_ID: urn:x-wmo:md:dza:dza_met_centre:surface-weather-observations
         TEST_DATA: /data/wis2box/observations/algeria
       run: |
-        sleep 5
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data add-collection $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
@@ -93,7 +90,6 @@ jobs:
         DISCOVERY_METADATA_ID: urn:x-wmo:md:rou:rnimh:synoptic-weather-observations
         TEST_DATA: /data/wis2box/observations/romania
       run: |
-        sleep 5
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data add-collection $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
@@ -106,7 +102,6 @@ jobs:
         DISCOVERY_METADATA_ID: urn:x-wmo:md:cog:brazza_met_centre:surface-weather-observations
         TEST_DATA: /data/wis2box/observations/congo
       run: |
-        sleep 5
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data add-collection $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
@@ -114,7 +109,7 @@ jobs:
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
     - name: sync stations 🔄
       run: |
-        sleep 20
+        sleep 15
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection
     - name: run integration tests ⚙️
       run: |

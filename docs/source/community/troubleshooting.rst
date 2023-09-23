@@ -85,7 +85,12 @@ ERROR - Failed to publish, wsi: ..., tsi: XXXXX
 -----------------------------------------------
 
 Data arrived for a station that is not present in the station metadata cache. 
-To add missing stations, use the station-editor in wis2box-webapp (from wis2box-1.0b5) or update the file ``metadata/station/station_list.csv`` in the wis2box data directory (see :ref:`setup`).
+To add missing stations, use the station-editor in wis2box-webapp (from wis2box-1.0b5) or update the file ``metadata/station/station_list.csv`` in the wis2box data directory and run the command:
+
+.. code-block:: bash
+
+   python3 wis2box-ctl.py login
+   wis2box metadata stations publish-collections
 
 Error: no such container: wis2box-management
 --------------------------------------------
