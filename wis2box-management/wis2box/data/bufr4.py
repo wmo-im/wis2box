@@ -54,9 +54,17 @@ TIME_NAMES = [
     'typicalSecond'
 ]
 
+HEADERS = ["edition", "masterTableNumber", "bufrHeaderCentre",
+           "bufrHeaderSubCentre", "updateSequenceNumber", "dataCategory",
+           "internationalDataSubCategory", "dataSubCategory",
+           "masterTablesVersionNumber", "localTablesVersionNumber",
+           "typicalYear", "typicalMonth", "typicalDay", "typicalHour",
+           "typicalMinute", "typicalSecond",
+           "numberOfSubsets", "observedData", "compressedData",
+           "unexpandedDescriptors"]
 
 class ObservationDataBUFR(BaseAbstractData):
-    """Oservation data"""
+    """Observation data"""
 
     def transform(
         self, input_data: Union[Path, bytes], filename: str = ''
@@ -97,6 +105,13 @@ class ObservationDataBUFR(BaseAbstractData):
             LOGGER.error(f'Error unpacking message: {err}')
             raise err
 
+        # get descriptors present in the file
+        descriptors = codes_get_array(bufr_in, "expandedDescriptors").tolist()
+        # get the headers in hte file
+        headers = {}
+        for header in HEADERS:
+            headers[header] = codes_get(bufr_in, header)
+
         num_subsets = codes_get(bufr_in, 'numberOfSubsets')
         LOGGER.debug(f'Found {num_subsets} subsets')
 
@@ -112,14 +127,39 @@ class ObservationDataBUFR(BaseAbstractData):
             idx = i + 1
             LOGGER.debug(f'Processing subset {idx}')
 
-            LOGGER.debug('Copying template BUFR')
-            subset_out = codes_clone(TEMPLATE)
-            codes_set(subset_out, 'masterTablesVersionNumber', table_version)
-            codes_set_array(subset_out, 'unexpandedDescriptors', outUE)
-
             LOGGER.debug('Extracting subset')
             codes_set(bufr_in, 'extractSubset', idx)
             codes_set(bufr_in, 'doExtractSubsets', 1)
+
+            # copy the replication factors
+            if 31000 in descriptors:
+                short_replication_factors = codes_get_array(bufr_in, "shortDelayedDescriptorReplicationFactor").tolist()  # noqa
+            if 31001 in descriptors:
+                replication_factors = codes_get_array(bufr_in, "delayedDescriptorReplicationFactor").tolist()  # noqa
+            if 31002 in descriptors:
+                extended_replication_factors = codes_get_array(bufr_in, "extendedDelayedDescriptorReplicationFactor").tolist()  # noqa
+
+            LOGGER.debug('Copying template BUFR')
+            subset_out = codes_clone(TEMPLATE)
+
+            # copy the replication factors, this needs to be done before
+            # setting the unexpanded descriptors
+            if 31000 in descriptors:
+                codes_set_array(subset_out, "inputShortDelayedDescriptorReplicationFactor", short_replication_factors)  # noqa
+            if 31001 in descriptors:
+                codes_set_array(subset_out, "inputDelayedDescriptorReplicationFactor", replication_factors)  # noqa
+            if 31002 in descriptors:
+                codes_set_array(subset_out, "inputExtendedDelayedDescriptorReplicationFactor", extended_replication_factors)  # noqa
+
+            # we need to copy all the headers, not just the
+            # unexpandedDescriptors and MT number
+            headers['unexpandedDescriptors'] = outUE
+            headers['masterTablesVersionNumber'] = table_version
+            for k, v in headers.items():
+                if isinstance(v, list):
+                    codes_set_array(subset_out, k, v)
+                else:
+                    codes_set(subset_out, k, v)
 
             LOGGER.debug('Cloning subset to new message')
             subset = codes_clone(bufr_in)
