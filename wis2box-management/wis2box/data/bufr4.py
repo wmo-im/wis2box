@@ -155,6 +155,7 @@ class ObservationDataBUFR(BaseAbstractData):
             # unexpandedDescriptors and MT number
             headers['unexpandedDescriptors'] = outUE
             headers['masterTablesVersionNumber'] = table_version
+            headers['numberOfSubsets'] = 1
             for k, v in headers.items():
                 if isinstance(v, list):
                     codes_set_array(subset_out, k, v)
