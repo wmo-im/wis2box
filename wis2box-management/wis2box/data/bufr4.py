@@ -63,6 +63,7 @@ HEADERS = ["edition", "masterTableNumber", "bufrHeaderCentre",
            "numberOfSubsets", "observedData", "compressedData",
            "unexpandedDescriptors"]
 
+
 class ObservationDataBUFR(BaseAbstractData):
     """Observation data"""
 
@@ -142,7 +143,7 @@ class ObservationDataBUFR(BaseAbstractData):
             LOGGER.debug('Copying template BUFR')
             subset_out = codes_clone(TEMPLATE)
 
-            # copy the replication factors, this needs to be done before
+            # set the replication factors, this needs to be done before
             # setting the unexpanded descriptors
             if 31000 in descriptors:
                 codes_set_array(subset_out, "inputShortDelayedDescriptorReplicationFactor", short_replication_factors)  # noqa
