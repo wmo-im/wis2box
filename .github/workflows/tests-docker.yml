@@ -109,11 +109,11 @@ jobs:
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
     - name: sync stations 🔄
       run: |
-        sleep 15
+        sleep 30
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection
     - name: run integration tests ⚙️
       run: |
-        sleep 15
+        sleep 30
         pytest -s tests/integration
     - name: run flake8 ⚙️
       run: |
@@ -121,6 +121,5 @@ jobs:
     - name: failed tests 🚩
       if: ${{ failure() }}
       run: |
-        docker logs wis2box-management
-        docker logs wis2box-api
-        docker logs wis2box-minio
+        docker logs -n1000 wis2box-management
+        docker logs -n1000 wis2box-api
