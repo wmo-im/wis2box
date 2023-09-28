@@ -64,6 +64,12 @@ Setup observation collections from discovery metadata:
     wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/dza-surface-weather-observations.yml
     wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/rou-synoptic-weather-observations.yml
 
+Load initial stations:
+
+.. code-block:: bash
+
+    wis2box metadata station publish-collection
+
 Ingest data using the data ingest command to push data to the ``wis2box-incoming`` bucket:
 
 .. code-block:: bash
