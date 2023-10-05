@@ -44,7 +44,7 @@ def get_bounding_box(country_code: str) -> Tuple[str, str]:
     """
 
     country_name = 'NA'
-    bounding_box = [-180, -90, 180, 90]
+    bounding_box = '-180, -90, 180, 90'
 
     print(f'Getting bounding box for "{country_code}".')
 
