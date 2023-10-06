@@ -31,13 +31,13 @@ It is recommended to use a reverse proxy (for example `NGINX`_) to provide HTTPS
 System requirements
 -------------------
 
-System requirements depend on the amount of data ingested.  We recommend minimum 2 vCPUs with 4GB Memory and 16GB of local storage.
+System requirements depend on the amount of data ingested.  We recommend minimum 2 vCPUs with 4GB Memory and 24GB of local storage.
 
 For example, the following Amazon AWS EC2 instance types have been utilized as part of various `wis2box demonstrations <https://demo.wis2box.wis.wmo.int>`_.
 
 * 0 - 2000 observations per day: `t3a.medium` instance:
 
-  * 2 vCPUs, x86_64 architecture, 4GB Memory, up to 5 Gigabit network, 16GB attached storage (~35 USD per month for on-demand Linux based OS)
+  * 2 vCPUs, x86_64 architecture, 4GB Memory, up to 5 Gigabit network, 24GB attached storage (~35 USD per month for on-demand Linux based OS)
 * 2000 - 10000 observations per day: `t3a.large` instance:
 
   * 2 vCPUs, x86_64 architecture, 8GB Memory, up to 5 Gigabit network, 24GB attached storage (~70 USD per month for on-demand Linux based OS)
