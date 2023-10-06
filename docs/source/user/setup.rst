@@ -223,7 +223,9 @@ You can also bulk insert a set of stations from a CSV file, by defining the stat
 .. code-block:: bash
 
    python3 wis2box-ctl.py login
-   wis2box metadata stations publish-collections
+   wis2box metadata station publish-collection
+
+After doing a bulk insert please review the stations in wis2box-webapp and associate each station to the correct topics.
 
 The next is the :ref:`data-ingest`.
 
