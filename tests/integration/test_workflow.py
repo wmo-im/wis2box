@@ -112,6 +112,39 @@ def test_metadata_discovery_publish():
 
     assert r['numberMatched'] == 5
 
+    # test access of discovery metadata from notification message
+
+    countries_and_centre_ids = [
+        ('mwi', 'mwi_met_centre'),
+        ('ita', 'roma_met_centre'),
+        ('dza', 'alger_met_centre'),
+        ('rou', 'rnimh'),
+        ('cog', 'brazza_met_centre')
+    ]
+
+    for cacid in countries_and_centre_ids:
+        params = {
+            'q': f'{cacid[0]} AND {cacid[1]} AND metadata'
+        }
+
+        r = SESSION.get(f'{API_URL}/collections/messages/items',
+                        params=params).json()
+
+        assert r['numberMatched'] == 1
+
+        feature = r['features'][0]
+        assert feature['properties']['data_id'].startswith(
+            f'{cacid[0]}/{cacid[1]}')
+
+        link = feature['links'][0]
+
+        assert link['type'] == 'application/geo+json'
+        assert link['href'].endswith('json')
+
+        r = SESSION.get(link['href']).json()
+
+        assert r['conformsTo'][0] == 'http://wis.wmo.int/spec/wcmp/2/conf/core'
+
 
 def test_data_ingest():
     """Test data ingest/process publish"""
@@ -220,7 +253,9 @@ def test_message_api():
     assert props['datetime'] == '2023-08-03T09:00:00Z'
     assert props['wigos_station_identifier'] == '0-20000-0-64406'
     assert props['integrity']['method'] == 'sha512'
-    assert props['data_id'].startswith('wis2')
+    assert not props['data_id'].startswith('wis2')
+    assert not props['data_id'].startswith('origin/a/wis2')
+    assert props['data_id'].startswith('cog')
 
     link_rel = msg['links'][0]
 

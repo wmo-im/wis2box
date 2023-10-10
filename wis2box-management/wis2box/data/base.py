@@ -145,7 +145,7 @@ class BaseAbstractData:
         LOGGER.debug(f'Prepare message for: {storage_path}')
 
         topic = f'origin/a/wis2/{self.topic_hierarchy.dirpath}'
-        data_id = topic.replace('origin/a/wis2', '')
+        data_id = topic.replace('origin/a/wis2/', '')
 
         wis_message = WISNotificationMessage(
             identifier, data_id, storage_path, datetime_, geometry,

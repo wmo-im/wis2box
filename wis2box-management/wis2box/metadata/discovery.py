@@ -226,7 +226,7 @@ def publish(ctx, filepath, verbosity):
 
         data_bytes = json.dumps(record,
                                 default=json_serial).encode('utf-8')
-        storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/metadata/{record['id']}"  # noqa
+        storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/metadata/{record['id']}.json"  # noqa
 
         put_data(data_bytes, storage_path)
 
