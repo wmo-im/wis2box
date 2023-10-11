@@ -228,7 +228,7 @@ def publish(ctx, filepath, verbosity):
                                 default=json_serial).encode('utf-8')
         storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/metadata/{record['id']}.json"  # noqa
 
-        put_data(data_bytes, storage_path)
+        put_data(data_bytes, storage_path, 'application/geo+json')
 
         message = publish_broker_message(record, storage_path,
                                          record_mcf['wis2box']['country'],

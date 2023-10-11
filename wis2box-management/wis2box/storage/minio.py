@@ -151,10 +151,12 @@ class MinIOStorage(StorageBase):
 
         return data
 
-    def put(self, data: bytes, identifier: str) -> bool:
+    def put(self, data: bytes, identifier: str,
+            content_type: str = 'application/octet-stream') -> bool:
 
         LOGGER.debug(f'Putting data as object={identifier}')
         self.client.put_object(bucket_name=self.name, object_name=identifier,
+                               content_type=content_type,
                                data=BytesIO(data), length=-1,
                                part_size=10*1024*1024)
 

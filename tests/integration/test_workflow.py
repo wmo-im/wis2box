@@ -141,8 +141,10 @@ def test_metadata_discovery_publish():
         assert link['type'] == 'application/geo+json'
         assert link['href'].endswith('json')
 
-        r = SESSION.get(link['href']).json()
+        r = SESSION.get(link['href'])
+        assert r.headers['Content-Type'] == 'application/geo+json'
 
+        r = r.json()
         assert r['conformsTo'][0] == 'http://wis.wmo.int/spec/wcmp/2/conf/core'
 
 

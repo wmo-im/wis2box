@@ -47,10 +47,15 @@ class S3Storage(StorageBase):
 
         return data['Body'].read()
 
-    def put(self, filepath: Path, identifier: str) -> bool:
+    def put(self, filepath: Path, identifier: str,
+            content_type: str = 'application/octet-stream') -> bool:
 
         LOGGER.debug(f'Putting file {filepath} to {identifier}')
-        self.client.upload_file(filepath, self.name, identifier)
+        extra_args = {
+            'ContentType': content_type
+        }
+        self.client.upload_file(filepath, self.name, identifier,
+                                ExtraArgs=extra_args)
 
         return True
 
