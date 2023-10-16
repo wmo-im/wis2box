@@ -170,7 +170,7 @@ def get_password(password_name: str) -> str:
         if answer == 'exit':
             exit()
 
-        print('Please enter the password to be used for the WIS2BOX_STORAGE_PASSWORD:') # noqa
+        print(f'Please enter the password to be used for the {password_name}:') # noqa
         password = input()
 
         # check if the password is at least 8 characters long
