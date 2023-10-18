@@ -218,7 +218,7 @@ def test_message_api():
 
     props = msg['properties']
     assert props['datetime'] == '2023-08-03T09:00:00Z'
-    assert props['wigos_station_identifier'] == '0-20000-0-64400'
+    assert props['wigos_station_identifier'] == '0-20000-0-64406'
     assert props['integrity']['method'] == 'sha512'
     assert props['data_id'].startswith('wis2')
 

@@ -40,6 +40,13 @@ This step will publish dataset discovery metadata to the API.
 
    wis2box metadata discovery publish /path/to/discovery-metadata.yml
 
+To unpublish discovery metadata from the API:
+
+.. code-block:: bash
+
+   wis2box metadata discovery unpublish metadata-id
+
+.. note:: ``metadata-id`` is the ``metadata.identifier`` value in your ``/path/to/discovery-metadata.yml`` file
 
 Dataset collection API publishing
 ---------------------------------

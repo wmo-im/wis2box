@@ -53,6 +53,7 @@ Publish test discovery metadata:
     wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/ita-surface-weather-observations.yml
     wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/dza-surface-weather-observations.yml
     wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/rou-synoptic-weather-observations.yml
+    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/cog-surface-weather-observations.yml
 
 
 Setup observation collections from discovery metadata:
@@ -63,6 +64,7 @@ Setup observation collections from discovery metadata:
     wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/ita-surface-weather-observations.yml
     wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/dza-surface-weather-observations.yml
     wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/rou-synoptic-weather-observations.yml
+    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/cog-surface-weather-observations.yml
 
 Load initial stations:
 
@@ -78,6 +80,7 @@ Ingest data using the data ingest command to push data to the ``wis2box-incoming
     wis2box data ingest --topic-hierarchy ita.roma_met_centre.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/italy
     wis2box data ingest --topic-hierarchy dza.alger_met_centre.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/algeria
     wis2box data ingest --topic-hierarchy rou.rnimh.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/romania
+    wis2box data ingest --topic-hierarchy cog.brazza_met_centre.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/congo
 
 
 Publish stations:

@@ -63,6 +63,8 @@ class DiscoveryMetadata(BaseMetadata):
 
         LOGGER.debug('Adding topic hierarchy')
         md['identification']['wmo_topic_hierarchy'] = local_topic
+        LOGGER.debug('Adding revision date')
+        md['identification']['dates']['revision'] = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')  # noqa
 
         LOGGER.debug('Adding distribution links')
         oafeat_link = {
@@ -234,7 +236,10 @@ def unpublish(ctx, identifier, verbosity):
     """Deletes a discovery metadata record from the catalogue"""
 
     click.echo(f'Unpublishing discovery metadata {identifier}')
-    delete_collection_item('discovery-metadata', identifier)
+    try:
+        delete_collection_item('discovery-metadata', identifier)
+    except Exception:
+        raise click.ClickException('Invalid metadata identifier')
 
 
 discovery_metadata.add_command(publish)
