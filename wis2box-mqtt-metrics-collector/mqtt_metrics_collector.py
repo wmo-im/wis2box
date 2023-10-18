@@ -165,6 +165,7 @@ def sub_mqtt_metrics(client, userdata, msg):
     elif str(msg.topic).startswith('wis2box/notifications'):
         notify_wsi_total.labels(
             m['properties']['wigos_station_identifier']).inc(1)
+        station_wsi.labels(wsi).set(1)
         notify_total.inc(1)
     elif str(msg.topic).startswith('wis2box/failure'):
         descr = m['description']
@@ -173,6 +174,7 @@ def sub_mqtt_metrics(client, userdata, msg):
             wsi = m['wigos_station_identifier']
         failure_descr_wsi_total.labels(descr, wsi).inc(1)
         failure_wsi_total.labels(wsi).inc(1)
+        station_wsi.labels(wsi).set(1)
         failure_total.inc(1)
     elif str(msg.topic).startswith('wis2box/storage'):
         if str(m["Key"]).startswith('wis2box-incoming'):
