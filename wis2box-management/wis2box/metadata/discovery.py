@@ -126,7 +126,7 @@ class DiscoveryMetadata(BaseMetadata):
             if isinstance(postalcode, int):
                 record['properties']['contacts'][0]['addresses'][0]['postalcode'] = f'{postalcode}'  # noqa
         except KeyError:
-            LOGGER.debug('No phone number defined')
+            LOGGER.debug('No postal code defined')
             pass
 
         return record
