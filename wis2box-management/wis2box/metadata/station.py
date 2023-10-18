@@ -186,9 +186,7 @@ def get_stations_csv(wsi: str = '') -> str:
         if '-' in wsi and len(wsi.split('-')) == 4:
             tsi = wsi.split('-')[3]
 
-        barometer_height = station['properties'].get(
-            'barometer_height',
-            station['geometry']['coordinates'][2] + 1.25)
+        barometer_height = station['properties'].get('barometer_height', '')
 
         obj = {
             'station_name': station['properties']['name'],
