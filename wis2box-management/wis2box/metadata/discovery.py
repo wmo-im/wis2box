@@ -21,7 +21,7 @@
 
 import click
 from copy import deepcopy
-from datetime import datetime
+from datetime import date, datetime
 import json
 import logging
 
@@ -65,6 +65,11 @@ class DiscoveryMetadata(BaseMetadata):
         md['identification']['wmo_topic_hierarchy'] = local_topic
         LOGGER.debug('Adding revision date')
         md['identification']['dates']['revision'] = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')  # noqa
+
+        LOGGER.debug('Checking temporal extents')
+        if md['identification']['extents']['temporal'][0].get('begin', 'BEGIN_DATE') is None:  # noqa
+            today = date.today().strftime('%Y-%m-%d')
+            md['identification']['extents']['temporal'][0]['begin'] = today
 
         LOGGER.debug('Adding distribution links')
         oafeat_link = {
@@ -115,6 +120,14 @@ class DiscoveryMetadata(BaseMetadata):
                 record['properties']['contacts'][0]['phones'][0]['value'] = f'+{phone}'  # noqa
         except KeyError:
             LOGGER.debug('No phone number defined')
+
+        try:
+            postalcode = record['properties']['contacts'][0]['addresses'][0]['postalcode']  # noqa
+            if isinstance(postalcode, int):
+                record['properties']['contacts'][0]['addresses'][0]['postalcode'] = f'{postalcode}'  # noqa
+        except KeyError:
+            LOGGER.debug('No postal code defined')
+            pass
 
         return record
 
@@ -211,11 +224,11 @@ def publish(ctx, filepath, verbosity):
 
         record = dm.generate(record_mcf)
 
-        data_bytes = json.dumps(record_mcf,
+        data_bytes = json.dumps(record,
                                 default=json_serial).encode('utf-8')
-        storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/metadata/{record['id']}"  # noqa
+        storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/metadata/{record['id']}.json"  # noqa
 
-        put_data(data_bytes, storage_path)
+        put_data(data_bytes, storage_path, 'application/geo+json')
 
         message = publish_broker_message(record, storage_path,
                                          record_mcf['wis2box']['country'],

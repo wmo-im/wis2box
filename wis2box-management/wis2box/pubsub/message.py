@@ -131,13 +131,18 @@ class WISNotificationMessage(PubSubMessage):
         super().__init__('wis2-notification-message', identifier,
                          topic, filepath, datetime_, geometry)
 
-        suffix = self.filepath.split('.')[-1]
-        try:
-            mimetype = DATA_OBJECT_MIMETYPES[suffix]
-        except KeyError:
-            mimetype = 'application/octet-stream'
+        data_id = f'{topic}/{self.identifier}'.replace('origin/a/wis2/', '')
 
-        # replace storage-source with wis2box-url
+        if '/metadata' in topic:
+            mimetype = 'application/geo+json'
+        else:
+            suffix = self.filepath.split('.')[-1]
+            mimetype = DATA_OBJECT_MIMETYPES.get(suffix,
+                'application/octet-stream')  # noqa
+
+        LOGGER.debug(f'media type: {mimetype}')
+
+        # replace storage source with wis2box URL
         public_file_url = self.filepath.replace(
             f'{STORAGE_SOURCE}/{STORAGE_PUBLIC}', f'{URL}/data'
         )
@@ -151,7 +156,7 @@ class WISNotificationMessage(PubSubMessage):
             'version': 'v04',
             'geometry': self.geometry,
             'properties': {
-                'data_id': f'{topic}/{self.identifier}',
+                'data_id': data_id,
                 'datetime': self.datetime,
                 'pubtime': self.publish_datetime,
                 'integrity': {

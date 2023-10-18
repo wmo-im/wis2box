@@ -73,12 +73,14 @@ class StorageBase:
 
         raise NotImplementedError()
 
-    def put(self, data: bytes, identifier: str) -> bool:
+    def put(self, data: bytes, identifier: str,
+            content_type: str = 'application/octet-stream') -> bool:
         """
         Access data source from storage
 
         :param data: bytes of file to upload
         :param identifier: `str` of data dest identifier
+        :param content_type: media type (default is `application/octet-stream`)
 
         :returns: `bool` of put result
         """

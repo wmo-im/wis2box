@@ -87,11 +87,14 @@ def list_content(basepath: str) -> Any:
     return storage.list_objects(prefix)
 
 
-def put_data(data: bytes, path: str) -> Any:
+def put_data(data: bytes, path: str,
+             content_type: str = 'application/octet-stream') -> Any:
     """
     Put data into storage
 
     :param data: bytes of object/file
+    :param path: path to use object id
+    :param content_type: media type (default is `application/octet-stream`)
 
     :returns: content of object/file
     """
@@ -113,7 +116,7 @@ def put_data(data: bytes, path: str) -> Any:
     identifier = storage_path.replace(name, '')
 
     LOGGER.debug(f'Storing data into {identifier}')
-    return storage.put(data, identifier)
+    return storage.put(data, identifier, content_type)
 
 
 def delete_data(path: str) -> Any:
