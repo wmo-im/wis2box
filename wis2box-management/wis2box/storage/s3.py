@@ -51,11 +51,8 @@ class S3Storage(StorageBase):
             content_type: str = 'application/octet-stream') -> bool:
 
         LOGGER.debug(f'Putting file {filepath} to {identifier}')
-        extra_args = {
-            'ContentType': content_type
-        }
         self.client.upload_file(filepath, self.name, identifier,
-                                ExtraArgs=extra_args)
+                                ContentType=content_type)
 
         return True
 
