@@ -60,8 +60,7 @@ HEADERS = ["edition", "masterTableNumber", "bufrHeaderCentre",
            "masterTablesVersionNumber", "localTablesVersionNumber",
            "typicalYear", "typicalMonth", "typicalDay", "typicalHour",
            "typicalMinute", "typicalSecond",
-           "numberOfSubsets", "observedData", "compressedData",
-           "unexpandedDescriptors"]
+           "numberOfSubsets", "observedData", "compressedData"]
 
 
 class ObservationDataBUFR(BaseAbstractData):
@@ -108,22 +107,27 @@ class ObservationDataBUFR(BaseAbstractData):
 
         # get descriptors present in the file
         descriptors = codes_get_array(bufr_in, "expandedDescriptors").tolist()
-        # get the headers in hte file
+
+        # prepare the headers for the new messages
         headers = {}
         for header in HEADERS:
             headers[header] = codes_get(bufr_in, header)
-
-        num_subsets = codes_get(bufr_in, 'numberOfSubsets')
-        LOGGER.debug(f'Found {num_subsets} subsets')
-
+        # original to be splitted by subset, so set the number of subsets to 1
+        headers['numberOfSubsets'] = 1
+        # set the master table version number
         table_version = max(
             28, codes_get(bufr_in, 'masterTablesVersionNumber')
         )
+        headers['masterTablesVersionNumber'] = table_version
+        # set the unexpanded descriptors
+        out_ue = codes_get_array(bufr_in, 'unexpandedDescriptors').tolist()
+        if 301150 not in out_ue:
+            out_ue.insert(0, 301150)
+        headers['unexpandedDescriptors'] = out_ue
 
-        outUE = codes_get_array(bufr_in, 'unexpandedDescriptors').tolist()
-        if 301150 not in outUE:
-            outUE.insert(0, 301150)
-
+        # loop over the subsets, create a new message for each
+        num_subsets = codes_get(bufr_in, 'numberOfSubsets')
+        LOGGER.debug(f'Found {num_subsets} subsets')
         for i in range(num_subsets):
             idx = i + 1
             LOGGER.debug(f'Processing subset {idx}')
@@ -154,9 +158,7 @@ class ObservationDataBUFR(BaseAbstractData):
 
             # we need to copy all the headers, not just the
             # unexpandedDescriptors and MT number
-            headers['unexpandedDescriptors'] = outUE
-            headers['masterTablesVersionNumber'] = table_version
-            headers['numberOfSubsets'] = 1
+
             for k, v in headers.items():
                 if isinstance(v, list):
                     codes_set_array(subset_out, k, v)
