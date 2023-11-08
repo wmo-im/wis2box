@@ -8,28 +8,6 @@ To share your data with the WIS2 network, you need to expose some of the wis2box
 * The Global Cache needs to be able to access to your HTTP endpoint at port 80 to download data published by the wis2box instance
 * The Global Broker needs to be able to subscribe to your MQTT endpoint at port 1883 to receive WIS2 notifications published by the wis2box instance
 
-SSL
-^^^
-
-It is recommended to use a reverse proxy to route HTTP and MQTT traffic from/to  wis2box, and to enable TLS (HTTPS/MQTTS) on wis2box.
-
-Please remember to update the ``WIS2BOX_URL`` and ``WIS2BOX_API_URL`` environment variable after enabling SSL, ensuring your URL starts with ``https://``.
-
-Please note that after changing the ``WIS2BOX_URL`` and ``WIS2BOX_API_URL`` environment variables, you will need to restart wis2box:
-
-.. code-block:: bash
-
-  python3 wis2box-ctl.py stop
-  python3 wis2box-ctl.py start
-
-After restarting wis2box, repeat the commands for adding your dataset and publishing your metadata, to ensure the URLs are updated accordingly:
-
-.. code-block:: bash
-
-  python3 wis2box-ctl.py login
-  wis2box data add-collection /data/wis2box/metadata/discovery/metadata-synop.yml
-  wis2box metadata discovery publish /data/wis2box/metadata/discovery/metadata-synop.yml
-
 Nginx (HTTP)
 ^^^^^^^^^^^^
 
@@ -128,6 +106,72 @@ If you do not wish to expose the internal MQTT broker on wis2box, you can config
 
    The ``everyone`` user is defined by default for public readonly access (``origin/#``) as per WIS2 Node requirements.
 
+SSL
+^^^
+
+In order to ensure the security of your data, it is recommended to enable SSL on your wis2box instance.
+
+There are multiple ways to expose the wis2box services over SSL:
+
+- using a reverse proxy (recommended)
+- using the built-in SSL support in the ``wis2box-ctl.py`` script
+
+The recommended way to expose the wis2box services over SSL is to use a reverse proxy such as `nginx`_ or `traefik`_. Discuss with your IT team to determine which reverse proxy is best suited for your environment.
+
+Please remember to update the ``WIS2BOX_URL`` and ``WIS2BOX_API_URL`` environment variable after enabling SSL, ensuring your URL starts with ``https://``.
+
+Please note that after changing the ``WIS2BOX_URL`` and ``WIS2BOX_API_URL`` environment variables, you will need to restart wis2box:
+
+.. code-block:: bash
+
+  python3 wis2box-ctl.py stop
+  python3 wis2box-ctl.py start
+
+After restarting wis2box, repeat the commands for adding your dataset and publishing your metadata, to ensure that URLs are updated accordingly:
+
+.. code-block:: bash
+
+  python3 wis2box-ctl.py login
+  wis2box data add-collection /data/wis2box/metadata/discovery/metadata-synop.yml
+  wis2box metadata discovery publish /data/wis2box/metadata/discovery/metadata-synop.yml
+
+Built-in SSL support
+--------------------
+
+If you do not have a reverse proxy available, you can enable SSL support in the ``wis2box-ctl.py`` script. 
+
+To enable HTTPS and MQTTS on your wis2box you can run wis2box with the option ``–ssl``:
+
+.. code-block:: bash
+
+  python3 wis2box-ctl.py --ssl start
+
+.. note::
+
+  The `--ssl` option will use the configuration in ``nginx/nginx-ssl.conf`` and `mosquitto-ssl.conf` to configure the SSL certificates and keys for the nginx and mosquitto containers.
+
+When running wis2box with SSL, you have to set additional environment variables in ``dev.env`` defining the location of your SSL certificate and private key:
+
+.. code-block:: bash
+
+  WIS2BOX_SSL_CERT=/etc/letsencrypt/live/example.wis2box.io/fullchain.pem
+  WIS2BOX_SSL_KEY=/etc/letsencrypt/live/example.wis2box.io/privkey.pem
+
+Please remember to update the ``WIS2BOX_URL`` and ``WIS2BOX_API_URL`` environment variable after enabling SSL, ensuring your URL starts with ``https://``.
+
+Please note that after changing the WIS2BOX_URL and WIS2BOX_API_URL environment variables, you will need to restart your wis2box:
+
+.. code-block:: bash
+
+  python3 wis2box-ctl.py stop
+  python3 wis2box-ctl.py --ssl start
+
+After restarting wis2box, repeat the commands for adding your dataset and publishing your metadata, to ensure that URLs are updated accordingly:
+
+python3 wis2box-ctl.py login
+wis2box data add-collection ${WIS2BOX_HOST_DATADIR}/surface-weather-observations.yml
+wis2box metadata discovery publish ${WIS2BOX_HOST_DATADIR}/surface-weather-observations.yml
+
 Registering your WIS2 Node
 --------------------------
 
@@ -139,3 +183,5 @@ Next: :ref:`downloading-data`
 .. _`pygeoapi`: https://pygeoapi.io/
 .. _`Elasticsearch`: https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
 .. _`OGC API`: https://ogcapi.ogc.org
+.. _`nginx`: https://www.nginx.com/
+.. _`traefik`: https://traefik.io/
