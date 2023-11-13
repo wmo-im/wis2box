@@ -202,13 +202,15 @@ class ObservationDataBUFR(BaseAbstractData):
 
         try:
             location = parser.get_location()
-        except Exception as err:
-            LOGGER.warning(err)
+            if location is None or None in location['coordinates']:
+                raise Exception("Missing location in BUFR")
+        except Exception:
+            LOGGER.error(f"Error parsing location from subset with wsi={temp_wsi}, use coordinates from station metadata") # noqa
 
         try:
             data_date = parser.get_time()
-        except Exception as err:
-            LOGGER.error(err)
+        except Exception:
+            LOGGER.error(f"Error parsing time from subset with wsi={temp_wsi}, skip this subset") # noqa
             self.publish_failure_message(
                         description="Invalid date in BUFR data",
                         wsi=temp_wsi)
