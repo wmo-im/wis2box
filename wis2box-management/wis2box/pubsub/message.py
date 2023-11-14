@@ -69,6 +69,8 @@ class PubSubMessage:
         :returns: `wis2box.pubsub.message.PubSubMessage` message object
         """
 
+        self.filebytes = None
+
         self.type = type_
         self.identifier = identifier
         self.filepath = filepath
@@ -79,14 +81,14 @@ class PubSubMessage:
         )
         self.checksum_type = SecureHashAlgorithms.SHA512.value
         # needs to get bytes to calc checksum and get length
-        filebytes = None
         if isinstance(self.filepath, Path):
             with self.filepath.open('rb') as fh:
-                filebytes = fh.read()
+                self.filebytes = fh.read()
         else:
-            filebytes = get_data(filepath)
-        self.length = len(filebytes)
-        self.checksum_value = self._generate_checksum(filebytes, self.checksum_type) # noqa
+            self.filebytes = get_data(filepath)
+        self.length = len(self.filebytes)
+        self.checksum_value = self._generate_checksum(
+            self.filebytes, self.checksum_type)
         self.message = {}
 
     def prepare(self):
@@ -171,6 +173,16 @@ class WISNotificationMessage(PubSubMessage):
                 'length': self.length
             }]
         }
+
+        if self.length < 4096:
+            LOGGER.debug('Including data inline via properties.content')
+            content_value = base64.b64encode(self.filebytes)
+
+            self.message['properties']['content'] = {
+                'encoding': 'base64',
+                'value': content_value,
+                'size': self.length
+            }
 
         if wigos_station_identifier is not None:
             self.message['properties']['wigos_station_identifier'] = wigos_station_identifier  # noqa

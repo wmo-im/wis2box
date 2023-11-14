@@ -64,7 +64,7 @@ Setup observation collections from discovery metadata:
     wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/ita-surface-weather-observations.yml
     wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/dza-surface-weather-observations.yml
     wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/rou-synoptic-weather-observations.yml
-    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/cog-surface-weather-observations.yml
+    wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/cog-surface-weather-observations.yml
 
 Load initial stations:
 
