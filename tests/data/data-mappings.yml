@@ -1,5 +1,5 @@
 data:
-    cog.brazza_met_centre.data.core.weather.surface-based-observations.synop:
+    cd-brazza_met_centre.data.core.weather.surface-based-observations.synop:
         plugins:
             txt:
                 - plugin: wis2box.data.synop2bufr.ObservationDataSYNOP2BUFR
@@ -10,7 +10,7 @@ data:
                   buckets:
                     - ${WIS2BOX_STORAGE_PUBLIC}
                   file-pattern: '^.*\.bufr4$' 
-    rou.rnimh.data.core.weather.surface-based-observations.synop:
+    ro-rnimh.data.core.weather.surface-based-observations.synop:
         plugins:
             txt:
                 - plugin: wis2box.data.synop2bufr.ObservationDataSYNOP2BUFR
@@ -24,7 +24,7 @@ data:
             bufr4:
                 - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
                   file-pattern: '^A_SMR.*EDZW_(\d{4})(\d{2}).*.bufr4$'
-    mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop:
+    mw-mw_met_centre.data.core.weather.surface-based-observations.synop:
         plugins:
             csv:
                 - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
@@ -34,7 +34,7 @@ data:
             bufr4:
                 - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
                   file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
-    ita.roma_met_centre.data.core.weather.surface-based-observations.synop:
+    it-roma_met_centre.data.core.weather.surface-based-observations.synop:
         plugins:
             bin:
                 - plugin: wis2box.data.bufr4.ObservationDataBUFR
@@ -43,7 +43,7 @@ data:
             bufr4:
                 - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
                   file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
-    dza.alger_met_centre.data.core.weather.surface-based-observations.synop:
+    dz-alger_met_centre.data.core.weather.surface-based-observations.synop:
         plugins:
             bufr4:
                 - plugin: wis2box.data.bufr4.ObservationDataBUFR

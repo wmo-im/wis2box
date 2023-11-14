@@ -1,14 +1,14 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: ita.roma_met_centre.data.core.weather.surface-based-observations.synop
+    topic_hierarchy: it-roma_met_centre.data.core.weather.surface-based-observations.synop
     country: ita
-    centre_id: roma_met_centre
+    centre_id: it-roma_met_centre
 
 mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:x-wmo:md:ita:roma_met_centre:surface-weather-observations
+    identifier: urn:x-wmo:md:it-roma_met_centre:surface-weather-observations
     hierarchylevel: dataset
 
 identification:

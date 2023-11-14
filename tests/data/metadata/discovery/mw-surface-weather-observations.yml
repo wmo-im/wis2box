@@ -1,21 +1,21 @@
 wis2box:
-    retention: P180D
-    topic_hierarchy: cog.brazza_met_centre.data.core.weather.surface-based-observations.synop
-    country: cog
-    centre_id: brazza_met_centre
+    retention: P30D
+    topic_hierarchy: mw-mw_met_centre.data.core.weather.surface-based-observations.synop
+    country: mwi
+    centre_id: mw-mw_met_centre
 
 mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:x-wmo:md:cog:brazza_met_centre:surface-weather-observations
+    identifier: urn:x-wmo:md:mw-mw_met_centre:surface-weather-observations
     hierarchylevel: dataset
 
 identification:
-    title: Surface weather observations from Republic of Congo
-    abstract: Surface weather observations from Republic of Congo
+    title: Surface weather observations from Malawi
+    abstract: Surface weather observations from Malawi
     dates:
-        creation: 2023-03-26
+        creation: 2021-11-29
     keywords:
         default:
             keywords:
@@ -31,10 +31,10 @@ identification:
                 url: https://github.com/wmo-im/wis2-topic-hierarchy/blob/main/topic-hierarchy/earth-system-discipline/index.csv
     extents:
         spatial:
-            - bbox: [11.0937728207,-5.03798674888,18.4530652198,3.72819651938]
+            - bbox: [32.6881653175,-16.8012997372,35.7719047381,-9.23059905359]
               crs: 4326
         temporal:
-            - begin: 2023-03-26
+            - begin: 2021-11-29
               end: null
               resolution: P1H
     url: https://example.org/malawi-surface-weather-observations
@@ -42,18 +42,18 @@ identification:
 
 contact:
     pointOfContact: &contact_poc
-        organization: Congo National Meteorological Service (DMN)
-        url: https://www.dirmet.cg
+        organization: Department of Climate Change and Meteorologial Services (DCCMS)
+        url: https://www.metmalawi.gov.mw
         individualname: Firstname Lastname
         positionname: Position Name
-        phone: null
-        fax: null
-        address: P.O. Box 208
-        city: Brazzaville
-        administrativearea: null
-        postalcode: null
-        country: Republic of Congo
-        email: you@example.com
+        phone: "+2651822014"
+        fax: "+2651822215"
+        address: P.O. Box 1808
+        city: Blantyre
+        administrativearea: Blantyre District
+        postalcode: M3H 5T4
+        country: Malawi
+        email: you@example.org
         hoursofservice: 0700h - 1500h UTC
         contactinstructions: email
 
