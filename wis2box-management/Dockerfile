@@ -48,7 +48,7 @@ RUN apt-get update -y && apt-get install -y ${DEBIAN_PACKAGES} \
     https://github.com/wmo-im/pywcmp/archive/refs/tags/0.4.0.zip \
     # install shapely
     && pip3 install --no-cache-dir cython pygeos==0.13 \
-    && pip3 install -U "shapely<2" --no-binary shapely \
+    && pip3 install shapely \
     # install boto3 and botocore
     && pip3 install --no-cache-dir botocore boto3 \
     # cleanup
