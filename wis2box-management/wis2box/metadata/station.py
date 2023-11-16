@@ -405,7 +405,7 @@ def get(ctx, wsi, verbosity):
 
     results = OrderedDict({
         'station_name': station['station_name'],
-        'wigos_station_identifier': station['wigos_station_identifier'],
+        'wigos_station_identifier': wsi,
         'traditional_station_identifier': None,
         'facility_type': station['facility_type'],
         'latitude': station.get('latitude', ''),
