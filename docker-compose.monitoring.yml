@@ -110,6 +110,8 @@ services:
     <<: *logging
   minio:
     <<: *logging
+  web-proxy:
+    <<: *logging
 
 volumes:
   loki-data:
