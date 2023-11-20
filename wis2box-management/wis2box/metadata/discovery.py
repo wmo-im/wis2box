@@ -132,20 +132,19 @@ class DiscoveryMetadata(BaseMetadata):
         return record
 
 
-def publish_broker_message(record: dict, storage_path: str, country: str,
+def publish_broker_message(record: dict, storage_path: str,
                            centre_id: str) -> str:
     """
     Publish discovery metadata to broker
 
     :param record: `dict` of discovery metadata record
     :param storage_path: `str` of storage path/object id
-    :param country: ISO 3166 alpha 3
     :param centre_id: centre acronym
 
     :returns: `str` of WIS message
     """
 
-    topic = f'origin/a/wis2/{country.lower()}/{centre_id.lower()}/metadata'  # noqa
+    topic = f'origin/a/wis2/{centre_id.lower()}/metadata'  # noqa
 
     datetime_ = datetime.strptime(record['properties']['created'], '%Y-%m-%dT%H:%M:%SZ')  # noqa
     wis_message = WISNotificationMessage(record['id'], topic, storage_path,
@@ -231,7 +230,6 @@ def publish(ctx, filepath, verbosity):
         put_data(data_bytes, storage_path, 'application/geo+json')
 
         message = publish_broker_message(record, storage_path,
-                                         record_mcf['wis2box']['country'],
                                          record_mcf['wis2box']['centre_id'])
         upsert_collection_item('discovery-metadata', record)
         upsert_collection_item('messages', json.loads(message))

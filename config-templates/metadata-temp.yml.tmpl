@@ -1,14 +1,13 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: $COUNTRY_CODE.$CENTRE_ID.data.core.weather.surface-based-observations.temp
-    country: $COUNTRY_CODE
+    topic_hierarchy: $CENTRE_ID.data.core.weather.surface-based-observations.temp
     centre_id: $CENTRE_ID
 
 mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:x-wmo:md:$COUNTRY_CODE:$CENTRE_ID:surface-based-observations.temp
+    identifier: urn:x-wmo:md:$CENTRE_ID:surface-based-observations.temp
     language: en
     charset: utf8
     hierarchylevel: dataset
@@ -16,8 +15,8 @@ metadata:
 identification:
     language: en
     charset: utf8
-    title: Upper-level temperature/humidity/wind reports from fixed-land stations (TEMP) ($COUNTRY_NAME)
-    abstract: Upper-level temperature/humidity/wind reports from fixed-land stations (TEMP) ($COUNTRY_NAME)
+    title: Upper-level temperature/humidity/wind reports from fixed-land stations (TEMP) ($CENTRE_ID)
+    abstract: Upper-level temperature/humidity/wind reports from fixed-land stations (TEMP) ($CENTRE_ID)
     dates:
         creation: $CREATION_DATE
         publication: $PUBLICATION_DATE
@@ -49,7 +48,7 @@ contact:
     pointOfContact: &contact_poc
         organization: $CENTRE_NAME
         url: null
-        individualname: null
+        individualname: $CONTACT_NAME
         positionname: null
         phone: null
         fax: null

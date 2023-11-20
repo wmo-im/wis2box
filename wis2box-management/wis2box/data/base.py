@@ -94,7 +94,6 @@ class BaseAbstractData:
         self.topic_hierarchy = TopicHierarchy(
             discovery_metadata['metadata']['identifier'])
 
-        self.country = discovery_metadata['wis2box']['country']
         self.centre_id = discovery_metadata['wis2box']['centre_id']
 
     def accept_file(self, filename: str = '') -> bool:

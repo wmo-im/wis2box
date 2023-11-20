@@ -1,14 +1,13 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: $COUNTRY_CODE.$CENTRE_ID.data.core.weather.surface-based-observations.synop
-    country: $COUNTRY_CODE
+    topic_hierarchy: $CENTRE_ID.data.core.weather.surface-based-observations.synop
     centre_id: $CENTRE_ID
 
 mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:x-wmo:md:$COUNTRY_CODE:$CENTRE_ID:surface-based-observations.synop
+    identifier: urn:x-wmo:md:$CENTRE_ID:surface-based-observations.synop
     language: en
     charset: utf8
     hierarchylevel: dataset
@@ -16,8 +15,8 @@ metadata:
 identification:
     language: en
     charset: utf8
-    title: Hourly synoptic observations from fixed-land stations (SYNOP) ($COUNTRY_NAME)
-    abstract: Hourly synoptic observations from fixed-land stations (SYNOP) ($COUNTRY_NAME)
+    title: Hourly synoptic observations from fixed-land stations (SYNOP) ($CENTRE_ID)
+    abstract: Hourly synoptic observations from fixed-land stations (SYNOP) ($CENTRE_ID)
     dates:
         creation: $CREATION_DATE
         publication: $PUBLICATION_DATE
@@ -48,7 +47,7 @@ contact:
     pointOfContact: &contact_poc
         organization: $CENTRE_NAME
         url: null
-        individualname: null
+        individualname: $CONTACT_NAME
         positionname: null
         phone: null
         fax: null

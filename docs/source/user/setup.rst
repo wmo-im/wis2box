@@ -42,8 +42,9 @@ Run the following command to create the initial configuration files for your wis
    The script will propose to automatically create passwords for ``WIS2BOX_STORAGE_PASSWORD`` and ``WIS2BOX_BROKER_PASSWORD``.
    These passwords are for internal use only within the wis2box, and it is recommended to accept the randomly generated passwords.
 
-   The script will ask for 3-letter ISO country code for your wis2box. Please provide the 3-letter ISO country code for your country, for example ``FRA``.
-   It will also ask for a centre-id. Please provide a string that identifies your organization and does not use spaces or special characters, for example ``meteofrance``.
+   The script will ask for the 2-letter ISO country code for your wis2box. Please provide the 2-letter ISO country code for your country, for example ``fr``.
+   It will also ask for a centre-id. Please provide a string that identifies your organization and does not use spaces or special characters, and starts with your 2-letter country-code,
+   for example ``fr-meteo``.
 
 .. note::
 
@@ -58,11 +59,13 @@ Discovery metadata provides the data description needed for users to discover yo
 
 The discovery metadata is provided in the form of a YAML file.
 
-If you used the ``python3 wis2box-create-config.py`` command to initialize your wis2box, you will find two initial the discovery metadata files in
+If you used the ``python3 wis2box-create-config.py`` command to initialize your wis2box, you will find two initial discovery metadata files in
 the directory you specified for your configuration files, under the ``metadata/discovery/`` directory:
    
-* ``metadata-synop.yml``: contains the discovery metadata for the ``synop`` dataset
-* ``metadata-temp.yml``: contains the discovery metadata for the ``temp`` dataset
+* ``metadata-synop-CENTRE_ID.yml``: contains the discovery metadata for the ``synop`` dataset
+* ``metadata-temp-CENTRE_ID.yml``: contains the discovery metadata for the ``temp`` dataset
+
+Where CENTRE_ID is the centre-id you specified during the configuration step.
 
 Please review the content of these files and edit them as needed.
 
