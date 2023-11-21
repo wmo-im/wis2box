@@ -33,11 +33,8 @@ printenv | grep -v "no_proxy" >> /etc/environment
 service cron start
 service cron status
 
-echo "Caching topic hierarchy JSON"
-rm -fr /tmp/all.json /tmp/all.json.zip ~/.pywcmp/wis2-topic-hierarchy
-mkdir -p ~/.pywcmp/wis2-topic-hierarchy
-curl https://wmo-im.github.io/wis2-topic-hierarchy/all.json.zip --output /tmp/all.json.zip
-cd ~/.pywcmp/wis2-topic-hierarchy && unzip -j /tmp/all.json.zip
+echo "Caching topic hierarchy CSVs"
+pywis-topics bundle sync
 
 # wis2box commands
 # TODO: avoid re-creating environment if it already exists

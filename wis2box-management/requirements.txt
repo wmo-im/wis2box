@@ -6,5 +6,6 @@ OWSLib
 paho-mqtt
 pygeometa
 pywis-pubsub
+pywis-topics
 PyYAML
 requests

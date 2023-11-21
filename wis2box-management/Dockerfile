@@ -45,7 +45,7 @@ RUN apt-get update -y && apt-get install -y ${DEBIAN_PACKAGES} \
     https://github.com/wmo-cop/pyoscar/archive/refs/tags/0.6.4.zip \
     https://github.com/wmo-im/synop2bufr/archive/refs/tags/v0.6.2.zip \
     https://github.com/geopython/pygeometa/archive/master.zip \
-    https://github.com/wmo-im/pywcmp/archive/refs/tags/0.4.0.zip \
+    https://github.com/wmo-im/pywis-topics/archive/refs/tags/0.2.0.zip \
     # install shapely
     && pip3 install --no-cache-dir cython pygeos==0.13 \
     && pip3 install shapely \
