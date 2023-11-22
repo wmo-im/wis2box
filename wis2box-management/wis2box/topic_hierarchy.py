@@ -24,8 +24,8 @@ import logging
 from pathlib import Path
 from typing import Any, Tuple, Union
 
-# TODO: uncomment once topic hiearchy is approved
-# from pywcmp.wcmp2.topics import TopicHierarchy as pywcmp_th
+# from pywis_topics.topics import TopicHierarchy as pywis_topics_th
+
 from wis2box.data_mappings import DATADIR_DATA_MAPPINGS
 from wis2box.plugin import load_plugin
 
@@ -37,6 +37,11 @@ class TopicHierarchy:
         self.path = str(path)
         self.dotpath = None
         self.dirpath = None
+
+        if not self.path.startswith('origin/a/wis2'):
+            self.fullpath = f'origin/a/wis2/{self.dirpath}'
+        else:
+            self.fullpath = self.dirpath
 
         if '/' in self.path:
             LOGGER.debug('Transforming from directory to dotted path')
@@ -54,10 +59,10 @@ class TopicHierarchy:
         :returns: `bool` of whether the topic hierarchy is valid
         """
 
-        # TODO: uncomment once topic hiearchy is approved
+        # TODO: uncomment once WTH is approved
         # LOGGER.debug(f'Validating topic {self.dirpath} (fuzzy match)')
-        # th = pywcmp_th()
-        # return th.validate(self.dirpath, fuzzy=True)
+        # th = pywis_topics_th()
+        # return th.validate(self.fullpath)
 
         return True
 

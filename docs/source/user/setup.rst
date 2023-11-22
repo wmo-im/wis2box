@@ -181,6 +181,10 @@ You can review the discovery metadata just cached through the new item at  ``/oa
 
 Repeat this step for any other discovery metadata you wish to publish, such as the ``temp`` dataset.
 
+.. note::
+
+   To ensure that discovery metadata is shared with the WIS2 Global Discovery Catalogue, you must ensure that your discovery metadata is published once the WMO Global Broker is connected and subscribed for your wis2box broker.  If you have published discovery metadata before this stage, you must re-publish using the command above.
+
 Finally it is recommended to prepare authentication tokens for updating your stations and ingesting data using the wis2box-webapp.
 
 To create a token for ingesting data:
