@@ -68,7 +68,7 @@ The below example copies a local file (``myfile.csv``) to the ``wis2box-incoming
 
 To allow uploading files into MinIO remotely, the ``wis2box-incoming`` bucket is proxied via Nginx. 
 
-For example, to upload the local file (``WIGOS_0-454-2-AWSNAMITAMBO_2021-11-18T0955.csv with topic``) with topic ``mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop`` via the Nbinx proxy:
+For example, to upload the local file (``WIGOS_0-454-2-AWSNAMITAMBO_2021-11-18T0955.csv with topic``) with topic ``mw-mw_met_centre.data.core.weather.surface-based-observations.synop`` via the Nbinx proxy:
 
 .. code-block:: python
 

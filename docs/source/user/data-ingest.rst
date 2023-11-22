@@ -108,7 +108,7 @@ See below a Python example to upload data using the MinIO package:
     from minio import Minio
 
     filepath = '/home/wis2box-user/local-data/mydata.bin'
-    minio_path = '/ita/italy_wmo_demo/data/core/weather/surface-based-observations/synop/'
+    minio_path = '/it-roma_met_centre/data/core/weather/surface-based-observations/synop/'
 
     endpoint = 'http://localhost:9000'
     WIS2BOX_STORAGE_USERNAME = 'wis2box'
@@ -160,7 +160,7 @@ Then start the ``wis2box-ftp`` service with the following command:
 
 When using the wis2box-ftp service to ingest data, please note that the topic is determined by the directory structure in which the data arrives.
 
-For example, to correctly ingest data on the topic ``it-roma_met_centre.data.core.weather.surface-based-observations.synop`` you need to copy the data into the directory ``/ita/roma_met_centre/data/core/weather/surface-based-observations/synop`` on the FTP server:
+For example, to correctly ingest data on the topic ``it-roma_met_centre.data.core.weather.surface-based-observations.synop`` you need to copy the data into the directory ``/it-roma_met_centre/data/core/weather/surface-based-observations/synop`` on the FTP server:
 
 .. image:: ../_static/winscp_wis2box-ftp_example.png
     :width: 600
