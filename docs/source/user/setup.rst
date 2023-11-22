@@ -183,7 +183,7 @@ Repeat this step for any other discovery metadata you wish to publish, such as t
 
 .. note::
 
-   You must ensure that your discovery metadata is published once the WMO Global Broker is connected and subscribed for your wis2box broker.  If you have published discovery metadata before this stage, you must re-publish using the command above.
+   To ensure that discovery metadata is shared with the WIS2 Global Discovery Catalogue, you must ensure that your discovery metadata is published once the WMO Global Broker is connected and subscribed for your wis2box broker.  If you have published discovery metadata before this stage, you must re-publish using the command above.
 
 Finally it is recommended to prepare authentication tokens for updating your stations and ingesting data using the wis2box-webapp.
 
