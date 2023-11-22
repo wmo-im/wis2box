@@ -109,7 +109,9 @@ class DiscoveryMetadata(BaseMetadata):
         LOGGER.debug('Generating OARec discovery metadata')
         record = WMOWCMP2OutputSchema().write(md, stringify=False)
         record['properties']['wmo:topicHierarchy'] = mqtt_topic
-        record['properties']['contacts'][0]['organization'] = record['properties']['contacts'][0].pop('name')  # noqa
+
+        if record['properties']['contacts'][0].get('organization') is None:
+            record['properties']['contacts'][0]['organization'] = record['properties']['contacts'][0].pop('name', "NOTSET")  # noqa
 
         try:
             phone = record['properties']['contacts'][0]['phones'][0]['value']
