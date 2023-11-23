@@ -183,8 +183,7 @@ To start the ``wis2box-data-subscriber``, add the following additional variables
 
 .. code-block:: bash
 
-    COUNTRY_ID=zmb  # set country_id used in wis2-topic-hierarchy
-    CENTRE_ID=zmb_met_centre  # set centre_id for wis2-topic-hierarchy
+    CENTRE_ID=zm-zmb_met_centre  # set centre_id for wis2-topic-hierarchy
 
 These variables determine the destination path in the ``wis2box-incoming`` bucket:
 

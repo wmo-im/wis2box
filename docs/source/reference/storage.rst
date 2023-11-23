@@ -47,29 +47,6 @@ Install the Python boto3 package via `pip`_:
 
 The below example copies a local file (``myfile.csv``) to the ``wis2box-incoming`` bucket with topic ``foo.bar.baz``:
 
-
-.. code-block:: python
-
-    import boto3
-
-    endpoint_url = '<your-wis2box-url>'
-    filename = 'myfile.csv'
-
-    session = boto3.Session(
-        aws_access_key_id='wis2box',
-        aws_secret_access_key='Wh00data!'
-    )
-
-    s3client = session.client('s3', endpoint_url=endpoint_url)
-
-    with open(filename, 'rb') as fh:
-        s3client.upload_fileobj(fh, 'wis2box-incoming', f'foo/bar/baz/{filename}')
-
-
-To allow uploading files into MinIO remotely, the ``wis2box-incoming`` bucket is proxied via Nginx. 
-
-For example, to upload the local file (``WIGOS_0-454-2-AWSNAMITAMBO_2021-11-18T0955.csv with topic``) with topic ``mw-mw_met_centre.data.core.weather.surface-based-observations.synop`` via the Nbinx proxy:
-
 .. code-block:: python
 
     import boto3
@@ -79,15 +56,36 @@ For example, to upload the local file (``WIGOS_0-454-2-AWSNAMITAMBO_2021-11-18T0
 
     session = boto3.Session(
         aws_access_key_id='wis2box',
-        aws_secret_access_key='Wh00data!'
+        aws_secret_access_key='XXXXX' # your wis2box storage password
     )
 
     s3client = session.client('s3', endpoint_url=endpoint_url)
 
+    with open(filename, 'rb') as fh:
+        s3client.upload_fileobj(fh, 'wis2box-incoming', f'foo/bar/baz/{filename}')
+
+To allow uploading files into MinIO remotely, the ``wis2box-incoming`` bucket is proxied via Nginx. 
+
+For example, to upload the local file (``WIGOS_0-454-2-AWSNAMITAMBO_2021-11-18T0955.csv with topic``) to the folder 
+``mw-mw_met_centre/data/core/weather/surface-based-observations/synop``:
+
+.. code-block:: python
+
+    import boto3
+
+    endpoint_url = '<your-wis2box-url>'
     filename = 'WIGOS_0-454-2-AWSNAMITAMBO_2021-11-18T0955.csv'
 
-    with open(filename, 'rb') as f:
-        s3client.upload_fileobj(f, 'wis2box-incoming', f'data/core/observations-surface-land/mw/FWCL/landFixed/{filename}')
+    session = boto3.Session(
+        aws_access_key_id='wis2box',
+        aws_secret_access_key='XXXXX' # your wis2box storage password
+    )
+
+    s3client = session.client('s3', endpoint_url=endpoint_url)
+
+    folder = 'mw-mw_met_centre/data/core/weather/surface-based-observations/synop'
+    with open(filename, 'rb') as fh:
+        s3client.upload_fileobj(fh, 'wis2box-incoming', f'{folder}/{filename}')
 
 
 Using the MinIO Python Client
@@ -101,20 +99,28 @@ Install the Python minio module via `pip`_:
 
     pip3 install minio
 
-The below example copies a local file (``myfile.csv``) to the ``wis2box-incoming`` bucket to topic ``foo.bar.baz``:
+The below example copies a local file (``mydata.bin``) to the ``wis2box-incoming`` bucket to topic ``foo.bar.baz``:
 
 .. code-block:: python
 
     from minio import Minio
 
-    client = Minio(
-        'localhost:9000',
-        access_key='minio',
-        secret_key='minio123',
-        secure=False
-    )
+    filepath = '/home/wis2box-user/local-data/mydata.bin'
+    minio_path = '/it-roma_met_centre/data/core/weather/surface-based-observations/synop/'
 
-    client.fput_object('wis2box-incoming', 'myfile.csv', '/foo/bar/baz/myfile.csv') 
+    endpoint = 'http://localhost:9000'
+    WIS2BOX_STORAGE_USERNAME = 'wis2box'
+    WIS2BOX_STORAGE_PASSWORD = 'XXXXX' # your wis2box storage password
+
+    client = Minio(
+        endpoint=endpoint,
+        access_key=WIS2BOX_STORAGE_USERNAME,
+        secret_key=WIS2BOX_STORAGE_PASSWORD,
+        secure=is_secure=False)
+    
+    filename = filepath.split('/')[-1]
+    client.fput_object('wis2box-incoming', minio_path+filename, filepath)
+
 
 Using S3cmd
 ^^^^^^^^^^^
@@ -132,8 +138,8 @@ Edit the following fields in ``~/.s3cfg``:
     use_https = False
 
     # Setup access keys
-    access_key = minio
-    secret_key = minio123
+    access_key = wis2box
+    secret_key = XXXXX
     EOF
 
 
