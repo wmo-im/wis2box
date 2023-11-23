@@ -368,6 +368,10 @@ def get_valid_wsi(wsi: str = '', tsi: str = '') -> Union[str, None]:
 
     if wsi in stations:
         return wsi
+    else:
+        for station in stations.values():
+            if station['properties']['traditional_station_identifier'] == tsi:
+                return wsi
 
     return None
 
