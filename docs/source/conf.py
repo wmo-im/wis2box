@@ -77,8 +77,8 @@ html_css_files = [
 ]
 html_static_path = ['_static']
 
-html_favicon = 'https://public.wmo.int/sites/all/themes/wmo/favicon.ico'
-html_logo = 'https://public.wmo.int/sites/all/themes/wmo/logo.png'
+html_favicon = '_static/favicon.ico'
+html_logo = '_static/logo.png'
 
 linkcheck_ignore = [
     r'http://localhost:\d+/'
