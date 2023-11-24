@@ -368,8 +368,7 @@ def create_config_dir() -> str:
     return config_dir
 
 
-def create_datamappings_file(config_dir: str, country_code: str,
-                             centre_id: str) -> None:
+def create_datamappings_file(config_dir: str, centre_id: str) -> None:
     """
     creates the data mappings file in the directory config_dir
 
@@ -385,7 +384,6 @@ def create_datamappings_file(config_dir: str, country_code: str,
     new_config_file = Path(config_dir) / "data-mappings.yml"
 
     template_vars = {
-        'COUNTRY_CODE': country_code,
         'CENTRE_ID': centre_id
     }
     with template_file.open() as fh:
@@ -400,14 +398,13 @@ def create_datamappings_file(config_dir: str, country_code: str,
     print("*" * 80)
 
 
-def create_metadata_file(config_dir: str, country_code: str, country_name,
+def create_metadata_file(config_dir: str,  country_name: str,
                          centre_id: str, centre_name: str, wis2box_email: str,
                          bounding_box: str, template: str) -> str:
     """
     creates the metadata file in the directory config_dir
 
     :param config_dir: `str` of the path to the directory where the configuration files are to be stored # noqa
-    :param country_code: `str` of the country code of the wis2box
     :param country_name: `str` of the country name of the wis2box
     :param centre_id: `str` of the centre id of the wis2box
     :param centre_name: `str` of centre name of the wis2box
@@ -435,7 +432,6 @@ def create_metadata_file(config_dir: str, country_code: str, country_name,
         'PUBLICATION_DATE': current_date,
         'START_DATE': current_date,
         'CREATION_DATE': current_date,
-        'COUNTRY_CODE': country_code,
         'COUNTRY_NAME': country_name,
         'CENTRE_ID': centre_id,
         'CENTRE_NAME': centre_name,
@@ -499,7 +495,6 @@ def create_metadata_files(config_dir: str, country_code: str,
 
     create_metadata_file(
         config_dir,
-        country_code,
         country_name,
         centre_id,
         centre_name,
@@ -509,7 +504,6 @@ def create_metadata_files(config_dir: str, country_code: str,
     )
     create_metadata_file(
         config_dir,
-        country_code,
         country_name,
         centre_id,
         centre_name,
@@ -622,8 +616,8 @@ def main():
     print("Creating initial configuration for surface and upper-air data.")
     print("*" * 80)
 
-    create_metadata_files(config_dir, country_code, centre_id)
-    create_datamappings_file(config_dir, country_code, centre_id)
+    create_metadata_files(config_dir, centre_id)
+    create_datamappings_file(config_dir, centre_id)
     create_station_list(config_dir)
 
     print("The configuration is complete.")

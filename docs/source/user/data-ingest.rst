@@ -61,8 +61,8 @@ Select 'browse' on the ``wis2box-incoming`` bucket and select 'Choose or create 
 
     For example:
     
-    * data to be published on:  ``origin/a/wis2/cog/brazza_met_centre/data/core/weather/surface-based-observations/synop``
-    * upload data in the path: ``cog/brazza_met_centre/data/core/weather/surface-based-observations/synop``. 
+    * data to be published on: ``origin/a/wis2/cd-brazza_met_centre/data/core/weather/surface-based-observations/synop``
+    * upload data in the path: ``cd-brazza_met_centre/data/core/weather/surface-based-observations/synop``
     
     The error message ``Topic Hierarchy validation error: No plugins for minio:9000/wis2box-incoming/... in data mappings`` indicates you stored a file in a folder for which no matching dataset was defined in ``data-mappings.yml``.
 
@@ -108,7 +108,7 @@ See below a Python example to upload data using the MinIO package:
     from minio import Minio
 
     filepath = '/home/wis2box-user/local-data/mydata.bin'
-    minio_path = '/ita/italy_wmo_demo/data/core/weather/surface-based-observations/synop/'
+    minio_path = '/it-roma_met_centre/data/core/weather/surface-based-observations/synop/'
 
     endpoint = 'http://localhost:9000'
     WIS2BOX_STORAGE_USERNAME = 'wis2box'
@@ -160,7 +160,7 @@ Then start the ``wis2box-ftp`` service with the following command:
 
 When using the wis2box-ftp service to ingest data, please note that the topic is determined by the directory structure in which the data arrives.
 
-For example to correctly ingest data on the topic ``ita.roma_met_centre.data.core.weather.surface-based-observations.synop`` you need to copy the data into the directory ``/ita/roma_met_centre/data/core/weather/surface-based-observations/synop`` on the FTP server:
+For example, to correctly ingest data on the topic ``it-roma_met_centre.data.core.weather.surface-based-observations.synop`` you need to copy the data into the directory ``/it-roma_met_centre/data/core/weather/surface-based-observations/synop`` on the FTP server:
 
 .. image:: ../_static/winscp_wis2box-ftp_example.png
     :width: 600
@@ -183,12 +183,11 @@ To start the ``wis2box-data-subscriber``, add the following additional variables
 
 .. code-block:: bash
 
-    COUNTRY_ID=zmb  # set country_id used in wis2-topic-hierarchy
-    CENTRE_ID=zmb_met_centre  # set centre_id for wis2-topic-hierarchy
+    CENTRE_ID=zm-zmb_met_centre  # set centre_id for wis2-topic-hierarchy
 
 These variables determine the destination path in the ``wis2box-incoming`` bucket:
 
-``{COUNTRY_ID}/{CENTRE_ID}/data/core/weather/surface-based-observations/synop/``
+``{CENTRE_ID}/data/core/weather/surface-based-observations/synop/``
 
 You then you can activate the optional 'wis2box-data-subscriber' service as follows:
 

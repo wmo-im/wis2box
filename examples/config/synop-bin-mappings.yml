@@ -1,5 +1,5 @@
 data:
-    [country].[centre_id].data.core.weather.surface-based-observations.synop:
+    [centre_id].data.core.weather.surface-based-observations.synop:
         plugins:
             bin:
                 - plugin: wis2box.data.bufr4.ObservationDataBUFR

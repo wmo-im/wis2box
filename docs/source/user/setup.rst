@@ -43,7 +43,7 @@ Run the following command to create the initial configuration files for your wis
    These passwords are for internal use only within the wis2box, and it is recommended to accept the randomly generated passwords.
 
    The script will ask for 3-letter ISO country code for your wis2box. Please provide the 3-letter ISO country code for your country, for example ``FRA``.
-   It will also ask for a centre-id. Please provide a string that identifies your organization and does not use spaces or special characters, for example ``meteofrance``.
+   It will also ask for a centre-id. Please provide a lowercase string delimited by `-`, that is comprised of the `top level domain of your country`_ and a lowercase string that identifies your organization and does not use spaces or special characters, for example ``fr-meteofrance``.
 
 .. note::
 
@@ -236,3 +236,4 @@ The next is the :ref:`data-ingest`.
 .. _`wis2box Releases`: https://github.com/wmo-im/wis2box/releases
 .. _`WIS2 topic hierarchy`: https://github.com/wmo-im/wis2-topic-hierarchy
 .. _`OSCAR`: https://oscar.wmo.int/surface
+.. _`top level domain of your country`: https://en.wikipedia.org/wiki/Country_code_top-level_domain

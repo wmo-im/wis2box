@@ -45,21 +45,21 @@ Below are some examples of working with the discovery catalogue.
 
 .. note::
 
-   - the examples below use the ``mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop`` collection as described
+   - the examples below use the ``mw-mw_met_centre.data.core.weather.surface-based-observations.synop`` collection as described
      in the :ref:`quickstart`.  For other dataset collections, use the same query patterns below, substituting the
      collection id accordingly
 
 
 - list of dataset collections: http://localhost/oapi/collections
-- collection description: http://localhost/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop
-- collection queryables: http://localhost/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/queryables
-- collection items (browse): http://localhost/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/items
+- collection description: http://localhost/oapi/collections/mw-mw_met_centre.data.core.weather.surface-based-observations.synop
+- collection queryables: http://localhost/oapi/collections/mw-mw_met_centre.data.core.weather.surface-based-observations.synop/queryables
+- collection items (browse): http://localhost/oapi/collections/mw-mw_met_centre.data.core.weather.surface-based-observations.synop/items
 - collection queries
 
-  - set limit/offset (paging): http://localhost/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/items?limit=1&startindex=2
-  - query by spatial (bounding box): http://localhost/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/items?bbox=32,-17,36,-8
-  - query by temporal extent (since): http://localhost/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/items?datetime=2021/..
-  - query by temporal extent (before): http://localhost/oapi/collections/mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop/items?datetime=../2022
+  - set limit/offset (paging): http://localhost/oapi/collections/mw-mw_met_centre.data.core.weather.surface-based-observations.synop/items?limit=1&startindex=2
+  - query by spatial (bounding box): http://localhost/oapi/collections/mw-mw_met_centre.data.core.weather.surface-based-observations.synop/items?bbox=32,-17,36,-8
+  - query by temporal extent (since): http://localhost/oapi/collections/mw-mw_met_centre.data.core.weather.surface-based-observations.synop/items?datetime=2021/..
+  - query by temporal extent (before): http://localhost/oapi/collections/mw-mw_met_centre.data.core.weather.surface-based-observations.synop/items?datetime=../2022
 
 .. note::
 

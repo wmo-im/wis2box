@@ -1,6 +1,6 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: country.centre_id.data.core.weather.surface-based-observations.synop
+    topic_hierarchy: centre_id.data.core.weather.surface-based-observations.synop
     country: country
     centre_id: centre_id
 
@@ -8,7 +8,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:x-wmo:md:country:centre_id:surface-weather-observations
+    identifier: urn:x-wmo:md:centre_id:surface-weather-observations
     language: en
     charset: utf8
     hierarchylevel: dataset
@@ -16,8 +16,8 @@ metadata:
 identification:
     language: en
     charset: utf8
-    title: Surface weather observations from country.centre_id
-    abstract: Surface weather observations from country.centre_id
+    title: Surface weather observations from centre_id
+    abstract: Surface weather observations from centre_id
     dates:
         creation: 2021-11-29
         publication: 2021-11-29

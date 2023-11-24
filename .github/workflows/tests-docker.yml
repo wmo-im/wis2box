@@ -49,9 +49,9 @@ jobs:
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection
     - name: add Malawi data 🇲🇼
       env:
-        TOPIC_HIERARCHY: mwi.mwi_met_centre.data.core.weather.surface-based-observations.synop
-        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/mwi-surface-weather-observations.yml
-        DISCOVERY_METADATA_ID: urn:x-wmo:md:mwi:mwi_met_centre:surface-weather-observations
+        TOPIC_HIERARCHY: mw-mw_met_centre.data.core.weather.surface-based-observations.synop
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/mw-surface-weather-observations.yml
+        DISCOVERY_METADATA_ID: urn:x-wmo:md:mw-mw_met_centre:surface-weather-observations
         TEST_DATA: /data/wis2box/observations/malawi
       run: |
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
@@ -61,9 +61,9 @@ jobs:
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
     - name: add Italy data 🇮🇹
       env:
-        TOPIC_HIERARCHY: ita.roma_met_centre.data.core.weather.surface-based-observations.synop
-        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/ita-surface-weather-observations.yml
-        DISCOVERY_METADATA_ID: urn:x-wmo:md:ita:roma_met_centre:surface-weather-observations
+        TOPIC_HIERARCHY: it-roma_met_centre.data.core.weather.surface-based-observations.synop
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/it-surface-weather-observations.yml
+        DISCOVERY_METADATA_ID: urn:x-wmo:md:it-roma_met_centre:surface-weather-observations
         TEST_DATA: /data/wis2box/observations/italy
       run: |
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
@@ -73,9 +73,9 @@ jobs:
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
     - name: add Algeria data 🇩🇿
       env:
-        TOPIC_HIERARCHY: dza.alger_met_centre.data.core.weather.surface-based-observations.synop
-        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/dza-surface-weather-observations.yml
-        DISCOVERY_METADATA_ID: urn:x-wmo:md:dza:dza_met_centre:surface-weather-observations
+        TOPIC_HIERARCHY: dz-alger_met_centre.data.core.weather.surface-based-observations.synop
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/dz-surface-weather-observations.yml
+        DISCOVERY_METADATA_ID: urn:x-wmo:md:dz-alger_met_centre:surface-weather-observations
         TEST_DATA: /data/wis2box/observations/algeria
       run: |
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
@@ -85,9 +85,9 @@ jobs:
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
     - name: add Romania data 🇷🇴
       env:
-        TOPIC_HIERARCHY: rou.rnimh.data.core.weather.surface-based-observations.synop
-        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/rou-synoptic-weather-observations.yml
-        DISCOVERY_METADATA_ID: urn:x-wmo:md:rou:rnimh:synoptic-weather-observations
+        TOPIC_HIERARCHY: ro-rnimh.data.core.weather.surface-based-observations.synop
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/ro-synoptic-weather-observations.yml
+        DISCOVERY_METADATA_ID: urn:x-wmo:md:ro-rnimh:synoptic-weather-observations
         TEST_DATA: /data/wis2box/observations/romania
       run: |
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
@@ -97,9 +97,9 @@ jobs:
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
     - name: add Congo data 🇨🇩
       env:
-        TOPIC_HIERARCHY: cog.brazza_met_centre.data.core.weather.surface-based-observations.synop
-        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/cog-surface-weather-observations.yml
-        DISCOVERY_METADATA_ID: urn:x-wmo:md:cog:brazza_met_centre:surface-weather-observations
+        TOPIC_HIERARCHY: cd-brazza_met_centre.data.core.weather.surface-based-observations.synop
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/cd-surface-weather-observations.yml
+        DISCOVERY_METADATA_ID: urn:x-wmo:md:cd-brazza_met_centre:surface-weather-observations
         TEST_DATA: /data/wis2box/observations/congo
       run: |
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA

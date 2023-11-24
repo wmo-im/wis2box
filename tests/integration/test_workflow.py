@@ -33,7 +33,7 @@ DATADIR = Path('.').parent.absolute() / 'tests/data'
 
 URL = 'http://localhost'
 API_URL = f'{URL}/oapi'
-ID = 'urn:x-wmo:md:mwi:mwi_met_centre:surface-weather-observations'
+ID = 'urn:x-wmo:md:mw-mw_met_centre:surface-weather-observations'
 SESSION = Session()
 SESSION.hooks = {
    'response': lambda r, *args, **kwargs: r.raise_for_status()
@@ -101,7 +101,7 @@ def test_metadata_discovery_publish():
     mqtt_link = [d for d in r['links'] if d['type'] == 'MQTT'][0]
 
     assert 'everyone:everyone' in mqtt_link['href']
-    assert mqtt_link['channel'] == 'origin/a/wis2/mwi/mwi_met_centre/data/core/weather/surface-based-observations/synop'  # noqa
+    assert mqtt_link['channel'] == 'origin/a/wis2/mw-mw_met_centre/data/core/weather/surface-based-observations/synop'  # noqa
 
     params = {
         'q': 'temperature'
@@ -114,17 +114,17 @@ def test_metadata_discovery_publish():
 
     # test access of discovery metadata from notification message
 
-    countries_and_centre_ids = [
-        ('mwi', 'mwi_met_centre'),
-        ('ita', 'roma_met_centre'),
-        ('dza', 'alger_met_centre'),
-        ('rou', 'rnimh'),
-        ('cog', 'brazza_met_centre')
+    centre_ids = [
+        'mw-mw_met_centre',
+        'it-roma_met_centre',
+        'dz-alger_met_centre',
+        'ro-rnimh',
+        'cd-brazza_met_centre'
     ]
 
-    for cacid in countries_and_centre_ids:
+    for centre_id in centre_ids:
         params = {
-            'q': f'{cacid[0]} AND {cacid[1]} AND metadata'
+            'q': f'{centre_id} AND metadata'
         }
 
         r = SESSION.get(f'{API_URL}/collections/messages/items',
@@ -133,8 +133,7 @@ def test_metadata_discovery_publish():
         assert r['numberMatched'] == 1
 
         feature = r['features'][0]
-        assert feature['properties']['data_id'].startswith(
-            f'{cacid[0]}/{cacid[1]}')
+        assert feature['properties']['data_id'].startswith(centre_id)
 
         link = feature['links'][0]
 
@@ -157,7 +156,7 @@ def test_data_ingest():
 
     assert item_api['reportId'] == 'WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500'
     assert item_api['properties']['resultTime'] == '2021-07-07T14:55:00Z'  # noqa
-    item_source = f'2021-07-07/wis/mwi/mwi_met_centre/data/core/weather/surface-based-observations/synop/{item_api["reportId"]}.bufr4' # noqa
+    item_source = f'2021-07-07/wis/mw-mw_met_centre/data/core/weather/surface-based-observations/synop/{item_api["reportId"]}.bufr4' # noqa
     r = SESSION.get(f'{URL}/data/{item_source}')  # noqa
     assert r.status_code == codes.ok
 
@@ -228,7 +227,7 @@ def test_message_api():
 
     # test messages per test dataset
     counts = {
-        'mwi_met_centre': 24,
+        'mw_met_centre': 24,
         'roma_met_centre': 33,
         'alger_met_centre': 28,
         'rnimh': 188,
@@ -257,7 +256,7 @@ def test_message_api():
     assert props['integrity']['method'] == 'sha512'
     assert not props['data_id'].startswith('wis2')
     assert not props['data_id'].startswith('origin/a/wis2')
-    assert props['data_id'].startswith('cog')
+    assert props['data_id'].startswith('cd')
     assert props['content']['size'] == 257
     assert props['content']['encoding'] == 'base64'
     assert props['content']['value'] is not None

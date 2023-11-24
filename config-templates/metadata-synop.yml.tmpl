@@ -1,14 +1,13 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: $COUNTRY_CODE.$CENTRE_ID.data.core.weather.surface-based-observations.synop
-    country: $COUNTRY_CODE
+    topic_hierarchy: $CENTRE_ID.data.core.weather.surface-based-observations.synop
     centre_id: $CENTRE_ID
 
 mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:x-wmo:md:$COUNTRY_CODE:$CENTRE_ID:surface-based-observations.synop
+    identifier: urn:x-wmo:md:$CENTRE_ID:surface-based-observations.synop
     language: en
     charset: utf8
     hierarchylevel: dataset
