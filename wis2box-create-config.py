@@ -34,10 +34,10 @@ OTHER_TLDS = ['org', 'int']
 def get_country_name(country_code: str) -> str:
     """
     provide the country name for the wis2box
-    using the country's 2-letter ISO code
+    using the country's TLD code
     using the data from config-templates/bounding_box_lookup.json
 
-    :param country_code: `str` 2-letter ISO code for the country
+    :param country_code: `str` of TLD code of the country
 
     :returns: `str` of country name
     """
@@ -51,8 +51,10 @@ def get_country_name(country_code: str) -> str:
         # load the data
         data = json.load(fh)
         # get the bounding box for the country
-        if country_code in data['countries'] and 'name' in data['countries'][country_code]:  # noqa
+        try:
             country_name = data['countries'][country_code]['name']
+        except KeyError:
+            pass
 
     return country_name
 
@@ -60,13 +62,13 @@ def get_country_name(country_code: str) -> str:
 def get_bounding_box(country_code: str) -> Tuple[str, str]:
     """
     provide the initial bounding box for the wis2box
-    using the country's 2-letter ISO code
+    using the country's TLD code
     using the data from config-templates/bounding_box_lookup.json
 
     use bounding box for the whole world if no value is found in
     the config-templates/bounding_box_lookup.json file
 
-    :param country_code: `str` 2-letter ISO code for the country
+    :param country_code: `str` of TLD code of the country
 
     :returns: `tuple` of (country_name, bbox)
     """
