@@ -28,17 +28,47 @@ import string
 from string import Template
 from typing import Tuple
 
+OTHER_TLDS = ['org', 'int']
+
+
+def get_country_name(country_code: str) -> str:
+    """
+    provide the country name for the wis2box
+    using the country's TLD code
+    using the data from config-templates/bounding_box_lookup.json
+
+    :param country_code: `str` of TLD code of the country
+
+    :returns: `str` of country name
+    """
+
+    country_name = 'NA'
+    # get the path to the data
+    data_path = Path(__file__).parent / 'config-templates' / 'countries.json'
+
+    # open the file
+    with data_path.open() as fh:
+        # load the data
+        data = json.load(fh)
+        # get the bounding box for the country
+        try:
+            country_name = data['countries'][country_code]['name']
+        except KeyError:
+            pass
+
+    return country_name
+
 
 def get_bounding_box(country_code: str) -> Tuple[str, str]:
     """
     provide the initial bounding box for the wis2box
-    using the country's 3-letter ISO code
+    using the country's TLD code
     using the data from config-templates/bounding_box_lookup.json
 
     use bounding box for the whole world if no value is found in
     the config-templates/bounding_box_lookup.json file
 
-    :param country_code: `str` 3-letter ISO code for the country
+    :param country_code: `str` of TLD code of the country
 
     :returns: `tuple` of (country_name, bbox)
     """
@@ -94,47 +124,66 @@ def get_bounding_box(country_code: str) -> Tuple[str, str]:
     return country_name, bounding_box
 
 
-def get_country_and_centre_id() -> Tuple[str, str]:
+def get_tld_and_centre_id() -> Tuple[str, str]:
     """
-    Asks the user for the 3-letter ISO country-code
+    Asks the user for the TLD
     and a string identifying the centre hosting the wis2box.
 
     :returns: `tuple` of (country_code, centre_id)
     """
 
     answer = ''
-
+    country_code = ''
     while answer != 'y':
         if answer == 'exit':
             exit()
 
-        print('Please enter your 3-letter ISO country code:')
+        print('Please enter your ccTLD (2-letter country code) or other TLD:') # noqa
         country_code = input()
 
-        # check that the input is a 3-letter string
+        # check that the input is a 2-letter string or a relevant TLD
         # if not repeat the question
-        while len(country_code) != 3:
-            print('The country code must be a 3-letter string.')
-            print('Please enter your 3-letter ISO country code:')
+        while country_code not in OTHER_TLDS and len(country_code) != 2:
+            print(f'The country code must be a 2-letter ISO code or another relevant TLD (e.g. {OTHER_TLDS}).') # noqa
+            print('Please enter your 2-letter ISO country code (or TLD):') # noqa
             country_code = input()
 
         # make sure the country code is lowercase
         country_code = country_code.lower()
 
+        # check the country name
+        country_name = get_country_name(country_code)
+        if country_name == 'NA':
+            print(f'No country-name found for TLD={country_code} !')
+
+        # ask the user to confirm their choice and give them the option to change it # noqa
+        print('Your TLD corresponds to: ')
+        print(f'  {country_code} (country_name={country_name})')
+        print('Is this correct? (y/n/exit)')
+        answer = input()
+
+    answer = ''
+    centre_id = ''
+    while answer != 'y':
+        if answer == 'exit':
+            exit()
         print('Please enter the centre-id for your wis2box:')
         centre_id = str(input()).lower()
 
         # check that the input is valid
         # if not repeat the question
-        while any([x in centre_id for x in ['#', '+', ' ']]) or len(centre_id) < 3:  # noqa
-            print('The centre-id cannot contain spaces or the "+" or "#" characters, and must be at least 3 characters long.') # noqa
-            print('Please enter the string identifying the centre hosting the wis2box:') # noqa
+        while any([x in centre_id for x in ['#', '+', ' ']]) or len(centre_id) < 6 or not centre_id.startswith(country_code + '-'):  # noqa
+            if not centre_id.startswith(country_code + '-'):
+                print(f' !!! The centre-id must start with {country_code}-')
+                print(f' For example: {country_code}-mycentre')
+            if any([x in centre_id for x in ['#', '+', ' ']]):
+                print(' !!! The centre-id cannot contain spaces or the "+" or "#" characters') # noqa
+            if len(centre_id) < 5:
+                print(' !!! The centre-id must be at least 6 characters long.')
+            print('Please enter the centre-id for your wis2box:')
             centre_id = str(input()).lower()
 
         # ask the user to confirm their choice and give them the option to change it # noqa
-        # and give them the option to exit the script
-        print('The country-code will be set to:')
-        print(f'  {country_code}')
         print('The centre-id will be set to:')
         print(f'  {centre_id}')
         print('Is this correct? (y/n/exit)')
@@ -368,7 +417,7 @@ def create_config_dir() -> str:
     return config_dir
 
 
-def create_datamappings_file(config_dir: str, centre_id: str) -> None:
+def update_datamappings_file(config_dir: str, centre_id: str) -> None:
     """
     creates the data mappings file in the directory config_dir
 
@@ -389,16 +438,22 @@ def create_datamappings_file(config_dir: str, centre_id: str) -> None:
     with template_file.open() as fh:
         config_file = Template(fh.read())
         result = config_file.substitute(template_vars)
-        with new_config_file.open("w") as fh2:
-            fh2.write(result)
+        if new_config_file.exists():
+            print(f"Adding datasets to {new_config_file}")
+            with new_config_file.open("a") as fh2:
+                fh2.write(result.replace("data:\n", ""))
+        else:
+            print(f"Creating {new_config_file}")
+            with new_config_file.open("w") as fh2:
+                fh2.write(result)
 
     print("*" * 80)
-    print("Initial data_mappings.yml have been created") # noqa
+    print("data_mappings.yml have been created/updated") # noqa
     print("Please review the file and update as needed.")
     print("*" * 80)
 
 
-def create_metadata_file(config_dir: str,  country_name: str,
+def create_metadata_file(config_dir: str, country_name: str,
                          centre_id: str, centre_name: str, wis2box_email: str,
                          bounding_box: str, template: str) -> str:
     """
@@ -425,7 +480,7 @@ def create_metadata_file(config_dir: str,  country_name: str,
     if not discovery_metadata_dir.exists():
         discovery_metadata_dir.mkdir(parents=True)
 
-    new_config_file = discovery_metadata_dir / f'metadata-{template}.yml'
+    new_config_file = discovery_metadata_dir / f'metadata-{template}-{centre_id}.yml' # noqa
     template_file = Path('config-templates') / f'metadata-{template}.yml.tmpl'  # noqa
 
     template_vars = {
@@ -470,7 +525,7 @@ def create_metadata_files(config_dir: str, country_code: str,
         if answer == "exit":
             exit()
 
-        print("Please enter the email address of the wis2box administrator:")
+        print(f"Please enter the email address of the wis2box administrator for {centre_id}:") # noqa
         wis2box_email = input()
         print("The email address of the wis2box administrator will be set to:") # noqa
         print(f"    {wis2box_email}")
@@ -483,9 +538,9 @@ def create_metadata_files(config_dir: str, country_code: str,
     while answer != "y":
         if answer == "exit":
             exit()
-        print("Please enter the name of your organization:")
+        print(f"Please enter the name of the organization for {centre_id}:")
         centre_name = input()
-        print("Your organization name will be set to:")
+        print("The organization name will be set to:")
         print(f"    {centre_name}")
         print("Is this correct? (y/n/exit)")
         answer = input()
@@ -513,7 +568,7 @@ def create_metadata_files(config_dir: str, country_code: str,
     )
 
     print("*" * 80)
-    print(f"Initial metadata files created in directory {config_dir}.") # noqa
+    print(f"Metadata files for {centre_id} created in directory {config_dir}.") # noqa
     print("Please review the files and edit where necessary.")
     print("*" * 80)
 
@@ -610,14 +665,21 @@ def main():
     if not dev_env.is_file():
         create_wis2box_env(config_dir)
 
-    country_code, centre_id = get_country_and_centre_id()
+    q_metadata = 'Would you like to add datasets for another centre-id ? (y/n)'  # noqa
+    answer = 'y'
+    while answer == 'y':
+        tld, centre_id = get_tld_and_centre_id()
+        create_metadata_files(config_dir, tld, centre_id)
+        update_datamappings_file(config_dir, centre_id)
+        print(" ")
+        print(f"Finished configuration for centre-id={centre_id}")
+        print(" ")
+        print(q_metadata)
+        answer = input()
+        if answer not in ['y', 'n']:
+            print(q_metadata)
+            answer = input()
 
-    print("*" * 80)
-    print("Creating initial configuration for surface and upper-air data.")
-    print("*" * 80)
-
-    create_metadata_files(config_dir, centre_id)
-    create_datamappings_file(config_dir, centre_id)
     create_station_list(config_dir)
 
     print("The configuration is complete.")

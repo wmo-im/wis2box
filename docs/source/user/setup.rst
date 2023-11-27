@@ -42,12 +42,13 @@ Run the following command to create the initial configuration files for your wis
    The script will propose to automatically create passwords for ``WIS2BOX_STORAGE_PASSWORD`` and ``WIS2BOX_BROKER_PASSWORD``.
    These passwords are for internal use only within the wis2box, and it is recommended to accept the randomly generated passwords.
 
-   The script will ask for 3-letter ISO country code for your wis2box. Please provide the 3-letter ISO country code for your country, for example ``FRA``.
-   It will also ask for a centre-id. Please provide a lowercase string delimited by `-`, that is comprised of the `top level domain of your country`_ and a lowercase string that identifies your organization and does not use spaces or special characters, for example ``fr-meteofrance``.
+   The script will ask for your TLD, the `top level domain of your country`_, for example ``fr`` for France. International organizations should use ``int``.
+   
+   It will also ask for a centre-id. Please provide a lowercase string delimited by `-`, that is comprised of the TLD and a lowercase string that identifies your organization and does not use spaces or special characters, for example ``fr-meteofrance``.
 
 .. note::
 
-   In alignment with WMO WIS2 Guidance, the above fields are automatically converted to lowercase when saved in wis2box.
+   In alignment with WMO WIS2 Guidance, the centre-id is automatically converted to lowercase when saved in wis2box.
 
    The remaining questions will be used in the creation the discovery metadata files for the ``synop`` and ``temp`` datasets.
 
