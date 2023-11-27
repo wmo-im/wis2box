@@ -149,12 +149,10 @@ def get_tld_and_centre_id() -> Tuple[str, str]:
         # make sure the country code is lowercase
         country_code = country_code.lower()
 
-        # if country_code is a 2-letter ISO code, check the country name
-        country_name = 'NA'
-        if len(country_code) == 2:
-            country_name = get_country_name(country_code)
-            if country_name == 'NA':
-                print(f'No country-name found for ccTLD={country_code} !')
+        # check the country name
+        country_name = get_country_name(country_code)
+        if country_name == 'NA':
+            print(f'No country-name found for TLD={country_code} !')
 
         # ask the user to confirm their choice and give them the option to change it # noqa
         print('Your TLD corresponds to: ')
@@ -546,10 +544,7 @@ def create_metadata_files(config_dir: str, country_code: str,
         answer = input()
 
     # get an initial bounding box for the country
-    country_name = 'NA'
-    bounding_box = '-180, -90, 180, 90'
-    if country_code not in OTHER_TLDS:
-        country_name, bounding_box = get_bounding_box(country_code)
+    country_name, bounding_box = get_bounding_box(country_code)
 
     create_metadata_file(
         config_dir,
