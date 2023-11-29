@@ -133,10 +133,8 @@ def station():
     pass
 
 
-def load_stations(wsi: str = '') -> dict:
+def load_stations() -> dict:
     """Load stations from API
-
-    param wsi: `str` of WIGOS Station Identifier
 
     :returns: `dict` of stations
     """
@@ -179,7 +177,7 @@ def get_stations_csv(wsi: str = '') -> str:
     LOGGER.info('Loading stations into csv-string')
 
     csv_output = []
-    stations = load_stations(wsi)
+    stations = load_stations()
 
     for station in stations.values():
         wsi = station['properties']['wigos_station_identifier']
@@ -363,15 +361,15 @@ def get_valid_wsi(wsi: str = '', tsi: str = '') -> Union[str, None]:
     :returns: `str`, of valid wsi or `None`
     """
 
-    LOGGER.info(f'Validating WIGOS Station Identifier: {wsi}')
-    stations = load_stations(wsi)
+    LOGGER.info(f'Validating wsi={wsi}, tsi={tsi}')
+    stations = load_stations()
 
     if wsi in stations:
         return wsi
     else:
         for station in stations.values():
             if station['properties']['traditional_station_identifier'] == tsi:
-                return wsi
+                return station['properties']['wigos_station_identifier']
 
     return None
 
@@ -385,7 +383,7 @@ def get_geometry(wsi: str = '') -> Union[dict, None]:
     :returns: `dict`, of station geometry or `None`
     """
 
-    stations = load_stations(wsi)
+    stations = load_stations()
     if wsi in stations:
         return stations[wsi]['geometry']
 

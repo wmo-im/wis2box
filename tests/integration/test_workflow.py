@@ -229,7 +229,7 @@ def test_message_api():
     counts = {
         'mw_met_centre': 24,
         'roma_met_centre': 33,
-        'alger_met_centre': 28,
+        'alger_met_centre': 29,
         'rnimh': 188,
         'brazza_met_centre': 15
     }
@@ -242,7 +242,7 @@ def test_message_api():
     r = SESSION.get(url).json()
 
     # should match sum of counts above
-    assert r['numberMatched'] == 288
+    assert r['numberMatched'] == sum(counts.values())
 
     msg = r['features'][5]
     is_valid, _ = validate_message(msg)
