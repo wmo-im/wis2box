@@ -294,6 +294,7 @@ def create_wis2box_env(config_dir: str) -> None:
         wis2box_url = get_wis2box_url()
         fh.write('# wis2box public URL\n')
         fh.write(f'WIS2BOX_URL={wis2box_url}\n')
+        fh.write('WIS2BOX_UI_CLUSTER=false\n')
         fh.write('\n')
         fh.write('# api\n')
         fh.write('WIS2BOX_API_TYPE=pygeoapi\n')
