@@ -257,10 +257,50 @@ def check_station_datasets(wigos_station_identifier: str) -> Iterator[dict]:
             topic['topic'] = topic2.replace('origin/a/wis2/', '')
             yield topic
 
-
-def publish_station_collection() -> None:
+def add_topic_hierarchy(new_topic: str, territory_name: str, wsi: str) -> None:
     """
-    Publishes station collection to API config and backend
+    Adds topic hierarchy to topic
+
+    :param topic: `str` of topic
+    :param territory_name: `str` of territory_name, defaults to None
+    :param wsi: `str` of WIGOS Station Identifier, defaults to None
+
+    :returns: `None`
+    """
+
+    valid_topics = [topic for link, topic in load_datasets()]
+    if new_topic not in valid_topics:
+        msg = f' ! Invalid topic: {new_topic} !\n'
+        msg += 'Valid topics:\n'
+        msg += '\n'.join(valid_topics)
+        LOGGER.error(msg)
+        raise RuntimeError(msg)
+
+    stations = load_stations()
+    for feature in stations.values():
+        if wsi != 'any' and feature['properties']['wigos_station_identifier'] != wsi:  # noqa
+            continue
+        if territory_name != 'any' and feature['properties']['territory_name'] != territory_name:  # noqa
+            continue
+        
+        topics = feature['properties'].get('topics', [])
+        # remove topics not in valid_topics
+        topics = [x for x in topics if x in valid_topics]
+        # add new_topic if not already in topics
+        if new_topic not in topics:
+            topics.append(new_topic)
+            feature['properties']['topics'] = topics
+        # update the feature
+        LOGGER.info(f'Updating station {feature["properties"]["wigos_station_identifier"]}')  # noqa
+        try:
+            delete_collection_item('stations', feature['id'])
+        except RuntimeError as err:
+            LOGGER.debug(f'Station does not exist: {err}')
+        upsert_collection_item('stations', feature)
+
+def publish_from_csv() -> None:
+    """
+    Publishes station collection to API config and backend from csv
 
     :returns: `None`
     """
@@ -458,12 +498,27 @@ def setup(ctx, verbosity):
 @click.pass_context
 @cli_helpers.OPTION_VERBOSITY
 def publish_collection(ctx, verbosity):
-    """Publishes collection of stations to API config and backend"""
+    """Publish from station_list.csv"""
 
-    publish_station_collection()
+    publish_from_csv()
+    click.echo('Done')
+
+
+# add command to add topic hierarchy to stations
+@click.command()
+@click.pass_context
+@click.argument('topic')
+@click.option('--territory-name', '-t', default="any", help='Territory Name')
+@click.option('--wsi', '-w', default="any", help='WIGOS Station Identifier')
+@cli_helpers.OPTION_VERBOSITY
+def add_topic(ctx, topic, territory_name, wsi, verbosity):
+    """Adds topic to station metadata"""
+
+    add_topic_hierarchy(topic, territory_name, wsi)
     click.echo('Done')
 
 
 station.add_command(get)
 station.add_command(publish_collection)
 station.add_command(setup)
+station.add_command(add_topic)
