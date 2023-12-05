@@ -257,6 +257,7 @@ def check_station_datasets(wigos_station_identifier: str) -> Iterator[dict]:
             topic['topic'] = topic2.replace('origin/a/wis2/', '')
             yield topic
 
+
 def add_topic_hierarchy(new_topic: str, territory_name: str, wsi: str) -> None:
     """
     Adds topic hierarchy to topic
@@ -282,7 +283,7 @@ def add_topic_hierarchy(new_topic: str, territory_name: str, wsi: str) -> None:
             continue
         if territory_name != 'any' and feature['properties']['territory_name'] != territory_name:  # noqa
             continue
-        
+
         topics = feature['properties'].get('topics', [])
         # remove topics not in valid_topics
         topics = [x for x in topics if x in valid_topics]
@@ -297,6 +298,7 @@ def add_topic_hierarchy(new_topic: str, territory_name: str, wsi: str) -> None:
         except RuntimeError as err:
             LOGGER.debug(f'Station does not exist: {err}')
         upsert_collection_item('stations', feature)
+
 
 def publish_from_csv() -> None:
     """
