@@ -124,6 +124,19 @@ def upsert_collection_item(collection_id: str, item: dict) -> str:
     return True
 
 
+def reindex_collection(collection_id: str, new_collection_id: str) -> str:
+    """
+    Reindex a collection
+
+    :param collection_id: name of collection
+    :param new_collection_id: name of new collection
+
+    :returns: `str` identifier of added item
+    """
+    backend = load_backend()
+    backend.reindex_collection(collection_id, new_collection_id)
+
+
 def delete_collection_item(collection_id: str, item_id: str) -> str:
     """
     Delete an item from a collection
@@ -173,7 +186,7 @@ def setup(ctx, verbosity):
 @cli_helpers.ARGUMENT_FILEPATH
 @cli_helpers.OPTION_VERBOSITY
 def add_collection(ctx, filepath, verbosity):
-    """Delete collection from api backend"""
+    """Add collection from api backend"""
 
     if not setup_collection(meta=filepath.read()):
         click.echo('Unable to add collection')

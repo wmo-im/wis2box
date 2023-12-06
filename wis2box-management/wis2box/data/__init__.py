@@ -27,7 +27,8 @@ import click
 
 from wis2box import cli_helpers
 from wis2box.api import (setup_collection, remove_collection,
-                         delete_collections_by_retention)
+                         delete_collections_by_retention,
+                         reindex_collection)
 from wis2box.data_mappings import DATADIR_DATA_MAPPINGS
 from wis2box.env import (STORAGE_SOURCE, STORAGE_ARCHIVE, STORAGE_PUBLIC,
                          STORAGE_DATA_RETENTION_DAYS, STORAGE_INCOMING)
@@ -233,6 +234,18 @@ def delete_collection(ctx, collection, verbosity):
 
 @click.command()
 @click.pass_context
+@click.argument('collection_id_source')
+@click.argument('collection_id_target')
+def reindex_collection_items(ctx, collection_id_source, collection_id_target):
+    """Reindex items from one collection to another"""
+
+    reindex_collection(collection_id_source, collection_id_target)
+
+    click.echo('Done')
+
+
+@click.command()
+@click.pass_context
 @cli_helpers.OPTION_TOPIC_HIERARCHY
 @cli_helpers.OPTION_PATH
 @cli_helpers.OPTION_RECURSIVE
@@ -255,3 +268,4 @@ data.add_command(ingest)
 data.add_command(add_collection)
 data.add_command(delete_collection)
 data.add_command(add_collection_items)
+data.add_command(reindex_collection_items)

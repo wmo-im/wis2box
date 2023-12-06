@@ -271,11 +271,11 @@ def add_topic_hierarchy(new_topic: str, territory_name: str, wsi: str) -> None:
 
     valid_topics = [topic for link, topic in load_datasets()]
     if new_topic not in valid_topics:
-        msg = f' ! Invalid topic: {new_topic} !\n'
+        msg = f'ERROR: Invalid topic: {new_topic}\n'
         msg += 'Valid topics:\n'
         msg += '\n'.join(valid_topics)
-        LOGGER.error(msg)
-        raise RuntimeError(msg)
+        print(msg)
+        return
 
     stations = load_stations()
     for feature in stations.values():

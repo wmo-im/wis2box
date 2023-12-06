@@ -73,6 +73,18 @@ class BaseBackend:
 
         raise NotImplementedError()
 
+    def reindex_collection(self, source: str, destination: str) -> bool:
+        """
+        Reindex a collection
+
+        :param source: name of source collection
+        :param destination: name of destination collection
+
+        :returns: `bool` of reindex result
+        """
+
+        raise NotImplementedError()
+
     def upsert_collection_item(self, collection: str, item: dict) -> str:
         """
         Add or update a collection item

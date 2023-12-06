@@ -243,6 +243,37 @@ class ElasticBackend(BaseBackend):
 
         return not self.has_collection(collection_id)
 
+    def reindex_collection(self, collection_id_source: str, collection_id_target: str) -> bool: # noqa
+        """
+        Reindex a collection
+
+        :param collection_id_source: name of source collection
+        :param collection_id_target: name of target collection
+
+        :returns: `bool` of reindex result
+        """
+        es_index_source = self.es_id(collection_id_source)
+        es_index_target = self.es_id(collection_id_target)
+
+        if self.has_collection(collection_id_target):
+            # delete existing index
+            LOGGER.debug(f'Deleting index={collection_id_target}')
+            self.conn.indices.delete(index=collection_id_target)
+
+        self.conn.options().indices.create(index=collection_id_target,
+                                           mappings=MAPPINGS,
+                                           settings=SETTINGS)
+
+        LOGGER.info(f'Copying {es_index_source} to {es_index_target}')
+        try:
+            helpers.reindex(self.conn, es_index_source, es_index_target)
+        except helpers.BulkIndexError as e:
+            print("Bulk indexing failed for some documents:")
+            for err in e.errors:
+                print(err)
+
+        return self.has_collection(collection_id_target)
+
     def has_collection(self, collection_id: str) -> bool:
         """
         Checks a collection
