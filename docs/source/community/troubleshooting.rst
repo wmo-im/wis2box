@@ -5,7 +5,28 @@ Troubleshooting
 
 This page lists several commonly seen issues and how to address them.
 
+no station on map in wis2box-UI
+-------------------------------
+
+The stations displayed in the wis2box-ui per dataset are defined by the topic associated with the station.
+
+To associate a station with a topic, you can edit the station metadata using the station-editor in wis2box-webapp or you can use the command 'wis2box metadata station add-topic' to add a topic to a station.
+
+For example, to add the topic 'origin/a/wis2/my-centre-id/data/core/weather/surface-based-observations/synop' to the station with wigos-station-id=0-20000-0-12345, run the following command:
+
+.. code-block:: bash
+
+   python3 wis2box-ctl.py login
+   wis2box metadata station add-topic --wsi 0-20000-0-12345 origin/a/wis2/my-centre-id/data/core/weather/surface-based-observations/synop
 	
+To associated all stations defined in your station metadata with the same topic, you can use the command 'wis2box metadata station add-topic' without specifying a station id:
+
+.. code-block:: bash
+
+   python3 wis2box-ctl.py login
+   wis2box metadata station add-topic origin/a/wis2/my-centre-id/data/core/weather/surface-based-observations/synop
+
+
 OSError: Missing data mappings
 ------------------------------
 
@@ -92,6 +113,7 @@ To add missing stations, use the station-editor in wis2box-webapp (from wis2box-
 
    python3 wis2box-ctl.py login
    wis2box metadata station publish-collection
+
 
 Error: no such container: wis2box-management
 --------------------------------------------
