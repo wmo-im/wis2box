@@ -255,16 +255,7 @@ class ElasticBackend(BaseBackend):
         es_index_source = self.es_id(collection_id_source)
         es_index_target = self.es_id(collection_id_target)
 
-        if self.has_collection(collection_id_target):
-            # delete existing index
-            LOGGER.debug(f'Deleting index={collection_id_target}')
-            self.conn.indices.delete(index=collection_id_target)
-
-        self.conn.options().indices.create(index=collection_id_target,
-                                           mappings=MAPPINGS,
-                                           settings=SETTINGS)
-
-        LOGGER.info(f'Copying {es_index_source} to {es_index_target}')
+        print(f'Copying {es_index_source} to {es_index_target}')
         try:
             helpers.reindex(self.conn, es_index_source, es_index_target)
         except helpers.BulkIndexError as e:
