@@ -133,8 +133,13 @@ def reindex_collection(collection_id: str, new_collection_id: str) -> str:
 
     :returns: `str` identifier of added item
     """
+
+    api_config = load_config()
+    collection_data = api_config.get_collection_data(collection_id)
+    new_collection_data = api_config.get_collection_data(new_collection_id)
+
     backend = load_backend()
-    backend.reindex_collection(collection_id, new_collection_id)
+    backend.reindex_collection(collection_data, new_collection_data)
 
 
 def delete_collection_item(collection_id: str, item_id: str) -> str:
