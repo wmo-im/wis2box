@@ -166,18 +166,19 @@ class WISNotificationMessage(PubSubMessage):
                     'value': self.checksum_value
                 }
             },
-            'links': [{
-                'rel': 'canonical',
-                'type': mimetype,
-                'href': public_file_url,
-                'length': self.length
-            },
-            {
-                'rel': 'http://def.wmo.int/def/rel/wnm/-/update',
-                'type': mimetype,
-                'href': public_file_url,
-                'length': self.length
-            }
+            'links': [
+                {
+                    'rel': 'canonical',
+                    'type': mimetype,
+                    'href': public_file_url,
+                    'length': self.length
+                },
+                {
+                    'rel': 'http://def.wmo.int/def/rel/wnm/-/update',
+                    'type': mimetype,
+                    'href': public_file_url,
+                    'length': self.length
+                }
             ]
         }
 
