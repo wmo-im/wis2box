@@ -171,7 +171,14 @@ class WISNotificationMessage(PubSubMessage):
                 'type': mimetype,
                 'href': public_file_url,
                 'length': self.length
-            }]
+            },
+            {
+                'rel': 'http://def.wmo.int/def/rel/wnm/-/update',
+                'type': mimetype,
+                'href': public_file_url,
+                'length': self.length
+            }
+            ]
         }
 
         if self.length < 4096:
