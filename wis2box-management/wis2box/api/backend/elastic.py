@@ -259,9 +259,9 @@ class ElasticBackend(BaseBackend):
         try:
             helpers.reindex(self.conn, es_index_source, es_index_target)
         except helpers.BulkIndexError as e:
-            print("Bulk indexing failed for some documents:")
+            LOGGER.error('Bulk indexing failed for some documents:')
             for err in e.errors:
-                print(err)
+                LOGGER.error(err)
 
         return self.has_collection(collection_id_target)
 
