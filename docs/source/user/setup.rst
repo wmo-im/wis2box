@@ -232,6 +232,23 @@ You can also bulk insert a set of stations from a CSV file, by defining the stat
 
 After doing a bulk insert please review the stations in wis2box-webapp and associate each station to the correct topics.
 
+Adding topics to stations from the command line
+-----------------------------------------------
+
+If you want to associate all stations in your station metadata to one topic, you can use the following command:
+
+.. code-block:: bash
+
+   python3 wis2box-ctl.py login
+   wis2box metadata station add-topic <topic-id>
+
+If you want to add a topic to a single station, you can use the following command:
+
+.. code-block:: bash
+
+   python3 wis2box-ctl.py login
+   wis2box metadata station add-topic --wsi <station-id> <topic-id>
+
 The next is the :ref:`data-ingest`.
 
 .. _`wis2box Releases`: https://github.com/wmo-im/wis2box/releases
