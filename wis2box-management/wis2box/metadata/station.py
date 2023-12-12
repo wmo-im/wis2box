@@ -274,7 +274,7 @@ def add_topic_hierarchy(new_topic: str, territory_name: str, wsi: str) -> None:
         msg = f'ERROR: Invalid topic: {new_topic}\n'
         msg += 'Valid topics:\n'
         msg += '\n'.join(valid_topics)
-        print(msg)
+        LOGGER.error(msg)
         return
 
     stations = load_stations()
