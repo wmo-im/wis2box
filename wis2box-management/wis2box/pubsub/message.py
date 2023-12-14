@@ -128,7 +128,8 @@ class PubSubMessage:
 
 class WISNotificationMessage(PubSubMessage):
     def __init__(self, identifier: str, topic: str, filepath: str,
-                 datetime_: str, geometry=None, wigos_station_identifier=None):
+                 datetime_: str, geometry=None, wigos_station_identifier=None,
+                 operation: str = 'create') -> None:
 
         super().__init__('wis2-notification-message', identifier,
                          topic, filepath, datetime_, geometry)
@@ -152,6 +153,20 @@ class WISNotificationMessage(PubSubMessage):
         if self.datetime is None:
             LOGGER.warning('Missing data datetime')
 
+        links = [{
+                'rel': 'canonical',
+                'type': mimetype,
+                'href': public_file_url,
+                'length': self.length
+        }]
+        if operation == 'update':
+            links.append({
+                'rel': 'http://def.wmo.int/def/rel/wnm/-/update',
+                'type': mimetype,
+                'href': public_file_url,
+                'length': self.length
+            })
+
         self.message = {
             'id': str(uuid.uuid4()),
             'type': 'Feature',
@@ -166,12 +181,7 @@ class WISNotificationMessage(PubSubMessage):
                     'value': self.checksum_value
                 }
             },
-            'links': [{
-                'rel': 'canonical',
-                'type': mimetype,
-                'href': public_file_url,
-                'length': self.length
-            }]
+            'links': links
         }
 
         if self.length < 4096:

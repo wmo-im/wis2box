@@ -225,9 +225,18 @@ def test_data_api():
 def test_message_api():
     """Test message API collection queries"""
 
+    # check messages with "wigos_station_identifier"="0-454-2-AWSBALAKA"
+    url = f'{API_URL}/collections/messages/items?q=0-454-2-AWSBALAKA&limit=2'  # noqa
+    r = SESSION.get(url).json()
+    # get links from 2nd message
+    links = r['features'][1]['links']
+    print(links)
+    # check link contains rel='http://def.wmo.int/def/rel/wnm/-/update'
+    assert any(link['rel'] == 'http://def.wmo.int/def/rel/wnm/-/update' for link in links)  # noqa
+
     # test messages per test dataset
     counts = {
-        'mw_met_centre': 24,
+        'mw_met_centre': 25,
         'roma_met_centre': 33,
         'alger_met_centre': 29,
         'rnimh': 188,

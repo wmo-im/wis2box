@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import Any
 
 import boto3
+from botocore.exceptions import ClientError
 
 from wis2box.storage.base import StorageBase
 
@@ -39,6 +40,23 @@ class S3Storage(StorageBase):
         self.client = boto3.client('s3', endpoint_url=self.source,
                                    aws_access_key_id=self.auth['username'],
                                    aws_secret_access_key=self.auth['password'])
+
+    def exists(self, identifier: str) -> bool:
+
+        LOGGER.debug(f'Checking if {identifier} exists')
+        try:
+            self.client.head_object(Bucket=self.name, Key=identifier)
+        except ClientError as e:
+            # If the object does not exist, return False
+            if e.response['Error']['Code'] == '404':
+                return False
+            else:
+                # If any other error occurs, raise an exception or handle it as needed
+                raise e
+        except Exception as e:
+            raise e
+
+        return True
 
     def get(self, identifier: str) -> Any:
 

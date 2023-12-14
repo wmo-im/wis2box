@@ -29,7 +29,7 @@ from wis2box.env import (STORAGE_INCOMING, STORAGE_PUBLIC,
                          STORAGE_SOURCE, BROKER_PUBLIC,
                          BROKER_HOST, BROKER_USERNAME, BROKER_PASSWORD,
                          BROKER_PORT)
-from wis2box.storage import put_data
+from wis2box.storage import put_data, exists, get_data
 from wis2box.topic_hierarchy import TopicHierarchy
 from wis2box.plugin import load_plugin, PLUGINS
 
@@ -128,7 +128,8 @@ class BaseAbstractData:
     def notify(self, identifier: str, storage_path: str,
                datetime_: str,
                geometry: dict = None,
-               wigos_station_identifier: str = None) -> bool:
+               wigos_station_identifier: str = None,
+               is_update: bool = False) -> bool:
         """
         Send notification of data to broker
 
@@ -147,9 +148,11 @@ class BaseAbstractData:
         topic = f'origin/a/wis2/{self.topic_hierarchy.dirpath}'
         data_id = topic.replace('origin/a/wis2/', '')
 
+        operation = 'create' if is_update is False else 'update'
+
         wis_message = WISNotificationMessage(
             identifier, data_id, storage_path, datetime_, geometry,
-            wigos_station_identifier)
+            wigos_station_identifier, operation)
 
         # load plugin for public broker
         defs = {
@@ -223,11 +226,23 @@ class BaseAbstractData:
                 LOGGER.debug('Publishing data')
                 data_bytes = self.as_bytes(the_data)
                 storage_path = f'{STORAGE_SOURCE}/{STORAGE_PUBLIC}/{rfp}/{identifier}.{format_}'  # noqa
+                
+                is_update =  False
+                is_new = True
+                # check if storage_path already exists
+                if exists(storage_path):
+                    # if data exists, check if it is the same
+                    if data_bytes == get_data(storage_path):
+                        LOGGER.error(f'Data already published for {identifier}-{format_}; not publishing')  # noqa
+                        is_new = False
+                    else:
+                        LOGGER.warning(f'Data already published for {identifier}-{format_}; updating')  # noqa
+                        is_update = True
+                if is_new:
+                    LOGGER.info(f'Writing data to {storage_path}')
+                    put_data(data_bytes, storage_path)
 
-                LOGGER.info(f'Writing data to {storage_path}')
-                put_data(data_bytes, storage_path)
-
-                if self.enable_notification:
+                if self.enable_notification and is_new:
                     LOGGER.debug('Sending notification to broker')
 
                     try:
@@ -237,7 +252,7 @@ class BaseAbstractData:
 
                     self.notify(identifier, storage_path,
                                 datetime_,
-                                item['_meta'].get('geometry'), wsi)
+                                item['_meta'].get('geometry'), wsi, is_update)
                 else:
                     LOGGER.debug('No notification sent')
         except Exception as err:

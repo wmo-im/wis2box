@@ -325,7 +325,6 @@ class ElasticBackend(BaseBackend):
             _ = self.conn.delete(index=collection_id, id=item_id)
         except Exception as err:
             msg = f'Item deletion failed: {err}'
-            LOGGER.error(msg)
             raise RuntimeError(msg)
 
         return True

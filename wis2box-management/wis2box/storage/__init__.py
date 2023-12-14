@@ -29,6 +29,34 @@ from wis2box.plugin import load_plugin, PLUGINS
 LOGGER = logging.getLogger(__name__)
 
 
+def exists(path: str) -> bool:
+    """
+    Check if storage path exists
+
+    :param path: path to check
+
+    :returns: `bool` of result
+    """
+    LOGGER.debug(f'exists: {path}')
+    storage_path = path.replace(f'{STORAGE_SOURCE}/', '')
+    name = storage_path.split('/')[0]
+
+    defs = {
+        'storage_type': STORAGE_TYPE,
+        'source': STORAGE_SOURCE,
+        'name': name,
+        'auth': {'username': STORAGE_USERNAME, 'password': STORAGE_PASSWORD},
+        'codepath': PLUGINS['storage'][STORAGE_TYPE]['plugin']
+    }
+
+    LOGGER.debug(f'Connecting to storage: {name}')
+    storage = load_plugin('storage', defs)
+
+    identifier = storage_path.replace(name, '')
+
+    LOGGER.debug(f'Checking if {identifier} exists')
+    return storage.exists(identifier)
+
 def get_data(path: str) -> Any:
     """
     Get data from storage
