@@ -152,7 +152,6 @@ class MinIOStorage(StorageBase):
         except Exception as err:
             LOGGER.error(err)
             raise err
-        return True
 
     def get(self, identifier: str) -> Any:
 
