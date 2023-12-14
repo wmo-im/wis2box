@@ -26,6 +26,7 @@ from typing import Any
 from urllib.parse import urlparse
 
 from minio import Minio
+from minio import error as minio_error
 from minio.notificationconfig import NotificationConfig, QueueConfig
 
 from wis2box.storage.base import PolicyTypes, StorageBase
@@ -134,6 +135,23 @@ class MinIOStorage(StorageBase):
         )
         LOGGER.debug(f'Adding notification config {config}')
         self.client.set_bucket_notification(self.name, config)
+
+    def exists(self, identifier: str) -> bool:
+        LOGGER.debug(f'Checking if object {identifier} exists')
+        try:
+            # Attempt to get object info to check if it exists
+            self.client.stat_object(bucket_name=self.name, object_name=identifier) # noqa
+            return True  # Object exists
+        except minio_error.S3Error as err:
+            if err.code == 'NoSuchKey':
+                LOGGER.debug(err)
+                return False
+            else:
+                LOGGER.error(err)
+                raise err
+        except Exception as err:
+            LOGGER.error(err)
+            raise err
 
     def get(self, identifier: str) -> Any:
 
