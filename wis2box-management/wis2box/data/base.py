@@ -29,7 +29,7 @@ from wis2box.env import (STORAGE_INCOMING, STORAGE_PUBLIC,
                          STORAGE_SOURCE, BROKER_PUBLIC,
                          BROKER_HOST, BROKER_USERNAME, BROKER_PASSWORD,
                          BROKER_PORT)
-from wis2box.storage import put_data, exists, get_data
+from wis2box.storage import exists, get_data, put_data
 from wis2box.topic_hierarchy import TopicHierarchy
 from wis2box.plugin import load_plugin, PLUGINS
 
