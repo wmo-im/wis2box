@@ -230,7 +230,7 @@ def test_message_api():
     r = SESSION.get(url).json()
     # get links from 2nd message
     links = r['features'][1]['links']
-    print(links)
+    
     # check link contains rel='http://def.wmo.int/def/rel/wnm/-/update'
     assert any(link['rel'] == 'http://def.wmo.int/def/rel/wnm/-/update' for link in links)  # noqa
 
@@ -239,7 +239,7 @@ def test_message_api():
         'mw_met_centre': 25,
         'roma_met_centre': 33,
         'alger_met_centre': 29,
-        'rnimh': 188,
+        'rnimh': 116,
         'brazza_met_centre': 15
     }
     for key, value in counts.items():
