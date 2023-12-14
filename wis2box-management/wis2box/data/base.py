@@ -226,8 +226,8 @@ class BaseAbstractData:
                 LOGGER.debug('Publishing data')
                 data_bytes = self.as_bytes(the_data)
                 storage_path = f'{STORAGE_SOURCE}/{STORAGE_PUBLIC}/{rfp}/{identifier}.{format_}'  # noqa
-                
-                is_update =  False
+
+                is_update = False
                 is_new = True
                 # check if storage_path already exists
                 if exists(storage_path):

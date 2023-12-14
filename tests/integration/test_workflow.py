@@ -230,7 +230,7 @@ def test_message_api():
     r = SESSION.get(url).json()
     # get links from 2nd message
     links = r['features'][1]['links']
-    
+
     # check link contains rel='http://def.wmo.int/def/rel/wnm/-/update'
     assert any(link['rel'] == 'http://def.wmo.int/def/rel/wnm/-/update' for link in links)  # noqa
 

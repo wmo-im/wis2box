@@ -57,6 +57,7 @@ def exists(path: str) -> bool:
     LOGGER.debug(f'Checking if {identifier} exists')
     return storage.exists(identifier)
 
+
 def get_data(path: str) -> Any:
     """
     Get data from storage

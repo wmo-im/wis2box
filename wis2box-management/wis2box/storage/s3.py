@@ -51,7 +51,7 @@ class S3Storage(StorageBase):
             if e.response['Error']['Code'] == '404':
                 return False
             else:
-                # If any other error occurs, raise an exception or handle it as needed
+                # If any other error occurs, raise an exception
                 raise e
         except Exception as e:
             raise e
