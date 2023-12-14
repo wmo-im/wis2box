@@ -145,7 +145,7 @@ To use the ``docker-compose.wis2box-ftp.yml`` template included in wis2box, crea
     FTP_HOST=${MYHOSTNAME}
 
     WIS2BOX_STORAGE_ENDPOINT=http://${MYHOSTNAME}:9000
-    WIS2BOX_STORAGE_USER=wis2box
+    WIS2BOX_STORAGE_USERNAME=wis2box
     WIS2BOX_STORAGE_PASSWORD=XXXXXXXX
 
     LOGGING_LEVEL=INFO
