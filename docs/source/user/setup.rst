@@ -62,8 +62,10 @@ The discovery metadata is provided in the form of a YAML file.
 If you used the ``python3 wis2box-create-config.py`` command to initialize your wis2box, you will find two initial the discovery metadata files in
 the directory you specified for your configuration files, under the ``metadata/discovery/`` directory:
    
-* ``metadata-synop.yml``: contains the discovery metadata for the ``synop`` dataset
-* ``metadata-temp.yml``: contains the discovery metadata for the ``temp`` dataset
+* ``metadata-synop-centreid.yml``: contains the discovery metadata for the ``synop`` dataset
+* ``metadata-temp-centreid.yml``: contains the discovery metadata for the ``temp`` dataset
+
+Where ``centreid`` is the centre-id you specified during the configuration step.
 
 Please review the content of these files and edit them as needed.
 
@@ -152,11 +154,11 @@ Login to the wis2box-management container
 
 The first step is to add your collection to the wis2box API, using the discovery metadata file you created above.
 
-For example to add the data collection defined in ``metadata/discovery/metadata-synop.yml`` in the directory you specified for your configuration files:
+For example to add the data collection defined in ``metadata/discovery/metadata-synop-centreid.yml`` in the directory you specified for your configuration files:
 
 .. code-block:: bash
 
-   wis2box data add-collection /data/wis2box/metadata/discovery/metadata-synop.yml
+   wis2box data add-collection /data/wis2box/metadata/discovery/metadata-synop-centreid.yml
 .. note::
 
    If you see an error like ``ValueError: No plugins for XXX defined in data mappings``, exit the wis2box-management container and edit the ``data-mappings.yml`` file
@@ -174,7 +176,7 @@ The second step is to publish discovery metadata and cache its content in the wi
 
 .. code-block:: bash
 
-   wis2box metadata discovery publish /data/wis2box/metadata/discovery/metadata-synop.yml
+   wis2box metadata discovery publish /data/wis2box/metadata/discovery/metadata-synop-centreid.yml
 
 This command publishes an MQTT message with information about your dataset to the WIS2 Global Discovery Catalogue. Repeat this command whenever you have to provide updated metadata about your dataset.
 
@@ -223,6 +225,9 @@ The wis2box-webapp can be accessed by visiting the URL you specified during the 
 
 Please note only data for stations that have been added to the wis2box will be ingested and result in WIS2 notifications being published.
 
+Bulk inserting stations from CSV
+--------------------------------
+
 You can also bulk insert a set of stations from a CSV file, by defining the stations in ``metadata/stations/station_list.csv`` in your wis2box host directory and running the following command:
 
 .. code-block:: bash
@@ -249,6 +254,13 @@ If you want to add a topic to a single station, you can use the following comman
    python3 wis2box-ctl.py login
    wis2box metadata station add-topic --wsi <station-id> <topic-id>
 
+If you want to add a topic to all stations from a specific territory, for example Italy, you can use the following command:
+
+.. code-block:: bash
+
+   python3 wis2box-ctl.py login
+   wis2box metadata station add-topic --territory-name Italy <topic-id>
+   
 The next is the :ref:`data-ingest`.
 
 .. _`wis2box Releases`: https://github.com/wmo-im/wis2box/releases
