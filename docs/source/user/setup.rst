@@ -225,6 +225,9 @@ The wis2box-webapp can be accessed by visiting the URL you specified during the 
 
 Please note only data for stations that have been added to the wis2box will be ingested and result in WIS2 notifications being published.
 
+Bulk inserting stations from CSV
+--------------------------------
+
 You can also bulk insert a set of stations from a CSV file, by defining the stations in ``metadata/stations/station_list.csv`` in your wis2box host directory and running the following command:
 
 .. code-block:: bash
@@ -251,6 +254,13 @@ If you want to add a topic to a single station, you can use the following comman
    python3 wis2box-ctl.py login
    wis2box metadata station add-topic --wsi <station-id> <topic-id>
 
+If you want to add a topic to all stations from a specific territory, for example Italy, you can use the following command:
+
+.. code-block:: bash
+
+   python3 wis2box-ctl.py login
+   wis2box metadata station add-topic --territory-name Italy <topic-id>
+   
 The next is the :ref:`data-ingest`.
 
 .. _`wis2box Releases`: https://github.com/wmo-im/wis2box/releases
