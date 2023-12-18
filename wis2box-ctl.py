@@ -166,7 +166,7 @@ def make(args) -> None:
             print("ERROR: wis2box.env file does not exist.  Please create one manually or by running `python3 wis2box-create-config.py`")
             exit(1)
         run(args, split(
-            'docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions > /dev/null 2>&1'))
+            'docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions'))
         run(args, split(
             'docker plugin enable loki'))
         if containers:
