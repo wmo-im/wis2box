@@ -55,3 +55,11 @@ data:
                   buckets:
                     - ${WIS2BOX_STORAGE_PUBLIC}
                   file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
+    chn.babj.data.core.weather.prediction.forecast.shortrange.probabilistic.global.CMA_GEPS:
+        plugins:
+            grib2:
+                - plugin: wis2box.data.universal.UniversalData
+                  notify: true
+                  buckets:
+                    - ${WIS2BOX_STORAGE_INCOMING}
+                  file-pattern: '^.*_(\d{8})\d{2}.*\.grib2$'
