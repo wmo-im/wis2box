@@ -3,6 +3,15 @@ wis2box:
     topic_hierarchy: it-roma_met_centre.data.core.weather.surface-based-observations.synop
     country: ita
     centre_id: it-roma_met_centre
+    data_mappings:
+        plugins:
+            bin:
+                - plugin: wis2box.data.bufr4.ObservationDataBUFR
+                  notify: true
+                  file-pattern: '^.*\.bin$'
+            bufr4:
+                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
+                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
 
 mcf:
     version: 1.0

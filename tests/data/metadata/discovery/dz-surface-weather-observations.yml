@@ -3,6 +3,18 @@ wis2box:
     topic_hierarchy: dz-alger_met_centre.data.core.weather.surface-based-observations.synop
     country: dza
     centre_id: dz-alger_met_centre
+    data_mappings:
+        plugins:
+            bufr4:
+                - plugin: wis2box.data.bufr4.ObservationDataBUFR
+                  notify: true
+                  buckets:
+                    - ${WIS2BOX_STORAGE_INCOMING}
+                  file-pattern: '^.*\.bufr4$'
+                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
+                  buckets:
+                    - ${WIS2BOX_STORAGE_PUBLIC}
+                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
 
 mcf:
     version: 1.0
