@@ -37,9 +37,12 @@ LOGGER = logging.getLogger(__name__)
 
 
 class Handler:
-    def __init__(self, filepath: str, topic_hierarchy: str = None):
+    def __init__(self, filepath: str,
+                 topic_hierarchy: str = None,
+                 data_mappings: dict = None) -> None:
         self.filepath = filepath
         self.plugins = ()
+        self.input_bytes = None
 
         LOGGER.debug('Detecting file type')
         if isinstance(self.filepath, Path):
@@ -50,7 +53,9 @@ class Handler:
             LOGGER.debug('filepath is a string')
             self.filetype = self.filepath.split('.')[-1]
 
-        self.is_http = self.filepath.startswith('http')
+        # check if filepath is a url
+        if self.filepath.startswith('http'):
+            self.input_bytes = get_data(self.filepath)
 
         if topic_hierarchy is not None:
             th = topic_hierarchy
@@ -65,7 +70,7 @@ class Handler:
 
         try:
             self.topic_hierarchy, self.plugins = validate_and_load(
-                th, self.filetype, fuzzy=fuzzy)
+                th, data_mappings, self.filetype, fuzzy=fuzzy)
         except Exception as err:
             msg = f'Topic Hierarchy validation error: {err}'
             raise ValueError(msg)
@@ -90,17 +95,14 @@ class Handler:
     def handle(self) -> bool:
         for plugin in self.plugins:
             if not plugin.accept_file(self.filepath):
-                msg = f'Filepath not accepted: {self.filepath}'
-                LOGGER.warning(msg)
-                self.publish_failure_message(
-                    description='filepath not accepted',
-                    plugin=plugin)
+                msg = f'Filepath not accepted: {self.filepath} for class {plugin.__class__}' # noqa
+                LOGGER.debug(msg)
                 continue
             try:
-                if self.is_http:
+                if self.input_bytes:
                     plugin.transform(
-                        get_data(self.filepath),
-                        filename=self.filepath.split('/')[-1],
+                        input_data=self.input_bytes,
+                        filename=self.filepath.split('/')[-1]
                     )
                 else:
                     plugin.transform(self.filepath)
@@ -125,8 +127,8 @@ class Handler:
 
     def publish(self) -> bool:
         index_name = self.topic_hierarchy.dotpath
-        if self.is_http:
-            geojson = json.load(get_data(self.filepath))
+        if self.input_bytes:
+            geojson = json.load(self.input_bytes)
             upsert_collection_item(index_name, geojson)
         else:
             with Path(self.filepath).open() as fh1:

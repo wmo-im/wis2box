@@ -26,7 +26,6 @@ from typing import Any, Tuple, Union
 
 # from pywis_topics.topics import TopicHierarchy as pywis_topics_th
 
-from wis2box.data_mappings import DATADIR_DATA_MAPPINGS
 from wis2box.plugin import load_plugin
 
 LOGGER = logging.getLogger(__name__)
@@ -67,13 +66,16 @@ class TopicHierarchy:
         return True
 
 
-def validate_and_load(
-    topic_hierarchy: str, file_type: str = None, fuzzy: bool = False
-) -> Tuple[TopicHierarchy, Tuple[Any]]:
+def validate_and_load(topic_hierarchy: str,
+                      data_mappings: dict = None,
+                      file_type: str = None,
+                      fuzzy: bool = False
+                      ) -> Tuple[TopicHierarchy, Tuple[Any]]:
     """
     Validate topic hierarchy and load plugins
 
     :param topic_hierarchy: `str` of topic hierarchy path
+    :param data_mappings: `dict` of data mappings
     :param file_type: `str` the type of file we are processing, e.g. csv, bufr, xml  # noqa
     :param fuzzy: `bool` of whether to do fuzzy matching of topic hierarchy
                   (e.g. "*foo.bar.baz*).
@@ -86,7 +88,6 @@ def validate_and_load(
     LOGGER.debug(f'Validating topic hierarchy: {topic_hierarchy}')
 
     th = TopicHierarchy(topic_hierarchy)
-    data_mappings = DATADIR_DATA_MAPPINGS['data']
     found = False
 
     if not th.is_valid():
@@ -144,6 +145,6 @@ def validate_and_load(
             'format': file_type
         }
 
-    plugins_ = [load_plugin('data', data_defs(p))
+    plugins_ = [load_plugin('data', data_defs(p), data_mappings)
                 for p in plugins[file_type]]
     return th, plugins_

@@ -30,17 +30,28 @@ LOGGER = logging.getLogger(__name__)
 DATADIR = os.environ.get('WIS2BOX_DATADIR', '/data/wis2box')
 DATA_MAPPINGS = Path(DATADIR) / 'data-mappings.yml'
 
-if not DATA_MAPPINGS.exists():
-    msg = f'Please create a data mappings file in {DATADIR}'
-    LOGGER.error(msg)
-    raise RuntimeError(msg)
 
-try:
-    with DATA_MAPPINGS.open() as fh:
-        DATADIR_DATA_MAPPINGS = yaml_load(fh)
-        assert DATADIR_DATA_MAPPINGS is not None
-except Exception as err:
-    DATADIR_DATA_MAPPINGS = None
-    msg = f'Missing data mappings: {err}'
-    LOGGER.error(msg)
-    raise EnvironmentError(msg)
+def get_data_mappings() -> dict:
+    """
+    Get data mappings
+
+    :returns: `dict` of data mappings definitions
+    """
+
+    data_mappings = None
+    if not DATA_MAPPINGS.exists():
+        msg = f'Please create a data mappings file in {DATADIR}'
+        LOGGER.error(msg)
+        raise RuntimeError(msg)
+
+    try:
+        with DATA_MAPPINGS.open() as fh:
+            data_mappings = yaml_load(fh)
+            assert data_mappings is not None
+            assert 'data' in data_mappings
+    except Exception as err:
+        msg = f'Issue loading data mappings: {err}'
+        LOGGER.error(msg)
+        raise EnvironmentError(msg)
+
+    return data_mappings['data']

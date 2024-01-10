@@ -24,8 +24,6 @@ import importlib
 import logging
 from typing import Any
 
-from wis2box.data_mappings import DATADIR_DATA_MAPPINGS
-
 LOGGER = logging.getLogger(__name__)
 
 PLUGINS = {
@@ -60,7 +58,9 @@ class PluginTypes(Enum):
     STORAGE = 'storage'
 
 
-def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
+def load_plugin(plugin_type: PluginTypes,
+                defs: dict,
+                data_mappings: dict = None) -> Any:
     """
     loads plugin by type
 
@@ -75,8 +75,17 @@ def load_plugin(plugin_type: PluginTypes, defs: dict) -> Any:
 
     if plugin_type in ['api_backend', 'api_config', 'pubsub', 'storage']:
         plugin_mappings = PLUGINS
+    elif plugin_type == 'data':
+        if data_mappings is None:
+            msg = 'data mappings are undefined'
+            LOGGER.error(msg)
+            raise ValueError(msg)
+        else:
+            plugin_mappings = {'data': data_mappings}
     else:
-        plugin_mappings = DATADIR_DATA_MAPPINGS
+        msg = f'Invalid plugin type: {plugin_type}'
+        LOGGER.error(msg)
+        raise InvalidPluginError(msg)
 
     # check code path is valid
     if '.' not in codepath:

@@ -29,7 +29,7 @@ from wis2box import cli_helpers
 from wis2box.api import (setup_collection, remove_collection,
                          delete_collections_by_retention,
                          reindex_collection)
-from wis2box.data_mappings import DATADIR_DATA_MAPPINGS
+from wis2box.data_mappings import get_data_mappings
 from wis2box.env import (STORAGE_SOURCE, STORAGE_ARCHIVE, STORAGE_PUBLIC,
                          STORAGE_DATA_RETENTION_DAYS, STORAGE_INCOMING)
 from wis2box.handler import Handler
@@ -185,9 +185,13 @@ def clean(ctx, days, verbosity):
 def ingest(ctx, topic_hierarchy, path, recursive, verbosity):
     """Ingest data file or directory"""
 
+    data_mappings = get_data_mappings()
+
     for file_to_process in walk_path(path, '.*', recursive):
         click.echo(f'Processing {file_to_process}')
-        handler = Handler(file_to_process, topic_hierarchy)
+        handler = Handler(filepath=file_to_process,
+                          topic_hierarchy=topic_hierarchy,
+                          data_mappings=data_mappings)
         rfp = handler.topic_hierarchy.dirpath
         path = f'{STORAGE_INCOMING}/{rfp}/{file_to_process.name}'
 
@@ -207,8 +211,10 @@ def add_collection(ctx, filepath, verbosity):
 
     meta = gcm(filepath.read())
 
-    if meta['topic_hierarchy'] not in DATADIR_DATA_MAPPINGS['data']:
-        data_mappings_topics = '\n'.join(DATADIR_DATA_MAPPINGS['data'].keys())
+    data_mappings = get_data_mappings()
+
+    if meta['topic_hierarchy'] not in data_mappings:
+        data_mappings_topics = '\n'.join(data_mappings.keys())
         msg = (f"topic_hierarchy={meta['topic_hierarchy']} not found"
                f" in data-mappings:\n\n{data_mappings_topics}")
         raise click.ClickException(msg)
@@ -253,10 +259,13 @@ def reindex_collection_items(ctx, collection_id_source, collection_id_target):
 def add_collection_items(ctx, topic_hierarchy, path, recursive, verbosity):
     """Add collection items to API backend"""
 
+    data_mappings = get_data_mappings()
     click.echo(f'Adding GeoJSON files to collection: {topic_hierarchy}')
     for file_to_process in walk_path(path, '.*.geojson$', recursive):
         click.echo(f'Adding {file_to_process}')
-        handler = Handler(file_to_process, topic_hierarchy)
+        handler = Handler(filepath=file_to_process,
+                          topic_hierarchy=topic_hierarchy,
+                          data_mappings=data_mappings)
         handler.publish()
 
     click.echo('Done')
