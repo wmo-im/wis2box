@@ -88,11 +88,7 @@ class WIS2BoxSubscriber:
                 if key.startswith(STORAGE_ARCHIVE):
                     LOGGER.info(f'Do not process archived-data: {key}')
                     return
-            elif 'relPath' in message:
-                LOGGER.debug('Received relPath')
-                filepath = Path(message['relPath'])
-                message['EventName'] = 'FilePathReceived'
-            elif message.get('EventName') == 'ReloadMappingRequest':
+            elif message.get('EventName') == 'wis2box:ReloadMappingRequest':
                 LOGGER.debug('Received ReloadMappingRequest')
                 self.data_mappings = get_data_mappings()
                 return
