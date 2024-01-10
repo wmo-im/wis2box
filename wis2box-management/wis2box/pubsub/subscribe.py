@@ -22,7 +22,7 @@
 import json
 import logging
 import multiprocessing as mp
-from pathlib import Path
+
 from time import sleep
 
 import click
