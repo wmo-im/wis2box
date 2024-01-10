@@ -32,7 +32,11 @@ DATA_MAPPINGS = Path(DATADIR) / 'data-mappings.yml'
 
 
 def get_data_mappings() -> dict:
-    """Get data mappings"""
+    """
+    Get data mappings
+
+    :returns: `dict` of data mappings definitions
+    """
 
     data_mappings = None
     if not DATA_MAPPINGS.exists():
