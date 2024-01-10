@@ -77,8 +77,9 @@ def load_plugin(plugin_type: PluginTypes,
         plugin_mappings = PLUGINS
     elif plugin_type == 'data':
         if data_mappings is None:
-            LOGGER.error('data_mappings is None')
-            raise ValueError('data_mappings is None')
+            msg = 'data mappings are undefined'
+            LOGGER.error(msg)
+            raise ValueError(msg)
         else:
             plugin_mappings = {'data': data_mappings}
     else:
