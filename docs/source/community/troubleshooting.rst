@@ -5,7 +5,7 @@ Troubleshooting
 
 This page lists several commonly seen issues and how to address them.
 
-No station on map in wis2box-UI
+No station on map in wis2box-ui
 -------------------------------
 
 The stations displayed in the wis2box-ui per dataset are defined by the topic associated with the station.
@@ -134,8 +134,8 @@ Possible issues are:
 - The directory defined by ``WIS2BOX_HOST_DATADIR`` does not contain the file ``metastation/station/station_list.csv`` or the file is invalid
 - ``WIS2BOX_STORAGE_PASSWORD`` is too short, MinIO will fail to start if you specify a ``WIS2BOX_STORAGE_PASSWORD`` of less than 8 characters
 
-wisbox-UI is empty
-------------------
+wis2box-ui is empty
+-------------------
 
 If when you access the wis2box UI you see the interface but no datasets are visible; check the ``WIS2BOX_URL`` and ``WIS2BOX_API_URL`` are set correctly.
 
