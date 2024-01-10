@@ -109,6 +109,7 @@ class DiscoveryMetadata(BaseMetadata):
         LOGGER.debug('Generating OARec discovery metadata')
         record = WMOWCMP2OutputSchema().write(md, stringify=False)
         record['properties']['wmo:topicHierarchy'] = mqtt_topic
+        record['wis2box'] = mcf['wis2box']
 
         if record['properties']['contacts'][0].get('organization') is None:
             record['properties']['contacts'][0]['organization'] = record['properties']['contacts'][0].pop('name', "NOTSET")  # noqa
@@ -226,16 +227,24 @@ def publish(ctx, filepath, verbosity):
 
         record = dm.generate(record_mcf)
 
+        LOGGER.debug('Publishing to API')
+        upsert_collection_item('discovery-metadata', record)
+
+        LOGGER.debug('Removing internal wis2box metadata')
+        record.pop('wis2box')
+
+        LOGGER.debug('Saving to object storage')
         data_bytes = json.dumps(record,
                                 default=json_serial).encode('utf-8')
         storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/metadata/{record['id']}.json"  # noqa
 
         put_data(data_bytes, storage_path, 'application/geo+json')
 
+        LOGGER.debug('Publishing message')
         message = publish_broker_message(record, storage_path,
                                          record_mcf['wis2box']['centre_id'])
-        upsert_collection_item('discovery-metadata', record)
         upsert_collection_item('messages', json.loads(message))
+
     except Exception as err:
         raise click.ClickException(err)
 
