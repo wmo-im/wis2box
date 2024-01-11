@@ -30,6 +30,7 @@ from typing import Iterator, Tuple, Union
 
 from elasticsearch import Elasticsearch
 from owslib.ogcapi.features import Features
+from owslib.ogcapi.records import Records
 from pygeometa.schemas.wmo_wigos import WMOWIGOSOutputSchema
 from pyoscar import OSCARClient
 
@@ -215,10 +216,11 @@ def load_datasets() -> Iterator[Tuple[dict, str]]:
 
     :returns: `list`, of link relations and topics for all datasets
     """
-    oaf = Features(DOCKER_API_URL)
+
+    oar = Records(DOCKER_API_URL)
 
     try:
-        dm = oaf.collection_items('discovery-metadata')
+        dm = oar.collection_items('discovery-metadata')
         for topic in dm['features']:
             for link in topic['links']:
                 if link['rel'] == 'canonical':

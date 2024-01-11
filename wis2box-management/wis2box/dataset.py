@@ -19,30 +19,47 @@
 #
 ###############################################################################
 
-__version__ = '1.0b6'
+import logging
 
 import click
 
-from wis2box.api import api
-from wis2box.data import data
-from wis2box.dataset import dataset
-from wis2box.env import environment
-from wis2box.metadata import metadata
-from wis2box.pubsub import pubsub
-from wis2box.auth import auth
+from wis2box import cli_helpers
+
+from wis2box.data import add_collection, delete_collection
+from wis2box.metadata.discovery import publish, unpublish
+
+LOGGER = logging.getLogger(__name__)
 
 
 @click.group()
-@click.version_option(version=__version__)
-def cli():
-    """WIS2 in a box"""
+def dataset():
+    """Dataset workflow"""
     pass
 
 
-cli.add_command(api)
-cli.add_command(environment)
-cli.add_command(data)
-cli.add_command(dataset)
-cli.add_command(metadata)
-cli.add_command(auth)
-cli.add_command(pubsub)
+@click.command('publish')
+@click.pass_context
+@cli_helpers.ARGUMENT_FILEPATH
+@cli_helpers.OPTION_VERBOSITY
+def publish_(ctx, filepath, verbosity):
+    """Publishes a dataset"""
+
+    ctx.invoke(publish, filepath=filepath, verbosity=verbosity)
+    filepath.seek(0)
+    ctx.invoke(add_collection, filepath=filepath, verbosity=verbosity)
+
+
+@click.command('unpublish')
+@click.pass_context
+@click.argument('identifier')
+@cli_helpers.OPTION_VERBOSITY
+def unpublish_(ctx, identifier, verbosity):
+    """Unpublishes a dataset"""
+
+    # TODO
+    # ctx.invoke(delete_collection, collection=identifier, verbosity=verbosity)
+    # ctx.invoke(unpublish, identifier=identifier, verbosity=verbosity)
+
+
+dataset.add_command(publish_)
+dataset.add_command(unpublish_)

@@ -30,7 +30,6 @@ from pygeometa.schemas.wmo_wcmp2 import WMOWCMP2OutputSchema
 from wis2box import cli_helpers
 from wis2box.api import (setup_collection, upsert_collection_item,
                          delete_collection_item)
-from wis2box.data_mappings import get_data_mappings
 from wis2box.env import API_URL, BROKER_PUBLIC, STORAGE_PUBLIC, STORAGE_SOURCE
 from wis2box.metadata.base import BaseMetadata
 from wis2box.plugin import load_plugin, PLUGINS
@@ -217,13 +216,6 @@ def publish(ctx, filepath, verbosity):
     try:
         dm = DiscoveryMetadata()
         record_mcf = dm.parse_record(filepath.read())
-
-        data_mappings = get_data_mappings()
-        if record_mcf['wis2box']['topic_hierarchy'] not in data_mappings:  # noqa
-            data_mappings_topics = '\n'.join(data_mappings.keys())  # noqa
-            msg = (f"topic_hierarchy={record_mcf['wis2box']['topic_hierarchy']} not found"  # noqa
-                   f" in data-mappings:\n\n{data_mappings_topics}")
-            raise click.ClickException(msg)
 
         record = dm.generate(record_mcf)
 
