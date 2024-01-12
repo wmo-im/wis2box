@@ -104,7 +104,11 @@ def remove_collection(collection_id: str, backend: bool = True,
         return False
 
     if collection_id not in ['discovery-metadata', 'stations', 'messages']:
-        delete_collection_item('discovery-metadata', collection_id)
+        try:
+            delete_collection_item('discovery-metadata', collection_id)
+        except Exception:
+            msg = f'discovery metadata {collection_id} not found'
+            LOGGER.warning(msg)
 
     return True
 

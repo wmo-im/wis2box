@@ -29,11 +29,13 @@ import click
 
 from wis2box.api import upsert_collection_item
 from wis2box import cli_helpers
+import wis2box.data as data_
 from wis2box.api import setup_collection
 from wis2box.data_mappings import get_data_mappings
 from wis2box.env import (BROKER_HOST, BROKER_PORT, BROKER_USERNAME,
                          BROKER_PASSWORD, STORAGE_SOURCE, STORAGE_ARCHIVE)
 from wis2box.handler import Handler, NotHandledError
+import wis2box.metadata.discovery as discovery_metadata
 from wis2box.plugin import load_plugin, PLUGINS
 from wis2box.pubsub.message import gcm
 
@@ -89,8 +91,15 @@ class WIS2BoxSubscriber:
                     LOGGER.info(f'Do not process archived-data: {key}')
                     return
             elif message.get('EventName') == 'wis2box:ReloadMappingRequest':
-                LOGGER.debug('Received ReloadMappingRequest')
+                LOGGER.debug('Received wis2box:ReloadMappingRequest')
                 self.data_mappings = get_data_mappings()
+                return
+            elif message.get('EventName') == 'wis2box:DatasetPublication':
+                LOGGER.debug('Received wis2box:DatasetPublication')
+                metadata = message.get('somekey')
+                discovery_metadata.publish_discovery_metadata(metadata)
+                data_.add_collection_data(metadata)
+                # TODO
                 return
             else:
                 LOGGER.debug('ignore message')
@@ -119,5 +128,5 @@ def subscribe(ctx, verbosity):
     broker = load_plugin('pubsub', defs)
 
     # start the wis2box subscriber
-    click.echo('Starting WIS2Box subscriber')
+    click.echo('Starting wis2box subscriber')
     WIS2BoxSubscriber(broker=broker)

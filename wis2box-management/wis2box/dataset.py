@@ -57,8 +57,8 @@ def unpublish_(ctx, identifier, verbosity):
     """Unpublishes a dataset"""
 
     # TODO
-    # ctx.invoke(delete_collection, collection=identifier, verbosity=verbosity)
-    # ctx.invoke(unpublish, identifier=identifier, verbosity=verbosity)
+    ctx.invoke(delete_collection, collection=identifier, verbosity=verbosity)
+    ctx.invoke(unpublish, identifier=identifier, verbosity=verbosity)
 
 
 dataset.add_command(publish_)

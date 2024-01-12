@@ -44,6 +44,7 @@ def get_data_mappings() -> dict:
         for record in records['features']:
             key = record['wis2box']['topic_hierarchy']
             value = record['wis2box']['data_mappings']
+            value['metadata_id'] = record['id']
             data_mappings[key] = value
     except Exception as err:
         msg = f'Issue loading data mappings: {err}'

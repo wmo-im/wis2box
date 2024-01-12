@@ -183,8 +183,51 @@ def gcm() -> dict:
         'bbox': [-180, -90, 180, 90],
         'id_field': 'identifier',
         'time_field': 'created',
-        'title_field': 'title',
+        'title_field': 'title'
     }
+
+
+def publish_discovery_metadata(metadata: str):
+    """
+    Inserts or updates discovery metadata to catalogue
+
+    :param metadata: `str` of MCF
+
+    :returns: `bool` of publishing result
+    """
+
+    setup_collection(meta=gcm())
+
+    LOGGER.debug('Publishing discovery metadata')
+    try:
+        dm = DiscoveryMetadata()
+        record_mcf = dm.parse_record(metadata)
+
+        record = dm.generate(record_mcf)
+
+        LOGGER.debug('Publishing to API')
+        upsert_collection_item('discovery-metadata', record)
+
+        LOGGER.debug('Removing internal wis2box metadata')
+        record.pop('wis2box')
+
+        LOGGER.debug('Saving to object storage')
+        data_bytes = json.dumps(record,
+                                default=json_serial).encode('utf-8')
+        storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/metadata/{record['id']}.json"  # noqa
+
+        put_data(data_bytes, storage_path, 'application/geo+json')
+
+        LOGGER.debug('Publishing message')
+        message = publish_broker_message(record, storage_path,
+                                         record_mcf['wis2box']['centre_id'])
+        upsert_collection_item('messages', json.loads(message))
+
+    except Exception as err:
+        LOGGER.warning(err)
+        raise RuntimeError(err)
+
+    return
 
 
 @click.group('discovery')
@@ -210,37 +253,11 @@ def setup(ctx, verbosity):
 def publish(ctx, filepath, verbosity):
     """Inserts or updates discovery metadata to catalogue"""
 
-    setup_collection(meta=gcm())
-
     click.echo(f'Publishing discovery metadata from {filepath.name}')
     try:
-        dm = DiscoveryMetadata()
-        record_mcf = dm.parse_record(filepath.read())
-
-        record = dm.generate(record_mcf)
-
-        LOGGER.debug('Publishing to API')
-        upsert_collection_item('discovery-metadata', record)
-
-        LOGGER.debug('Removing internal wis2box metadata')
-        record.pop('wis2box')
-
-        LOGGER.debug('Saving to object storage')
-        data_bytes = json.dumps(record,
-                                default=json_serial).encode('utf-8')
-        storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/metadata/{record['id']}.json"  # noqa
-
-        put_data(data_bytes, storage_path, 'application/geo+json')
-
-        LOGGER.debug('Publishing message')
-        message = publish_broker_message(record, storage_path,
-                                         record_mcf['wis2box']['centre_id'])
-        upsert_collection_item('messages', json.loads(message))
-
+        publish_discovery_metadata(filepath.read())
     except Exception as err:
-        raise click.ClickException(err)
-
-    click.echo('Done')
+        raise click.ClickException(f'Failed to publish: {err}')
 
 
 @click.command()
