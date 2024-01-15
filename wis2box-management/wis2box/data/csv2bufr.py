@@ -19,16 +19,17 @@
 #
 ###############################################################################
 
-import json
+import base64
+
 import logging
+import requests
+
+from datetime import datetime
 from pathlib import Path
 from typing import Union
 
-from csv2bufr import transform as transform_csv
-import csv2bufr.templates as c2bt
-
 from wis2box.data.base import BaseAbstractData
-from wis2box.metadata.station import get_valid_wsi
+from wis2box.env import DOCKER_API_URL
 
 LOGGER = logging.getLogger(__name__)
 
@@ -46,20 +47,6 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
 
         super().__init__(defs)
 
-        self.mappings = {}
-
-        LOGGER.debug(f'Loading template {self.template}')
-        if self.template.startswith('/'):
-            mapping_bufr4 = Path(self.template)
-            with mapping_bufr4.open() as fh1:
-                self.mappings['bufr4'] = json.load(fh1)
-        else:
-            if self.template not in c2bt.list_templates():
-                raise Exception(f'Unknown template: {self.template}, options are: {c2bt.list_templates()}') # noqa
-            self.mappings['bufr4'] = c2bt.load_template(self.template)
-
-        self.station_metadata = None
-
     def transform(self, input_data: Union[Path, bytes],
                   filename: str = '') -> bool:
 
@@ -75,37 +62,62 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
             raise ValueError(msg)
 
         LOGGER.debug('Generating BUFR4')
-        input_bytes = self.as_bytes(input_data)
+        data = self.as_string(input_data)
 
-        LOGGER.debug('Transforming data')
-        results = transform_csv(input_bytes.decode(),
-                                self.mappings['bufr4'])
+        LOGGER.debug('Posting data to wis2box-api')
+        headers = {
+            'accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
 
-        LOGGER.debug('Iterating over BUFR messages')
-        for item in results:
-            wsi = item['_meta']['properties']['wigos_station_identifier']
-            if 'result' in item['_meta']:
-                if item['_meta']['result']['code'] != 1:
-                    msg = item['_meta']['result']['message']
-                    LOGGER.error(f'Transform returned {msg} for wsi={wsi}')
-                    self.publish_failure_message(
-                        description='csv2bufr transform error',
-                        wsi=wsi)
-                    continue
-            if get_valid_wsi(wsi) is None:
-                msg = f'Station {wsi} not in station list; skipping'
-                LOGGER.error(msg)
-                self.publish_failure_message(
-                        description='Station not in station list',
-                        wsi=wsi)
-                continue
-            LOGGER.debug('Setting obs date for filepath creation')
-            identifier = item['_meta']['id']
-            data_date = item['_meta']['properties']['datetime']
+        payload = {
+            "inputs": {
+                "channel": self.topic_hierarchy.dirpath,
+                "template": self.template,
+                "notify": False,
+                "data": data
+            }
+        }
 
-            self.output_data[identifier] = item
-            self.output_data[identifier]['_meta']['relative_filepath'] = \
-                self.get_local_filepath(data_date)
+        url = f'{DOCKER_API_URL}/processes/wis2box-csv2bufr/execution'
+        response = requests.post(url, headers=headers, json=payload)
+        if response.status_code != 200:
+            msg = f'Failed to post data to wis2box-api: {response.status_code}'
+            LOGGER.error(msg)
+            raise ValueError(msg)
+
+        result = response.json()
+
+        # check for errors
+        for error in result['errors']:
+            LOGGER.error(error)
+
+        # check for warnings
+        for warning in result['warnings']:
+            LOGGER.warning(warning)
+
+        if 'data_items' not in result:
+            LOGGER.error(f'file={filename} failed to convert to BUFR4')
+            return False
+
+        # loop over data_items in response
+        for data_item in result['data_items']:
+            filename = data_item['filename']
+            suffix = filename.split('.')[-1]
+            rmk = filename.split('.')[0]
+            # convert data_item['data'] to bytes
+            input_bytes = base64.b64decode(data_item['data'].encode('utf-8'))
+            # define _meta
+            _meta = data_item['meta']
+            # convert isoformat to datetime
+            _meta['data_date'] = datetime.fromisoformat(_meta['data_date'])
+            # add relative filepath to _meta
+            _meta['relative_filepath'] = self.get_local_filepath(_meta['data_date']) # noqa
+            # add to output_data
+            self.output_data[rmk] = {
+                suffix: input_bytes,
+                '_meta': _meta
+            }
 
         return True
 

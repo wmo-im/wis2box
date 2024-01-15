@@ -19,13 +19,16 @@
 #
 ###############################################################################
 
+
+import base64
 import logging
+import requests
+
 from pathlib import Path
 from typing import Union
 
-from bufr2geojson import transform as as_geojson
-
 from wis2box.data.geojson import ObservationDataGeoJSON
+from wis2box.env import DOCKER_API_URL
 
 LOGGER = logging.getLogger(__name__)
 
@@ -33,47 +36,63 @@ LOGGER = logging.getLogger(__name__)
 class ObservationDataBUFR2GeoJSON(ObservationDataGeoJSON):
     """Observation data"""
 
-    def transform(
-        self, input_data: Union[Path, bytes], filename: str = ''
-    ) -> bool:
+    def transform(self, input_data: Union[Path, bytes],
+                  filename: str = '') -> bool:
 
         LOGGER.debug('Procesing BUFR data')
-        input_bytes = self.as_bytes(input_data)
 
-        LOGGER.debug('Generating GeoJSON features')
-        results = as_geojson(input_bytes, serialize=False)
+        LOGGER.debug('Posting data to wis2box-api')
+        headers = {
+            'accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+        url = f'{DOCKER_API_URL}/processes/bufr2geojson/execution'
 
-        LOGGER.debug('Processing GeoJSON features')
-        for collection in results:
-            # results is an iterator, for each iteration we have:
-            # - dict['id']
-            # - dict['id']['_meta']
-            # - dict['id']
-            for id, item in collection.items():
-                LOGGER.debug(f'Processing feature: {id}')
+        # check if input_data is Path object
+        if isinstance(input_data, Path):
+            payload = {
+                'inputs': {
+                    'data_url': input_data.as_posix()
+                }
+            }
+        else:
+            input_bytes = self.as_bytes(input_data)
+            payload = {
+                'inputs': {
+                    'data': base64.b64encode(input_bytes).decode('utf-8')
+                }
+            }
 
-                LOGGER.debug('Parsing feature datetime')
-                data_date = item['_meta']['data_date']
-                if '/' in data_date:
-                    # date is range/period, split and get end date/time
-                    data_date = data_date.split('/')[1]
+        response = requests.post(url, headers=headers, json=payload)
+        if response.status_code != 200:
+            msg = f'Failed to post data to wis2box-api: {response.status_code}'
+            LOGGER.error(msg)
+            raise ValueError(msg)
 
-                LOGGER.debug('Parsing feature fields')
-                items_to_remove = [
-                    key for key in item if key not in ('geojson', '_meta')
-                ]
-                for key in items_to_remove:
-                    LOGGER.debug(f'Removing unexpected key: {key}')
-                    item.pop(key)
+        result = response.json()
 
-                LOGGER.debug('Populating output data for publication')
-                self.output_data[id] = item
+        # check for errors
+        if 'error' in result and result['error'] != '':
+            LOGGER.error(result['error'])
 
-                self.output_data[id]['_meta'][
-                    'relative_filepath'
-                ] = self.get_local_filepath(data_date)
+        if 'items' not in result:
+            LOGGER.error(f'file={filename} failed to convert to geojson')
+            return False
 
-        LOGGER.debug('Successfully finished transforming BUFR data')
+        # loop over items in response
+        for item in result['items']:
+            id = item['id']
+
+            data_date = item['properties']['resultTime']
+            self.output_data[id] = {
+                '_meta': {
+                    'identifier': id,
+                    'data_date': data_date,
+                    'relative_filepath': self.get_local_filepath(data_date),
+                },
+                'geojson': item
+            }
+
         return True
 
     def get_local_filepath(self, date_):

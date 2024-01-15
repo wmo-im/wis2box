@@ -19,14 +19,12 @@
 #
 ###############################################################################
 
-FROM ghcr.io/wmo-im/dim_eccodes_baseimage:latest
-
-LABEL maintainer="tomkralidis@gmail.com"
+FROM ubuntu:focal
 
 ARG WIS2BOX_PIP3_EXTRA_PACKAGES
 ENV TZ="Etc/UTC" \
     DEBIAN_FRONTEND="noninteractive" \
-    DEBIAN_PACKAGES="cron bash vim curl git libffi-dev python3-cryptography libssl-dev libudunits2-0 python3-paho-mqtt python3-dateparser python3-tz python3-setuptools unzip"
+    DEBIAN_PACKAGES="cron bash vim curl git libffi-dev python3-cryptography libssl-dev libudunits2-0 python3 python3-pip curl python3-paho-mqtt python3-dateparser python3-tz python3-setuptools unzip"
 
 RUN if [ "$WIS2BOX_PIP3_EXTRA_PACKAGES" = "None" ]; \
     then export WIS2BOX_PIP3_EXTRA_PACKAGES=echo; \
@@ -39,11 +37,7 @@ RUN if [ "$WIS2BOX_PIP3_EXTRA_PACKAGES" = "None" ]; \
 RUN apt-get update -y && apt-get install -y ${DEBIAN_PACKAGES} \
     # install wis2box data pipeline dependencies
     && pip3 install --no-cache-dir \
-    https://github.com/wmo-im/csv2bufr/archive/refs/tags/v0.7.4.zip \
-    https://github.com/wmo-im/bufr2geojson/archive/refs/tags/v0.5.1.zip \
-    https://github.com/wmo-im/pymetdecoder/archive/refs/tags/v0.1.10.zip  \
-    https://github.com/wmo-cop/pyoscar/archive/master.zip \
-    https://github.com/wmo-im/synop2bufr/archive/refs/tags/v0.6.2.zip \
+    https://github.com/wmo-cop/pyoscar/archive/refs/tags/0.6.4.zip \
     https://github.com/geopython/pygeometa/archive/master.zip \
     https://github.com/wmo-im/pywis-topics/archive/refs/tags/0.2.0.zip \
     # install shapely

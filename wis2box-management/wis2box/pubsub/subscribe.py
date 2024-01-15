@@ -50,9 +50,9 @@ class WIS2BoxSubscriber:
         self.broker.bind('on_message', self.on_message_handler)
         self.broker.sub('wis2box/#')
 
-    def handle(self, filepath, message):
+    def handle(self, filepath):
         try:
-            LOGGER.info(f'Processing {message} for {filepath}')
+            LOGGER.info(f'Processing {filepath}')
             # load handler
             handler = Handler(filepath=filepath,
                               data_mappings=self.data_mappings)
@@ -71,6 +71,34 @@ class WIS2BoxSubscriber:
             msg = f'handle() error: {err}'
             raise err
 
+    def handle_publish(self, message):
+        LOGGER.debug('Loading DataPublish plugin')
+        defs = {
+            'topic_hierarchy': message['channel'].replace('origin/a/wis2/', ''), # noqa
+            '_meta': message['_meta'],
+            'notify': True
+        }
+        from wis2box.data.message import MessageData
+        MessageData(defs=defs)
+        plugin = MessageData(defs=defs)
+        try:
+            import base64
+            input_bytes = base64.b64decode(message['data'].encode('utf-8'))
+            plugin.transform(
+                input_data=input_bytes,
+                filename=self.filepath.split('/')[-1]
+            )
+        except Exception as err:
+            msg = f'MessageData-transform failed: {err}'
+            LOGGER.error(msg, exc_info=True)
+            return False
+        try:
+            plugin.publish()
+        except Exception as err:
+            msg = f'MessageData-publish failed: {err}'
+            LOGGER.error(msg, exc_info=True)
+            return False
+
     def on_message_handler(self, client, userdata, msg):
         LOGGER.debug(f'Raw message: {msg.payload}')
 
@@ -78,6 +106,8 @@ class WIS2BoxSubscriber:
         message = json.loads(msg.payload)
         LOGGER.info(f'Incoming message on topic {topic}')
         filepath = None
+        target = None
+        args = None
         if topic == 'wis2box/notifications':
             LOGGER.info(f'Notification: {message}')
             # store notification in messages collection
@@ -113,7 +143,7 @@ class WIS2BoxSubscriber:
         if filepath:
             while len(mp.active_children()) == mp.cpu_count():
                 sleep(0.1)
-            p = mp.Process(target=self.handle, args=(filepath, message))
+            p = mp.Process(target=target, args=args)
             p.start()
 
 
