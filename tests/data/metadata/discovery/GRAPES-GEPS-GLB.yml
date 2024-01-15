@@ -1,0 +1,66 @@
+wis2box:
+    retention: P30D
+    topic_hierarchy: cn-cma-babj.data.core.weather.prediction.forecast.short-range.probabilistic.global
+    country: chn
+    centre_id: cn-cma-babj
+
+mcf:
+    version: 1.0
+
+metadata:
+    identifier: urn:x-wmo:md:cn-cma-babj:data.core.weather.prediction.forecast.short-range.probabilistic.global
+    hierarchylevel: dataset
+
+identification:
+    title: CMA GRAPES GEPS v1.3
+    abstract: GRAPES GEPS is the main technical means to solve the uncertainty of CMA-GFS medium-term forecast and the difficulties of extreme weather forecast.
+    dates:
+        creation: 2023-04-23
+    keywords:
+        default:
+            keywords:
+                - mean sea level Pressure 
+                - 2 m above ground Temperature
+                - 10 m above ground U-Component of Wind
+                - 10 m above ground V-Component of Wind
+                - Total Precipitation
+                - Geopotential Height
+                - Temperature
+                - U-Component of Wind
+                - V-Component of Wind
+        wmo:
+            keywords:
+                - weatherObservations
+            keywords_type: theme
+            vocabulary:
+                name: WMO Category Code
+                url: https://github.com/wmo-im/wcmp-codelists/blob/main/codelists/WMO_CategoryCode.csv
+    extents:
+        spatial:
+            - bbox: [73.66000, 4.00000, 135.08000, 53.52000]
+              crs: 259200
+        temporal:
+            - begin: 2021-11-29
+              end: null
+              resolution: P6H
+    url: http://gisc.wis.cma.cn/wis/portal.pub?M_PID=urn:x-wmo:md:int.wmo.wis::CMA_GEPS
+    wmo_data_policy: core
+
+contact:
+    pointOfContact: &contact_poc
+        organization: China Meteorological Administration (CMA)
+        url: https://www.cma.gov.cn/
+        individualname: National Meteorological Information Center (NMIC)
+        positionname: National Meteorological Information Center (NMIC)
+        phone: 86-10-68409329
+        fax: null
+        address: 46 Zhongguancun Nandajie
+        city: Beijing
+        administrativearea: Beijing
+        postalcode: 100 081
+        country: China
+        email: hanxq@cma.gov.cn
+        hoursofservice: 0000h - 0900h UTC
+        contactinstructions: email
+
+    distributor: *contact_poc
