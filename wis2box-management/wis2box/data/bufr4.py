@@ -98,7 +98,7 @@ class ObservationDataBUFR(BaseAbstractData):
             # convert data_item['data'] to bytes
             input_bytes = base64.b64decode(data_item['data'].encode('utf-8'))
             # define _meta
-            _meta = data_item['meta']
+            _meta = data_item['_meta']
             # convert isoformat to datetime
             _meta['data_date'] = datetime.fromisoformat(_meta['data_date'])
             # add relative filepath to _meta

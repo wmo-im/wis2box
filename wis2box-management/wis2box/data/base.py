@@ -311,6 +311,21 @@ class BaseAbstractData:
         raise NotImplementedError()
 
     @staticmethod
+    def as_string(input_data):
+        """Get data as string"""
+        LOGGER.debug(f'input data is type: {type(input_data)}')
+        if isinstance(input_data, str):
+            return input_data
+        elif isinstance(input_data, bytes):
+            return input_data.decode()
+        elif isinstance(input_data, Path):
+            with input_data.open('r') as fh:
+                return fh.read()
+        else:
+            LOGGER.warning('Invalid data type')
+            return None
+
+    @staticmethod
     def as_bytes(input_data):
         """Get data as bytes"""
         LOGGER.debug(f'input data is type: {type(input_data)}')
