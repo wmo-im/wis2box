@@ -311,21 +311,6 @@ class BaseAbstractData:
         raise NotImplementedError()
 
     @staticmethod
-    def as_string(input_data):
-        """Get data as string"""
-        LOGGER.debug(f'input data is type: {type(input_data)}')
-        if isinstance(input_data, str):
-            return input_data
-        if isinstance(input_data, bytes):
-            return base64.b64encode(input_data).decode('utf-8')
-        elif isinstance(input_data, Path):
-            with input_data.open('r') as fh:
-                return fh.read()
-        else:
-            LOGGER.warning('Invalid data type')
-            return None
-
-    @staticmethod
     def as_bytes(input_data):
         """Get data as bytes"""
         LOGGER.debug(f'input data is type: {type(input_data)}')
@@ -336,6 +321,28 @@ class BaseAbstractData:
         elif isinstance(input_data, Path):
             with input_data.open('rb') as fh:
                 return fh.read()
+        else:
+            LOGGER.warning('Invalid data type')
+            return None
+
+    @staticmethod
+    def as_string(input_data, base64_encode=False):
+        """Get data as string"""
+        LOGGER.debug(f'input data is type: {type(input_data)}')
+        if isinstance(input_data, bytes):
+            if base64_encode:
+                return base64.b64encode(input_data).decode('utf-8')
+            else:
+                return input_data.decode('utf-8')
+        elif isinstance(input_data, str):
+            return input_data
+        elif isinstance(input_data, Path):
+            if base64_encode:
+                with input_data.open('rb') as fh:
+                    return base64.b64encode(fh.read()).decode('utf-8')
+            else:
+                with input_data.open('r') as fh:
+                    return fh.read()
         else:
             LOGGER.warning('Invalid data type')
             return None

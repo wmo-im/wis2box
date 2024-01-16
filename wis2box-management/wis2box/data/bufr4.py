@@ -51,7 +51,7 @@ class ObservationDataBUFR(BaseAbstractData):
                   filename: str = '') -> bool:
 
         LOGGER.debug('Processing BUFR4')
-        data = self.as_string(input_data)
+        data = self.as_string(input_data, base64_encode=True)
 
         LOGGER.debug('Posting data to wis2box-api')
         headers = {
