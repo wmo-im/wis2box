@@ -24,7 +24,6 @@ import logging
 import click
 
 from wis2box import cli_helpers
-
 from wis2box.data import add_collection, delete_collection
 from wis2box.metadata.discovery import publish, unpublish
 
