@@ -15,7 +15,7 @@ identification:
     title: CMA GRAPES GEPS v1.3
     abstract: GRAPES GEPS is the main technical means to solve the uncertainty of CMA-GFS medium-term forecast and the difficulties of extreme weather forecast.
     dates:
-        creation: 2023-04-23
+        creation: 2024-01-17
     keywords:
         default:
             keywords:
@@ -42,7 +42,7 @@ identification:
         temporal:
             - begin: 2021-11-29
               end: null
-              resolution: P6H
+              resolution: P12H
     url: http://gisc.wis.cma.cn/wis/portal.pub?M_PID=urn:x-wmo:md:int.wmo.wis::CMA_GEPS
     wmo_data_policy: core
 
