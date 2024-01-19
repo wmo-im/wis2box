@@ -54,8 +54,13 @@ class UniversalData(BaseAbstractData):
             LOGGER.error(msg)
             raise ValueError(msg)
 
-        date_time = parse(date_time)
-
+        try:
+            date_time = parse(date_time)
+        except Exception:
+            msg = f'Invalid date/time format: {date_time}'
+            LOGGER.error(msg)
+            raise ValueError(msg)
+        
         rmk = filename.stem
         suffix = filename.suffix.replace('.', '')
 

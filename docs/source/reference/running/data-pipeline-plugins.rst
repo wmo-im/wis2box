@@ -76,8 +76,7 @@ A typical synop2bufr plugin workflow definition would be defined as follows:
          notify: true  # trigger GeoJSON publishing for API and UI
          file-pattern: '^station_123_(\d{4})(\d{2}).*.txt$'  # example: station_123_202305_112342.txt (where 2023 is the year and 05 is the month)
 
-
-
+``wis2box.data.bufr4.ObservationDataBUFR``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This plugin takes an incoming BUFR4 data file and separates it into individual BUFR bulletins if there
@@ -98,6 +97,27 @@ A typical BUFR4 plugin workflow definition would be defined as follows:
        - plugin: wis2box.data.bufr4.ObservationDataBUFR
          notify: true  # trigger GeoJSON publishing for API and UI
          file-pattern: '^.*\.bin$'
+
+``wis2box.data.universal.UniversalData``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This plugin can be used to publish data as-is, without any conversion.
+
+It takes any incoming data, copies it to the /data endpoint configured in the wis2box, providing minimal information in the WIS2-Notification:
+
+  - ``properties.datatime`` in the WIS2-notification is parsed as ``match.group(1)`` of the regular expression defined in the plugin configuration. If the group can not be parsed by ``dateutil.parser`` an error will be raised and the data will not be published.
+  - ``geometry`` in the WIS2-Notification will be empty.
+
+For example to publish grib2 matching the file-pattern ``^.*_(\d{8})\d{2}.*\.grib2$`` the following configuration could be used:
+
+.. code-block:: yaml
+
+    grib2:
+        - plugin: wis2box.data.universal.UniversalData
+          notify: true
+          buckets:
+            - ${WIS2BOX_STORAGE_INCOMING}
+          file-pattern: '^.*_(\d{8})\d{2}.*\.grib2$' # example: Z_NAFP_C_BABJ_20231207000000_P_CMA-GEPS-GLB-036.grib2 (where 20231207000000 will be used as the datetime)
 
 
 See :ref:`data-mappings` for a full example data mapping configuration.

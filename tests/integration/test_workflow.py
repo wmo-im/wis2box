@@ -31,7 +31,7 @@ from requests import Session, codes
 
 DATADIR = Path('.').parent.absolute() / 'tests/data'
 
-URL = 'http://localhost'
+URL = 'http://localhost:4480'
 API_URL = f'{URL}/oapi'
 ID = 'urn:x-wmo:md:mw-mw_met_centre:surface-weather-observations'
 SESSION = Session()
@@ -225,9 +225,11 @@ def test_data_api():
 def test_message_api():
     """Test message API collection queries"""
 
-    # check messages with "wigos_station_identifier"="0-454-2-AWSBALAKA"
-    url = f'{API_URL}/collections/messages/items?q=0-454-2-AWSBALAKA&limit=2'  # noqa
+    # check messages with "q=AWSBALAKA" contains link with rel='update'
+    url = f'{API_URL}/collections/messages/items?q=AWSBALAKA&limit=2'  # noqa
     r = SESSION.get(url).json()
+    # TMP print output
+    print(r)
     # get links from 2nd message
     links = r['features'][1]['links']
 
@@ -236,6 +238,7 @@ def test_message_api():
 
     # test messages per test dataset
     counts = {
+        'cn-cma-babj': 11,
         'mw_met_centre': 25,
         'roma_met_centre': 33,
         'alger_met_centre': 29,
