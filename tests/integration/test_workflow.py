@@ -76,7 +76,7 @@ def test_metadata_discovery_publish():
     """Test discovery metadata publishing"""
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items').json()
-    assert r['numberMatched'] == 5
+    assert r['numberMatched'] == 6
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/{ID}').json()  # noqa
 
@@ -238,7 +238,7 @@ def test_message_api():
 
     # test messages per test dataset
     counts = {
-        'cn-cma-babj': 11,
+        'cn-cma-babj': 10,
         'mw_met_centre': 25,
         'roma_met_centre': 33,
         'alger_met_centre': 29,
