@@ -256,7 +256,7 @@ def test_message_api():
     # should match sum of counts above
     assert r['numberMatched'] == sum(counts.values())
 
-    msg = r['features'][5]
+    msg = r['features'][16]
     is_valid, _ = validate_message(msg)
     assert is_valid
 
