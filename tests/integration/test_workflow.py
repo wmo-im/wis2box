@@ -228,8 +228,6 @@ def test_message_api():
     # check messages with "q=AWSBALAKA" contains link with rel='update'
     url = f'{API_URL}/collections/messages/items?q=AWSBALAKA&limit=2'  # noqa
     r = SESSION.get(url).json()
-    # TMP print output
-    print(r)
     # get links from 2nd message
     links = r['features'][1]['links']
 

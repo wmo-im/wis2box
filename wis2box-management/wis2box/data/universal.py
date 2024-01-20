@@ -18,10 +18,13 @@
 # under the License.
 #
 ###############################################################################
+
 import logging
 from pathlib import Path
 from typing import Union
+
 from dateutil.parser import parse
+
 from wis2box.data.base import BaseAbstractData
 
 LOGGER = logging.getLogger(__name__)
