@@ -109,7 +109,7 @@ jobs:
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
-    - name: add China GRIB data (universal pipeline) 🇨🇳
+    - name: add China GRIB2 data (universal pipeline) 🇨🇳
       env:
         TOPIC_HIERARCHY: cn-cma-babj.data.core.weather.prediction.forecast.short-range.probabilistic.global
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/GRAPES-GEPS-GLB.yml
