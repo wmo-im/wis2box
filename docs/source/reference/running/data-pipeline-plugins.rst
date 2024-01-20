@@ -101,14 +101,14 @@ A typical BUFR4 plugin workflow definition would be defined as follows:
 ``wis2box.data.universal.UniversalData``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This plugin can be used to publish data as-is, without any conversion.
+This plugin can be used to publish any data, without any transformation.
 
-It takes any incoming data, copies it to the /data endpoint configured in the wis2box, providing minimal information in the WIS2-Notification:
+The plugin takes any incoming data, copies it to the ``/data`` endpoint configured in wis2box, providing minimal information in the WIS2 Notification:
 
-  - ``properties.datatime`` in the WIS2-notification is parsed as ``match.group(1)`` of the regular expression defined in the plugin configuration. If the group can not be parsed by ``dateutil.parser`` an error will be raised and the data will not be published.
-  - ``geometry`` in the WIS2-Notification will be empty.
+- ``properties.datatime`` in the WIS2 notification is parsed as ``match.group(1)`` of the regular expression defined in the plugin configuration. If the group cannot be parsed by ``dateutil.parser``, an error will be raised and the data will not be published
+- ``geometry`` in the WIS2 Notification will be null
 
-For example to publish grib2 matching the file-pattern ``^.*_(\d{8})\d{2}.*\.grib2$`` the following configuration could be used:
+For example, to publish GRIB2 data matching the file-pattern ``^.*_(\d{8})\d{2}.*\.grib2$`` the following configuration could be used:
 
 .. code-block:: yaml
 
