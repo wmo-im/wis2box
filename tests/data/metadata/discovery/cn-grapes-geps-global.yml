@@ -1,6 +1,6 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: cn-cma-babj.data.core.weather.prediction.forecast.subseasonal.probabilistic.global
+    topic_hierarchy: cn-cma-babj.data.core.weather.prediction.forecast.medium-range.probabilistic.global
     country: chn
     centre_id: cn-cma-babj
 
