@@ -132,17 +132,44 @@ services:
 
   wis2box-auth:
     container_name: wis2box-auth
-    image: ghcr.io/wmo-im/wis2box-auth:latest
+    # WIP: disabled GHCR image and using locally updated branch instead
+    # image: ghcr.io/wmo-im/wis2box-auth:latest
+    build: 
+      context: ../wis2box-auth
     restart: always
     env_file:
       - wis2box.env
     volumes:
       - auth-data:/data/wis2box:rw
+    # WIP: temporarily disabled dependencies for quicker debugging
+    # depends_on:
+    #   - wis2box-management
+
+  postgres:
+    container_name: postgres
+    image: postgres:13
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    env_file:
+      - wis2box.env
+
+  keycloak:
+    # WIP-FIXME: --hostname-strict must be true in production (use docker-compose.ssl.yml)
+    container_name: keycloak
+    command: start --optimized --hostname-strict=false
+    build: keycloak
+# WIP: volume not required when using RDBMS, but may be added later to realm import on start (/build?)
+#    volumes:
+#      - keycloak-data-volume:/opt/keycloak/data
+    env_file:
+      - wis2box.env
     depends_on:
-      - wis2box-management
+      - postgres
 
 volumes:
   es-data:
   minio-data:
   auth-data:
   api-config:
+  postgres-db-volume:
+  keycloak-data-volume:
