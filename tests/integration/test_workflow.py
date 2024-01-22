@@ -76,7 +76,7 @@ def test_metadata_discovery_publish():
     """Test discovery metadata publishing"""
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items').json()
-    assert r['numberMatched'] == 5
+    assert r['numberMatched'] == 6
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/{ID}').json()  # noqa
 
@@ -110,7 +110,7 @@ def test_metadata_discovery_publish():
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items',
                     params=params).json()
 
-    assert r['numberMatched'] == 5
+    assert r['numberMatched'] == 6
 
     # test access of discovery metadata from notification message
 
@@ -225,8 +225,8 @@ def test_data_api():
 def test_message_api():
     """Test message API collection queries"""
 
-    # check messages with "wigos_station_identifier"="0-454-2-AWSBALAKA"
-    url = f'{API_URL}/collections/messages/items?q=0-454-2-AWSBALAKA&limit=2'  # noqa
+    # check messages with "q=AWSBALAKA" contains link with rel='update'
+    url = f'{API_URL}/collections/messages/items?q=AWSBALAKA&limit=2'  # noqa
     r = SESSION.get(url).json()
     # get links from 2nd message
     links = r['features'][1]['links']
@@ -236,6 +236,7 @@ def test_message_api():
 
     # test messages per test dataset
     counts = {
+        'cn-cma-babj': 11,
         'mw_met_centre': 25,
         'roma_met_centre': 33,
         'alger_met_centre': 29,
@@ -253,7 +254,7 @@ def test_message_api():
     # should match sum of counts above
     assert r['numberMatched'] == sum(counts.values())
 
-    msg = r['features'][5]
+    msg = r['features'][16]
     is_valid, _ = validate_message(msg)
     assert is_valid
 
