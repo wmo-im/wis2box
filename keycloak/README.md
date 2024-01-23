@@ -5,7 +5,7 @@ The following instructions describe how to manually configure keycloak by creati
 - A realm is an isolated environment within Keycloak for managing users, roles, and authentication and authorization settings for a specific set of applications or services.
 - A client represents an application or service that is secured by Keycloak and is configured to use Keycloak for authentication and authorization.
 
-These instructions are temporary. The required realm and client will be imported/created automatically then the container is built, leaving only the creation and management of users and groups.
+These instructions are temporary. The required realm and client will be imported/created automatically when the container is built, leaving only the creation and management of users and groups.
 
 ## Creating a realm
 
