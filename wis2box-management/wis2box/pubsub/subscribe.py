@@ -19,6 +19,7 @@
 #
 ###############################################################################
 
+import base64
 import json
 import logging
 import multiprocessing as mp
@@ -27,17 +28,18 @@ from time import sleep
 
 import click
 
-from wis2box.api import upsert_collection_item
 from wis2box import cli_helpers
 import wis2box.data as data_
 from wis2box.api import remove_collection, setup_collection
 from wis2box.data_mappings import get_data_mappings
+from wis2box.data.message import MessageData
 from wis2box.env import (BROKER_HOST, BROKER_PORT, BROKER_USERNAME,
                          BROKER_PASSWORD, STORAGE_SOURCE, STORAGE_ARCHIVE)
 from wis2box.handler import Handler, NotHandledError
 import wis2box.metadata.discovery as discovery_metadata
 from wis2box.plugin import load_plugin, PLUGINS
 from wis2box.pubsub.message import gcm
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -78,11 +80,9 @@ class WIS2BoxSubscriber:
             '_meta': message['_meta'],
             'notify': True
         }
-        from wis2box.data.message import MessageData
         MessageData(defs=defs)
         plugin = MessageData(defs=defs)
         try:
-            import base64
             input_bytes = base64.b64decode(message['data'].encode('utf-8'))
             plugin.transform(
                 input_data=input_bytes,

@@ -22,13 +22,12 @@
 
 import base64
 import logging
-import requests
 
 from pathlib import Path
 from typing import Union
 
+from wis2box.api import execute_api_process
 from wis2box.data.geojson import ObservationDataGeoJSON
-from wis2box.env import DOCKER_API_URL
 
 LOGGER = logging.getLogger(__name__)
 
@@ -40,13 +39,7 @@ class ObservationDataBUFR2GeoJSON(ObservationDataGeoJSON):
                   filename: str = '') -> bool:
 
         LOGGER.debug('Procesing BUFR data')
-
-        LOGGER.debug('Posting data to wis2box-api')
-        headers = {
-            'accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-        url = f'{DOCKER_API_URL}/processes/bufr2geojson/execution'
+        process_name = 'bufr2geojson'
 
         # check if input_data is Path object
         if isinstance(input_data, Path):
@@ -63,13 +56,7 @@ class ObservationDataBUFR2GeoJSON(ObservationDataGeoJSON):
                 }
             }
 
-        response = requests.post(url, headers=headers, json=payload)
-        if response.status_code != 200:
-            msg = f'Failed to post data to wis2box-api: {response.status_code}'
-            LOGGER.error(msg)
-            raise ValueError(msg)
-
-        result = response.json()
+        result = execute_api_process(process_name, payload)
 
         # check for errors
         if 'error' in result and result['error'] != '':

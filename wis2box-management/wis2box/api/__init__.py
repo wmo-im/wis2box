@@ -26,7 +26,7 @@ from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
 from wis2box.env import (BROKER_HOST, BROKER_USERNAME, BROKER_PASSWORD,
-                         BROKER_PORT)
+                         BROKER_PORT, DOCKER_API_URL)
 from wis2box.plugin import load_plugin, PLUGINS
 
 
@@ -42,6 +42,51 @@ def refresh_data_mappings():
     }
     local_broker = load_plugin('pubsub', defs_local)
     local_broker.pub('wis2box/data_mappings/refresh', '{}', qos=0)
+
+
+def execute_api_process(process_name: str, payload: dict) -> dict:
+    """
+    Executes a process on the API
+
+    :param process_name: process name
+    :param payload: payload to send to process
+
+    :returns: `dict` with execution-result
+    """
+
+    LOGGER.debug('Posting data to wis2box-api')
+    headers = {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+        'prefer': 'respond-async'
+    }
+    url = f'{DOCKER_API_URL}/processes/{process_name}/execution'
+
+    response = requests.post(url, headers=headers, json=payload)
+    if response.status_code >= 400:
+        msg = f'Failed to post data to wis2box-api: {response.status_code}'
+        LOGGER.error(msg)
+        raise ValueError(msg)
+
+    if response.status_code == 200:
+        return response.json()
+
+    headers_json = dict(response.headers)
+    location = headers_json['Location']
+
+    status = 'accepted'
+    response_json = None
+    while status == 'accepted' or status == 'running':
+        # get the job status
+        headers = {
+            'accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+        response = requests.get(location, headers=headers)
+        response_json = response.json()
+        status = response_json['status']
+        sleep(0.1)
+    return response_json
 
 
 def setup_collection(meta: dict = {}) -> bool:

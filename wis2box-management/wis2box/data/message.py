@@ -1,7 +1,8 @@
-from datetime import datetime
-import logging
-from pathlib import Path
 
+import logging
+
+from pathlib import Path
+from datetime import datetime
 from typing import Union
 
 from wis2box.data.base import BaseAbstractData

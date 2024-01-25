@@ -73,7 +73,7 @@ class BaseAbstractData:
         # load plugin for local broker
         defs = {
             'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-            'url': f"mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}", # noqa
+            'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}', # noqa
             'client_type': 'failure-publisher'
         }
         local_broker = load_plugin('pubsub', defs)
@@ -169,7 +169,7 @@ class BaseAbstractData:
         # load plugin for local broker
         defs_local = {
             'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-            'url': f"mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}", # noqa
+            'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}', # noqa
             'client_type': 'notify-publisher'
         }
         local_broker = load_plugin('pubsub', defs_local)

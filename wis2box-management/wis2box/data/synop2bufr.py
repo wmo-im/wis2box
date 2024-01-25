@@ -20,16 +20,14 @@
 ###############################################################################
 
 import base64
-
 import logging
-import requests
 
 from datetime import datetime
 from pathlib import Path
 from typing import Union
 
+from wis2box.api import execute_api_process
 from wis2box.data.base import BaseAbstractData
-from wis2box.env import DOCKER_API_URL
 
 LOGGER = logging.getLogger(__name__)
 
@@ -76,28 +74,17 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
 
         # post data do wis2box-api/oapi/processes/synop2bufr
         payload = {
-            "inputs": {
-                "channel": self.topic_hierarchy.dirpath,
-                "year": year,
-                "month": month,
-                "notify": False,
-                "data": data # noqa
+            'inputs': {
+                'channel': self.topic_hierarchy.dirpath,
+                'year': year,
+                'month': month,
+                'notify': False,
+                'data': data # noqa
             }
         }
 
-        LOGGER.debug('Posting data to wis2box-api')
-        headers = {
-            'accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-        url = f'{DOCKER_API_URL}/processes/wis2box-synop2bufr/execution'
-        response = requests.post(url, headers=headers, json=payload)
-        if response.status_code != 200:
-            msg = f'Failed to post data to wis2box-api: {response.status_code}'
-            LOGGER.error(msg)
-            raise ValueError(msg)
-
-        result = response.json()
+        process_name = 'wis2box-synop2bufr'
+        result = execute_api_process(process_name, payload)
 
         # check for errors
         for error in result['errors']:
