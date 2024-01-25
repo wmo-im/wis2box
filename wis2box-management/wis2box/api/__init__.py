@@ -26,9 +26,8 @@ from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
 from wis2box.env import (BROKER_HOST, BROKER_USERNAME, BROKER_PASSWORD,
-                         BROKER_PORT, DOCKER_API_URL)
+                         BROKER_PORT, DOCKER_API_URL, API_URL)
 from wis2box.plugin import load_plugin, PLUGINS
-
 
 LOGGER = logging.getLogger(__name__)
 
@@ -82,6 +81,7 @@ def execute_api_process(process_name: str, payload: dict) -> dict:
             'accept': 'application/json',
             'Content-Type': 'application/json'
         }
+        location.replace(API_URL, DOCKER_API_URL)
         response = requests.get(location, headers=headers)
         response_json = response.json()
         status = response_json['status']
