@@ -154,13 +154,9 @@ services:
       - wis2box.env
 
   keycloak:
-    # WIP-FIXME: --hostname-strict must be true in production (use docker-compose.ssl.yml)
     container_name: keycloak
     command: start --optimized --hostname-strict=false
     build: keycloak
-# WIP: volume not required when using RDBMS, but may be added later to realm import on start (/build?)
-#    volumes:
-#      - keycloak-data-volume:/opt/keycloak/data
     env_file:
       - wis2box.env
     depends_on:

@@ -7,4 +7,4 @@ WORKDIR /opt/keycloak/
 # https://www.keycloak.org/server/importExport#_importing_a_realm_during_startup
 # RUN ./bin/kc.sh import --file /opt/keycloak/data/import/wis2box-keycloak.json && ./bin/kc.sh build --db=postgres
 
-RUN ./bin/kc.sh build --db=postgres
+RUN ./bin/kc.sh build --db=postgres --http-relative-path=/oauth
