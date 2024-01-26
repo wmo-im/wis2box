@@ -72,6 +72,7 @@ def execute_api_process(process_name: str, payload: dict) -> dict:
 
     headers_json = dict(response.headers)
     location = headers_json['Location']
+    location.replace(API_URL, DOCKER_API_URL)
 
     status = 'accepted'
     response_json = None
@@ -81,7 +82,6 @@ def execute_api_process(process_name: str, payload: dict) -> dict:
             'accept': 'application/json',
             'Content-Type': 'application/json'
         }
-        location.replace(API_URL, DOCKER_API_URL)
         response = requests.get(location, headers=headers)
         response_json = response.json()
         status = response_json['status']
