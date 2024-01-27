@@ -3,7 +3,7 @@ iso3166
 isodate
 minio
 OWSLib
-paho-mqtt
+paho-mqtt<2
 pygeometa
 pywis-pubsub
 pywis-topics
