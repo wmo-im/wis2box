@@ -1,3 +1,9 @@
+# Creating conf/realm-client-*.json
+
+The `conf` directory contains two identical keycloak configuration files that vary only in
+whether they require secure connections using https (conf/wis2box-keycloak-secure.json) or
+permit http connections (conf/wis2box-keycloak-insecure.json).
+
 ## Keycloak manual configuration
 
 The following instructions describe how to manually configure keycloak by creating a realm and client, where:
