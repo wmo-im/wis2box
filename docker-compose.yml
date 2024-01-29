@@ -155,10 +155,8 @@ services:
 
   keycloak:
     container_name: keycloak
-    command: start --optimized --import-realm --hostname-strict=false --hostname-strict-https
+    command: start --optimized --hostname-strict=false --hostname-strict-https=false
     build: keycloak
-    volumes:
-      - ./keycloak/conf/wis2box-keycloak-insecure.json:/opt/keycloak/data/import/wis2box-conf.json
     env_file:
       - wis2box.env
     depends_on:
