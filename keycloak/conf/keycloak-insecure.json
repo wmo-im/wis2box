@@ -2418,29 +2418,7 @@
   "webAuthnPolicyPasswordlessCreateTimeout" : 0,
   "webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister" : false,
   "webAuthnPolicyPasswordlessAcceptableAaguids" : [ ],
-  "users" : [ {
-    "id" : "31a26dc9-d5bd-4c02-b868-6e1349e3ce78",
-    "createdTimestamp" : 1706130701691,
-    "username" : "wis2box",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
-    "credentials" : [ {
-      "id" : "e4497b46-a497-49ac-a6eb-ffd32b9d59e5",
-      "type" : "password",
-      "createdDate" : 1706130702966,
-      "secretData" : "{\"value\":\"ajDk2843x+bo+EMi4a6VfLl3XSqObX/Kx13QDUDx/wE1YMxY21W3F9Be4MIIcJKT8IRPaGFgzuV6l4FzlWxzgw==\",\"salt\":\"Gi6oCzou45ggy8TjABiG6w==\",\"additionalParameters\":{}}",
-      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
-    } ],
-    "disableableCredentialTypes" : [ ],
-    "requiredActions" : [ ],
-    "realmRoles" : [ "default-roles-master", "admin" ],
-    "clientRoles" : {
-      "wis2box-realm" : [ "manage-users", "query-groups", "create-client", "view-authorization", "view-users", "query-clients", "view-events", "view-realm", "manage-clients", "manage-events", "view-clients", "manage-realm", "manage-identity-providers", "query-users", "query-realms", "manage-authorization", "view-identity-providers" ]
-    },
-    "notBefore" : 0,
-    "groups" : [ ]
-  } ],
+  "users" : [],
   "scopeMappings" : [ {
     "clientScope" : "offline_access",
     "roles" : [ "offline_access" ]
