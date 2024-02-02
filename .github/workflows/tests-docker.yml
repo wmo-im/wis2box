@@ -111,9 +111,9 @@ jobs:
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
     - name: add China GRIB2 data (universal pipeline) 🇨🇳
       env:
-        TOPIC_HIERARCHY: cn-cma-babj.data.core.weather.prediction.forecast.medium-range.probabilistic.global
+        TOPIC_HIERARCHY: cn-cma.data.core.weather.prediction.forecast.medium-range.probabilistic.global
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/cn-grapes-geps-global.yml
-        DISCOVERY_METADATA_ID: urn:x-wmo:md:cn-cma-babj:grapes-geps-global
+        DISCOVERY_METADATA_ID: urn:x-wmo:md:cn-cma:grapes-geps-global
         TEST_DATA: /data/wis2box/observations/china
       run: |
         python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
