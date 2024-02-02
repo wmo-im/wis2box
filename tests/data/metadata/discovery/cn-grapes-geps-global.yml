@@ -1,14 +1,14 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: cn-cma-babj.data.core.weather.prediction.forecast.medium-range.probabilistic.global
+    topic_hierarchy: cn-cma.data.core.weather.prediction.forecast.medium-range.probabilistic.global
     country: chn
-    centre_id: cn-cma-babj
+    centre_id: cn-cma
 
 mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:x-wmo:md:cn-cma-babj:grapes-geps-global
+    identifier: urn:x-wmo:md:cn-cma:grapes-geps-global
     hierarchylevel: dataset
 
 identification:

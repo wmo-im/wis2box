@@ -236,7 +236,7 @@ def test_message_api():
 
     # test messages per test dataset
     counts = {
-        'cn-cma-babj': 11,
+        'cn-cma': 11,
         'mw_met_centre': 25,
         'roma_met_centre': 33,
         'alger_met_centre': 29,
