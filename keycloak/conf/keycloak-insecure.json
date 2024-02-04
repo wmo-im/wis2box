@@ -609,7 +609,7 @@
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "secret" : "GioSJKAH5NxbYN35PG1L7oLw4rhBjZaF",
+    "secret" : "${OIDC_CLIENT_SECRET}",
     "redirectUris" : [ ],
     "webOrigins" : [ ],
     "notBefore" : 0,
