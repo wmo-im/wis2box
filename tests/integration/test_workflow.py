@@ -232,7 +232,7 @@ def test_message_api():
     links = r['features'][1]['links']
 
     # check link contains rel='update'
-    assert any(link['rel'] == 'update' for link in links)  # noqa
+    assert any(link['rel'] == 'update' for link in links)
 
     # test messages per test dataset
     counts = {
