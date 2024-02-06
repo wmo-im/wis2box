@@ -3,6 +3,14 @@ wis2box:
     topic_hierarchy: cn-cma.data.core.weather.prediction.forecast.medium-range.probabilistic.global
     country: chn
     centre_id: cn-cma
+    data_mappings:
+        plugins:
+            grib2:
+                - plugin: wis2box.data.universal.UniversalData
+                  notify: true
+                  buckets:
+                    - ${WIS2BOX_STORAGE_INCOMING}
+                  file-pattern: '^.*_(\d{8})\d{2}.*\.grib2$'
 
 mcf:
     version: 1.0
