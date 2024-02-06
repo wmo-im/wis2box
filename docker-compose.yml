@@ -8,7 +8,7 @@ services:
     depends_on:
       - wis2box-ui
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/nginx.conf:/etc/nginx/templates/default.conf.template
 
   wis2box-ui:
     container_name: wis2box-ui
@@ -132,17 +132,42 @@ services:
 
   wis2box-auth:
     container_name: wis2box-auth
-    image: ghcr.io/wmo-im/wis2box-auth:latest
+    # WIP: disabled GHCR image and using locally updated branch instead
+    # image: ghcr.io/wmo-im/wis2box-auth:latest
+    build: 
+      context: ../wis2box-auth
     restart: always
     env_file:
       - wis2box.env
     volumes:
       - auth-data:/data/wis2box:rw
+    # WIP: temporarily disabled dependencies for quicker debugging
+    # depends_on:
+    #   - wis2box-management
+
+  postgres:
+    container_name: postgres
+    image: postgres:13
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    env_file:
+      - wis2box.env
+
+  keycloak:
+    container_name: keycloak
+    command: start --optimized --hostname-strict=false --hostname-strict-https=false
+    build: keycloak
+    env_file:
+      - wis2box.env
+    volumes:
+      - ./keycloak/conf/keycloak-insecure.json:/opt/keycloak/data/import/keycloak-conf.json
     depends_on:
-      - wis2box-management
+      - postgres
 
 volumes:
   es-data:
   minio-data:
   auth-data:
   api-config:
+  postgres-db-volume:
+  keycloak-data-volume:
