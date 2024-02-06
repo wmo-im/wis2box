@@ -66,7 +66,7 @@ class WIS2BoxSubscriber:
             LOGGER.debug(msg)
         except ValueError as err:
             msg = f'handle() error: {err}'
-            LOGGER.error(msg)
+            LOGGER.error(msg, exc_info=True)
         except Exception as err:
             msg = f'handle() error: {err}'
             raise err
