@@ -52,7 +52,7 @@ class WIS2BoxSubscriber:
 
     def handle(self, filepath, message):
         try:
-            LOGGER.info(f'Processing {message["EventName"]} for {filepath}')
+            LOGGER.info(f'Processing {message} for {filepath}')
             # load handler
             handler = Handler(filepath=filepath,
                               data_mappings=self.data_mappings)
