@@ -86,7 +86,6 @@ def validate_and_load(topic_hierarchy: str,
     """
 
     LOGGER.debug(f'Validating topic hierarchy: {topic_hierarchy}')
-    LOGGER.debug(f'Data mappings {data_mappings}')
 
     th = TopicHierarchy(topic_hierarchy)
     found = False
