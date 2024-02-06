@@ -83,7 +83,7 @@ class WIS2BoxSubscriber:
             # store notification in messages collection
             upsert_collection_item('messages', message)
         elif (topic == 'wis2box/storage' and
-              message.get('EventName') == 's3:ObjectCreated:Put'):
+              message.get('EventName', '') == 's3:ObjectCreated:Put'):
             LOGGER.debug('Storing data')
             key = str(message['Key'])
             filepath = f'{STORAGE_SOURCE}/{key}'
@@ -91,12 +91,12 @@ class WIS2BoxSubscriber:
                 LOGGER.info(f'Do not process archived-data: {key}')
                 return
         elif topic == 'wis2box/data_mappings/refresh':
-            LOGGER.debug('Refresing data mappings')
+            LOGGER.debug('Refreshing data mappings')
             self.data_mappings = get_data_mappings()
             return
         elif topic == 'wis2box/dataset_publication':
             LOGGER.debug('Publishing dataset')
-            metadata = message.get('somekey')
+            metadata = message
             discovery_metadata.publish_discovery_metadata(metadata)
             data_.add_collection_data(metadata)
             return
