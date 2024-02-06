@@ -231,8 +231,8 @@ def test_message_api():
     # get links from 2nd message
     links = r['features'][1]['links']
 
-    # check link contains rel='http://def.wmo.int/def/rel/wnm/-/update'
-    assert any(link['rel'] == 'http://def.wmo.int/def/rel/wnm/-/update' for link in links)  # noqa
+    # check link contains rel='update'
+    assert any(link['rel'] == 'update' for link in links)  # noqa
 
     # test messages per test dataset
     counts = {
