@@ -82,6 +82,7 @@ class WIS2BoxSubscriber:
             LOGGER.info(f'Notification: {message}')
             # store notification in messages collection
             upsert_collection_item('messages', message)
+            return
         elif (topic == 'wis2box/storage' and
               message.get('EventName', '') == 's3:ObjectCreated:Put'):
             LOGGER.debug('Storing data')
@@ -109,11 +110,11 @@ class WIS2BoxSubscriber:
             LOGGER.debug('Ignoring message')
             return
 
-        while len(mp.active_children()) == mp.cpu_count():
-            sleep(0.1)
-
-        p = mp.Process(target=self.handle, args=(filepath, message))
-        p.start()
+        if filepath:
+            while len(mp.active_children()) == mp.cpu_count():
+                sleep(0.1)
+            p = mp.Process(target=self.handle, args=(filepath, message))
+            p.start()
 
 
 @click.command()
