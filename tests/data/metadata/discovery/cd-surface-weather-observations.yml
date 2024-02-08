@@ -52,7 +52,7 @@ identification:
     wmo_data_policy: core
 
 contact:
-    pointOfContact: &contact_poc
+    host:
         organization: Congo National Meteorological Service (DMN)
         url: https://www.dirmet.cg
         individualname: Firstname Lastname
@@ -67,5 +67,3 @@ contact:
         email: you@example.com
         hoursofservice: 0700h - 1500h UTC
         contactinstructions: email
-
-    distributor: *contact_poc

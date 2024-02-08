@@ -55,7 +55,7 @@ identification:
     wmo_data_policy: core
 
 contact:
-    pointOfContact: &contact_poc
+    host:
         organization: China Meteorological Administration (CMA)
         url: https://www.cma.gov.cn/
         individualname: National Meteorological Information Center (NMIC)
@@ -70,5 +70,3 @@ contact:
         email: hanxq@cma.gov.cn
         hoursofservice: 0000h - 0900h UTC
         contactinstructions: email
-
-    distributor: *contact_poc

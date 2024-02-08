@@ -55,7 +55,7 @@ identification:
     wmo_data_policy: core
 
 contact:
-    pointOfContact: &contact_poc
+    host:
         organization: Romanian National Meteorological Administration
         url: https://www.meteoromania.ro
         individualname: Firstname Lastname
@@ -70,5 +70,3 @@ contact:
         email: you@example.org
         hoursofservice: 0700h - 1500h UTC
         contactinstructions: email
-
-    distributor: *contact_poc

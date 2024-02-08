@@ -46,7 +46,7 @@ identification:
     wmo_data_policy: core
 
 contact:
-    pointOfContact: &contact_poc
+    host:
         organization: Your organization name
         url: https://example.org
         individualname: Firstname Lastname
@@ -61,5 +61,3 @@ contact:
         email: you@example.org
         hoursofservice: 0700h - 1500h UTC
         contactinstructions: email
-
-    distributor: *contact_poc

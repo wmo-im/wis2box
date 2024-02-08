@@ -51,7 +51,7 @@ identification:
     wmo_data_policy: core
 
 contact:
-    pointOfContact: &contact_poc
+    host:
         organization: Department of Climate Change and Meteorologial Services (DCCMS)
         url: https://www.metmalawi.gov.mw
         individualname: Firstname Lastname
@@ -66,5 +66,3 @@ contact:
         email: you@example.org
         hoursofservice: 0700h - 1500h UTC
         contactinstructions: email
-
-    distributor: *contact_poc
