@@ -47,6 +47,10 @@ DOCKER_API_URL = os.environ.get('WIS2BOX_DOCKER_API_URL', 'http://wis2box-api:80
 AUTH_URL = os.environ.get('WIS2BOX_AUTH_URL', 'http://wis2box-auth')
 URL = os.environ.get('WIS2BOX_URL', 'http://localhost')
 
+KEYCLOAK_ADMIN = os.environ.get('KEYCLOAK_ADMIN', 'wis2box')
+KEYCLOAK_ADMIN_PASSWORD = os.environ.get('KEYCLOAK_ADMIN_PASSWORD')
+KEYCLOAK_URL = os.environ.get('KEYCLOAK_URL', 'http://keycloak:8080')
+
 BROKER_USERNAME = os.environ.get('WIS2BOX_BROKER_USERNAME', 'wis2box')
 BROKER_PASSWORD = os.environ.get('WIS2BOX_BROKER_PASSWORD', 'wis2box')
 BROKER_HOST = os.environ.get('WIS2BOX_BROKER_HOST', 'mosquitto')

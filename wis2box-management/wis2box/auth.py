@@ -26,9 +26,49 @@ from secrets import token_hex
 
 from wis2box import cli_helpers
 from wis2box.topic_hierarchy import validate_and_load
-from wis2box.env import AUTH_URL
+from wis2box.env import AUTH_URL, KEYCLOAK_URL, KEYCLOAK_ADMIN, KEYCLOAK_ADMIN_PASSWORD # noqa
 
 LOGGER = logging.getLogger(__name__)
+
+
+def get_kc_admin_token():
+    url = f'{KEYCLOAK_URL}/oauth/realms/master/protocol/openid-connect/token'
+    params = {
+        'client_id': 'admin-cli',
+        'grant_type': 'password',
+        'username': KEYCLOAK_ADMIN,
+        'password': KEYCLOAK_ADMIN_PASSWORD
+    }
+    resp = requests.post(url, data=params)
+    resp.raise_for_status()
+    data = resp.json()
+    access_token = data["access_token"]
+    return access_token
+
+
+def create_kc_user(username, password):
+    access_token = get_kc_admin_token()
+    url = f'{KEYCLOAK_URL}/oauth/admin/realms/wis2box/users'
+    headers = {
+        'content-type': 'application/json',
+        'Authorization': f'Bearer {access_token}'
+    }
+    params = {
+        'username': f'{username}',
+        'enabled': 'true',
+        'credentials': [
+            {
+                'type': 'password',
+                'value': f'{password}'
+            }
+        ]
+    }
+    resp = requests.post(url, headers=headers, json=params)
+    # check response
+    if resp.status_code != 201:
+        LOGGER.error(f'Error creating user: {resp.text}')
+        return False
+    return resp.ok
 
 
 def create_token(topic: str, token: str) -> bool:
@@ -147,6 +187,17 @@ def has_access_path(ctx, path, token):
 
 @click.command()
 @click.pass_context
+@click.option('--username', '-u', required=True)
+@click.option('--password', '-p', required=True)
+def add_user(ctx, username, password):
+    """Add a new user to Keycloak"""
+
+    if create_kc_user(username, password):
+        click.echo(f'User {username} successfully created')
+
+
+@click.command()
+@click.pass_context
 @cli_helpers.OPTION_TOPIC_HIERARCHY
 @click.option('--path', '-p')
 @click.option('--yes', '-y', default=False, is_flag=True, help='Automatic yes')
@@ -198,3 +249,4 @@ auth.add_command(has_access_topic)
 auth.add_command(has_access_path)
 auth.add_command(is_restricted_topic)
 auth.add_command(is_restricted_path)
+auth.add_command(add_user)

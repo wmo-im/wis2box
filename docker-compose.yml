@@ -159,8 +159,8 @@ services:
     build: keycloak
     env_file:
       - wis2box.env
-    volumes:
-      - ./keycloak/conf/keycloak-insecure.json:/opt/keycloak/data/import/keycloak-conf.json
+    #volumes:
+    #  - ./keycloak/conf/keycloak-insecure.json:/opt/keycloak/data/import/keycloak-conf.json
     depends_on:
       - postgres
 
@@ -170,4 +170,3 @@ volumes:
   auth-data:
   api-config:
   postgres-db-volume:
-  keycloak-data-volume:

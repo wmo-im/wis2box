@@ -15,7 +15,7 @@ These instructions are temporary. The required realm and client will be imported
 
 ## Creating a realm
 
-- Visit KeyCloak admin console in the browser: `${WIS2BOX_URL}:8180/admin` 
+- Visit KeyCloak admin console in the browser: `${WIS2BOX_URL}/oauth` 
 - Log into the `master` (default) realm using the `KEYCLOAK_ADMIN` and `KEYCLOAK_ADMIN_PASSWORD` credentials that you created in your `wis2box.env`
 - Select the down arrow of the 'Realm selector' drop down in the top left and click <kbd>Create Realm</kbd>
 - Enter `wis2box` as realm name and click <kbd>Create</kbd>

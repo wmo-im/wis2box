@@ -1,4 +1,4 @@
-FROM quay.io/keycloak/keycloak:latest
+FROM quay.io/keycloak/keycloak:23.0
 WORKDIR /opt/keycloak/
 
 RUN mkdir -p /opt/keycloak/data/import
