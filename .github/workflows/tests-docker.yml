@@ -51,7 +51,7 @@ jobs:
       env:
         TOPIC_HIERARCHY: mw-mw_met_centre.data.core.weather.surface-based-observations.synop
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/mw-surface-weather-observations.yml
-        DISCOVERY_METADATA_ID: urn:x-wmo:md:mw-mw_met_centre:surface-weather-observations
+        DISCOVERY_METADATA_ID: urn:wmo:md:mw-mw_met_centre:surface-weather-observations
         TEST_DATA: /data/wis2box/observations/malawi
         TEST_DATA_UPDATE: /data/wis2box/observations/malawi_update
       run: |
@@ -64,7 +64,7 @@ jobs:
       env:
         TOPIC_HIERARCHY: it-roma_met_centre.data.core.weather.surface-based-observations.synop
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/it-surface-weather-observations.yml
-        DISCOVERY_METADATA_ID: urn:x-wmo:md:it-roma_met_centre:surface-weather-observations
+        DISCOVERY_METADATA_ID: urn:wmo:md:it-roma_met_centre:surface-weather-observations
         TEST_DATA: /data/wis2box/observations/italy
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
@@ -75,7 +75,7 @@ jobs:
       env:
         TOPIC_HIERARCHY: dz-alger_met_centre.data.core.weather.surface-based-observations.synop
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/dz-surface-weather-observations.yml
-        DISCOVERY_METADATA_ID: urn:x-wmo:md:dz-alger_met_centre:surface-weather-observations
+        DISCOVERY_METADATA_ID: urn:wmo:md:dz-alger_met_centre:surface-weather-observations
         TEST_DATA: /data/wis2box/observations/algeria
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
@@ -86,7 +86,7 @@ jobs:
       env:
         TOPIC_HIERARCHY: ro-rnimh.data.core.weather.surface-based-observations.synop
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/ro-synoptic-weather-observations.yml
-        DISCOVERY_METADATA_ID: urn:x-wmo:md:ro-rnimh:synoptic-weather-observations
+        DISCOVERY_METADATA_ID: urn:wmo:md:ro-rnimh:synoptic-weather-observations
         TEST_DATA: /data/wis2box/observations/romania
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
@@ -97,7 +97,7 @@ jobs:
       env:
         TOPIC_HIERARCHY: cd-brazza_met_centre.data.core.weather.surface-based-observations.synop
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/cd-surface-weather-observations.yml
-        DISCOVERY_METADATA_ID: urn:x-wmo:md:cd-brazza_met_centre:surface-weather-observations
+        DISCOVERY_METADATA_ID: urn:wmo:md:cd-brazza_met_centre:surface-weather-observations
         TEST_DATA: /data/wis2box/observations/congo
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
@@ -108,7 +108,7 @@ jobs:
       env:
         TOPIC_HIERARCHY: cn-cma.data.core.weather.prediction.forecast.medium-range.probabilistic.global
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/cn-grapes-geps-global.yml
-        DISCOVERY_METADATA_ID: urn:x-wmo:md:cn-cma:grapes-geps-global
+        DISCOVERY_METADATA_ID: urn:wmo:md:cn-cma:grapes-geps-global
         TEST_DATA: /data/wis2box/observations/china
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA

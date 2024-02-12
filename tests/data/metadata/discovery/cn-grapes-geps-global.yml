@@ -16,7 +16,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:x-wmo:md:cn-cma:grapes-geps-global
+    identifier: urn:wmo:md:cn-cma:grapes-geps-global
     hierarchylevel: dataset
 
 identification:
@@ -42,7 +42,7 @@ identification:
             keywords_type: theme
             vocabulary:
                 name: Earth system disciplines as defined by the WMO Unified Data Policy, Resolution 1 (Cg-Ext(2021), Annex 1.
-                url: https://github.com/wmo-im/wis2-topic-hierarchy/blob/main/topic-hierarchy/earth-system-discipline/index.csv
+                url: https://codes.wmo.int/wis/topic-hierarchy/earth-system-discipline
     extents:
         spatial:
             - bbox: [73.66000, 4.00000, 135.08000, 53.52000]
@@ -51,7 +51,7 @@ identification:
             - begin: 2021-11-29
               end: null
               resolution: P12H
-    url: http://gisc.wis.cma.cn/wis/portal.pub?M_PID=urn:x-wmo:md:int.wmo.wis::CMA_GEPS
+    url: http://gisc.wis.cma.cn/wis/portal.pub?M_PID=urn:wmo:md:int.wmo.wis::CMA_GEPS
     wmo_data_policy: core
 
 contact:

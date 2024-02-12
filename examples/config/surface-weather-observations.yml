@@ -8,7 +8,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:x-wmo:md:centre_id:surface-weather-observations
+    identifier: urn:wmo:md:centre_id:surface-weather-observations
     language: en
     charset: utf8
     hierarchylevel: dataset
@@ -33,7 +33,7 @@ identification:
             keywords_type: theme
             vocabulary:
                 name: WMO WIS2 Topic Hierarchy
-                url: https://github.com/wmo-im/wis2-topic-hierarchy/blob/main/topic-hierarchy/earth-system-discipline/index.csv
+                url: https://codes.wmo.int/topic-hierarchy/earth-system-discipline
     extents:
         spatial:
             - bbox: [-180, -90, 190, 90]
