@@ -8,7 +8,7 @@ The runtime component of wis2box is data ingestion. This is an event driven work
 The wis2box storage is provided using a `MinIO`_ container that provides S3-compatible object storage.
 
 Any file received in the ``wis2box-incoming`` storage bucket will trigger an action to process the file. 
-What action to take is determined by the ``data-mappings.yml`` you've setup in the previous section.
+What action to take is determined by the data mappings that were setup in the previous section.
 
 wis2box-webapp
 --------------
@@ -55,7 +55,7 @@ Select 'browse' on the ``wis2box-incoming`` bucket and select 'Choose or create 
     :alt: MinIO new folder path
 
 .. note::
-    The folder in which the file is placed defines the topic you want to share the data on and should match the datasets defined in ``data-mappings.yml``
+    The folder in which the file is placed defines the topic you want to share the data on and should match the datasets defined in your data mappings.
     
     The first 3 levels of the WIS2 topic hierarchy ``origin/a/wis2`` are automatically included by wis2box when publishing data notification messages.
 
@@ -64,7 +64,7 @@ Select 'browse' on the ``wis2box-incoming`` bucket and select 'Choose or create 
     * data to be published on: ``origin/a/wis2/cd-brazza_met_centre/data/core/weather/surface-based-observations/synop``
     * upload data in the path: ``cd-brazza_met_centre/data/core/weather/surface-based-observations/synop``
     
-    The error message ``Topic Hierarchy validation error: No plugins for minio:9000/wis2box-incoming/... in data mappings`` indicates you stored a file in a folder for which no matching dataset was defined in ``data-mappings.yml``.
+    The error message ``Topic Hierarchy validation error: No plugins for minio:9000/wis2box-incoming/... in data mappings`` indicates you stored a file in a folder for which no matching dataset was defined in the data mappings.
 
 After uploading a file to ``wis2box-incoming`` storage bucket, you can browse the content in the ``wis2box-public`` bucket.  If the data ingest was successful, new data will appear as follows:
 

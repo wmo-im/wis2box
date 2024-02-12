@@ -14,6 +14,6 @@ categorize and classify data.
 
 To publish data and metadata to WIS2, the topic hierarchy requires a valid centre
 identifier (``centre-id``), which is specified by the member endorsed by the
-permananent representative (PR) of the country.
+Permananent Representative (PR) of the country.
 
 .. _`WIS2 topic hierarchy`: https://github.com/wmo-im/wis2-topic-hierarchy

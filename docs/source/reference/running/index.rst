@@ -28,7 +28,6 @@ topics
    concepts
    topic-hierarchy
    environment
-   data-mappings
    station-metadata
    discovery-metadata
    data-ingest-processing-and-publishing

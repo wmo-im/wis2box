@@ -27,40 +27,10 @@ To associated all stations defined in your station metadata with the same topic,
    wis2box metadata station add-topic origin/a/wis2/my-centre-id/data/core/weather/surface-based-observations/synop
 
 
-OSError: Missing data mappings
-------------------------------
-
-The wis2box logging displays the error:
-
-.. code-block:: bash	
-    
-    OSError: Missing data mappings: [Errno 2] No such file or directory: '/data/wis2box/data-mappings.yml'
-
-Check ``wis2box.env`` and check value that was set for WIS2BOX_HOST_DATADIR
-
-.. code-block:: bash
-    
-    WIS2BOX_HOST_DATADIR=/home/wmouser/wis2box-data
-
-In this case the value set was '/home/wmouser/wis2box-data'
-
-Check that the file 'data-mappings.yml' is contained in this directory:
-
-.. code-block:: bash
-    
-    ls -lh /home/wmouser/wis2box-data/data-mappings.yml
-
-After you have ensured the data-mappings.yml is in the directory defined by WIS2BOX_HOST_DATADIR, restart the wis2box:
-
-.. code-block:: bash
-    
-    python3 wis2box-ctl.py stop
-    python3 wis2box-ctl.py start
-
 Topic Hierarchy validation error: Unknown file type
 ---------------------------------------------------
 
-Check ``data-mappings.yml`` file to adjust the file extension expected by the plugins processing your dataset.
+Check the ``wis2box.data_mappings`` section in your discovery metadata to adjust the file extension expected by the plugins processing your dataset.
 
 If you are ingesting files with extension .bin:
 
@@ -96,11 +66,11 @@ Check the values for ``WIS2BOX_STORAGE_USERNAME`` and ``WIS2BOX_STORAGE_PASSWORD
 Topic Hierarchy validation error: No plugins for ... in data mappings
 ---------------------------------------------------------------------
 
-A file arrived a folder for which no matching dataset was defined in ``data-mappings.yml``.
+A file arrived a folder for which no matching dataset was defined in the data mappings.
 
 For dataset ``foo.bar``, store your file in the path ``/foo/bar/``.
 
-This requires either updating ``data-mappings.yml`` or changing the target folder under which the file is received.
+This requires either updating the data mappings in your discovery metadata or changing the target folder under which the file is received.
 
 ERROR - Failed to publish, wsi: ..., tsi: XXXXX
 -----------------------------------------------
@@ -130,8 +100,7 @@ Please check all services are Running using the following command:
 Possible issues are:
 
 - The host ran out of diskspace, check the output of ``df -h`` and ensure there is sufficient space available
-- The directory defined by ``WIS2BOX_HOST_DATADIR`` does not contain the file ``data-mappings.yml`` or the file is invalid
-- The directory defined by ``WIS2BOX_HOST_DATADIR`` does not contain the file ``metastation/station/station_list.csv`` or the file is invalid
+- The directory defined by ``WIS2BOX_HOST_DATADIR`` does not contain the file ``metadata/station/station_list.csv`` or the file is invalid
 - ``WIS2BOX_STORAGE_PASSWORD`` is too short, MinIO will fail to start if you specify a ``WIS2BOX_STORAGE_PASSWORD`` of less than 8 characters
 
 wis2box-ui is empty

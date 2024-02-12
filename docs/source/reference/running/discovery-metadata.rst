@@ -31,6 +31,29 @@ leverages the `pygeometa`_ project's `metadata control file (MCF)`_ format. Belo
 .. _`pygeometa`: https://geopython.github.io/pygeometa
 .. _`metadata control file (MCF)`: https://geopython.github.io/pygeometa/reference/mcf
 
+.. _data-mappings:
+
+Data mappings
+-------------
+
+A discovery metadata configuration file (MCF) has a `wis2box` section which provides a default data mapping (in YAML format).
+
+The data mappings are indicated by the ``wis2box.data_mappings`` keyword, with each topic having a separate entry specifying:
+
+- ``plugins``: all plugin objects associated with the topic, by file type/extension
+
+Each plugin is based on the file extension to be detected and processed, with the following configuration:
+
+- ``plugin``: the codepath of the plugin
+- ``notify``: whether the plugin should publish a data notification
+- ``template``: additional argument allowing a mapping template name to be passed to the plugin.  Note that if the path is relative, the plugin must be able to locate the template accordingly
+- ``file-pattern``: additional argument allowing a file pattern to be passed to the plugin
+- ``buckets``: the name(s) of the storage bucket(s) that data should be saved to (See :ref:`configuration` for more information on buckets)
+
+See :ref:`extending-wis2box` for more information on adding your own data processing
+pipeline.
+
+
 Summary
 -------
 

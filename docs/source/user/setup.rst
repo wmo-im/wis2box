@@ -134,7 +134,8 @@ You should now be able to view collections on the wis2box API by visiting the UR
   :width: 800
   :alt: Initial wis2box API collections list
 
-The API will show one (initially empty) collection 'Data Notifications'. 
+The API will show one (initially empty) collection named 'Data Notifications'. 
+
 This collection will be filled when you start ingesting data and publishing WIS2 notifications.
 
 .. note::
@@ -152,41 +153,29 @@ Login to the wis2box-management container
 
    python3 wis2box-ctl.py login
 
-The first step is to add your collection to the wis2box API, using the discovery metadata file you created above.
+The first step is to pubished your dataset using the discovery metadata file you created above.
 
-For example to add the data collection defined in ``metadata/discovery/metadata-synop-centreid.yml`` in the directory you specified for your configuration files:
-
-.. code-block:: bash
-
-   wis2box data add-collection /data/wis2box/metadata/discovery/metadata-synop-centreid.yml
-.. note::
-
-   If you see an error like ``ValueError: No plugins for XXX defined in data mappings``, exit the wis2box-management container and edit the ``data-mappings.yml`` file
-   in your wis2box configuration directory.
-
-You can view the collection you just added, by re-visiting ``/oapi/collections`` in a web browser.
-
-.. image:: ../_static/wis2box-api-added-collection.png
-  :width: 800
-  :alt: wis2box API collections list with added collection
-
-Repeat this step for any other collections you wish to add, such as the ``temp`` dataset.
-
-The second step is to publish discovery metadata and cache its content in the wis2box API:
+For example to add the dataset ``metadata/discovery/metadata-synop-centreid.yml`` in the directory you specified for your configuration files:
 
 .. code-block:: bash
 
-   wis2box metadata discovery publish /data/wis2box/metadata/discovery/metadata-synop-centreid.yml
+   wis2box dataset publish /data/wis2box/metadata/discovery/metadata-synop-centreid.yml
 
 This command publishes an MQTT message with information about your dataset to the WIS2 Global Discovery Catalogue. Repeat this command whenever you have to provide updated metadata about your dataset.
 
 You can review the discovery metadata just cached through the new item at  ``/oapi/collections/discovery-metadata/items``:
+
+You can view the dataset you just added in the API, by re-visiting ``/oapi/collections`` in a web browser.
 
 Repeat this step for any other discovery metadata you wish to publish, such as the ``temp`` dataset.
 
 .. note::
 
    To ensure that discovery metadata is shared with the WIS2 Global Discovery Catalogue, you must ensure that your discovery metadata is published once the WMO Global Broker is connected and subscribed for your wis2box broker.  If you have published discovery metadata before this stage, you must re-publish using the command above.
+
+.. image:: ../_static/wis2box-api-added-collection.png
+  :width: 800
+  :alt: wis2box API collections list with added collection
 
 Finally it is recommended to prepare authentication tokens for updating your stations and ingesting data using the wis2box-webapp.
 
