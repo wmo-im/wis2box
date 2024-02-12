@@ -98,7 +98,7 @@ def test_metadata_discovery_publish():
 
     assert r['geometry'] == geometry
 
-    mqtt_link = [d for d in r['links'] if d['type'] == 'MQTT'][0]
+    mqtt_link = [d for d in r['links'] if d['href'].startswith('mqtt')][0]
 
     assert 'everyone:everyone' in mqtt_link['href']
     assert mqtt_link['channel'] == 'origin/a/wis2/mw-mw_met_centre/data/core/weather/surface-based-observations/synop'  # noqa
