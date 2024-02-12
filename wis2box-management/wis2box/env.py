@@ -53,6 +53,7 @@ BROKER_HOST = os.environ.get('WIS2BOX_BROKER_HOST', 'mosquitto')
 BROKER_PORT = os.environ.get('WIS2BOX_BROKER_PORT', 1883)
 BROKER_PUBLIC = os.environ.get('WIS2BOX_BROKER_PUBLIC',
                                f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}') # noqa
+DOCKER_BROKER = f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}' # noqa
 
 STORAGE_TYPE = os.environ.get('WIS2BOX_STORAGE_TYPE', 'S3')
 STORAGE_SOURCE = os.environ.get('WIS2BOX_STORAGE_SOURCE', 'http://minio:9000')

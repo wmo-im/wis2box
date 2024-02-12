@@ -30,7 +30,8 @@ from pygeometa.schemas.wmo_wcmp2 import WMOWCMP2OutputSchema
 from wis2box import cli_helpers
 from wis2box.api import (setup_collection, upsert_collection_item,
                          delete_collection_item)
-from wis2box.env import API_URL, BROKER_PUBLIC, STORAGE_PUBLIC, STORAGE_SOURCE
+from wis2box.env import (API_URL, BROKER_PUBLIC, DOCKER_BROKER,
+                         STORAGE_PUBLIC, STORAGE_SOURCE)
 from wis2box.metadata.base import BaseMetadata
 from wis2box.plugin import load_plugin, PLUGINS
 from wis2box.pubsub.message import WISNotificationMessage
@@ -72,8 +73,8 @@ class DiscoveryMetadata(BaseMetadata):
 
         LOGGER.debug('Adding distribution links')
         oafeat_link = {
-            'url': f"{API_URL}/collections/{identifier}",
-            'type': 'OAFeat',
+            'url': f"{API_URL}/collections/{identifier}?f=json",
+            'type': 'application/json',
             'name': identifier,
             'description': identifier,
             'rel': 'collection'
@@ -81,16 +82,16 @@ class DiscoveryMetadata(BaseMetadata):
 
         mqp_link = {
             'url': remove_auth_from_url(BROKER_PUBLIC, 'everyone:everyone'),
-            'type': 'MQTT',
+            'type': 'application/json',
             'name': mcf['wis2box']['topic_hierarchy'],
-            'description': mcf['wis2box']['topic_hierarchy'],
-            'rel': 'data',
+            'description': mcf['identification']['title'],
+            'rel': 'items',
             'channel': mqtt_topic
         }
 
         canonical_link = {
             'url': f"{API_URL}/collections/discovery-metadata/items/{identifier}",  # noqa
-            'type': 'OARec',
+            'type': 'application/geo+json',
             'name': identifier,
             'description': identifier,
             'rel': 'canonical'
@@ -155,7 +156,7 @@ def publish_broker_message(record: dict, storage_path: str,
     # load plugin for broker
     defs = {
         'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-        'url': BROKER_PUBLIC,
+        'url': DOCKER_BROKER,
         'client_type': 'publisher'
     }
     broker = load_plugin('pubsub', defs)
@@ -200,6 +201,7 @@ def publish_discovery_metadata(metadata: str):
 
     LOGGER.debug('Publishing discovery metadata')
     try:
+        new_links = []
         dm = DiscoveryMetadata()
         record_mcf = dm.parse_record(metadata)
 
@@ -210,6 +212,15 @@ def publish_discovery_metadata(metadata: str):
 
         LOGGER.debug('Removing internal wis2box metadata')
         record.pop('wis2box')
+
+        LOGGER.debug('Sanitizing links')
+        old_links = record.pop('links')
+
+        for ol in old_links:
+            if API_URL not in ol['href']:
+                new_links.append(ol)
+
+        record['links'] = new_links
 
         LOGGER.debug('Saving to object storage')
         data_bytes = json.dumps(record,
