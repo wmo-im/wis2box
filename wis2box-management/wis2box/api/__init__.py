@@ -22,11 +22,26 @@
 import click
 import logging
 
+from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
-from wis2box import cli_helpers
+from wis2box.env import (BROKER_HOST, BROKER_USERNAME, BROKER_PASSWORD,
+                         BROKER_PORT)
+from wis2box.plugin import load_plugin, PLUGINS
+
 
 LOGGER = logging.getLogger(__name__)
+
+
+def refresh_data_mappings():
+    # load plugin for local broker
+    defs_local = {
+        'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
+        'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}', # noqa
+        'client_type': 'dataset-manager'
+    }
+    local_broker = load_plugin('pubsub', defs_local)
+    local_broker.pub('wis2box/data_mappings/refresh', '{}', qos=0)
 
 
 def setup_collection(meta: dict = {}) -> bool:
@@ -66,6 +81,9 @@ def setup_collection(meta: dict = {}) -> bool:
             LOGGER.error(msg)
             return False
 
+    LOGGER.debug('Refreshing data mappings')
+    refresh_data_mappings()
+
     return True
 
 
@@ -104,7 +122,14 @@ def remove_collection(collection_id: str, backend: bool = True,
         return False
 
     if collection_id not in ['discovery-metadata', 'stations', 'messages']:
-        delete_collection_item('discovery-metadata', collection_id)
+        try:
+            delete_collection_item('discovery-metadata', collection_id)
+        except Exception:
+            msg = f'discovery metadata {collection_id} not found'
+            LOGGER.warning(msg)
+
+    LOGGER.debug('Refreshing data mappings')
+    refresh_data_mappings()
 
     return True
 

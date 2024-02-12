@@ -29,11 +29,13 @@ import click
 
 from wis2box.api import upsert_collection_item
 from wis2box import cli_helpers
-from wis2box.api import setup_collection
+import wis2box.data as data_
+from wis2box.api import remove_collection, setup_collection
 from wis2box.data_mappings import get_data_mappings
 from wis2box.env import (BROKER_HOST, BROKER_PORT, BROKER_USERNAME,
                          BROKER_PASSWORD, STORAGE_SOURCE, STORAGE_ARCHIVE)
 from wis2box.handler import Handler, NotHandledError
+import wis2box.metadata.discovery as discovery_metadata
 from wis2box.plugin import load_plugin, PLUGINS
 from wis2box.pubsub.message import gcm
 
@@ -50,7 +52,7 @@ class WIS2BoxSubscriber:
 
     def handle(self, filepath, message):
         try:
-            LOGGER.info(f'Processing {message["EventName"]} for {filepath}')
+            LOGGER.info(f'Processing {message} for {filepath}')
             # load handler
             handler = Handler(filepath=filepath,
                               data_mappings=self.data_mappings)
@@ -80,22 +82,35 @@ class WIS2BoxSubscriber:
             LOGGER.info(f'Notification: {message}')
             # store notification in messages collection
             upsert_collection_item('messages', message)
+            return
+        elif (topic == 'wis2box/storage' and
+              message.get('EventName', '') == 's3:ObjectCreated:Put'):
+            LOGGER.debug('Storing data')
+            key = str(message['Key'])
+            filepath = f'{STORAGE_SOURCE}/{key}'
+            if key.startswith(STORAGE_ARCHIVE):
+                LOGGER.info(f'Do not process archived-data: {key}')
+                return
+        elif topic == 'wis2box/data_mappings/refresh':
+            LOGGER.debug('Refreshing data mappings')
+            self.data_mappings = get_data_mappings()
+            return
+        elif topic == 'wis2box/dataset_publication':
+            LOGGER.debug('Publishing dataset')
+            metadata = message
+            discovery_metadata.publish_discovery_metadata(metadata)
+            data_.add_collection_data(metadata)
+            return
+        elif topic.startswith('wis2box/dataset_unpublication'):
+            LOGGER.debug('Unpublishing dataset')
+            identifier = topic.split('/')[-1]
+            remove_collection(identifier)
+            return
         else:
-            if message.get('EventName') == 's3:ObjectCreated:Put':
-                LOGGER.debug('Received s3:ObjectCreated:Put')
-                key = str(message['Key'])
-                filepath = f'{STORAGE_SOURCE}/{key}'
-                if key.startswith(STORAGE_ARCHIVE):
-                    LOGGER.info(f'Do not process archived-data: {key}')
-                    return
-            elif message.get('EventName') == 'wis2box:ReloadMappingRequest':
-                LOGGER.debug('Received ReloadMappingRequest')
-                self.data_mappings = get_data_mappings()
-                return
-            else:
-                LOGGER.debug('ignore message')
-                return
+            LOGGER.debug('Ignoring message')
+            return
 
+        if filepath:
             while len(mp.active_children()) == mp.cpu_count():
                 sleep(0.1)
             p = mp.Process(target=self.handle, args=(filepath, message))
@@ -119,5 +134,5 @@ def subscribe(ctx, verbosity):
     broker = load_plugin('pubsub', defs)
 
     # start the wis2box subscriber
-    click.echo('Starting WIS2Box subscriber')
+    click.echo('Starting wis2box subscriber')
     WIS2BoxSubscriber(broker=broker)

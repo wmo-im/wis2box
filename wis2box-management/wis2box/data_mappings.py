@@ -20,15 +20,12 @@
 ###############################################################################
 
 import logging
-import os
-from pathlib import Path
 
-from wis2box.util import yaml_load
+from owslib.ogcapi.records import Records
+
+from wis2box.env import DOCKER_API_URL
 
 LOGGER = logging.getLogger(__name__)
-
-DATADIR = os.environ.get('WIS2BOX_DATADIR', '/data/wis2box')
-DATA_MAPPINGS = Path(DATADIR) / 'data-mappings.yml'
 
 
 def get_data_mappings() -> dict:
@@ -38,20 +35,20 @@ def get_data_mappings() -> dict:
     :returns: `dict` of data mappings definitions
     """
 
-    data_mappings = None
-    if not DATA_MAPPINGS.exists():
-        msg = f'Please create a data mappings file in {DATADIR}'
-        LOGGER.error(msg)
-        raise RuntimeError(msg)
+    data_mappings = {}
+
+    oar = Records(DOCKER_API_URL)
 
     try:
-        with DATA_MAPPINGS.open() as fh:
-            data_mappings = yaml_load(fh)
-            assert data_mappings is not None
-            assert 'data' in data_mappings
+        records = oar.collection_items('discovery-metadata')
+        for record in records['features']:
+            key = record['wis2box']['topic_hierarchy']
+            value = record['wis2box']['data_mappings']
+            value['metadata_id'] = record['id']
+            data_mappings[key] = value
     except Exception as err:
         msg = f'Issue loading data mappings: {err}'
         LOGGER.error(msg)
         raise EnvironmentError(msg)
 
-    return data_mappings['data']
+    return data_mappings

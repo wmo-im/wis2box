@@ -3,6 +3,14 @@ wis2box:
     topic_hierarchy: cn-cma.data.core.weather.prediction.forecast.medium-range.probabilistic.global
     country: chn
     centre_id: cn-cma
+    data_mappings:
+        plugins:
+            grib2:
+                - plugin: wis2box.data.universal.UniversalData
+                  notify: true
+                  buckets:
+                    - ${WIS2BOX_STORAGE_INCOMING}
+                  file-pattern: '^.*_(\d{8})\d{2}.*\.grib2$'
 
 mcf:
     version: 1.0
@@ -47,7 +55,7 @@ identification:
     wmo_data_policy: core
 
 contact:
-    pointOfContact: &contact_poc
+    host:
         organization: China Meteorological Administration (CMA)
         url: https://www.cma.gov.cn/
         individualname: National Meteorological Information Center (NMIC)
@@ -62,5 +70,3 @@ contact:
         email: hanxq@cma.gov.cn
         hoursofservice: 0000h - 0900h UTC
         contactinstructions: email
-
-    distributor: *contact_poc

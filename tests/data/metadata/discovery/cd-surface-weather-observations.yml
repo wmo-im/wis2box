@@ -3,6 +3,17 @@ wis2box:
     topic_hierarchy: cd-brazza_met_centre.data.core.weather.surface-based-observations.synop
     country: cog
     centre_id: cd-brazza_met_centre
+    data_mappings:
+        plugins:
+            txt:
+                - plugin: wis2box.data.synop2bufr.ObservationDataSYNOP2BUFR
+                  notify: true
+                  file-pattern: '^.*_(\d{4})(\d{2}).*\.txt$'
+            bufr4:
+                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
+                  buckets:
+                    - ${WIS2BOX_STORAGE_PUBLIC}
+                  file-pattern: '^.*\.bufr4$'
 
 mcf:
     version: 1.0
@@ -41,7 +52,7 @@ identification:
     wmo_data_policy: core
 
 contact:
-    pointOfContact: &contact_poc
+    host:
         organization: Congo National Meteorological Service (DMN)
         url: https://www.dirmet.cg
         individualname: Firstname Lastname
@@ -56,5 +67,3 @@ contact:
         email: you@example.com
         hoursofservice: 0700h - 1500h UTC
         contactinstructions: email
-
-    distributor: *contact_poc
