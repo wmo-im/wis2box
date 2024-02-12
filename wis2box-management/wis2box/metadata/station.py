@@ -27,6 +27,7 @@ import io
 import json
 import logging
 from typing import Iterator, Tuple, Union
+from urllib.request import urlretrieve
 
 from elasticsearch import Elasticsearch
 from owslib.ogcapi.features import Features
@@ -51,45 +52,34 @@ LOGGER = logging.getLogger(__name__)
 STATION_METADATA = DATADIR / 'metadata' / 'station'
 STATIONS = STATION_METADATA / 'station_list.csv'
 
-WMO_RAS = {
-    1: 'I',
-    2: 'II',
-    3: 'III',
-    4: 'IV',
-    5: 'V',
-    6: 'VI'
-}
 
-WMDR_RAS = {
-    'africa': 'I',
-    'asia': 'II',
-    'southAmerica': 'III',
-    'northCentralAmericaCaribbean': 'IV',
-    'southWestPacific': 'V',
-    'europe': 'VI'
-}
-
-
-def get_wmo_ra_roman(ra: str) -> str:
+def get_wmdr_codelists() -> dict:
     """
-    Helper function to derive a WMO Regional Association roman numeral from
-    an integer.
+    Helper function to cast WMDR codelists into object lookups
 
-    :param ra: `str` of WMO RA
-
-    :returns: `str` of WMO RA as roman numeral
+    :returns: `dict` of lookups
     """
 
-    if ra in WMO_RAS.values():
-        return ra
-    if ra.isdigit():
-        try:
-            return WMO_RAS[int(ra)]
-        except KeyError:
-            LOGGER.debug(f'Invalid region: {ra}')
-            return None
-    else:
-        return None
+    LOGGER.debug('Checking properties against WMDR code lists')
+
+    codelists = {}
+
+    column2codelists = {
+        'facility_type': 'FacilityType',
+        'territory_name': 'TerritoryName',
+        'wmo_region': 'WMORegion'
+    }
+
+    for key, value in column2codelists.items():
+        codelist_filename = STATION_METADATA / f'{value}.csv'
+        codelists[key] = []
+        with codelist_filename.open() as fh:
+            reader = csv.reader(fh)
+            next(reader)
+            for row in reader:
+                codelists[key].append(row[4])
+
+    return codelists
 
 
 def gcm() -> dict:
@@ -357,7 +347,7 @@ def publish_from_csv() -> None:
                    'barometer_height': barometer_height,
                    'facility_type': row['facility_type'],
                    'territory_name': row['territory_name'],
-                   'wmo_region': get_wmo_ra_roman(row['wmo_region']),
+                   'wmo_region': row['wmo_region'],
                    'url': f"{oscar_baseurl}/{wigos_station_identifier}",
                    'topic': topic,
                    'topics': [x['topic'] for x in topics],
@@ -366,6 +356,13 @@ def publish_from_csv() -> None:
                 },
                 'links': topics
             }
+
+            LOGGER.debug('Checking properties against WMDR code lists')
+            for key, values in get_wmdr_codelists().items():
+                column_value = feature['properties'][key]
+                if column_value not in values:
+                    msg = f'Invalid value {column_value}'
+                    raise RuntimeError(msg)
 
             station_elevation = get_typed_value(row['elevation'])
 
@@ -435,6 +432,26 @@ def get_geometry(wsi: str = '') -> Union[dict, None]:
     return None
 
 
+def cache_wmdr_code_tables() -> None:
+    """
+    Cache WMDR code tables from codes.wmo.int
+
+    :returns: None
+    """
+
+    code_tables = [
+        'FacilityType',
+        'InstrumentOperatingStatus',
+        'TerritoryName',
+        'WMORegion'
+    ]
+
+    for ct in code_tables:
+        url = f'https://codes.wmo.int/wmdr/{ct}?_format=csv&status=valid'
+        filename = STATION_METADATA / f'{ct}.csv'
+        urlretrieve(url, filename)
+
+
 @click.command()
 @click.pass_context
 @click.argument('wsi')
@@ -464,17 +481,14 @@ def get(ctx, wsi, verbosity):
     if results['territory_name'] not in [None, '']:
         try:
             results['territory_name'] = countries.get(
-               results['territory_name']).name
+               results['territory_name']).alpha3
         except KeyError:
             results['territory_name'] = ''
 
     try:
-        results['wmo_region'] = WMO_RAS[station['wmo_region']]
+        results['wmo_region'] = station['wmo_region']
     except KeyError:
-        try:
-            results['wmo_region'] = WMDR_RAS[station['wmo_region']]
-        except KeyError:
-            results['wmo_region'] = ''
+        results['wmo_region'] = ''
 
     if station['wigos_station_identifier'].startswith('0-20000'):
         results['traditional_station_identifier'] = station['wigos_station_identifier'].split('-')[-1]  # noqa
@@ -496,6 +510,8 @@ def setup(ctx, verbosity):
 
     click.echo('Setting up station metadata repository')
     setup_collection(meta=gcm())
+    click.echo('Caching WMDR code tables')
+    cache_wmdr_code_tables()
 
 
 @click.command()

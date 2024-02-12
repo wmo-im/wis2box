@@ -43,7 +43,17 @@ SESSION.hooks = {
 def test_metadata_station_cache():
     """Test station metadata caching"""
 
-    wmo_regions = ['I', 'II', 'III', 'IV', 'V', 'VI']
+    wmo_regions = [
+        'africa',
+        'antarctica',
+        'asia',
+        'europe',
+        'inapplicable',
+        'northCentralAmericaCaribbean',
+        'southAmerica',
+        'southWestPacific',
+        'unknown'
+    ]
 
     with (DATADIR / 'metadata/station/station_list.csv').open() as fh:
         reader = csv.DictReader(fh)
