@@ -26,6 +26,7 @@ from typing import Any, Tuple, Union
 
 # from pywis_topics.topics import TopicHierarchy as pywis_topics_th
 
+from wis2box.data_mappings import get_data_mappings
 from wis2box.plugin import load_plugin
 
 LOGGER = logging.getLogger(__name__)
@@ -86,6 +87,11 @@ def validate_and_load(topic_hierarchy: str,
     """
 
     LOGGER.debug(f'Validating topic hierarchy: {topic_hierarchy}')
+    LOGGER.debug(f'Data mappings {data_mappings}')
+
+    if not data_mappings:
+        msg = 'Data mappings are empty. Fetching'
+        data_mappings = get_data_mappings()
 
     th = TopicHierarchy(topic_hierarchy)
     found = False

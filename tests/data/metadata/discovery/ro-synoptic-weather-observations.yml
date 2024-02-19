@@ -3,6 +3,20 @@ wis2box:
     topic_hierarchy: ro-rnimh.data.core.weather.surface-based-observations.synop
     country: rou
     centre_id: ro-rnimh
+    data_mappings:
+        plugins:
+            txt:
+                - plugin: wis2box.data.synop2bufr.ObservationDataSYNOP2BUFR
+                  notify: true
+                  file-pattern: '^A_SMR.*EDZW_(\d{4})(\d{2}).*.txt$'
+            csv:
+                - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
+                  template: aws-template
+                  notify: true
+                  file-pattern: '^.*\.csv$'
+            bufr4:
+                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
+                  file-pattern: '^A_SMR.*EDZW_(\d{4})(\d{2}).*.bufr4$'
 
 mcf:
     version: 1.0
@@ -41,7 +55,7 @@ identification:
     wmo_data_policy: core
 
 contact:
-    pointOfContact: &contact_poc
+    host:
         organization: Romanian National Meteorological Administration
         url: https://www.meteoromania.ro
         individualname: Firstname Lastname
@@ -56,5 +70,3 @@ contact:
         email: you@example.org
         hoursofservice: 0700h - 1500h UTC
         contactinstructions: email
-
-    distributor: *contact_poc

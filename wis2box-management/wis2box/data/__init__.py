@@ -137,6 +137,22 @@ def gcm(mcf: Union[dict, str]) -> dict:
     }
 
 
+def add_collection_data(metadata: str):
+    """
+    Add collection index to API backend
+
+    :param metadata: `str` of MCF
+
+    :returns: None
+    """
+
+    meta = gcm(metadata)
+
+    setup_collection(meta=meta)
+
+    return
+
+
 @click.group()
 def data():
     """Data workflow"""
@@ -209,17 +225,7 @@ def ingest(ctx, topic_hierarchy, path, recursive, verbosity):
 def add_collection(ctx, filepath, verbosity):
     """Add collection index to API backend"""
 
-    meta = gcm(filepath.read())
-
-    data_mappings = get_data_mappings()
-
-    if meta['topic_hierarchy'] not in data_mappings:
-        data_mappings_topics = '\n'.join(data_mappings.keys())
-        msg = (f"topic_hierarchy={meta['topic_hierarchy']} not found"
-               f" in data-mappings:\n\n{data_mappings_topics}")
-        raise click.ClickException(msg)
-
-    setup_collection(meta=meta)
+    add_collection_data(filepath.read())
 
     click.echo("Done")
 

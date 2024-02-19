@@ -55,8 +55,7 @@ jobs:
         TEST_DATA: /data/wis2box/observations/malawi
         TEST_DATA_UPDATE: /data/wis2box/observations/malawi_update
       run: |
-        python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
-        python3 wis2box-ctl.py execute wis2box data add-collection $DISCOVERY_METADATA
+        python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
@@ -68,8 +67,7 @@ jobs:
         DISCOVERY_METADATA_ID: urn:x-wmo:md:it-roma_met_centre:surface-weather-observations
         TEST_DATA: /data/wis2box/observations/italy
       run: |
-        python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
-        python3 wis2box-ctl.py execute wis2box data add-collection $DISCOVERY_METADATA
+        python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
@@ -80,8 +78,7 @@ jobs:
         DISCOVERY_METADATA_ID: urn:x-wmo:md:dz-alger_met_centre:surface-weather-observations
         TEST_DATA: /data/wis2box/observations/algeria
       run: |
-        python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
-        python3 wis2box-ctl.py execute wis2box data add-collection $DISCOVERY_METADATA
+        python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
@@ -92,8 +89,7 @@ jobs:
         DISCOVERY_METADATA_ID: urn:x-wmo:md:ro-rnimh:synoptic-weather-observations
         TEST_DATA: /data/wis2box/observations/romania
       run: |
-        python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
-        python3 wis2box-ctl.py execute wis2box data add-collection $DISCOVERY_METADATA
+        python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
@@ -104,8 +100,7 @@ jobs:
         DISCOVERY_METADATA_ID: urn:x-wmo:md:cd-brazza_met_centre:surface-weather-observations
         TEST_DATA: /data/wis2box/observations/congo
       run: |
-        python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
-        python3 wis2box-ctl.py execute wis2box data add-collection $DISCOVERY_METADATA
+        python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
@@ -116,7 +111,7 @@ jobs:
         DISCOVERY_METADATA_ID: urn:x-wmo:md:cn-cma:grapes-geps-global
         TEST_DATA: /data/wis2box/observations/china
       run: |
-        python3 wis2box-ctl.py execute wis2box metadata discovery publish $DISCOVERY_METADATA
+        python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID

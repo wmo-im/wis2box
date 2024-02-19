@@ -30,8 +30,8 @@ from pygeometa.schemas.wmo_wcmp2 import WMOWCMP2OutputSchema
 from wis2box import cli_helpers
 from wis2box.api import (setup_collection, upsert_collection_item,
                          delete_collection_item)
-from wis2box.data_mappings import get_data_mappings
-from wis2box.env import API_URL, BROKER_PUBLIC, STORAGE_PUBLIC, STORAGE_SOURCE
+from wis2box.env import (API_URL, BROKER_PUBLIC, DOCKER_BROKER,
+                         STORAGE_PUBLIC, STORAGE_SOURCE)
 from wis2box.metadata.base import BaseMetadata
 from wis2box.plugin import load_plugin, PLUGINS
 from wis2box.pubsub.message import WISNotificationMessage
@@ -73,8 +73,8 @@ class DiscoveryMetadata(BaseMetadata):
 
         LOGGER.debug('Adding distribution links')
         oafeat_link = {
-            'url': f"{API_URL}/collections/{identifier}",
-            'type': 'OAFeat',
+            'url': f"{API_URL}/collections/{identifier}?f=json",
+            'type': 'application/json',
             'name': identifier,
             'description': identifier,
             'rel': 'collection'
@@ -82,16 +82,16 @@ class DiscoveryMetadata(BaseMetadata):
 
         mqp_link = {
             'url': remove_auth_from_url(BROKER_PUBLIC, 'everyone:everyone'),
-            'type': 'MQTT',
+            'type': 'application/json',
             'name': mcf['wis2box']['topic_hierarchy'],
-            'description': mcf['wis2box']['topic_hierarchy'],
-            'rel': 'data',
+            'description': mcf['identification']['title'],
+            'rel': 'items',
             'channel': mqtt_topic
         }
 
         canonical_link = {
             'url': f"{API_URL}/collections/discovery-metadata/items/{identifier}",  # noqa
-            'type': 'OARec',
+            'type': 'application/geo+json',
             'name': identifier,
             'description': identifier,
             'rel': 'canonical'
@@ -109,6 +109,7 @@ class DiscoveryMetadata(BaseMetadata):
         LOGGER.debug('Generating OARec discovery metadata')
         record = WMOWCMP2OutputSchema().write(md, stringify=False)
         record['properties']['wmo:topicHierarchy'] = mqtt_topic
+        record['wis2box'] = mcf['wis2box']
 
         if record['properties']['contacts'][0].get('organization') is None:
             record['properties']['contacts'][0]['organization'] = record['properties']['contacts'][0].pop('name', "NOTSET")  # noqa
@@ -155,7 +156,7 @@ def publish_broker_message(record: dict, storage_path: str,
     # load plugin for broker
     defs = {
         'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-        'url': BROKER_PUBLIC,
+        'url': DOCKER_BROKER,
         'client_type': 'publisher'
     }
     broker = load_plugin('pubsub', defs)
@@ -183,8 +184,61 @@ def gcm() -> dict:
         'bbox': [-180, -90, 180, 90],
         'id_field': 'identifier',
         'time_field': 'created',
-        'title_field': 'title',
+        'title_field': 'title'
     }
+
+
+def publish_discovery_metadata(metadata: str):
+    """
+    Inserts or updates discovery metadata to catalogue
+
+    :param metadata: `str` of MCF
+
+    :returns: `bool` of publishing result
+    """
+
+    setup_collection(meta=gcm())
+
+    LOGGER.debug('Publishing discovery metadata')
+    try:
+        new_links = []
+        dm = DiscoveryMetadata()
+        record_mcf = dm.parse_record(metadata)
+
+        record = dm.generate(record_mcf)
+
+        LOGGER.debug('Publishing to API')
+        upsert_collection_item('discovery-metadata', record)
+
+        LOGGER.debug('Removing internal wis2box metadata')
+        record.pop('wis2box')
+
+        LOGGER.debug('Sanitizing links')
+        old_links = record.pop('links')
+
+        for ol in old_links:
+            if API_URL not in ol['href']:
+                new_links.append(ol)
+
+        record['links'] = new_links
+
+        LOGGER.debug('Saving to object storage')
+        data_bytes = json.dumps(record,
+                                default=json_serial).encode('utf-8')
+        storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/metadata/{record['id']}.json"  # noqa
+
+        put_data(data_bytes, storage_path, 'application/geo+json')
+
+        LOGGER.debug('Publishing message')
+        message = publish_broker_message(record, storage_path,
+                                         record_mcf['wis2box']['centre_id'])
+        upsert_collection_item('messages', json.loads(message))
+
+    except Exception as err:
+        LOGGER.warning(err)
+        raise RuntimeError(err)
+
+    return
 
 
 @click.group('discovery')
@@ -210,36 +264,11 @@ def setup(ctx, verbosity):
 def publish(ctx, filepath, verbosity):
     """Inserts or updates discovery metadata to catalogue"""
 
-    setup_collection(meta=gcm())
-
     click.echo(f'Publishing discovery metadata from {filepath.name}')
     try:
-        dm = DiscoveryMetadata()
-        record_mcf = dm.parse_record(filepath.read())
-
-        data_mappings = get_data_mappings()
-        if record_mcf['wis2box']['topic_hierarchy'] not in data_mappings:  # noqa
-            data_mappings_topics = '\n'.join(data_mappings.keys())  # noqa
-            msg = (f"topic_hierarchy={record_mcf['wis2box']['topic_hierarchy']} not found"  # noqa
-                   f" in data-mappings:\n\n{data_mappings_topics}")
-            raise click.ClickException(msg)
-
-        record = dm.generate(record_mcf)
-
-        data_bytes = json.dumps(record,
-                                default=json_serial).encode('utf-8')
-        storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/metadata/{record['id']}.json"  # noqa
-
-        put_data(data_bytes, storage_path, 'application/geo+json')
-
-        message = publish_broker_message(record, storage_path,
-                                         record_mcf['wis2box']['centre_id'])
-        upsert_collection_item('discovery-metadata', record)
-        upsert_collection_item('messages', json.loads(message))
+        publish_discovery_metadata(filepath.read())
     except Exception as err:
-        raise click.ClickException(err)
-
-    click.echo('Done')
+        raise click.ClickException(f'Failed to publish: {err}')
 
 
 @click.command()

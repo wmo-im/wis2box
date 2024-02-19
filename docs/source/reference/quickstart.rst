@@ -45,26 +45,15 @@ Once logged in, verify the enviroment:
 
     wis2box environment show
 
-Publish test discovery metadata:
+Publish test datasets:
 
 .. code-block:: bash
 
-    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/mw-surface-weather-observations.yml
-    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/it-surface-weather-observations.yml
-    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/dz-surface-weather-observations.yml
-    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/ro-synoptic-weather-observations.yml
-    wis2box metadata discovery publish $WIS2BOX_DATADIR/metadata/discovery/cd-surface-weather-observations.yml
-
-
-Setup observation collections from discovery metadata:
-
-.. code-block:: bash
-
-    wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/mw-surface-weather-observations.yml
-    wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/it-surface-weather-observations.yml
-    wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/dz-surface-weather-observations.yml
-    wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/ro-synoptic-weather-observations.yml
-    wis2box data add-collection $WIS2BOX_DATADIR/metadata/discovery/cd-surface-weather-observations.yml
+    wis2box dataset publish $WIS2BOX_DATADIR/metadata/discovery/mw-surface-weather-observations.yml
+    wis2box dataset publish $WIS2BOX_DATADIR/metadata/discovery/it-surface-weather-observations.yml
+    wis2box dataset publish $WIS2BOX_DATADIR/metadata/discovery/dz-surface-weather-observations.yml
+    wis2box dataset publish $WIS2BOX_DATADIR/metadata/discovery/ro-synoptic-weather-observations.yml
+    wis2box dataset publish $WIS2BOX_DATADIR/metadata/discovery/cd-surface-weather-observations.yml
 
 Load initial stations:
 

@@ -43,7 +43,17 @@ SESSION.hooks = {
 def test_metadata_station_cache():
     """Test station metadata caching"""
 
-    wmo_regions = ['I', 'II', 'III', 'IV', 'V', 'VI']
+    wmo_regions = [
+        'africa',
+        'antarctica',
+        'asia',
+        'europe',
+        'inapplicable',
+        'northCentralAmericaCaribbean',
+        'southAmerica',
+        'southWestPacific',
+        'unknown'
+    ]
 
     with (DATADIR / 'metadata/station/station_list.csv').open() as fh:
         reader = csv.DictReader(fh)
@@ -98,7 +108,7 @@ def test_metadata_discovery_publish():
 
     assert r['geometry'] == geometry
 
-    mqtt_link = [d for d in r['links'] if d['type'] == 'MQTT'][0]
+    mqtt_link = [d for d in r['links'] if d['href'].startswith('mqtt')][0]
 
     assert 'everyone:everyone' in mqtt_link['href']
     assert mqtt_link['channel'] == 'origin/a/wis2/mw-mw_met_centre/data/core/weather/surface-based-observations/synop'  # noqa
@@ -231,8 +241,8 @@ def test_message_api():
     # get links from 2nd message
     links = r['features'][1]['links']
 
-    # check link contains rel='http://def.wmo.int/def/rel/wnm/-/update'
-    assert any(link['rel'] == 'http://def.wmo.int/def/rel/wnm/-/update' for link in links)  # noqa
+    # check link contains rel='update'
+    assert any(link['rel'] == 'update' for link in links)
 
     # test messages per test dataset
     counts = {

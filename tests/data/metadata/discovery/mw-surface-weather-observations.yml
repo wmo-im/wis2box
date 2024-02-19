@@ -3,6 +3,16 @@ wis2box:
     topic_hierarchy: mw-mw_met_centre.data.core.weather.surface-based-observations.synop
     country: mwi
     centre_id: mw-mw_met_centre
+    data_mappings:
+        plugins:
+            csv:
+                - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
+                  template: synop_bufr
+                  notify: true
+                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.csv$'
+            bufr4:
+                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
+                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
 
 mcf:
     version: 1.0
@@ -41,7 +51,7 @@ identification:
     wmo_data_policy: core
 
 contact:
-    pointOfContact: &contact_poc
+    host:
         organization: Department of Climate Change and Meteorologial Services (DCCMS)
         url: https://www.metmalawi.gov.mw
         individualname: Firstname Lastname
@@ -56,5 +66,3 @@ contact:
         email: you@example.org
         hoursofservice: 0700h - 1500h UTC
         contactinstructions: email
-
-    distributor: *contact_poc

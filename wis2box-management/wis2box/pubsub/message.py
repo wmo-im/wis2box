@@ -161,7 +161,7 @@ class WISNotificationMessage(PubSubMessage):
         }]
         if operation == 'update':
             links.append({
-                'rel': 'http://def.wmo.int/def/rel/wnm/-/update',
+                'rel': 'update',
                 'type': mimetype,
                 'href': public_file_url,
                 'length': self.length

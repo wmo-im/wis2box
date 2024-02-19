@@ -132,8 +132,7 @@ After restarting wis2box, repeat the commands for adding your dataset and publis
 .. code-block:: bash
 
   python3 wis2box-ctl.py login
-  wis2box data add-collection /data/wis2box/metadata/discovery/metadata-synop.yml
-  wis2box metadata discovery publish /data/wis2box/metadata/discovery/metadata-synop.yml
+  wis2box dataset publish /data/wis2box/metadata/discovery/metadata-synop.yml
 
 Built-in SSL support
 --------------------
@@ -168,9 +167,11 @@ Please note that after changing the WIS2BOX_URL and WIS2BOX_API_URL environment 
 
 After restarting wis2box, repeat the commands for adding your dataset and publishing your metadata, to ensure that URLs are updated accordingly:
 
-python3 wis2box-ctl.py login
-wis2box data add-collection ${WIS2BOX_HOST_DATADIR}/surface-weather-observations.yml
-wis2box metadata discovery publish ${WIS2BOX_HOST_DATADIR}/surface-weather-observations.yml
+.. code-block:: bash
+
+  python3 wis2box-ctl.py login
+  wis2box data add-collection ${WIS2BOX_HOST_DATADIR}/surface-weather-observations.yml
+  wis2box metadata discovery publish ${WIS2BOX_HOST_DATADIR}/surface-weather-observations.yml
 
 Registering your WIS2 Node
 --------------------------
