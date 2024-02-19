@@ -120,7 +120,8 @@ services:
     env_file:
       - wis2box.env
     volumes:
-      - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
+      - ./tests/data:/data/wis2box:rw
+      #- ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
     depends_on:
       minio:
         condition: service_healthy

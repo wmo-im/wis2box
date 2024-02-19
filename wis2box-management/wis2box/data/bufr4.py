@@ -112,7 +112,7 @@ class ObservationDataBUFR(BaseAbstractData):
         headers = {}
         for header in HEADERS:
             headers[header] = codes_get(bufr_in, header)
-        # original to be splitted by subset, so set the number of subsets to 1
+        # original to be split by subset, so set the number of subsets to 1
         headers['numberOfSubsets'] = 1
         # set the master table version number
         table_version = max(
@@ -131,29 +131,38 @@ class ObservationDataBUFR(BaseAbstractData):
         for i in range(num_subsets):
             idx = i + 1
             LOGGER.debug(f'Processing subset {idx}')
-
             LOGGER.debug('Extracting subset')
             codes_set(bufr_in, 'extractSubset', idx)
             codes_set(bufr_in, 'doExtractSubsets', 1)
-
             # copy the replication factors
             if 31000 in descriptors:
-                short_replication_factors = codes_get_array(bufr_in, "shortDelayedDescriptorReplicationFactor").tolist()  # noqa
+                try:
+                    short_replication_factors = codes_get_array(bufr_in, "shortDelayedDescriptorReplicationFactor").tolist()  # noqa
+                except Exception as e:
+                    short_replication_factors = []
+                    LOGGER.error(e.__class__.__name__)
             if 31001 in descriptors:
-                replication_factors = codes_get_array(bufr_in, "delayedDescriptorReplicationFactor").tolist()  # noqa
+                try:
+                    replication_factors = codes_get_array(bufr_in, "delayedDescriptorReplicationFactor").tolist()  # noqa
+                except Exception as e:
+                    replication_factors = []
+                    LOGGER.error(e.__class__.__name__)
             if 31002 in descriptors:
-                extended_replication_factors = codes_get_array(bufr_in, "extendedDelayedDescriptorReplicationFactor").tolist()  # noqa
-
+                try:
+                    extended_replication_factors = codes_get_array(bufr_in, "extendedDelayedDescriptorReplicationFactor").tolist()  # noqa
+                except Exception as e:
+                    extended_replication_factors = []
+                    LOGGER.error(e.__class__.__name__)
             LOGGER.debug('Copying template BUFR')
             subset_out = codes_clone(TEMPLATE)
 
             # set the replication factors, this needs to be done before
             # setting the unexpanded descriptors
-            if 31000 in descriptors:
+            if (31000 in descriptors) and (len(short_replication_factors)>0):
                 codes_set_array(subset_out, "inputShortDelayedDescriptorReplicationFactor", short_replication_factors)  # noqa
-            if 31001 in descriptors:
+            if (31001 in descriptors) and (len(replication_factors)>0):
                 codes_set_array(subset_out, "inputDelayedDescriptorReplicationFactor", replication_factors)  # noqa
-            if 31002 in descriptors:
+            if (31002 in descriptors) and (len(extended_replication_factors)>0):
                 codes_set_array(subset_out, "inputExtendedDelayedDescriptorReplicationFactor", extended_replication_factors)  # noqa
 
             # we need to copy all the headers, not just the

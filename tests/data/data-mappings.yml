@@ -63,3 +63,30 @@ data:
                   buckets:
                     - ${WIS2BOX_STORAGE_INCOMING}
                   file-pattern: '^.*_(\d{8})\d{2}.*\.grib2$'
+    cn-hk-obs.data.core.weather.surface-based-observations.ship:
+        plugins:
+            bin:
+              - plugin: wis2box.data.bufr4.ObservationDataBUFR
+                notify: true
+                buckets:
+                  - ${WIS2BOX_STORAGE_INCOMING}
+                file-pattern: '^A_[A-Z0-9]{6}.*_._[A-Z]{4}_(\d{4}\d{2}\d{2}).*\.bin$'
+            bufr4:
+              - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
+                buckets:
+                  - ${WIS2BOX_STORAGE_PUBLIC}
+                file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
+                
+    us-msc-monitoring.data.core.weather.surface-based-observations.buoy:
+        plugins:
+            bin:
+              - plugin: wis2box.data.bufr4.ObservationDataBUFR
+                notify: true
+                buckets:
+                  - ${WIS2BOX_STORAGE_INCOMING}
+                file-pattern: '^A_[A-Z0-9]{6}.*_._[A-Z]{4}_(\d{4}\d{2}\d{2}).*\.bin$'
+            bufr4:
+              - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
+                buckets:
+                  - ${WIS2BOX_STORAGE_PUBLIC}
+                file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
