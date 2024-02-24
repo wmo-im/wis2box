@@ -57,10 +57,10 @@ RUN apt-get update -y && apt-get install -y ${DEBIAN_PACKAGES} \
     && rm -rf /var/lib/apt/lists/* \
     # cache WMDR codelists
     && mkdir -p /home/wis2box/wmdr-codelists \
-    && curl "https://codes.wmo.int/wmdr/FacilityType?_format=csv&status=valid" --output-dir /home/wis2box/wmdr-codelists -o wmdr-FacilityType.csv \
-    && curl "https://codes.wmo.int/wmdr/InstrumentOperatingStatus?_format=csv&status=valid" --output-dir /home/wis2box/wmdr-codelists -o wmdr-InstrumentOperatingStatus.csv \
-    && curl "https://codes.wmo.int/wmdr/TerritoryName?_format=csv&status=valid" --output-dir /home/wis2box/wmdr-codelists -o wmdr-TerritoryName.csv \
-    && curl "https://codes.wmo.int/wmdr/WMORegion?_format=csv&status=valid" --output-dir /home/wis2box/wmdr-codelists -o wmdr-WMORegion.csv
+    && curl -s "https://codes.wmo.int/wmdr/FacilityType?_format=csv&status=valid" > /home/wis2box/wmdr-codelists/wmdr-FacilityType.csv \
+    && curl -s "https://codes.wmo.int/wmdr/InstrumentOperatingStatus?_format=csv&status=valid" > /home/wis2box/wmdr-codelists/wmdr-InstrumentOperatingStatus.csv \
+    && curl -s "https://codes.wmo.int/wmdr/TerritoryName?_format=csv&status=valid" > /home/wis2box/wmdr-codelists/wmdr-TerritoryName.csv \
+    && curl -s "https://codes.wmo.int/wmdr/WMORegion?_format=csv&status=valid" > /home/wis2box/wmdr-codelists/wmdr-WMORegion.csv
 
 
 # copy the app
