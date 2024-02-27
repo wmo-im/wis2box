@@ -75,13 +75,16 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
         process_name = 'wis2box-csv2bufr'
         result = execute_api_process(process_name, payload)
 
-        # check for errors
-        for error in result['errors']:
-            LOGGER.error(error)
-
-        # check for warnings
-        for warning in result['warnings']:
-            LOGGER.warning(warning)
+        try:
+            # check for errors
+            for error in result['errors']:
+                LOGGER.error(f'input={filename} error={error}')
+            # check for warnings
+            for warning in result['warnings']:
+                LOGGER.warning(f'input={filename} warning={warning}')
+        except KeyError:
+            LOGGER.error(f'file={filename} failed to convert to BUFR4, result={result}') # noqa
+            return False
 
         if 'data_items' not in result:
             LOGGER.error(f'file={filename} failed to convert to BUFR4')

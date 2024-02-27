@@ -71,6 +71,7 @@ class ObservationDataBUFR(BaseAbstractData):
                 LOGGER.warning(warning)
         except KeyError:
             LOGGER.error(f'KeyError in result={result}')
+            return False
 
         if 'data_items' not in result:
             LOGGER.error(f'file={filename} failed to convert to BUFR4 (result={result})') # noqa

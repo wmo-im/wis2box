@@ -30,7 +30,8 @@ import click
 
 from wis2box import cli_helpers
 import wis2box.data as data_
-from wis2box.api import remove_collection, setup_collection
+from wis2box.api import (remove_collection, setup_collection,
+                         upsert_collection_item)
 from wis2box.data_mappings import get_data_mappings
 from wis2box.data.message import MessageData
 from wis2box.env import (BROKER_HOST, BROKER_PORT, BROKER_USERNAME,
@@ -105,14 +106,10 @@ class WIS2BoxSubscriber:
         topic = msg.topic
         message = json.loads(msg.payload)
         LOGGER.info(f'Incoming message on topic {topic}')
-        filepath = None
-        target = None
-        args = None
         if topic == 'wis2box/notifications':
             LOGGER.info(f'Notification: {message}')
             # store notification in messages collection
             upsert_collection_item('messages', message)
-            return
         elif (topic == 'wis2box/storage' and
               message.get('EventName', '') == 's3:ObjectCreated:Put'):
             LOGGER.debug('Storing data')
@@ -120,31 +117,28 @@ class WIS2BoxSubscriber:
             filepath = f'{STORAGE_SOURCE}/{key}'
             if key.startswith(STORAGE_ARCHIVE):
                 LOGGER.info(f'Do not process archived-data: {key}')
-                return
+            # start a new process to handle the received data
+            while len(mp.active_children()) == mp.cpu_count():
+                sleep(0.1)
+            mp.Process(target=self.handle, args=(filepath,)).start()
+        elif (topic == 'wis2box/data/publication'):
+            LOGGER.debug('Publishing data')
+            self.handle_publish(message)
         elif topic == 'wis2box/data_mappings/refresh':
-            LOGGER.debug('Refreshing data mappings')
+            LOGGER.info('Refreshing data mappings')
             self.data_mappings = get_data_mappings()
-            return
+            LOGGER.info(f'Data mappings: {self.data_mappings}')
         elif topic == 'wis2box/dataset/publication':
             LOGGER.debug('Publishing dataset')
             metadata = message
             discovery_metadata.publish_discovery_metadata(metadata)
             data_.add_collection_data(metadata)
-            return
         elif topic.startswith('wis2box/dataset/unpublication'):
             LOGGER.debug('Unpublishing dataset')
             identifier = topic.split('/')[-1]
             remove_collection(identifier)
-            return
         else:
             LOGGER.debug('Ignoring message')
-            return
-
-        if filepath:
-            while len(mp.active_children()) == mp.cpu_count():
-                sleep(0.1)
-            p = mp.Process(target=target, args=args)
-            p.start()
 
 
 @click.command()

@@ -21,6 +21,9 @@
 
 import click
 import logging
+import requests
+
+from time import sleep
 
 from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
@@ -72,10 +75,9 @@ def execute_api_process(process_name: str, payload: dict) -> dict:
 
     headers_json = dict(response.headers)
     location = headers_json['Location']
-    location.replace(API_URL, DOCKER_API_URL)
+    location = location.replace(API_URL, DOCKER_API_URL)
 
     status = 'accepted'
-    response_json = None
     while status == 'accepted' or status == 'running':
         # get the job status
         headers = {
@@ -84,9 +86,12 @@ def execute_api_process(process_name: str, payload: dict) -> dict:
         }
         response = requests.get(location, headers=headers)
         response_json = response.json()
-        status = response_json['status']
+        if 'status' in response_json:
+            status = response_json['status']
         sleep(0.1)
-    return response_json
+    # get result from location/results?f=json
+    response = requests.get(f'{location}/results?f=json', headers=headers) # noqa
+    return response.json()
 
 
 def setup_collection(meta: dict = {}) -> bool:
