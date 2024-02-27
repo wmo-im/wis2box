@@ -36,7 +36,7 @@ services:
 
   wis2box-api:
     container_name: wis2box-api
-    image: ghcr.io/wmo-im/wis2box-api:1.0b7
+    image: ghcr.io/wmo-im/wis2box-api:latest
     restart: always
     env_file:
       - wis2box.env
