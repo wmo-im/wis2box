@@ -26,8 +26,8 @@ from iso3166 import countries
 import io
 import json
 import logging
+from pathlib import Path
 from typing import Iterator, Tuple, Union
-from urllib.request import urlretrieve
 
 from elasticsearch import Elasticsearch
 from owslib.ogcapi.features import Features
@@ -51,6 +51,7 @@ LOGGER = logging.getLogger(__name__)
 
 STATION_METADATA = DATADIR / 'metadata' / 'station'
 STATIONS = STATION_METADATA / 'station_list.csv'
+WMDR_CODELISTS = Path('/home/wis2box/wmdr-codelists')
 
 
 def get_wmdr_codelists() -> dict:
@@ -71,7 +72,7 @@ def get_wmdr_codelists() -> dict:
     }
 
     for key, value in column2codelists.items():
-        codelist_filename = STATION_METADATA / f'{value}.csv'
+        codelist_filename = WMDR_CODELISTS / f'{value}.csv'
         codelists[key] = []
         with codelist_filename.open() as fh:
             reader = csv.reader(fh)
@@ -432,26 +433,6 @@ def get_geometry(wsi: str = '') -> Union[dict, None]:
     return None
 
 
-def cache_wmdr_code_tables() -> None:
-    """
-    Cache WMDR code tables from codes.wmo.int
-
-    :returns: None
-    """
-
-    code_tables = [
-        'FacilityType',
-        'InstrumentOperatingStatus',
-        'TerritoryName',
-        'WMORegion'
-    ]
-
-    for ct in code_tables:
-        url = f'https://codes.wmo.int/wmdr/{ct}?_format=csv&status=valid'
-        filename = STATION_METADATA / f'{ct}.csv'
-        urlretrieve(url, filename)
-
-
 @click.command()
 @click.pass_context
 @click.argument('wsi')
@@ -510,8 +491,6 @@ def setup(ctx, verbosity):
 
     click.echo('Setting up station metadata repository')
     setup_collection(meta=gcm())
-    click.echo('Caching WMDR code tables')
-    cache_wmdr_code_tables()
 
 
 @click.command()

@@ -22,7 +22,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:x-wmo:md:ro-rnimh:synoptic-weather-observations
+    identifier: urn:wmo:md:ro-rnimh:synoptic-weather-observations
     hierarchylevel: dataset
 
 identification:
@@ -42,7 +42,7 @@ identification:
             keywords_type: theme
             vocabulary:
                 name: Earth system disciplines as defined by the WMO Unified Data Policy, Resolution 1 (Cg-Ext(2021), Annex 1.
-                url:  https://github.com/wmo-im/wis2-topic-hierarchy/blob/main/topic-hierarchy/earth-system-discipline/index.csv
+                url:  https://codes.wmo.int/wis/topic-hierarchy/earth-system-discipline
     extents:
         spatial:
             - bbox: [20.2201924985,43.6884447292,29.62654341,48.2208812526]
