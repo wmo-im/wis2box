@@ -33,7 +33,7 @@ DATADIR = Path('.').parent.absolute() / 'tests/data'
 
 URL = 'http://localhost'
 API_URL = f'{URL}/oapi'
-ID = 'urn:x-wmo:md:mw-mw_met_centre:surface-weather-observations'
+ID = 'urn:wmo:md:mw-mw_met_centre:surface-weather-observations'
 SESSION = Session()
 SESSION.hooks = {
    'response': lambda r, *args, **kwargs: r.raise_for_status()

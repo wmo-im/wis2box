@@ -95,13 +95,13 @@ class WIS2BoxSubscriber:
             LOGGER.debug('Refreshing data mappings')
             self.data_mappings = get_data_mappings()
             return
-        elif topic == 'wis2box/dataset_publication':
+        elif topic == 'wis2box/dataset/publication':
             LOGGER.debug('Publishing dataset')
             metadata = message
             discovery_metadata.publish_discovery_metadata(metadata)
             data_.add_collection_data(metadata)
             return
-        elif topic.startswith('wis2box/dataset_unpublication'):
+        elif topic.startswith('wis2box/dataset/unpublication'):
             LOGGER.debug('Unpublishing dataset')
             identifier = topic.split('/')[-1]
             remove_collection(identifier)

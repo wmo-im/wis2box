@@ -54,7 +54,14 @@ RUN apt-get update -y && apt-get install -y ${DEBIAN_PACKAGES} \
     # cleanup
     && apt autoremove -y  \
     && apt-get -q clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    # cache WMDR codelists
+    && mkdir -p /home/wis2box/wmdr-codelists \
+    && curl -s "https://codes.wmo.int/wmdr/FacilityType?_format=csv&status=valid" > /home/wis2box/wmdr-codelists/FacilityType.csv \
+    && curl -s "https://codes.wmo.int/wmdr/InstrumentOperatingStatus?_format=csv&status=valid" > /home/wis2box/wmdr-codelists/InstrumentOperatingStatus.csv \
+    && curl -s "https://codes.wmo.int/wmdr/TerritoryName?_format=csv&status=valid" > /home/wis2box/wmdr-codelists/TerritoryName.csv \
+    && curl -s "https://codes.wmo.int/wmdr/WMORegion?_format=csv&status=valid" > /home/wis2box/wmdr-codelists/WMORegion.csv
+
 
 # copy the app
 COPY . /app
