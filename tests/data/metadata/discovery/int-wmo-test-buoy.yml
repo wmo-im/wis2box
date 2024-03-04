@@ -67,7 +67,7 @@ contact:
         administrativearea: null
         postalcode: null
         country: null
-        email: nul
+        email: null
         hoursofservice: 0800h - 1600h UTC
         contactinstructions: email
 
