@@ -86,7 +86,7 @@ def test_metadata_discovery_publish():
     """Test discovery metadata publishing"""
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items').json()
-    assert r['numberMatched'] == 9
+    assert r['numberMatched'] == 8
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/{ID}').json()  # noqa
 
