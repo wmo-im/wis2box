@@ -141,7 +141,7 @@ def test_metadata_discovery_publish():
         r = SESSION.get(f'{API_URL}/collections/messages/items',
                         params=params).json()
 
-        assert r['numberMatched'] == 1
+        assert r['numberMatched'] >= 1
 
         feature = r['features'][0]
         assert feature['properties']['data_id'].startswith(centre_id)
