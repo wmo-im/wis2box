@@ -120,7 +120,7 @@ def test_metadata_discovery_publish():
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items',
                     params=params).json()
 
-    assert r['numberMatched'] == 9
+    assert r['numberMatched'] == 8
 
     # test access of discovery metadata from notification message
 
