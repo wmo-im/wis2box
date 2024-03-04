@@ -266,7 +266,20 @@ def test_message_api():
     # should match sum of counts above
     assert r['numberMatched'] == sum(counts.values())
 
-    msg = r['features'][16]
+
+    # we want to find a particular message with data ID
+    target_data_id = "mw-mw_met_centre/data/core/weather/" \
+            "surface-based-observations/synop/" \
+            "WIGOS_0-20000-0-64406_20230803T090000"
+
+    msg = None
+    for feature in r['features']:
+        if feature['properties']['data_id'] == target_data_id:
+            msg = feature
+            break
+
+    assert msg is not None
+
     is_valid, _ = validate_message(msg)
     assert is_valid
 
