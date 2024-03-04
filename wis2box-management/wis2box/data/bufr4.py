@@ -158,11 +158,11 @@ class ObservationDataBUFR(BaseAbstractData):
 
             # set the replication factors, this needs to be done before
             # setting the unexpanded descriptors
-            if (31000 in descriptors) and (len(short_replication_factors)>0):
+            if (31000 in descriptors) and (len(short_replication_factors) > 0):  # noqa
                 codes_set_array(subset_out, "inputShortDelayedDescriptorReplicationFactor", short_replication_factors)  # noqa
-            if (31001 in descriptors) and (len(replication_factors)>0):
+            if (31001 in descriptors) and (len(replication_factors) > 0):
                 codes_set_array(subset_out, "inputDelayedDescriptorReplicationFactor", replication_factors)  # noqa
-            if (31002 in descriptors) and (len(extended_replication_factors)>0):
+            if (31002 in descriptors) and (len(extended_replication_factors) > 0):  # noqa
                 codes_set_array(subset_out, "inputExtendedDelayedDescriptorReplicationFactor", extended_replication_factors)  # noqa
 
             # we need to copy all the headers, not just the
