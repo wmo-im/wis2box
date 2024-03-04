@@ -1,28 +1,41 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: us-msc-monitoring.data.core.weather.surface-based-observations.buoy
-    country: us
-    centre_id: msc-monitoring
+    topic_hierarchy: int-wmo-test.data.core.weather.surface-based-observations.ship
+    country: int
+    centre_id: wmo-test
+    data_mappings:
+        plugins:
+            bin:
+                - plugin: wis2box.data.bufr4.ObservationDataBUFR
+                  notify: true
+                  buckets:
+                      - ${WIS2BOX_STORAGE_INCOMING}
+                  file-pattern: '^A_[A-Z0-9]{6}.*_._[A-Z]{4}_(\d{4}\d{2}\d{2}).*\.bin$'
+            bufr4:
+                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
+                  buckets:
+                      - ${WIS2BOX_STORAGE_PUBLIC}
+                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
 
 mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:x-wmo:md:us-msc-monitoring:surface-weather-observations:buoy
+    identifier: urn:wmo:md:int-wmo-test:surface-weather-observations:ship
     hierarchylevel: dataset
 
 identification:
-    title: Surface weather observations from buoys
-    abstract: Surface weather observations from buoys
+    title: Example surface weather observations GOOS Voluntary Observing Ships
+    abstract: Example surface weather observations from GOOS Voluntary Observing Ships downloaded from the WIS.
     dates:
-        creation: 2024-02-16
+        creation: 2024-03-04
     keywords:
         default:
             keywords:
                 - surface weather
                 - temperature
                 - observations
-                - buoy
+                - ship
         wmo:
             keywords:
                 - weather
@@ -43,8 +56,8 @@ identification:
 
 contact:
     pointOfContact: &contact_poc
-        organization: TBC
-        url: https://example.com
+        organization: World Meteorological Organisation
+        url: https://www.wmo.int/
         individualname: Firstname Lastname
         positionname: Position Name
         phone: null
@@ -55,7 +68,7 @@ contact:
         postalcode: null
         country: null
         email: you@example.org
-        hoursofservice: 0700h - 1500h UTC
+        hoursofservice: 0800h - 1600h UTC
         contactinstructions: email
 
     distributor: *contact_poc
