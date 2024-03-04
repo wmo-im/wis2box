@@ -86,7 +86,7 @@ def test_metadata_discovery_publish():
     """Test discovery metadata publishing"""
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items').json()
-    assert r['numberMatched'] == 8
+    assert r['numberMatched'] == 9
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/{ID}').json()  # noqa
 
@@ -268,7 +268,7 @@ def test_message_api():
 
 
     # we want to find a particular message with data ID
-    target_data_id = "mw-mw_met_centre/data/core/weather/" \
+    target_data_id = "cd-brazza_met_centre/data/core/weather/" \
             "surface-based-observations/synop/" \
             "WIGOS_0-20000-0-64406_20230803T090000"
 
