@@ -78,8 +78,8 @@ def test_metadata_station_publish():
 
     stations = r.json()
 
-    assert stations['numberReturned'] == 96
-    assert stations['numberMatched'] == 96
+    assert stations['numberReturned'] == 148
+    assert stations['numberMatched'] == 148
 
 
 def test_metadata_discovery_publish():
@@ -120,7 +120,7 @@ def test_metadata_discovery_publish():
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items',
                     params=params).json()
 
-    assert r['numberMatched'] == 6
+    assert r['numberMatched'] == 9
 
     # test access of discovery metadata from notification message
 
@@ -129,7 +129,8 @@ def test_metadata_discovery_publish():
         'it-roma_met_centre',
         'dz-alger_met_centre',
         'ro-rnimh',
-        'cd-brazza_met_centre'
+        'cd-brazza_met_centre',
+        'int-wmo-test'
     ]
 
     for centre_id in centre_ids:
@@ -251,7 +252,8 @@ def test_message_api():
         'roma_met_centre': 33,
         'alger_met_centre': 29,
         'rnimh': 116,
-        'brazza_met_centre': 15
+        'brazza_met_centre': 15,
+        'wmo-test': 148
     }
     for key, value in counts.items():
         url = f'{API_URL}/collections/messages/items?sortby=-datetime&q={key}&limit=1'  # noqa
