@@ -86,7 +86,7 @@ def test_metadata_discovery_publish():
     """Test discovery metadata publishing"""
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items').json()
-    assert r['numberMatched'] == 6
+    assert r['numberMatched'] == 9
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/{ID}').json()  # noqa
 
@@ -253,7 +253,7 @@ def test_message_api():
         'alger_met_centre': 29,
         'rnimh': 116,
         'brazza_met_centre': 15,
-        'wmo-test': 148
+        'wmo-test': 151
     }
     for key, value in counts.items():
         url = f'{API_URL}/collections/messages/items?sortby=-datetime&q={key}&limit=1'  # noqa
