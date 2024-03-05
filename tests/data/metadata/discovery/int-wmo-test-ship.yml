@@ -1,0 +1,74 @@
+wis2box:
+    retention: P30D
+    topic_hierarchy: int-wmo-test.data.core.weather.surface-based-observations.ship
+    country: int
+    centre_id: int-wmo-test
+    data_mappings:
+        plugins:
+            bin:
+                - plugin: wis2box.data.bufr4.ObservationDataBUFR
+                  notify: true
+                  buckets:
+                      - ${WIS2BOX_STORAGE_INCOMING}
+                  file-pattern: '^A_[A-Z0-9]{6}.*_._[A-Z]{4}_(\d{4}\d{2}\d{2}).*\.bin$'
+            bufr4:
+                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
+                  buckets:
+                      - ${WIS2BOX_STORAGE_PUBLIC}
+                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
+
+mcf:
+    version: 1.0
+
+metadata:
+    identifier: urn:wmo:md:int-wmo-test:surface-weather-observations:ship
+    hierarchylevel: dataset
+
+identification:
+    title: Example surface weather observations GOOS Voluntary Observing Ships
+    abstract: Example surface weather observations from GOOS Voluntary Observing Ships downloaded from the WIS.
+    dates:
+        creation: 2024-03-04
+    keywords:
+        default:
+            keywords:
+                - surface weather
+                - temperature
+                - observations
+                - ship
+        wmo:
+            keywords:
+                - weather
+            keywords_type: theme
+            vocabulary:
+                name: Earth system disciplines as defined by the WMO Unified Data Policy, Resolution 1 (Cg-Ext(2021), Annex 1.
+                url: https://github.com/wmo-im/wis2-topic-hierarchy/blob/main/topic-hierarchy/earth-system-discipline/index.csv
+    extents:
+        spatial:
+            - bbox: [-180.0, -90.0, 180.0, 90.0]
+              crs: 4326
+        temporal:
+            - begin: 2024-02-09
+              end: null
+              resolution: P1H
+    rights: WMO Unified Policy for the International Exchange of Earth System Data
+    url: https://example.org/fixme
+
+contact:
+    pointOfContact: &contact_poc
+        organization: World Meteorological Organisation
+        url: https://www.wmo.int/
+        individualname: Firstname Lastname
+        positionname: Position Name
+        phone: null
+        fax: null
+        address: null
+        city: null
+        administrativearea: null
+        postalcode: null
+        country: null
+        email: you@example.org
+        hoursofservice: 0800h - 1600h UTC
+        contactinstructions: email
+
+    distributor: *contact_poc

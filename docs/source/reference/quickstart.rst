@@ -54,6 +54,9 @@ Publish test datasets:
     wis2box dataset publish $WIS2BOX_DATADIR/metadata/discovery/dz-surface-weather-observations.yml
     wis2box dataset publish $WIS2BOX_DATADIR/metadata/discovery/ro-synoptic-weather-observations.yml
     wis2box dataset publish $WIS2BOX_DATADIR/metadata/discovery/cd-surface-weather-observations.yml
+    wis2box dataset publish $WIS2BOX_DATADIR/metadata/discovery/int-wmo-test-ship.yml
+    wis2box dataset publish $WIS2BOX_DATADIR/metadata/discovery/int-wmo-test-buoy.yml
+    wis2box dataset publish $WIS2BOX_DATADIR/metadata/discovery/int-wmo-test-wind_profiler.yml
 
 Load initial stations:
 
@@ -70,7 +73,9 @@ Ingest data using the data ingest command to push data to the ``wis2box-incoming
     wis2box data ingest --topic-hierarchy dz-alger_met_centre.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/algeria
     wis2box data ingest --topic-hierarchy ro-rnimh.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/romania
     wis2box data ingest --topic-hierarchy cd-brazza_met_centre.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/congo
-
+    wis2box data ingest --topic-hierarchy int-wmo-test.data.core.weather.surface-based-observations.ship --path $WIS2BOX_DATADIR/observations/wmo/ship
+    wis2box data ingest --topic-hierarchy int-wmo-test.data.core.weather.surface-based-observations.buoy --path $WIS2BOX_DATADIR/observations/wmo/buoy
+    wis2box data ingest --topic-hierarchy int-wmo-test.data.core.weather.surface-based-observations.wind_profiler --path $WIS2BOX_DATADIR/observations/wmo/wind_profiler
 
 Publish stations:
 

@@ -78,15 +78,15 @@ def test_metadata_station_publish():
 
     stations = r.json()
 
-    assert stations['numberReturned'] == 96
-    assert stations['numberMatched'] == 96
+    assert stations['numberReturned'] == 148
+    assert stations['numberMatched'] == 148
 
 
 def test_metadata_discovery_publish():
     """Test discovery metadata publishing"""
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items').json()
-    assert r['numberMatched'] == 6
+    assert r['numberMatched'] == 9
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/{ID}').json()  # noqa
 
@@ -120,7 +120,7 @@ def test_metadata_discovery_publish():
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items',
                     params=params).json()
 
-    assert r['numberMatched'] == 6
+    assert r['numberMatched'] == 8
 
     # test access of discovery metadata from notification message
 
@@ -129,7 +129,8 @@ def test_metadata_discovery_publish():
         'it-roma_met_centre',
         'dz-alger_met_centre',
         'ro-rnimh',
-        'cd-brazza_met_centre'
+        'cd-brazza_met_centre',
+        'int-wmo-test'
     ]
 
     for centre_id in centre_ids:
@@ -140,7 +141,7 @@ def test_metadata_discovery_publish():
         r = SESSION.get(f'{API_URL}/collections/messages/items',
                         params=params).json()
 
-        assert r['numberMatched'] == 1
+        assert r['numberMatched'] >= 1
 
         feature = r['features'][0]
         assert feature['properties']['data_id'].startswith(centre_id)
@@ -251,7 +252,8 @@ def test_message_api():
         'roma_met_centre': 33,
         'alger_met_centre': 29,
         'rnimh': 116,
-        'brazza_met_centre': 15
+        'brazza_met_centre': 15,
+        'wmo-test': 151
     }
     for key, value in counts.items():
         url = f'{API_URL}/collections/messages/items?sortby=-datetime&q={key}&limit=1'  # noqa
@@ -264,7 +266,19 @@ def test_message_api():
     # should match sum of counts above
     assert r['numberMatched'] == sum(counts.values())
 
-    msg = r['features'][16]
+    # we want to find a particular message with data ID
+    target_data_id = "cd-brazza_met_centre/data/core/weather/" \
+        "surface-based-observations/synop/" \
+        "WIGOS_0-20000-0-64406_20230803T090000"
+
+    msg = None
+    for feature in r['features']:
+        if feature['properties']['data_id'] == target_data_id:
+            msg = feature
+            break
+
+    assert msg is not None
+
     is_valid, _ = validate_message(msg)
     assert is_valid
 
