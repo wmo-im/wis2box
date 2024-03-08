@@ -66,7 +66,9 @@ def execute_api_process(process_name: str, payload: dict) -> dict:
 
     response = requests.post(url, headers=headers, json=payload)
     if response.status_code >= 400:
-        msg = f'Failed to post data to wis2box-api: {response.status_code}'
+        msg = f'Failed to post data to wis2box-api: {response.status_code}' # noqa
+        if response.text:
+            msg += f'\nError message: {response.text}'
         LOGGER.error(msg)
         raise ValueError(msg)
 
