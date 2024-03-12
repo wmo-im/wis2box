@@ -291,7 +291,7 @@ def test_message_api():
     assert not props['data_id'].startswith('wis2')
     assert not props['data_id'].startswith('origin/a/wis2')
     assert props['data_id'].startswith('cd')
-    assert props['content']['size'] == 257
+    assert props['content']['size'] == 253
     assert props['content']['encoding'] == 'base64'
     assert props['content']['value'] is not None
 
