@@ -54,10 +54,10 @@ class BaseAbstractData:
         self.filename = None
         self.incoming_filepath = None
         self.topic_hierarchy = TopicHierarchy(defs['topic_hierarchy'])
-        self.template = defs['template']
-        self.file_filter = defs['pattern']
-        self.enable_notification = defs['notify']
-        self.buckets = defs['buckets']
+        self.template = defs.get('template', None)
+        self.file_filter = defs.get('pattern', '.*')
+        self.enable_notification = defs.get('notify', False)
+        self.buckets = defs.get('buckets', ())
         self.output_data = {}
         self.discovery_metadata = {}
 #        if discovery_metadata:

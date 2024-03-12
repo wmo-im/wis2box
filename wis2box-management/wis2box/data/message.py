@@ -39,9 +39,12 @@ class MessageData(BaseAbstractData):
     """
 
     def __init__(self, defs: dict) -> None:
-        self._meta = defs['_meta']
-        # remove _meta from defs before passing to super
-        defs.pop('_meta')
+        try:
+            self._meta = defs['_meta']
+        except KeyError:
+            error = f'No _meta in defs: {defs}'
+            LOGGER.error(error)
+            raise KeyError(error)
         super().__init__(defs)
 
     def transform(self, input_data: Union[Path, bytes],

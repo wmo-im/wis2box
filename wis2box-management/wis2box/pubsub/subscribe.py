@@ -75,7 +75,7 @@ class WIS2BoxSubscriber:
             raise err
 
     def handle_publish(self, message):
-        LOGGER.debug('Loading DataPublish plugin')
+        LOGGER.debug('Loading MessageData plugin to publish data from message') # noqa
         defs = {
             'topic_hierarchy': message['channel'].replace('origin/a/wis2/', ''), # noqa
             '_meta': message['_meta'],
@@ -87,7 +87,7 @@ class WIS2BoxSubscriber:
             input_bytes = base64.b64decode(message['data'].encode('utf-8'))
             plugin.transform(
                 input_data=input_bytes,
-                filename=self.filepath.split('/')[-1]
+                filename=message['filename']
             )
         except Exception as err:
             msg = f'MessageData-transform failed: {err}'
