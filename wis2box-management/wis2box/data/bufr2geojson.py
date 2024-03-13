@@ -19,12 +19,14 @@
 #
 ###############################################################################
 
+
+import base64
 import logging
+
 from pathlib import Path
 from typing import Union
 
-from bufr2geojson import transform as as_geojson
-
+from wis2box.api import execute_api_process
 from wis2box.data.geojson import ObservationDataGeoJSON
 
 LOGGER = logging.getLogger(__name__)
@@ -33,47 +35,51 @@ LOGGER = logging.getLogger(__name__)
 class ObservationDataBUFR2GeoJSON(ObservationDataGeoJSON):
     """Observation data"""
 
-    def transform(
-        self, input_data: Union[Path, bytes], filename: str = ''
-    ) -> bool:
+    def transform(self, input_data: Union[Path, bytes],
+                  filename: str = '') -> bool:
 
         LOGGER.debug('Procesing BUFR data')
-        input_bytes = self.as_bytes(input_data)
+        process_name = 'bufr2geojson'
 
-        LOGGER.debug('Generating GeoJSON features')
-        results = as_geojson(input_bytes, serialize=False)
+        # check if input_data is Path object
+        if isinstance(input_data, Path):
+            payload = {
+                'inputs': {
+                    'data_url': input_data.as_posix()
+                }
+            }
+        else:
+            input_bytes = self.as_bytes(input_data)
+            payload = {
+                'inputs': {
+                    'data': base64.b64encode(input_bytes).decode('utf-8')
+                }
+            }
 
-        LOGGER.debug('Processing GeoJSON features')
-        for collection in results:
-            # results is an iterator, for each iteration we have:
-            # - dict['id']
-            # - dict['id']['_meta']
-            # - dict['id']
-            for id, item in collection.items():
-                LOGGER.debug(f'Processing feature: {id}')
+        result = execute_api_process(process_name, payload)
 
-                LOGGER.debug('Parsing feature datetime')
-                data_date = item['_meta']['data_date']
-                if '/' in data_date:
-                    # date is range/period, split and get end date/time
-                    data_date = data_date.split('/')[1]
+        # check for errors
+        if result.get('error') not in [None, '']:
+            LOGGER.error(result['error'])
 
-                LOGGER.debug('Parsing feature fields')
-                items_to_remove = [
-                    key for key in item if key not in ('geojson', '_meta')
-                ]
-                for key in items_to_remove:
-                    LOGGER.debug(f'Removing unexpected key: {key}')
-                    item.pop(key)
+        if 'items' not in result:
+            LOGGER.error(f'file={filename} failed to convert to GeoJSON')
+            return False
 
-                LOGGER.debug('Populating output data for publication')
-                self.output_data[id] = item
+        # loop over items in response
+        for item in result['items']:
+            id = item['id']
 
-                self.output_data[id]['_meta'][
-                    'relative_filepath'
-                ] = self.get_local_filepath(data_date)
+            data_date = item['properties']['resultTime']
+            self.output_data[id] = {
+                '_meta': {
+                    'identifier': id,
+                    'data_date': data_date,
+                    'relative_filepath': self.get_local_filepath(data_date),
+                },
+                'geojson': item
+            }
 
-        LOGGER.debug('Successfully finished transforming BUFR data')
         return True
 
     def get_local_filepath(self, date_):

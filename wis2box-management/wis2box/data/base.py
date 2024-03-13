@@ -18,7 +18,7 @@
 # under the License.
 #
 ###############################################################################
-
+import base64
 import json
 import logging
 from pathlib import Path
@@ -54,10 +54,10 @@ class BaseAbstractData:
         self.filename = None
         self.incoming_filepath = None
         self.topic_hierarchy = TopicHierarchy(defs['topic_hierarchy'])
-        self.template = defs['template']
-        self.file_filter = defs['pattern']
-        self.enable_notification = defs['notify']
-        self.buckets = defs['buckets']
+        self.template = defs.get('template', None)
+        self.file_filter = defs.get('pattern', '.*')
+        self.enable_notification = defs.get('notify', False)
+        self.buckets = defs.get('buckets', ())
         self.output_data = {}
         self.discovery_metadata = {}
 #        if discovery_metadata:
@@ -73,7 +73,7 @@ class BaseAbstractData:
         # load plugin for local broker
         defs = {
             'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-            'url': f"mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}", # noqa
+            'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}', # noqa
             'client_type': 'failure-publisher'
         }
         local_broker = load_plugin('pubsub', defs)
@@ -169,7 +169,7 @@ class BaseAbstractData:
         # load plugin for local broker
         defs_local = {
             'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-            'url': f"mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}", # noqa
+            'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}', # noqa
             'client_type': 'notify-publisher'
         }
         local_broker = load_plugin('pubsub', defs_local)
@@ -312,7 +312,13 @@ class BaseAbstractData:
 
     @staticmethod
     def as_bytes(input_data):
-        """Get data as bytes"""
+        """Return input data as bytes
+
+        :param input_data: `str`, `bytes` or `Path` of data
+
+        :returns: `bytes` of data
+        """
+
         LOGGER.debug(f'input data is type: {type(input_data)}')
         if isinstance(input_data, bytes):
             return input_data
@@ -321,6 +327,35 @@ class BaseAbstractData:
         elif isinstance(input_data, Path):
             with input_data.open('rb') as fh:
                 return fh.read()
+        else:
+            LOGGER.warning('Invalid data type')
+            return None
+
+    @staticmethod
+    def as_string(input_data, base64_encode=False):
+        """Return input data as string
+
+        :param input_data: `str`, `bytes` or `Path` of data
+        :param base64_encode: `bool` if to use base64-encode before decoding
+
+        :returns: `str` of data
+        """
+
+        LOGGER.debug(f'input data is type: {type(input_data)}')
+        if isinstance(input_data, bytes):
+            if base64_encode:
+                return base64.b64encode(input_data).decode('utf-8')
+            else:
+                return input_data.decode('utf-8')
+        elif isinstance(input_data, str):
+            return input_data
+        elif isinstance(input_data, Path):
+            if base64_encode:
+                with input_data.open('rb') as fh:
+                    return base64.b64encode(fh.read()).decode('utf-8')
+            else:
+                with input_data.open('r') as fh:
+                    return fh.read()
         else:
             LOGGER.warning('Invalid data type')
             return None

@@ -588,9 +588,42 @@
           "legendFormat": "",
           "queryType": "range",
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P55348B596EBB51C3"
+          },
+          "editorMode": "builder",
+          "expr": "{compose_service=\"wis2box-management\"} |= `WARNING`",
+          "hide": false,
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P55348B596EBB51C3"
+          },
+          "editorMode": "builder",
+          "expr": "{compose_service=\"wis2box-api\"} |= `ERROR`",
+          "hide": false,
+          "queryType": "range",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P55348B596EBB51C3"
+          },
+          "editorMode": "builder",
+          "expr": "{compose_service=\"wis2box-api\"} |= `WARNING` != `int() argument must be a string`",
+          "hide": false,
+          "queryType": "range",
+          "refId": "D"
         }
       ],
-      "title": "wis2box ERRORs",
+      "title": "wis2box ERRORs and WARNINGs",
       "type": "logs"
     }
   ],

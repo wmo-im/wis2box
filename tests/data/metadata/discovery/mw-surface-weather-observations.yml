@@ -7,7 +7,7 @@ wis2box:
         plugins:
             csv:
                 - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
-                  template: synop_bufr
+                  template: CampbellAfrica-v1-template
                   notify: true
                   file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.csv$'
             bufr4:

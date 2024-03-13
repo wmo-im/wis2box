@@ -82,7 +82,9 @@ class MQTTPubSubClient(BasePubSubClient):
         LOGGER.debug(f'Topic: {topic}')
         LOGGER.debug(f'Message: {message}')
 
+        self.conn.loop_start()
         result = self.conn.publish(topic, message, qos)
+        self.conn.loop_stop()
 
         # TODO: investigate implication
         # result.wait_for_publish()

@@ -251,8 +251,8 @@ def test_message_api():
         'mw_met_centre': 25,
         'roma_met_centre': 33,
         'alger_met_centre': 29,
-        'rnimh': 116,
-        'brazza_met_centre': 15,
+        'rnimh': 111,
+        'brazza_met_centre': 14,
         'wmo-test': 151
     }
     for key, value in counts.items():
@@ -291,7 +291,7 @@ def test_message_api():
     assert not props['data_id'].startswith('wis2')
     assert not props['data_id'].startswith('origin/a/wis2')
     assert props['data_id'].startswith('cd')
-    assert props['content']['size'] == 257
+    assert props['content']['size'] == 253
     assert props['content']['encoding'] == 'base64'
     assert props['content']['value'] is not None
 

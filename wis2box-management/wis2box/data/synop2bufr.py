@@ -19,14 +19,15 @@
 #
 ###############################################################################
 
+import base64
 import logging
+
+from datetime import datetime
 from pathlib import Path
 from typing import Union
 
-from synop2bufr import transform as transform_synop
-
+from wis2box.api import execute_api_process
 from wis2box.data.base import BaseAbstractData
-from wis2box.metadata.station import get_valid_wsi, get_stations_csv
 
 LOGGER = logging.getLogger(__name__)
 
@@ -44,12 +45,8 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
 
         super().__init__(defs)
 
-        self.mappings = {}
-
-        self.station_metadata = get_stations_csv()
-
     def transform(self, input_data: Union[Path, bytes],
-                  filename: str = '') -> bool:
+                  filename: str = '', _meta: dict = None) -> bool:
 
         LOGGER.debug('Processing SYNOP ASCII data')
 
@@ -65,7 +62,7 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
             raise ValueError(msg)
 
         LOGGER.debug('Generating BUFR4')
-        input_bytes = self.as_bytes(input_data)
+        data = self.as_string(input_data)
 
         try:
             year = int(file_match.group(1))
@@ -75,43 +72,53 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
             LOGGER.error(msg)
             raise ValueError(msg)
 
-        LOGGER.debug('Transforming data')
-        bufr_generator = transform_synop(input_bytes.decode(),
-                                         self.station_metadata,
-                                         year, month)
-        results = []
+        # post data do wis2box-api/oapi/processes/synop2bufr
+        payload = {
+            'inputs': {
+                'channel': self.topic_hierarchy.dirpath,
+                'year': year,
+                'month': month,
+                'notify': False,
+                'data': data # noqa
+            }
+        }
+
+        process_name = 'wis2box-synop2bufr'
+        result = execute_api_process(process_name, payload)
 
         try:
-            for item in bufr_generator:
-                results.append(item)
-        except Exception as err:
-            LOGGER.error(f'Error in bufr_generator: {err}')
+            # check for errors
+            for error in result['errors']:
+                LOGGER.error(error)
+            # check for warnings
+            for warning in result['warnings']:
+                LOGGER.warning(warning)
+        except KeyError:
+            LOGGER.error(f'file={filename} failed to convert to BUFR4, result={result}') # noqa
+            return False
 
-        LOGGER.debug('Iterating over BUFR messages')
-        for item in results:
-            wsi = item['_meta']['properties']['wigos_station_identifier']
-            if 'result' in item['_meta']:
-                if item['_meta']['result']['code'] != 1:
-                    msg = item['_meta']['result']['message']
-                    LOGGER.error(f'Transform returned {msg} for wsi={wsi}')
-                    self.publish_failure_message(
-                        description='synop2bufr transform error',
-                        wsi=wsi)
-                    continue
-            if get_valid_wsi(wsi) is None:
-                msg = f'Station not in station list: wsi={wsi}; skipping'
-                LOGGER.error(msg)
-                self.publish_failure_message(
-                        description='Station not in station list',
-                        wsi=wsi)
-                continue
-            LOGGER.debug('Setting obs date for filepath creation')
-            identifier = item['_meta']['id']
-            data_date = item['_meta']['properties']['datetime']
+        if 'data_items' not in result:
+            LOGGER.error(f'file={filename} failed to convert to BUFR4')
+            return False
 
-            self.output_data[identifier] = item
-            self.output_data[identifier]['_meta']['relative_filepath'] = \
-                self.get_local_filepath(data_date)
+        # loop over data_items in response
+        for data_item in result['data_items']:
+            filename = data_item['filename']
+            suffix = filename.split('.')[-1]
+            rmk = filename.split('.')[0]
+            # convert data_item['data'] to bytes
+            input_bytes = base64.b64decode(data_item['data'].encode('utf-8'))
+            # define _meta
+            _meta = data_item['_meta']
+            # convert isoformat to datetime
+            _meta['data_date'] = datetime.fromisoformat(_meta['data_date'])
+            # add relative filepath to _meta
+            _meta['relative_filepath'] = self.get_local_filepath(_meta['data_date']) # noqa
+            # add to output_data
+            self.output_data[rmk] = {
+                suffix: input_bytes,
+                '_meta': _meta
+            }
 
         return True
 
