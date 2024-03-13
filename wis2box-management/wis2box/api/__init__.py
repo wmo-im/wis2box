@@ -80,7 +80,7 @@ def execute_api_process(process_name: str, payload: dict) -> dict:
     location = location.replace(API_URL, DOCKER_API_URL)
 
     status = 'accepted'
-    while status == 'accepted' or status == 'running':
+    while status in ['accepted', 'running']:
         # get the job status
         headers = {
             'accept': 'application/json',

@@ -121,7 +121,7 @@ class WIS2BoxSubscriber:
             while len(mp.active_children()) == mp.cpu_count():
                 sleep(0.1)
             mp.Process(target=self.handle, args=(filepath,)).start()
-        elif (topic == 'wis2box/data/publication'):
+        elif topic == 'wis2box/data/publication':
             LOGGER.debug('Publishing data')
             self.handle_publish(message)
         elif topic == 'wis2box/data_mappings/refresh':

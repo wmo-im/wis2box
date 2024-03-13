@@ -21,6 +21,8 @@
 
 FROM ubuntu:focal
 
+LABEL maintainer="tomkralidis@gmail.com; mlimper@wmo.int"
+
 ARG WIS2BOX_PIP3_EXTRA_PACKAGES
 ENV TZ="Etc/UTC" \
     DEBIAN_FRONTEND="noninteractive" \

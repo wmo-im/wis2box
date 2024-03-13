@@ -59,11 +59,11 @@ class ObservationDataBUFR2GeoJSON(ObservationDataGeoJSON):
         result = execute_api_process(process_name, payload)
 
         # check for errors
-        if 'error' in result and result['error'] != '':
+        if result.get('error') not in [None, '']:
             LOGGER.error(result['error'])
 
         if 'items' not in result:
-            LOGGER.error(f'file={filename} failed to convert to geojson')
+            LOGGER.error(f'file={filename} failed to convert to GeoJSON')
             return False
 
         # loop over items in response
