@@ -312,7 +312,13 @@ class BaseAbstractData:
 
     @staticmethod
     def as_bytes(input_data):
-        """Get data as bytes"""
+        """Return input data as bytes
+
+        :param input_data: `str`, `bytes` or `Path` of data
+
+        :returns: `bytes` of data
+        """
+
         LOGGER.debug(f'input data is type: {type(input_data)}')
         if isinstance(input_data, bytes):
             return input_data
@@ -327,7 +333,14 @@ class BaseAbstractData:
 
     @staticmethod
     def as_string(input_data, base64_encode=False):
-        """Get data as string"""
+        """Return input data as string
+
+        :param input_data: `str`, `bytes` or `Path` of data
+        :param base64_encode: `bool` if to use base64-encode before decoding
+
+        :returns: `str` of data
+        """
+
         LOGGER.debug(f'input data is type: {type(input_data)}')
         if isinstance(input_data, bytes):
             if base64_encode:
