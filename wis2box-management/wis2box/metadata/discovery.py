@@ -24,6 +24,7 @@ from copy import deepcopy
 from datetime import date, datetime
 import json
 import logging
+from typing import Union
 
 from pygeometa.schemas.wmo_wcmp2 import WMOWCMP2OutputSchema
 
@@ -188,11 +189,11 @@ def gcm() -> dict:
     }
 
 
-def publish_discovery_metadata(metadata: str):
+def publish_discovery_metadata(metadata: Union[dict, str]):
     """
     Inserts or updates discovery metadata to catalogue
 
-    :param metadata: `str` of MCF
+    :param metadata: `str` of MCF or `dict` of WCMP2
 
     :returns: `bool` of publishing result
     """
@@ -202,10 +203,15 @@ def publish_discovery_metadata(metadata: str):
     LOGGER.debug('Publishing discovery metadata')
     try:
         new_links = []
-        dm = DiscoveryMetadata()
-        record_mcf = dm.parse_record(metadata)
 
-        record = dm.generate(record_mcf)
+        if isinstance(metadata, dict):
+            LOGGER.debug('Adding WCMP2 record')
+            record = metadata
+        else:
+            LOGGER.debug('Transforming MCF into WCMP2 record')
+            dm = DiscoveryMetadata()
+            record_mcf = dm.parse_record(metadata)
+            record = dm.generate(record_mcf)
 
         LOGGER.debug('Publishing to API')
         upsert_collection_item('discovery-metadata', record)
