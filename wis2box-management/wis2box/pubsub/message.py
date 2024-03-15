@@ -182,7 +182,8 @@ class WISNotificationMessage(PubSubMessage):
                     'value': self.checksum_value
                 }
             },
-            'links': links
+            'links': links,
+            'generated-by': f'wis2box {__version__}'
         }
 
         if self.length < 4096:
