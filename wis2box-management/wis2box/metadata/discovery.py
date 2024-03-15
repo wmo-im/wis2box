@@ -73,30 +73,7 @@ class DiscoveryMetadata(BaseMetadata):
             md['identification']['extents']['temporal'][0]['begin'] = today
 
         LOGGER.debug('Adding distribution links')
-        oafeat_link = {
-            'url': f"{API_URL}/collections/{identifier}?f=json",
-            'type': 'application/json',
-            'name': identifier,
-            'description': identifier,
-            'rel': 'collection'
-        }
-
-        mqp_link = {
-            'url': remove_auth_from_url(BROKER_PUBLIC, 'everyone:everyone'),
-            'type': 'application/json',
-            'name': mcf['wis2box']['topic_hierarchy'],
-            'description': mcf['identification']['title'],
-            'rel': 'items',
-            'channel': mqtt_topic
-        }
-
-        canonical_link = {
-            'url': f"{API_URL}/collections/discovery-metadata/items/{identifier}",  # noqa
-            'type': 'application/geo+json',
-            'name': identifier,
-            'description': identifier,
-            'rel': 'canonical'
-        }
+        oafeat_link, mqp_link, canonical_link = self.get_distribution_links(identifier, mqtt_topic)  # noqa
 
         md['distribution'] = {
             'oafeat': oafeat_link,
@@ -134,6 +111,44 @@ class DiscoveryMetadata(BaseMetadata):
             pass
 
         return record
+
+    def get_distribution_links(self, identifier: str, topic: str) -> list:
+        """
+        Generates distribution links
+
+        :param identifier: `str` of metadata identifier
+        :param topic: `str` of associated topic
+
+        :returns: `list` of distribution links
+        """
+
+        LOGGER.debug('Adding distribution links')
+        oafeat_link = {
+            'url': f"{API_URL}/collections/{identifier}?f=json",
+            'type': 'application/json',
+            'name': identifier,
+            'description': identifier,
+            'rel': 'collection'
+        }
+
+        mqp_link = {
+            'url': remove_auth_from_url(BROKER_PUBLIC, 'everyone:everyone'),
+            'type': 'application/json',
+            'name': topic,
+            'description': 'Notifications',
+            'rel': 'items',
+            'channel': topic
+        }
+
+        canonical_link = {
+            'url': f"{API_URL}/collections/discovery-metadata/items/{identifier}",  # noqa
+            'type': 'application/geo+json',
+            'name': identifier,
+            'description': identifier,
+            'rel': 'canonical'
+        }
+
+        return oafeat_link, mqp_link, canonical_link
 
 
 def publish_broker_message(record: dict, storage_path: str,
@@ -207,6 +222,10 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
         if isinstance(metadata, dict):
             LOGGER.debug('Adding WCMP2 record')
             record = metadata
+            dm = DiscoveryMetadata()
+            distribution_links = dm.get_distribution_links(
+                record['id'], record['properties']['wmo:topicHierarchy'])
+            record['links'].extend(distribution_links)
         else:
             LOGGER.debug('Transforming MCF into WCMP2 record')
             dm = DiscoveryMetadata()
