@@ -1,0 +1,21 @@
+services:
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.6.2
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - discovery.seed_hosts=[]
+      - node.name=elasticsearch-01
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - cluster.name=es-wis2box
+      - xpack.security.enabled=false
+    mem_limit: 1.5g
+    memswap_limit: 1.5g
+    volumes:
+      - ${ELASTICSEARH_DATA}:/usr/share/elasticsearch/data:rw
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 5s
+      retries: 100

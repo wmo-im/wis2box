@@ -1,0 +1,31 @@
+services:
+  wis2box-management:
+    container_name: wis2box-management
+    mem_limit: 1g
+    memswap_limit: 1g
+    restart: always
+    #image: ghcr.io/wmo-im/wis2box-management:1.0.beta1
+    build:
+      context: ./wis2box-management
+    environment:
+      - WIS2BOX_API_URL=${WIS2BOX_API_URL}
+      - WIS2BOX_URL=${WIS2BOX_URL}
+      - WIS2BOX_API_BACKEND_URL=$(WIS2BOX_API_BACKEND_URL)
+      - WIS2BOX_BASEMAP_URL=${WIS2BOX_BASEMAP_URL}
+      - WIS2BOX_BASEMAP_ATTRIBUTION=${WIS2BOX_BASEMAP_ATTRIBUTION}
+      - WIS2BOX_BROKER_USERNAME=${WIS2BOX_BROKER_USERNAME}
+      - WIS2BOX_BROKER_PASSWORD=${WIS2BOX_BROKER_PASSWORD}
+      - WIS2BOX_BROKER_HOST=${WIS2BOX_BROKER_HOST}
+      - WIS2BOX_BROKER_PORT=${WIS2BOX_BROKER_PORT}
+      - WIS2BOX_STORAGE_SOURCE=${WIS2BOX_STORAGE_SOURCE}
+      
+    volumes:
+      - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
+    depends_on:
+      minio:
+        condition: service_healthy
+      mosquitto:
+        condition: service_started
+      wis2box-api:
+        condition: service_healthy
+    command: ["wis2box", "pubsub" , "subscribe"]
