@@ -28,6 +28,7 @@ import logging
 from pathlib import Path
 import uuid
 
+from wis2box import __version__
 from wis2box.util import json_serial
 from wis2box.env import STORAGE_PUBLIC, URL, STORAGE_SOURCE
 from wis2box.storage import get_data

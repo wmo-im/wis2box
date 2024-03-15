@@ -229,6 +229,11 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
                 record['links'].extend(distribution_links)
             else:
                 record['links'] = distribution_links
+            for link in record['links']:
+                if 'description' in link:
+                    link['title'] = link.pop('description')
+                if 'url' in link:
+                    link['href'] = link.pop('url')
         else:
             LOGGER.debug('Transforming MCF into WCMP2 record')
             dm = DiscoveryMetadata()
