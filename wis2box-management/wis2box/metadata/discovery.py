@@ -225,7 +225,10 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
             dm = DiscoveryMetadata()
             distribution_links = dm.get_distribution_links(
                 record['id'], record['properties']['wmo:topicHierarchy'])
-            record['links'].extend(distribution_links)
+            if 'links' in record:
+                record['links'].extend(distribution_links)
+            else:
+                record['links'] = distribution_links
         else:
             LOGGER.debug('Transforming MCF into WCMP2 record')
             dm = DiscoveryMetadata()
