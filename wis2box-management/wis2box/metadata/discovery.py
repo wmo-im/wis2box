@@ -124,7 +124,7 @@ class DiscoveryMetadata(BaseMetadata):
 
         LOGGER.debug('Adding distribution links')
         oafeat_link = {
-            'url': f"{API_URL}/collections/{identifier}?f=json",
+            'href': f"{API_URL}/collections/{identifier}?f=json",
             'type': 'application/json',
             'name': identifier,
             'description': identifier,
@@ -132,7 +132,7 @@ class DiscoveryMetadata(BaseMetadata):
         }
 
         mqp_link = {
-            'url': remove_auth_from_url(BROKER_PUBLIC, 'everyone:everyone'),
+            'href': remove_auth_from_url(BROKER_PUBLIC, 'everyone:everyone'),
             'type': 'application/json',
             'name': topic,
             'description': 'Notifications',
@@ -141,7 +141,7 @@ class DiscoveryMetadata(BaseMetadata):
         }
 
         canonical_link = {
-            'url': f"{API_URL}/collections/discovery-metadata/items/{identifier}",  # noqa
+            'href': f"{API_URL}/collections/discovery-metadata/items/{identifier}",  # noqa
             'type': 'application/geo+json',
             'name': identifier,
             'description': identifier,
@@ -220,7 +220,7 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
         new_links = []
 
         if isinstance(metadata, dict):
-            LOGGER.debug('Adding WCMP2 record')
+            LOGGER.info('Adding WCMP2 record from dictionary')
             record = metadata
             dm = DiscoveryMetadata()
             distribution_links = dm.get_distribution_links(
@@ -263,9 +263,20 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
         put_data(data_bytes, storage_path, 'application/geo+json')
 
         LOGGER.debug('Publishing message')
-        message = publish_broker_message(record, storage_path,
-                                         record_mcf['wis2box']['centre_id'])
-        upsert_collection_item('messages', json.loads(message))
+        centre_id = record['properties']['wmo:topicHierarchy'].split('/')[3]
+        try:
+            message = publish_broker_message(record, storage_path,
+                                            centre_id)
+        except Exception as err:
+            msg = f'Failed to publish record={record} to broker: {err}'
+            LOGGER.error(msg)
+            raise RuntimeError(msg) from err
+        try:
+            upsert_collection_item('messages', json.loads(message))
+        except Exception as err:
+            msg = f'Failed to publish message to API: {err}'
+            LOGGER.error(msg)
+            raise RuntimeError(msg) from err
 
     except Exception as err:
         LOGGER.warning(err)
