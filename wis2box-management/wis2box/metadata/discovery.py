@@ -266,7 +266,7 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
         centre_id = record['properties']['wmo:topicHierarchy'].split('/')[3]
         try:
             message = publish_broker_message(record, storage_path,
-                                            centre_id)
+                                             centre_id)
         except Exception as err:
             msg = f'Failed to publish record={record} to broker: {err}'
             LOGGER.error(msg)
