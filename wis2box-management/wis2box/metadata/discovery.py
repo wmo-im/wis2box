@@ -73,7 +73,8 @@ class DiscoveryMetadata(BaseMetadata):
             md['identification']['extents']['temporal'][0]['begin'] = today
 
         LOGGER.debug('Adding distribution links')
-        oafeat_link, mqp_link, canonical_link = self.get_distribution_links(identifier, mqtt_topic)  # noqa
+        oafeat_link, mqp_link, canonical_link = self.get_distribution_links(
+            identifier, mqtt_topic, format_='mcf')
 
         md['distribution'] = {
             'oafeat': oafeat_link,
@@ -112,12 +113,14 @@ class DiscoveryMetadata(BaseMetadata):
 
         return record
 
-    def get_distribution_links(self, identifier: str, topic: str) -> list:
+    def get_distribution_links(self, identifier: str, topic: str,
+                               format_='mcf') -> list:
         """
         Generates distribution links
 
         :param identifier: `str` of metadata identifier
         :param topic: `str` of associated topic
+        :param format_: `str` of format (`mcf` or `wcmp2`)
 
         :returns: `list` of distribution links
         """
@@ -147,6 +150,10 @@ class DiscoveryMetadata(BaseMetadata):
             'description': identifier,
             'rel': 'canonical'
         }
+
+        if format_ == 'mcf':
+            for link in [oafeat_link, mqp_link, canonical_link]:
+                link['url'] = link.pop('href')
 
         return oafeat_link, mqp_link, canonical_link
 
@@ -224,7 +231,8 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
             record = metadata
             dm = DiscoveryMetadata()
             distribution_links = dm.get_distribution_links(
-                record['id'], record['properties']['wmo:topicHierarchy'])
+                record['id'], record['properties']['wmo:topicHierarchy'],
+                format_='wcmp2')
             if 'links' in record:
                 record['links'].extend(distribution_links)
             else:
