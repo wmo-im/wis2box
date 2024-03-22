@@ -377,7 +377,7 @@ class ElasticBackend(BaseBackend):
         :returns: `None`
         """
 
-        self.conn.indices.flush(index_name=self.es_id(collection))
+        self.conn.indices.flush(index=self.es_id(collection))
 
     def __repr__(self):
         return f'<ElasticBackend> (url={self.url})'
