@@ -30,8 +30,8 @@ import click
 
 from wis2box import cli_helpers
 import wis2box.data as data_
-from wis2box.api import (remove_collection, setup_collection,
-                         upsert_collection_item)
+from wis2box.api import (delete_collection_item, remove_collection,
+                         setup_collection, upsert_collection_item)
 from wis2box.data_mappings import get_data_mappings
 from wis2box.data.message import MessageData
 from wis2box.env import (DOCKER_BROKER, STORAGE_SOURCE, STORAGE_ARCHIVE)
@@ -135,7 +135,10 @@ class WIS2BoxSubscriber:
         elif topic.startswith('wis2box/dataset/unpublication'):
             LOGGER.debug('Unpublishing dataset')
             identifier = topic.split('/')[-1]
-            remove_collection(identifier)
+            delete_collection_item('discovery-metadata', identifier)
+            if message.get('force', False):
+                LOGGER.info('Deleting data')
+                remove_collection(identifier)
         else:
             LOGGER.debug('Ignoring message')
 

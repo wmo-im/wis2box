@@ -201,6 +201,9 @@ def upsert_collection_item(collection_id: str, item: dict) -> str:
     backend = load_backend()
     backend.upsert_collection_items(collection_id, [item])
 
+    if collection_id in ['discovery-metadata', 'stations']:
+        backend.flush(collection_id)
+
     return True
 
 

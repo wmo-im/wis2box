@@ -29,8 +29,8 @@ from typing import Union
 from pygeometa.schemas.wmo_wcmp2 import WMOWCMP2OutputSchema
 
 from wis2box import cli_helpers
-from wis2box.api import (setup_collection, upsert_collection_item,
-                         delete_collection_item)
+from wis2box.api import (delete_collection_item, remove_collection,
+                         setup_collection, upsert_collection_item)
 from wis2box.env import (API_URL, BROKER_PUBLIC,
                          STORAGE_PUBLIC, STORAGE_SOURCE)
 from wis2box.metadata.base import BaseMetadata
@@ -327,8 +327,10 @@ def publish(ctx, filepath, verbosity):
 @click.command()
 @click.pass_context
 @click.argument('identifier')
+@click.option('--force', '-f', default=False, is_flag=True,
+              help='Force delete associated data from API')
 @cli_helpers.OPTION_VERBOSITY
-def unpublish(ctx, identifier, verbosity):
+def unpublish(ctx, identifier, verbosity, force=False):
     """Deletes a discovery metadata record from the catalogue"""
 
     click.echo(f'Unpublishing discovery metadata {identifier}')
@@ -336,6 +338,10 @@ def unpublish(ctx, identifier, verbosity):
         delete_collection_item('discovery-metadata', identifier)
     except Exception:
         raise click.ClickException('Invalid metadata identifier')
+
+    if force:
+        click.echo('Deleting associated data from the API')
+        remove_collection(identifier)
 
 
 discovery_metadata.add_command(publish)

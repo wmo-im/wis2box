@@ -368,5 +368,16 @@ class ElasticBackend(BaseBackend):
 
         return
 
+    def flush(self, collection: str):
+        """
+        Flush a given index to ensure persistence
+
+        :param collection: name of collection
+
+        :returns: `None`
+        """
+
+        self.conn.indices.flush(index_name=self.es_id(collection))
+
     def __repr__(self):
         return f'<ElasticBackend> (url={self.url})'
