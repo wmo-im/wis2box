@@ -42,6 +42,13 @@ def get_data_mappings() -> dict:
     try:
         records = oar.collection_items('discovery-metadata')
         for record in records['features']:
+            # skip records without data mappings
+            if 'wis2box' not in record:
+                continue
+            if 'topic_hierarchy' not in record['wis2box']:
+                continue
+            if 'data_mappings' not in record['wis2box']:
+                continue
             key = record['wis2box']['topic_hierarchy']
             value = record['wis2box']['data_mappings']
             value['metadata_id'] = record['id']
