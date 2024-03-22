@@ -34,8 +34,7 @@ from wis2box.api import (remove_collection, setup_collection,
                          upsert_collection_item)
 from wis2box.data_mappings import get_data_mappings
 from wis2box.data.message import MessageData
-from wis2box.env import (BROKER_HOST, BROKER_PORT, BROKER_USERNAME,
-                         BROKER_PASSWORD, STORAGE_SOURCE, STORAGE_ARCHIVE)
+from wis2box.env import (DOCKER_BROKER, STORAGE_SOURCE, STORAGE_ARCHIVE)
 from wis2box.handler import Handler, NotHandledError
 import wis2box.metadata.discovery as discovery_metadata
 from wis2box.plugin import load_plugin, PLUGINS
@@ -151,7 +150,7 @@ def subscribe(ctx, verbosity):
 
     defs = {
         'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-        'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}',  # noqa
+        'url': DOCKER_BROKER,  # noqa
         'client_type': 'subscriber'
     }
 

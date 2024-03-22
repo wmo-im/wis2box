@@ -30,8 +30,7 @@ from wis2box.topic_hierarchy import validate_and_load
 from wis2box.plugin import load_plugin
 from wis2box.plugin import PLUGINS
 
-from wis2box.env import (BROKER_HOST, BROKER_USERNAME,
-                         BROKER_PASSWORD, BROKER_PORT)
+from wis2box.env import (DOCKER_BROKER)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -86,11 +85,14 @@ class Handler:
         # handler uses local broker to publish success/failure messages
         defs = {
             'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-            'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}', # noqa
+            'url': DOCKER_BROKER, # noqa
             'client_type': 'handler-publisher'
         }
         local_broker = load_plugin('pubsub', defs)
-        local_broker.pub('wis2box/failure', json.dumps(message), qos=0)
+        success = local_broker.pub('wis2box/handler', json.dumps(message), qos=0) # noqa
+        if not success:
+            msg = f'Failed to publish message: {message}'
+            LOGGER.error(msg)
 
     def handle(self) -> bool:
         for plugin in self.plugins:

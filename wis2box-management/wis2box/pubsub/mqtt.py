@@ -52,6 +52,8 @@ class MQTTPubSubClient(BasePubSubClient):
 
         self.conn.enable_logger(logger=LOGGER)
 
+        self.is_connected = False
+
         if None not in [self.broker_url.password, self.broker_url.password]:
             self.conn.username_pw_set(
                 self.broker_url.username,
@@ -64,6 +66,28 @@ class MQTTPubSubClient(BasePubSubClient):
                 self._port = 1883
         if self.broker_url.scheme == 'mqtts':
             self.conn.tls_set(tls_version=2)
+
+        def on_connect(client, userdata, flags, rc):
+            # check if the connection was successful
+            if rc == 0:
+                LOGGER.debug(f'Connected to broker {self.broker}')
+                self.is_connected = True
+            else:
+                self.is_connected = False
+                msg = f"Connection to MQTT-broker with url={self.broker['url']} failed:"  # noqa	
+                if rc == mqtt_client.CONNACK_REFUSED_PROTOCOL_VERSION:
+                    reason = 'Connection Refused, unacceptable protocol version' # noqa
+                elif rc == mqtt_client.CONNACK_REFUSED_IDENTIFIER_REJECTED:
+                    reason = 'Connection Refused, identifier rejected'
+                elif rc == mqtt_client.CONNACK_REFUSED_SERVER_UNAVAILABLE:
+                    reason = 'Connection Refused, server unavailable'
+                elif rc == mqtt_client.CONNACK_REFUSED_BAD_USERNAME_PASSWORD:
+                    reason = 'Connection Refused, bad username or password'
+                elif rc == mqtt_client.CONNACK_REFUSED_NOT_AUTHORIZED:
+                    reason = 'Connection Refused, not authorized'
+                LOGGER.error(f'{msg} {reason}')
+
+        self.conn.on_connect = on_connect
 
         self.conn.connect(self.broker_url.hostname, self._port)
         LOGGER.debug('Connected to broker')
@@ -78,23 +102,16 @@ class MQTTPubSubClient(BasePubSubClient):
         :returns: `bool` of publish result
         """
 
-        LOGGER.debug(f'Publishing to broker {self.broker}')
-        LOGGER.debug(f'Topic: {topic}')
-        LOGGER.debug(f'Message: {message}')
-
         self.conn.loop_start()
-        result = self.conn.publish(topic, message, qos)
+        if self.is_connected:
+            self.conn.publish(topic, message, qos)
         self.conn.loop_stop()
 
-        # TODO: investigate implication
-        # result.wait_for_publish()
-
-        if result.is_published:
-            return True
-        else:
-            msg = f'Publishing error code: {result[1]}'
-            LOGGER.warning(msg)
+        if not self.is_connected:
+            LOGGER.error(f"Cannot publish to {self.broker['url']}, not connected") # noqa
             return False
+        else:
+            return True
 
     def sub(self, topic: str) -> None:
         """

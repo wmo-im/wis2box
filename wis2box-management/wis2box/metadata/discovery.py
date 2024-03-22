@@ -31,7 +31,7 @@ from pygeometa.schemas.wmo_wcmp2 import WMOWCMP2OutputSchema
 from wis2box import cli_helpers
 from wis2box.api import (setup_collection, upsert_collection_item,
                          delete_collection_item)
-from wis2box.env import (API_URL, BROKER_PUBLIC, DOCKER_BROKER,
+from wis2box.env import (API_URL, BROKER_PUBLIC,
                          STORAGE_PUBLIC, STORAGE_SOURCE)
 from wis2box.metadata.base import BaseMetadata
 from wis2box.plugin import load_plugin, PLUGINS
@@ -169,16 +169,17 @@ def publish_broker_message(record: dict, storage_path: str,
     wis_message = WISNotificationMessage(record['id'], topic, storage_path,
                                          datetime_, record['geometry']).dumps()
 
-    # load plugin for broker
+    # load plugin for plugin-broker
     defs = {
         'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-        'url': DOCKER_BROKER,
+        'url': BROKER_PUBLIC,
         'client_type': 'publisher'
     }
     broker = load_plugin('pubsub', defs)
 
-    broker.pub(topic, wis_message)
-    LOGGER.info(f'Discovery metadata published to {topic}')
+    success = broker.pub(topic, wis_message)
+    if not success:
+        raise RuntimeError(f'Failed to publish message to {topic}')
 
     return wis_message
 
@@ -268,7 +269,7 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
             message = publish_broker_message(record, storage_path,
                                              centre_id)
         except Exception as err:
-            msg = f'Failed to publish record={record} to broker: {err}'
+            msg = 'Failed to publish discovery metadata to public broker'
             LOGGER.error(msg)
             raise RuntimeError(msg) from err
         try:

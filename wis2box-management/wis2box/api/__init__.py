@@ -28,8 +28,7 @@ from time import sleep
 from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
-from wis2box.env import (BROKER_HOST, BROKER_USERNAME, BROKER_PASSWORD,
-                         BROKER_PORT, DOCKER_API_URL, API_URL)
+from wis2box.env import (DOCKER_BROKER, DOCKER_API_URL, API_URL)
 from wis2box.plugin import load_plugin, PLUGINS
 
 LOGGER = logging.getLogger(__name__)
@@ -39,11 +38,13 @@ def refresh_data_mappings():
     # load plugin for local broker
     defs_local = {
         'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-        'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}', # noqa
+        'url': DOCKER_BROKER,
         'client_type': 'dataset-manager'
     }
     local_broker = load_plugin('pubsub', defs_local)
-    local_broker.pub('wis2box/data_mappings/refresh', '{}', qos=0)
+    success = local_broker.pub('wis2box/data_mappings/refresh', '{}', qos=0)
+    if not success:
+        LOGGER.error('Failed to refresh data mappings')
 
 
 def execute_api_process(process_name: str, payload: dict) -> dict:
@@ -133,7 +134,7 @@ def setup_collection(meta: dict = {}) -> bool:
             LOGGER.error(msg)
             return False
 
-    LOGGER.debug('Refreshing data mappings')
+    LOGGER.info('Refreshing data mappings')
     refresh_data_mappings()
 
     return True
@@ -152,12 +153,14 @@ def remove_collection(collection_id: str, backend: bool = True,
     api_backend = None
     api_config = None
 
-    collection_data = load_config().get_collection_data(collection_id)
+    collection_data = 'None'
 
     if config:
         api_config = load_config()
         if api_config.has_collection(collection_id):
             api_config.delete_collection(collection_id)
+        if api_config.has_collection(collection_id):
+            collection_data = api_config.get_collection_data(collection_id)
 
     if backend:
         api_backend = load_backend()
@@ -180,7 +183,7 @@ def remove_collection(collection_id: str, backend: bool = True,
             msg = f'discovery metadata {collection_id} not found'
             LOGGER.warning(msg)
 
-    LOGGER.debug('Refreshing data mappings')
+    LOGGER.info('Refreshing data mappings')
     refresh_data_mappings()
 
     return True
@@ -228,6 +231,8 @@ def delete_collection_item(collection_id: str, item_id: str) -> str:
 
     :returns: `str` identifier of added item
     """
+
+    LOGGER.info(f'Deleting item {item_id} from collection {collection_id}')
     backend = load_backend()
     backend.delete_collection_item(collection_id, item_id)
 

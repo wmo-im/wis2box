@@ -27,8 +27,7 @@ from typing import Iterator, Union
 
 from wis2box.env import (STORAGE_INCOMING, STORAGE_PUBLIC,
                          STORAGE_SOURCE, BROKER_PUBLIC,
-                         BROKER_HOST, BROKER_USERNAME, BROKER_PASSWORD,
-                         BROKER_PORT)
+                         DOCKER_BROKER)
 from wis2box.storage import exists, get_data, put_data
 from wis2box.topic_hierarchy import TopicHierarchy
 from wis2box.plugin import load_plugin, PLUGINS
@@ -73,12 +72,14 @@ class BaseAbstractData:
         # load plugin for local broker
         defs = {
             'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-            'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}', # noqa
+            'url': DOCKER_BROKER, # noqa
             'client_type': 'failure-publisher'
         }
         local_broker = load_plugin('pubsub', defs)
         # publish with qos=0
-        local_broker.pub('wis2box/failure', json.dumps(message), qos=0)
+        success = local_broker.pub('wis2box/failure', json.dumps(message), qos=0) # noqa
+        if not success:
+            LOGGER.error('Failed to publish failure message on internal broker') # noqa
 
     def setup_discovery_metadata(self, discovery_metadata: dict) -> None:
         """
@@ -163,19 +164,23 @@ class BaseAbstractData:
         broker = load_plugin('pubsub', defs)
 
         # publish using filename as identifier
-        broker.pub(topic, wis_message.dumps())
-        LOGGER.info(f'WISNotificationMessage published for {identifier}')
+        success = broker.pub(topic, wis_message.dumps())
+        if not success:
+            LOGGER.error('Failed to publish data notification message on public broker') # noqa
+            return False
+        else:
+            LOGGER.info(f'WISNotificationMessage published for {identifier}')
 
         # load plugin for local broker
         defs_local = {
             'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-            'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}', # noqa
+            'url': DOCKER_BROKER, # noqa
             'client_type': 'notify-publisher'
         }
         local_broker = load_plugin('pubsub', defs_local)
-        local_broker.pub('wis2box/notifications',
-                         wis_message.dumps(),
-                         qos=0)
+        success = local_broker.pub('wis2box/notifications', wis_message.dumps(), qos=0) # noqa
+        if not success:
+            LOGGER.error('Failed to publish notification message on internal broker') # noqa
         return True
 
     def publish(self) -> bool:
