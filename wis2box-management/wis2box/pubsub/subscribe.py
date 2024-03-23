@@ -30,8 +30,10 @@ import click
 
 from wis2box import cli_helpers
 import wis2box.data as data_
-from wis2box.api import (delete_collection_item, remove_collection,
-                         setup_collection, upsert_collection_item)
+
+from wis2box.api import (setup_collection, upsert_collection_item,
+                         delete_collection_item, remove_collection)
+
 from wis2box.data_mappings import get_data_mappings
 from wis2box.data.message import MessageData
 from wis2box.env import (DOCKER_BROKER, STORAGE_SOURCE, STORAGE_ARCHIVE)

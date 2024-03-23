@@ -31,6 +31,7 @@ from pygeometa.schemas.wmo_wcmp2 import WMOWCMP2OutputSchema
 from wis2box import cli_helpers
 from wis2box.api import (delete_collection_item, remove_collection,
                          setup_collection, upsert_collection_item)
+from wis2box.data_mappings import refresh_data_mappings
 from wis2box.env import (API_URL, BROKER_PUBLIC,
                          STORAGE_PUBLIC, STORAGE_SOURCE)
 from wis2box.metadata.base import BaseMetadata
@@ -322,6 +323,7 @@ def publish(ctx, filepath, verbosity):
         publish_discovery_metadata(filepath.read())
     except Exception as err:
         raise click.ClickException(f'Failed to publish: {err}')
+    refresh_data_mappings()
 
 
 @click.command()
@@ -338,6 +340,7 @@ def unpublish(ctx, identifier, verbosity, force=False):
         delete_collection_item('discovery-metadata', identifier)
     except Exception:
         raise click.ClickException('Invalid metadata identifier')
+    refresh_data_mappings()
 
     if force:
         click.echo('Deleting associated data from the API')
