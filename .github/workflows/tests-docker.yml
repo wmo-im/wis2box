@@ -42,7 +42,7 @@ jobs:
         docker logs wis2box-management
     - name: setup wis2box-management ⚙️
       run: |
-        sleep 30
+        sleep 20
         python3 wis2box-ctl.py execute wis2box environment show
     - name: populate stations from CSV 📡
       run: |
@@ -56,6 +56,7 @@ jobs:
         TEST_DATA_UPDATE: /data/wis2box/observations/malawi_update
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
+        sleep 5
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
@@ -68,6 +69,7 @@ jobs:
         TEST_DATA: /data/wis2box/observations/italy
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
+        sleep 5
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
@@ -79,6 +81,7 @@ jobs:
         TEST_DATA: /data/wis2box/observations/algeria
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
+        sleep 5
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
@@ -90,6 +93,7 @@ jobs:
         TEST_DATA: /data/wis2box/observations/romania
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
+        sleep 5
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
@@ -101,6 +105,7 @@ jobs:
         TEST_DATA: /data/wis2box/observations/congo
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
+        sleep 5
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
@@ -113,6 +118,7 @@ jobs:
         TEST_DATA: /data/wis2box/observations/wmo/ship
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
+        sleep 5
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID        
@@ -124,6 +130,7 @@ jobs:
         TEST_DATA: /data/wis2box/observations/wmo/buoy
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
+        sleep 5
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
@@ -135,6 +142,7 @@ jobs:
         TEST_DATA: /data/wis2box/observations/wmo/wind_profiler
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
+        sleep 5
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
@@ -146,6 +154,7 @@ jobs:
         TEST_DATA: /data/wis2box/observations/china
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
+        sleep 5
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
@@ -155,7 +164,7 @@ jobs:
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection
     - name: run integration tests ⚙️
       run: |
-        sleep 30
+        sleep 10
         pytest -s tests/integration
     - name: run flake8 ⚙️
       run: |
