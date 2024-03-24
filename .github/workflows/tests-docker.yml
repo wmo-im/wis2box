@@ -160,7 +160,7 @@ jobs:
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
     - name: sync stations 🔄
       run: |
-        sleep 30
+        sleep 240
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection
     - name: run integration tests ⚙️
       run: |
