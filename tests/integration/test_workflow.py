@@ -251,7 +251,7 @@ def test_message_api():
         'mw_met_centre': 25,
         'roma_met_centre': 33,
         'alger_met_centre': 29,
-        'rnimh': 111,
+        'rnimh': 106,
         'brazza_met_centre': 14,
         'wmo-test': 151
     }
