@@ -141,9 +141,8 @@ def remove_collection(collection_id: str, backend: bool = True,
     if config:
         api_config = load_config()
         if api_config.has_collection(collection_id):
-            api_config.delete_collection(collection_id)
-        if api_config.has_collection(collection_id):
             collection_data = api_config.get_collection_data(collection_id)
+            api_config.delete_collection(collection_id)
 
     if backend:
         api_backend = load_backend()
@@ -161,7 +160,8 @@ def remove_collection(collection_id: str, backend: bool = True,
 
     if collection_id not in ['discovery-metadata', 'stations', 'messages']:
         try:
-            delete_collection_item('discovery-metadata', collection_id)
+            if api_backend is not None and api_backend.has_collection(collection_id):  # noqa
+                delete_collection_item('discovery-metadata', collection_id)
         except Exception:
             msg = f'discovery metadata {collection_id} not found'
             LOGGER.warning(msg)

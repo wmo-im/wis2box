@@ -86,7 +86,7 @@ class MQTTPubSubClient(BasePubSubClient):
             else:
                 msg = 'Failed to connect to MQTT-broker:'
                 LOGGER.error(f'{msg} {mqtt_client.connack_string(rc)}')
-        self.conn.on_connect = on_connect   
+        self.conn.on_connect = on_connect
         # allow 10 attempts to connect
         attempts = 0
         while not self.conn.is_connected() and attempts < 10:
