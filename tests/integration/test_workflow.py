@@ -252,7 +252,7 @@ def test_message_api():
         'alger_met_centre': 29,
         'rnimh': 106,
         'brazza_met_centre': 14,
-        # 'wmo-test': 151,
+        'wmo-test': 151,
         'cn-cma': 11
     }
     for key, value in counts.items():

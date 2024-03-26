@@ -104,39 +104,39 @@ jobs:
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
-#    - name: add example ship data (bufr2bufr) WMO
-#      env:
-#        TOPIC_HIERARCHY: int-wmo-test.data.core.weather.surface-based-observations.ship
-#        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/int-wmo-test-ship.yml
-#        DISCOVERY_METADATA_ID: urn:wmo:md:int-wmo-test:surface-weather-observations:ship
-#        TEST_DATA: /data/wis2box/observations/wmo/ship
-#      run: |
-#        python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
-#        curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
-#        check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
-#        python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
-#    - name: add example buoy data (bufr2bufr) WMO
-#      env:
-#        TOPIC_HIERARCHY: int-wmo-test.data.core.weather.surface-based-observations.buoy
-#        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/int-wmo-test-buoy.yml
-#        DISCOVERY_METADATA_ID: urn:wmo:md:int-wmo-test:surface-weather-observations:buoy
-#        TEST_DATA: /data/wis2box/observations/wmo/buoy
-#      run: |
-#        python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
-#        curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
-#        check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
-#        python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
-#    - name: add example wind profiler data (bufr2bufr) WMO
-#      env:
-#        TOPIC_HIERARCHY: int-wmo-test.data.core.weather.surface-based-observations.wind_profiler
-#        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/int-wmo-test-wind_profiler.yml
-#        DISCOVERY_METADATA_ID: urn:wmo:md:int-wmo-test:surface-weather-observations:wind_profiler
-#        TEST_DATA: /data/wis2box/observations/wmo/wind_profiler
-#      run: |
-#        python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
-#        curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
-#        check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
-#        python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
+    - name: add example ship data (bufr2bufr) WMO
+      env:
+        TOPIC_HIERARCHY: int-wmo-test.data.core.weather.surface-based-observations.ship
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/int-wmo-test-ship.yml
+        DISCOVERY_METADATA_ID: urn:wmo:md:int-wmo-test:surface-weather-observations:ship
+        TEST_DATA: /data/wis2box/observations/wmo/ship
+      run: |
+        python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
+        curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
+        check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
+        python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
+    - name: add example buoy data (bufr2bufr) WMO
+      env:
+        TOPIC_HIERARCHY: int-wmo-test.data.core.weather.surface-based-observations.buoy
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/int-wmo-test-buoy.yml
+        DISCOVERY_METADATA_ID: urn:wmo:md:int-wmo-test:surface-weather-observations:buoy
+        TEST_DATA: /data/wis2box/observations/wmo/buoy
+      run: |
+        python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
+        curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
+        check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
+        python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
+    - name: add example wind profiler data (bufr2bufr) WMO
+      env:
+        TOPIC_HIERARCHY: int-wmo-test.data.core.weather.surface-based-observations.wind_profiler
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/int-wmo-test-wind_profiler.yml
+        DISCOVERY_METADATA_ID: urn:wmo:md:int-wmo-test:surface-weather-observations:wind_profiler
+        TEST_DATA: /data/wis2box/observations/wmo/wind_profiler
+      run: |
+        python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
+        curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
+        check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
+        python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
     - name: add China GRIB2 data (universal pipeline) 🇨🇳
       env:
         TOPIC_HIERARCHY: cn-cma.data.core.weather.prediction.forecast.medium-range.probabilistic.global
