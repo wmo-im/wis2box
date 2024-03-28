@@ -148,9 +148,9 @@ jobs:
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
-    - name: wait 3 minutes then sync stations 🔄
+    - name: wait 1 minute then sync stations 🔄
       run: |
-        sleep 180
+        sleep 60
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection
     - name: run integration tests ⚙️
       run: |
