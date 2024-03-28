@@ -32,7 +32,7 @@ from wis2box import cli_helpers
 from wis2box.api import (delete_collection_item, remove_collection,
                          setup_collection, upsert_collection_item)
 from wis2box.data_mappings import refresh_data_mappings
-from wis2box.env import (API_URL, BROKER_PUBLIC, DOCKER_BROKER,
+from wis2box.env import (API_URL, BROKER_PUBLIC,
                          STORAGE_PUBLIC, STORAGE_SOURCE)
 from wis2box.metadata.base import BaseMetadata
 from wis2box.plugin import load_plugin, PLUGINS
@@ -180,7 +180,7 @@ def publish_broker_message(record: dict, storage_path: str,
     # load plugin for plugin-broker
     defs = {
         'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-        'url': DOCKER_BROKER,
+        'url': BROKER_PUBLIC,
         'client_type': 'publisher'
     }
     broker = load_plugin('pubsub', defs)
