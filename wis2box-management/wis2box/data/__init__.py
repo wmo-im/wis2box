@@ -105,9 +105,12 @@ def gcm(mcf: Union[dict, str]) -> dict:
 
     LOGGER.debug('Parsing discovery metadata')
 
-    dm = DiscoveryMetadata()
-    record = dm.parse_record(mcf)
-    generated = dm.generate(record)
+    if 'conformsTo' in mcf:
+        generated = mcf
+    else:
+        dm = DiscoveryMetadata()
+        record = dm.parse_record(mcf)
+        generated = dm.generate(record)
 
     LOGGER.debug('Creating collection configuration')
 
@@ -118,17 +121,13 @@ def gcm(mcf: Union[dict, str]) -> dict:
         generated['geometry']['coordinates'][0][2][1]
     ]
 
-    kw = record['identification']['keywords']
-
-    keywords = set([k for k in kw.values() for k in kw])
-
     return {
         'id': generated['id'],
         'type': 'feature',
-        'topic_hierarchy': record['wis2box']['topic_hierarchy'],
+        'topic_hierarchy': generated['properties']['wmo:topicHierarchy'].replace('origin/a/wis2/', '').replace('/', '.'),  # noqa: E501
         'title': generated['properties']['title'],
         'description': generated['properties']['description'],
-        'keywords': list(keywords),
+        'keywords': generated['properties']['keywords'],
         'bbox': bbox,
         'links': generated['links'],
         'id_field': 'id',

@@ -120,5 +120,16 @@ class BaseBackend:
 
         raise NotImplementedError()
 
+    def flush(self, collection: str):
+        """
+        Flush a given index to ensure persistence
+
+        :param collection: name of collection
+
+        :returns: `None`
+        """
+
+        raise NotImplementedError()
+
     def __repr__(self):
         return f'<BaseBackend> (url={self.url})'

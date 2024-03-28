@@ -24,7 +24,7 @@ import logging
 import click
 
 from wis2box import cli_helpers
-from wis2box.data import add_collection, delete_collection
+from wis2box.data import add_collection
 from wis2box.metadata.discovery import publish, unpublish
 
 LOGGER = logging.getLogger(__name__)
@@ -51,13 +51,14 @@ def publish_(ctx, filepath, verbosity):
 @click.command('unpublish')
 @click.pass_context
 @click.argument('identifier')
+@click.option('--force', '-f', default=False, is_flag=True,
+              help='Force delete associated data from API')
 @cli_helpers.OPTION_VERBOSITY
-def unpublish_(ctx, identifier, verbosity):
+def unpublish_(ctx, identifier, verbosity, force=False):
     """Unpublishes a dataset"""
 
-    # TODO
-    ctx.invoke(delete_collection, collection=identifier, verbosity=verbosity)
-    ctx.invoke(unpublish, identifier=identifier, verbosity=verbosity)
+    ctx.invoke(unpublish, identifier=identifier, verbosity=verbosity,
+               force=force)
 
 
 dataset.add_command(publish_)

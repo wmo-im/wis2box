@@ -21,6 +21,8 @@
 
 import logging
 import random
+import time
+
 from typing import Any, Callable
 
 from paho.mqtt import client as mqtt_client
@@ -66,7 +68,7 @@ class MQTTPubSubClient(BasePubSubClient):
             self.conn.tls_set(tls_version=2)
 
         self.conn.connect(self.broker_url.hostname, self._port)
-        LOGGER.debug('Connected to broker')
+        LOGGER.debug('Connection initiated')
 
     def pub(self, topic: str, message: str, qos: int = 1) -> bool:
         """
@@ -78,22 +80,25 @@ class MQTTPubSubClient(BasePubSubClient):
         :returns: `bool` of publish result
         """
 
-        LOGGER.debug(f'Publishing to broker {self.broker}')
-        LOGGER.debug(f'Topic: {topic}')
-        LOGGER.debug(f'Message: {message}')
-
-        self.conn.loop_start()
-        result = self.conn.publish(topic, message, qos)
-        self.conn.loop_stop()
-
-        # TODO: investigate implication
-        # result.wait_for_publish()
-
-        if result.is_published:
+        def on_connect(client, userdata, flags, rc, properties=None):
+            if rc == 0:
+                LOGGER.debug('connected to broker')
+            else:
+                msg = 'Failed to connect to MQTT-broker:'
+                LOGGER.error(f'{msg} {mqtt_client.connack_string(rc)}')
+        self.conn.on_connect = on_connect
+        # allow 10 attempts to connect
+        attempts = 0
+        while not self.conn.is_connected() and attempts < 10:
+            self.conn.loop()
+            time.sleep(1.)
+            attempts += 1
+        # publish message, if connected
+        if self.conn.is_connected():
+            self.conn.publish(topic, message, qos)
             return True
         else:
-            msg = f'Publishing error code: {result[1]}'
-            LOGGER.warning(msg)
+            LOGGER.error(f'{self.client_id} failed to publish message')
             return False
 
     def sub(self, topic: str) -> None:
@@ -106,10 +111,14 @@ class MQTTPubSubClient(BasePubSubClient):
         """
 
         def on_connect(client, userdata, flags, rc):
-            LOGGER.debug(f'Connected to broker {self.broker}')
-            LOGGER.debug(f'Subscribing to topic {topic} ')
-            client.subscribe(topic, qos=1)
-            LOGGER.debug(f'Subscribed to topic {topic}')
+            if rc == 0:
+                LOGGER.debug(f'Connected to broker {self.broker}')
+                LOGGER.debug(f'Subscribing to topic {topic} ')
+                client.subscribe(topic, qos=1)
+                LOGGER.debug(f'Subscribed to topic {topic}')
+            else:
+                msg = 'Failed to connect to MQTT-broker:'
+                LOGGER.error(f'{msg} {mqtt_client.connack_string(rc)}')
 
         def on_disconnect(client, userdata, rc):
             LOGGER.debug(f'Disconnected from {self.broker}')

@@ -23,9 +23,23 @@ import logging
 
 from owslib.ogcapi.records import Records
 
-from wis2box.env import DOCKER_API_URL
+from wis2box.env import (DOCKER_BROKER, DOCKER_API_URL)
+from wis2box.plugin import load_plugin, PLUGINS
 
 LOGGER = logging.getLogger(__name__)
+
+
+def refresh_data_mappings():
+    # load plugin for local broker and publish refresh request
+    defs_local = {
+        'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
+        'url': DOCKER_BROKER,
+        'client_type': 'dataset-manager'
+    }
+    local_broker = load_plugin('pubsub', defs_local)
+    success = local_broker.pub('wis2box/data_mappings/refresh', '{}', qos=0)
+    if not success:
+        LOGGER.error('Failed to refresh data mappings')
 
 
 def get_data_mappings() -> dict:
@@ -42,6 +56,13 @@ def get_data_mappings() -> dict:
     try:
         records = oar.collection_items('discovery-metadata')
         for record in records['features']:
+            # skip records without data mappings
+            if 'wis2box' not in record:
+                continue
+            if 'topic_hierarchy' not in record['wis2box']:
+                continue
+            if 'data_mappings' not in record['wis2box']:
+                continue
             key = record['wis2box']['topic_hierarchy']
             value = record['wis2box']['data_mappings']
             value['metadata_id'] = record['id']

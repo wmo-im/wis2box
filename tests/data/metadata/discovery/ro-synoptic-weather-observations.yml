@@ -14,9 +14,6 @@ wis2box:
                   template: aws-template
                   notify: true
                   file-pattern: '^.*\.csv$'
-            bufr4:
-                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
-                  file-pattern: '^A_SMR.*EDZW_(\d{4})(\d{2}).*.bufr4$'
 
 mcf:
     version: 1.0

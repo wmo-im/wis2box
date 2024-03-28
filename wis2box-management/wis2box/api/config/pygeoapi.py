@@ -123,7 +123,10 @@ class PygeoapiConfig(BaseConfig):
         :returns: `bool` of collection result
         """
 
-        r = self.http.get(f'{self.url}/{name}')
+        try:
+            r = self.http.get(f'{self.url}/{name}')
+        except Exception:
+            return False
         return r.ok
 
     def prepare_collection(self, meta: dict) -> bool:
