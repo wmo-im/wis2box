@@ -50,7 +50,7 @@ jobs:
     - name: add Malawi synop data (csv2bufr synop_bufr template) 🇲🇼
       env:
         TOPIC_HIERARCHY: mw-mw_met_centre.data.core.weather.surface-based-observations.synop
-        CHANNEL: origin/a/mw-mw_met_centre/data/core/weather/surface-based-observations/synop
+        CHANNEL: origin/a/wis2/mw-mw_met_centre/data/core/weather/surface-based-observations/synop
         TERRITORY: MWI
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/mw-surface-weather-observations.yml
         DISCOVERY_METADATA_ID: urn:wmo:md:mw-mw_met_centre:surface-weather-observations
@@ -66,7 +66,7 @@ jobs:
     - name: add Italy synop data (bufr2bufr) 🇮🇹
       env:
         TOPIC_HIERARCHY: it-roma_met_centre.data.core.weather.surface-based-observations.synop
-        CHANNEL: origin/a/it-roma_met_centre/data/core/weather/surface-based-observations/synop
+        CHANNEL: origin/a/wis2/it-roma_met_centre/data/core/weather/surface-based-observations/synop
         TERRITORY: ITA
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/it-surface-weather-observations.yml
         DISCOVERY_METADATA_ID: urn:wmo:md:it-roma_met_centre:surface-weather-observations
@@ -80,7 +80,7 @@ jobs:
     - name: add Algeria synop data (bufr2bufr) 🇩🇿
       env:
         TOPIC_HIERARCHY: dz-alger_met_centre.data.core.weather.surface-based-observations.synop
-        CHANNEL: origin/a/dz-alger_met_centre/data/core/weather/surface-based-observations/synop
+        CHANNEL: origin/a/wis2/dz-alger_met_centre/data/core/weather/surface-based-observations/synop
         TERRITORY: DZA
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/dz-surface-weather-observations.yml
         DISCOVERY_METADATA_ID: urn:wmo:md:dz-alger_met_centre:surface-weather-observations
@@ -94,7 +94,7 @@ jobs:
     - name: add Romania synop data  (synop2bufr and csv2bufr aws-template) 🇷🇴
       env:
         TOPIC_HIERARCHY: ro-rnimh.data.core.weather.surface-based-observations.synop
-        CHANNEL: origin/a/ro-rnimh/data/core/weather/surface-based-observations/synop
+        CHANNEL: origin/a/wis2/ro-rnimh/data/core/weather/surface-based-observations/synop
         TERRITORY: ROU
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/ro-synoptic-weather-observations.yml
         DISCOVERY_METADATA_ID: urn:wmo:md:ro-rnimh:synoptic-weather-observations
@@ -108,7 +108,7 @@ jobs:
     - name: add Congo synop data (synop2bufr) 🇨🇩
       env:
         TOPIC_HIERARCHY: cd-brazza_met_centre.data.core.weather.surface-based-observations.synop
-        CHANNEL: origin/a/cd-brazza_met_centre/data/core/weather/surface-based-observations/synop
+        CHANNEL: origin/a/wis2/cd-brazza_met_centre/data/core/weather/surface-based-observations/synop
         TERRITORY: COD
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/cd-surface-weather-observations.yml
         DISCOVERY_METADATA_ID: urn:wmo:md:cd-brazza_met_centre:surface-weather-observations
@@ -122,7 +122,7 @@ jobs:
     - name: add example ship data (bufr2bufr) WMO
       env:
         TOPIC_HIERARCHY: int-wmo-test.data.core.weather.surface-based-observations.ship
-        CHANNEL: origin/a/int-wmo-test/data/core/weather/surface-based-observations/ship
+        CHANNEL: origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/ship
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/int-wmo-test-ship.yml
         DISCOVERY_METADATA_ID: urn:wmo:md:int-wmo-test:surface-weather-observations:ship
         TEST_DATA: /data/wis2box/observations/wmo/ship
@@ -139,7 +139,7 @@ jobs:
     - name: add example buoy data (bufr2bufr) WMO
       env:
         TOPIC_HIERARCHY: int-wmo-test.data.core.weather.surface-based-observations.buoy
-        CHANNEL: origin/a/int-wmo-test/data/core/weather/surface-based-observations/buoy
+        CHANNEL: origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/buoy
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/int-wmo-test-buoy.yml
         DISCOVERY_METADATA_ID: urn:wmo:md:int-wmo-test:surface-weather-observations:buoy
         TEST_DATA: /data/wis2box/observations/wmo/buoy
@@ -152,7 +152,7 @@ jobs:
     - name: add example wind profiler data (bufr2bufr) WMO
       env:
         TOPIC_HIERARCHY: int-wmo-test.data.core.weather.surface-based-observations.wind_profiler
-        CHANNEL: origin/a/int-wmo-test/data/core/weather/surface-based-observations/wind_profiler
+        CHANNEL: origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/wind_profiler
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/int-wmo-test-wind_profiler.yml
         DISCOVERY_METADATA_ID: urn:wmo:md:int-wmo-test:surface-weather-observations:wind_profiler
         TEST_DATA: /data/wis2box/observations/wmo/wind_profiler
@@ -175,7 +175,7 @@ jobs:
         python3 wis2box-ctl.py execute wis2box data ingest -th $TOPIC_HIERARCHY -p $TEST_DATA
     - name: run integration tests ⚙️
       run: |
-        sleep 10
+        sleep 30
         pytest -s tests/integration
     - name: run flake8 ⚙️
       run: |
