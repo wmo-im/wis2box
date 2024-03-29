@@ -250,7 +250,7 @@ def test_message_api():
         'mw_met_centre': 25,
         'roma_met_centre': 33,
         'alger_met_centre': 29,
-        'rnimh': 75,
+        'rnimh': 50,
         'brazza_met_centre': 15,
         'wmo-test': 11,
         'cn-cma': 11
