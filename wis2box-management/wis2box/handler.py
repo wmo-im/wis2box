@@ -30,7 +30,7 @@ from wis2box.topic_hierarchy import validate_and_load
 from wis2box.plugin import load_plugin
 from wis2box.plugin import PLUGINS
 
-from wis2box.env import (DOCKER_BROKER)
+from wis2box.env import (DOCKER_BROKER, STORAGE_PUBLIC)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -72,7 +72,11 @@ class Handler:
                 th, data_mappings, self.filetype, fuzzy=fuzzy)
         except Exception as err:
             msg = f'Topic Hierarchy validation error: {err}'
-            raise ValueError(msg)
+            # errors in public storage are not handled
+            if STORAGE_PUBLIC in self.filepath:
+                raise NotHandledError(msg)
+            else:
+                raise ValueError(msg)
 
     def publish_failure_message(self, description, plugin=None):
         message = {
