@@ -24,6 +24,8 @@ from copy import deepcopy
 from datetime import date, datetime
 import json
 import logging
+import time
+
 from typing import Union
 
 from pygeometa.schemas.wmo_wcmp2 import WMOWCMP2OutputSchema
@@ -324,6 +326,9 @@ def publish(ctx, filepath, verbosity):
     except Exception as err:
         raise click.ClickException(f'Failed to publish: {err}')
     refresh_data_mappings()
+    time.sleep(1)
+    refresh_data_mappings()
+    click.echo('Discovery metadata published')
 
 
 @click.command()
@@ -341,6 +346,9 @@ def unpublish(ctx, identifier, verbosity, force=False):
     except Exception:
         raise click.ClickException('Invalid metadata identifier')
     refresh_data_mappings()
+    time.sleep(1)
+    refresh_data_mappings()
+    click.echo('Discovery metadata unpublished')
 
     if force:
         click.echo('Deleting associated data from the API')

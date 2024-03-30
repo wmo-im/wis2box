@@ -120,7 +120,7 @@ class WIS2BoxSubscriber:
                 LOGGER.info(f'Do not process archived-data: {key}')
             # start a new process to handle the received data
             while len(mp.active_children()) == mp.cpu_count():
-                sleep(0.1)
+                sleep(0.05)
             mp.Process(target=self.handle, args=(filepath,)).start()
         elif topic == 'wis2box/data/publication':
             LOGGER.debug('Publishing data')
@@ -134,6 +134,7 @@ class WIS2BoxSubscriber:
             metadata = message
             discovery_metadata.publish_discovery_metadata(metadata)
             data_.add_collection_data(metadata)
+            self.data_mappings = get_data_mappings()
         elif topic.startswith('wis2box/dataset/unpublication'):
             LOGGER.debug('Unpublishing dataset')
             identifier = topic.split('/')[-1]
@@ -141,6 +142,7 @@ class WIS2BoxSubscriber:
             if message.get('force', False):
                 LOGGER.info('Deleting data')
                 remove_collection(identifier)
+            self.data_mappings = get_data_mappings()
         else:
             LOGGER.debug('Ignoring message')
 

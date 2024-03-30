@@ -77,7 +77,7 @@ def execute_api_process(process_name: str, payload: dict) -> dict:
         response_json = response.json()
         if 'status' in response_json:
             status = response_json['status']
-        sleep(0.1)
+        sleep(0.05)
     # get result from location/results?f=json
     response = requests.get(f'{location}/results?f=json', headers=headers) # noqa
     return response.json()
@@ -218,6 +218,8 @@ def delete_collection_item(collection_id: str, item_id: str) -> str:
     LOGGER.info(f'Deleting item {item_id} from collection {collection_id}')
     backend = load_backend()
     backend.delete_collection_item(collection_id, item_id)
+    if collection_id in ['discovery-metadata', 'stations']:
+        backend.flush(collection_id)
 
 
 def delete_collections_by_retention(days: int) -> None:
