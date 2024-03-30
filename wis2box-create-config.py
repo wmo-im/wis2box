@@ -418,42 +418,6 @@ def create_config_dir() -> str:
     return config_dir
 
 
-def update_datamappings_file(config_dir: str, centre_id: str) -> None:
-    """
-    creates the data mappings file in the directory config_dir
-
-    :param config_dir: `str` of path to directory where configuration files
-                       are to be stored
-    :param country_code: `str` of the country code of the wis2box
-    :param centre_id: `str` of the centre id of the wis2box
-
-    :returns: None
-    """
-
-    template_file = Path("config-templates/data-mappings.yml.tmpl")
-    new_config_file = Path(config_dir) / "data-mappings.yml"
-
-    template_vars = {
-        'CENTRE_ID': centre_id
-    }
-    with template_file.open() as fh:
-        config_file = Template(fh.read())
-        result = config_file.substitute(template_vars)
-        if new_config_file.exists():
-            print(f"Adding datasets to {new_config_file}")
-            with new_config_file.open("a") as fh2:
-                fh2.write(result.replace("data:\n", ""))
-        else:
-            print(f"Creating {new_config_file}")
-            with new_config_file.open("w") as fh2:
-                fh2.write(result)
-
-    print("*" * 80)
-    print("data_mappings.yml have been created/updated") # noqa
-    print("Please review the file and update as needed.")
-    print("*" * 80)
-
-
 def create_metadata_file(config_dir: str, country_name: str,
                          centre_id: str, centre_name: str, wis2box_email: str,
                          bounding_box: str, template: str) -> str:
@@ -585,24 +549,14 @@ def create_station_list(config_dir: str) -> None:
     """
 
     station_metadata_dir = Path(config_dir) / 'metadata' / 'station'
-    station_list_template_file = Path('config-templates') / 'station_list_example.csv'  # noqa
-
     # create directory for station metadata if it does not exist
     if not station_metadata_dir.exists():
         station_metadata_dir.mkdir()
 
-    # create station list file
-    new_config_file = station_metadata_dir / "station_list.csv"
-
-    with station_list_template_file.open() as fh:
-        config_file = fh.read()
-        with new_config_file.open("w") as fh2:
-            fh2.write(config_file)
-
-    # print("*" * 80)
-    # print(f"Created the file {new_config_file}.")
-    # print("Please add your stations to this file.")
-    # print("*" * 80)
+    station_list = station_metadata_dir / 'station_list.csv'
+    headers = 'station_name,wigos_station_identifier,traditional_station_identifier,facility_type,latitude,longitude,elevation,barometer_height,territory_name,wmo_region' # noqa
+    with station_list.open("w") as fh2:
+        fh2.write(headers)
 
 
 def get_config_dir() -> str:
@@ -661,27 +615,12 @@ def main():
     if not config_dir:
         config_dir = create_config_dir()
 
+    create_station_list(config_dir)
+
     # if wis2box.env does not exist
     # create it and write config_dir as the value for WIS2BOX_HOST_DATADIR to wis2box.env # noqa
     if not dev_env.is_file():
         create_wis2box_env(config_dir)
-
-    q_metadata = 'Would you like to add datasets for another centre-id ? (y/n)'  # noqa
-    answer = 'y'
-    while answer == 'y':
-        tld, centre_id = get_tld_and_centre_id()
-        create_metadata_files(config_dir, tld, centre_id)
-        update_datamappings_file(config_dir, centre_id)
-        print(" ")
-        print(f"Finished configuration for centre-id={centre_id}")
-        print(" ")
-        print(q_metadata)
-        answer = input()
-        if answer not in ['y', 'n']:
-            print(q_metadata)
-            answer = input()
-
-    create_station_list(config_dir)
 
     print("The configuration is complete.")
     exit()
