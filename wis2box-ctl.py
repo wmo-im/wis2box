@@ -147,9 +147,24 @@ def make(args) -> None:
     :returns: None.
     """
 
+    if not os.path.exists('wis2box.env'):
+        print("ERROR: wis2box.env file does not exist.  Please create one manually or by running `python3 wis2box-create-config.py`")
+        exit(1)
+    # check if WIS2BOX_SSL_KEY and WIS2BOX_SSL_CERT are set
+    ssl_key = None
+    ssl_cert = None
+    with open('wis2box.env', 'r') as f:
+        for line in f:
+            if 'WIS2BOX_SSL_KEY' in line:
+                ssl_key = line.split('=')[1].strip()
+            if 'WIS2BOX_SSL_CERT' in line:
+                ssl_cert = line.split('=')[1].strip()
     docker_compose_args = DOCKER_COMPOSE_ARGS
-    if args.ssl:
+    if args.ssl or (ssl_key and ssl_cert):
         docker_compose_args +=" --file docker-compose.ssl.yml"
+    if args.ssl and not (ssl_key and ssl_cert):
+        print("ERROR: SSL is enabled but WIS2BOX_SSL_KEY and WIS2BOX_SSL_CERT are not set in wis2box.env")
+        exit(1)
     # if you selected a bunch of them, default to all
     containers = "" if not args.args else ' '.join(args.args)
 
@@ -162,9 +177,6 @@ def make(args) -> None:
         run(args, split(
             f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} build {containers}'))
     elif args.command in ["up", "start", "start-dev"]:
-        if not os.path.exists('wis2box.env'):
-            print("ERROR: wis2box.env file does not exist.  Please create one manually or by running `python3 wis2box-create-config.py`")
-            exit(1)
         run(args, split(
             'docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions'))
         run(args, split(

@@ -137,19 +137,10 @@ After restarting wis2box, repeat the commands for adding your dataset and publis
 Built-in SSL support
 --------------------
 
-If you do not have a reverse proxy available, you can enable SSL support in the ``wis2box-ctl.py`` script. 
+You can also enable HTTPS and MQTTS directly in the nginx and mosquitto containers running in wis2box.
+In this case, the certificate and private key must be available on the host running wis2box
 
-To enable HTTPS and MQTTS on your wis2box you can run wis2box with the option ``–ssl``:
-
-.. code-block:: bash
-
-  python3 wis2box-ctl.py --ssl start
-
-.. note::
-
-  The `--ssl` option will use the configuration in ``nginx/nginx-ssl.conf`` and `mosquitto-ssl.conf` to configure the SSL certificates and keys for the nginx and mosquitto containers.
-
-When running wis2box with SSL, you have to set additional environment variables in ``dev.env`` defining the location of your SSL certificate and private key:
+The location of your SSL certificate and private key are defined by the environment variables ``WIS2BOX_SSL_CERT`` and ``WIS2BOX_SSL_KEY`` respectively.
 
 .. code-block:: bash
 
@@ -158,12 +149,15 @@ When running wis2box with SSL, you have to set additional environment variables 
 
 Please remember to update the ``WIS2BOX_URL`` and ``WIS2BOX_API_URL`` environment variable after enabling SSL, ensuring your URL starts with ``https://``.
 
-Please note that after changing the WIS2BOX_URL and WIS2BOX_API_URL environment variables, you will need to restart your wis2box:
+You will need to restart your wis2box instance after enabling SSL:
 
 .. code-block:: bash
 
   python3 wis2box-ctl.py stop
-  python3 wis2box-ctl.py --ssl start
+  python3 wis2box-ctl.py start
+
+Your wis2box instance will now apply TLS encryption to the HTTP and MQTT services, exposing them on HTTPS (port 443) and MQTTS (port 8883). 
+When setting up the network routing of your wis2box instance, only ports 443 and 8883 need to be exposed to the public internet.
 
 After restarting wis2box, repeat the commands for adding your dataset and publishing your metadata, to ensure that URLs are updated accordingly:
 
