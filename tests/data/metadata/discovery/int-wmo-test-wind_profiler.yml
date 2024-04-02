@@ -11,11 +11,6 @@ wis2box:
                   buckets:
                       - ${WIS2BOX_STORAGE_INCOMING}
                   file-pattern: '^WIGOS_\d-\d+-\d+-\w+_(\d{4}\d{2}\d{2}).*\.bin$'
-            bufr4:
-                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
-                  buckets:
-                      - ${WIS2BOX_STORAGE_PUBLIC}
-                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
 
 mcf:
     version: 1.0

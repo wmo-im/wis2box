@@ -78,8 +78,8 @@ def test_metadata_station_publish():
 
     stations = r.json()
 
-    assert stations['numberReturned'] == 148
-    assert stations['numberMatched'] == 148
+    assert stations['numberReturned'] == 103
+    assert stations['numberMatched'] == 103
 
 
 def test_metadata_discovery_publish():
@@ -247,13 +247,13 @@ def test_message_api():
 
     # test messages per test dataset
     counts = {
-        'cn-cma': 11,
         'mw_met_centre': 25,
         'roma_met_centre': 33,
         'alger_met_centre': 29,
-        'rnimh': 111,
-        'brazza_met_centre': 14,
-        'wmo-test': 151
+        'rnimh': 50,
+        'brazza_met_centre': 15,
+        'wmo-test': 11,
+        'cn-cma': 11
     }
     for key, value in counts.items():
         url = f'{API_URL}/collections/messages/items?sortby=-datetime&q={key}&limit=1'  # noqa

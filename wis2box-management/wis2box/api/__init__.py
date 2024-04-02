@@ -28,22 +28,9 @@ from time import sleep
 from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
-from wis2box.env import (BROKER_HOST, BROKER_USERNAME, BROKER_PASSWORD,
-                         BROKER_PORT, DOCKER_API_URL, API_URL)
-from wis2box.plugin import load_plugin, PLUGINS
+from wis2box.env import (DOCKER_API_URL, API_URL)
 
 LOGGER = logging.getLogger(__name__)
-
-
-def refresh_data_mappings():
-    # load plugin for local broker
-    defs_local = {
-        'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-        'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}', # noqa
-        'client_type': 'dataset-manager'
-    }
-    local_broker = load_plugin('pubsub', defs_local)
-    local_broker.pub('wis2box/data_mappings/refresh', '{}', qos=0)
 
 
 def execute_api_process(process_name: str, payload: dict) -> dict:
@@ -90,7 +77,7 @@ def execute_api_process(process_name: str, payload: dict) -> dict:
         response_json = response.json()
         if 'status' in response_json:
             status = response_json['status']
-        sleep(0.1)
+        sleep(0.05)
     # get result from location/results?f=json
     response = requests.get(f'{location}/results?f=json', headers=headers) # noqa
     return response.json()
@@ -133,9 +120,6 @@ def setup_collection(meta: dict = {}) -> bool:
             LOGGER.error(msg)
             return False
 
-    LOGGER.debug('Refreshing data mappings')
-    refresh_data_mappings()
-
     return True
 
 
@@ -152,11 +136,12 @@ def remove_collection(collection_id: str, backend: bool = True,
     api_backend = None
     api_config = None
 
-    collection_data = load_config().get_collection_data(collection_id)
+    collection_data = 'None'
 
     if config:
         api_config = load_config()
         if api_config.has_collection(collection_id):
+            collection_data = api_config.get_collection_data(collection_id)
             api_config.delete_collection(collection_id)
 
     if backend:
@@ -175,13 +160,11 @@ def remove_collection(collection_id: str, backend: bool = True,
 
     if collection_id not in ['discovery-metadata', 'stations', 'messages']:
         try:
-            delete_collection_item('discovery-metadata', collection_id)
+            if api_backend is not None and api_backend.has_collection(collection_id):  # noqa
+                delete_collection_item('discovery-metadata', collection_id)
         except Exception:
             msg = f'discovery metadata {collection_id} not found'
             LOGGER.warning(msg)
-
-    LOGGER.debug('Refreshing data mappings')
-    refresh_data_mappings()
 
     return True
 
@@ -197,6 +180,9 @@ def upsert_collection_item(collection_id: str, item: dict) -> str:
     """
     backend = load_backend()
     backend.upsert_collection_items(collection_id, [item])
+
+    if collection_id in ['discovery-metadata', 'stations']:
+        backend.flush(collection_id)
 
     return True
 
@@ -228,8 +214,12 @@ def delete_collection_item(collection_id: str, item_id: str) -> str:
 
     :returns: `str` identifier of added item
     """
+
+    LOGGER.info(f'Deleting item {item_id} from collection {collection_id}')
     backend = load_backend()
     backend.delete_collection_item(collection_id, item_id)
+    if collection_id in ['discovery-metadata', 'stations']:
+        backend.flush(collection_id)
 
 
 def delete_collections_by_retention(days: int) -> None:

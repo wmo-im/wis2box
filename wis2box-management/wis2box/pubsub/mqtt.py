@@ -21,6 +21,7 @@
 
 import logging
 import random
+
 from typing import Any, Callable
 
 from paho.mqtt import client as mqtt_client
@@ -66,7 +67,7 @@ class MQTTPubSubClient(BasePubSubClient):
             self.conn.tls_set(tls_version=2)
 
         self.conn.connect(self.broker_url.hostname, self._port)
-        LOGGER.debug('Connected to broker')
+        LOGGER.debug('Connection initiated')
 
     def pub(self, topic: str, message: str, qos: int = 1) -> bool:
         """
@@ -106,10 +107,14 @@ class MQTTPubSubClient(BasePubSubClient):
         """
 
         def on_connect(client, userdata, flags, rc):
-            LOGGER.debug(f'Connected to broker {self.broker}')
-            LOGGER.debug(f'Subscribing to topic {topic} ')
-            client.subscribe(topic, qos=1)
-            LOGGER.debug(f'Subscribed to topic {topic}')
+            if rc == 0:
+                LOGGER.debug(f'Connected to broker {self.broker}')
+                LOGGER.debug(f'Subscribing to topic {topic} ')
+                client.subscribe(topic, qos=1)
+                LOGGER.debug(f'Subscribed to topic {topic}')
+            else:
+                msg = 'Failed to connect to MQTT-broker:'
+                LOGGER.error(f'{msg} {mqtt_client.connack_string(rc)}')
 
         def on_disconnect(client, userdata, rc):
             LOGGER.debug(f'Disconnected from {self.broker}')

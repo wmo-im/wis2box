@@ -42,35 +42,6 @@ Run the following command to create the initial configuration files for your wis
    The script will propose to automatically create passwords for ``WIS2BOX_STORAGE_PASSWORD`` and ``WIS2BOX_BROKER_PASSWORD``.
    These passwords are for internal use only within the wis2box, and it is recommended to accept the randomly generated passwords.
 
-   The script will ask for your TLD, the `top level domain of your country`_, for example ``fr`` for France. International organizations should use ``int``.
-   
-   It will also ask for a centre-id. Please provide a lowercase string delimited by `-`, that is comprised of the TLD and a lowercase string that identifies your organization and does not use spaces or special characters, for example ``fr-meteofrance``.
-
-.. note::
-
-   In alignment with WMO WIS2 Guidance, the centre-id is automatically converted to lowercase when saved in wis2box.
-
-   The remaining questions will be used in the creation the discovery metadata files for the ``synop`` and ``temp`` datasets.
-
-Discovery metadata
-------------------
-
-Discovery metadata provides the data description needed for users to discover your data when searching the WIS2 Global Discovery Catalogue.
-
-The discovery metadata is provided in the form of a YAML file.
-
-If you used the ``python3 wis2box-create-config.py`` command to initialize your wis2box, you will find two initial the discovery metadata files in
-the directory you specified for your configuration files, under the ``metadata/discovery/`` directory:
-   
-* ``metadata-synop-centreid.yml``: contains the discovery metadata for the ``synop`` dataset
-* ``metadata-temp-centreid.yml``: contains the discovery metadata for the ``temp`` dataset
-
-Where ``centreid`` is the centre-id you specified during the configuration step.
-
-Please review the content of these files and edit them as needed.
-
-You can also add additional discovery metadata files for any other datasets you wish to publish.
-
 Starting wis2box
 ----------------
 
@@ -177,9 +148,9 @@ Repeat this step for any other discovery metadata you wish to publish, such as t
   :width: 800
   :alt: wis2box API collections list with added collection
 
-Finally it is recommended to prepare authentication tokens for updating your stations and ingesting data using the wis2box-webapp.
+Finally it is recommended to prepare authentication tokens for updating your stations and running processes in the wis2box-webapp.
 
-To create a token for ingesting data:
+To create a token for running wis2box processes:
 
 .. code-block:: bash
 
@@ -201,12 +172,34 @@ You can now logout of wis2box-management container:
 
    exit
 
+
+Adding datasets
+---------------
+
+In order to publish data using the wis2box you need to create a dataset with discovery metadata and data mappings plugins.
+
+Discovery metadata provides the data description needed for users to discover your data when searching the WIS2 Global Discovery Catalogue.
+
+Data mappings plugins are used to transform the data from the input source format before the data is published.
+
+You can use the wis2box-webapp to create datasets interactively: the dataset editor can be accessed by visiting the URL you specified during the configuration step,
+and adding ``/wis2box-webapp/dataset_editor`` to the URL.
+
+.. image:: ../_static/wis2box-webapp-dataset_editor.png
+  :width: 800
+  :alt: wis2box webapp stations page
+
+Please note that you need to add one dataset for each topic you want to publish data for. Please define your datasets before adding station metadata.
+
+Alternatively, you can define MCF files for your datasets in the ``metadata/discovery`` directory in your wis2box host directory and publish them from the CLI.
+For more information on publishing datasets using MCF files, see the reference documentation.
+
 Adding station metadata
 -----------------------
 
 The next step is to add station metadata to your wis2box. This can be done interactively in the wis2box-webapp UI on the 'stations' page.
 
-The wis2box-webapp can be accessed by visiting the URL you specified during the configuration step, and adding ``/wis2box-webapp`` to the URL.
+The station editor can be accessed by visiting the URL you specified during the configuration step, and adding ``/wis2box-webapp/station`` to the URL.
 
 .. image:: ../_static/wis2box-webapp-stations.png
   :width: 800

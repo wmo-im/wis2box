@@ -24,19 +24,24 @@ from copy import deepcopy
 from datetime import date, datetime
 import json
 import logging
+import time
+from urllib.parse import urlparse
+
+from typing import Union
 
 from pygeometa.schemas.wmo_wcmp2 import WMOWCMP2OutputSchema
 
 from wis2box import cli_helpers
-from wis2box.api import (setup_collection, upsert_collection_item,
-                         delete_collection_item)
-from wis2box.env import (API_URL, BROKER_PUBLIC, DOCKER_BROKER,
-                         STORAGE_PUBLIC, STORAGE_SOURCE)
+from wis2box.api import (delete_collection_item, remove_collection,
+                         setup_collection, upsert_collection_item)
+from wis2box.data_mappings import refresh_data_mappings
+from wis2box.env import (API_URL, BROKER_PUBLIC,
+                         STORAGE_PUBLIC, STORAGE_SOURCE, URL)
 from wis2box.metadata.base import BaseMetadata
 from wis2box.plugin import load_plugin, PLUGINS
 from wis2box.pubsub.message import WISNotificationMessage
 from wis2box.storage import put_data
-from wis2box.util import json_serial, remove_auth_from_url
+from wis2box.util import json_serial
 
 LOGGER = logging.getLogger(__name__)
 
@@ -72,30 +77,8 @@ class DiscoveryMetadata(BaseMetadata):
             md['identification']['extents']['temporal'][0]['begin'] = today
 
         LOGGER.debug('Adding distribution links')
-        oafeat_link = {
-            'url': f"{API_URL}/collections/{identifier}?f=json",
-            'type': 'application/json',
-            'name': identifier,
-            'description': identifier,
-            'rel': 'collection'
-        }
-
-        mqp_link = {
-            'url': remove_auth_from_url(BROKER_PUBLIC, 'everyone:everyone'),
-            'type': 'application/json',
-            'name': mcf['wis2box']['topic_hierarchy'],
-            'description': mcf['identification']['title'],
-            'rel': 'items',
-            'channel': mqtt_topic
-        }
-
-        canonical_link = {
-            'url': f"{API_URL}/collections/discovery-metadata/items/{identifier}",  # noqa
-            'type': 'application/geo+json',
-            'name': identifier,
-            'description': identifier,
-            'rel': 'canonical'
-        }
+        oafeat_link, mqp_link, canonical_link = self.get_distribution_links(
+            identifier, mqtt_topic, format_='mcf')
 
         md['distribution'] = {
             'oafeat': oafeat_link,
@@ -134,6 +117,50 @@ class DiscoveryMetadata(BaseMetadata):
 
         return record
 
+    def get_distribution_links(self, identifier: str, topic: str,
+                               format_='mcf') -> list:
+        """
+        Generates distribution links
+
+        :param identifier: `str` of metadata identifier
+        :param topic: `str` of associated topic
+        :param format_: `str` of format (`mcf` or `wcmp2`)
+
+        :returns: `list` of distribution links
+        """
+
+        LOGGER.debug('Adding distribution links')
+        oafeat_link = {
+            'href': f"{API_URL}/collections/{identifier}?f=json",
+            'type': 'application/json',
+            'name': identifier,
+            'description': identifier,
+            'rel': 'collection'
+        }
+
+        mqp_link = {
+            'href': get_broker_public_endpoint(),
+            'type': 'application/json',
+            'name': topic,
+            'description': 'Notifications',
+            'rel': 'items',
+            'channel': topic
+        }
+
+        canonical_link = {
+            'href': f"{API_URL}/collections/discovery-metadata/items/{identifier}",  # noqa
+            'type': 'application/geo+json',
+            'name': identifier,
+            'description': identifier,
+            'rel': 'canonical'
+        }
+
+        if format_ == 'mcf':
+            for link in [oafeat_link, mqp_link, canonical_link]:
+                link['url'] = link.pop('href')
+
+        return oafeat_link, mqp_link, canonical_link
+
 
 def publish_broker_message(record: dict, storage_path: str,
                            centre_id: str) -> str:
@@ -153,16 +180,17 @@ def publish_broker_message(record: dict, storage_path: str,
     wis_message = WISNotificationMessage(record['id'], topic, storage_path,
                                          datetime_, record['geometry']).dumps()
 
-    # load plugin for broker
+    # load plugin for plugin-broker
     defs = {
         'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-        'url': DOCKER_BROKER,
+        'url': BROKER_PUBLIC,
         'client_type': 'publisher'
     }
     broker = load_plugin('pubsub', defs)
 
-    broker.pub(topic, wis_message)
-    LOGGER.info(f'Discovery metadata published to {topic}')
+    success = broker.pub(topic, wis_message)
+    if not success:
+        raise RuntimeError(f'Failed to publish message to {topic}')
 
     return wis_message
 
@@ -188,11 +216,11 @@ def gcm() -> dict:
     }
 
 
-def publish_discovery_metadata(metadata: str):
+def publish_discovery_metadata(metadata: Union[dict, str]):
     """
     Inserts or updates discovery metadata to catalogue
 
-    :param metadata: `str` of MCF
+    :param metadata: `str` of MCF or `dict` of WCMP2
 
     :returns: `bool` of publishing result
     """
@@ -202,10 +230,28 @@ def publish_discovery_metadata(metadata: str):
     LOGGER.debug('Publishing discovery metadata')
     try:
         new_links = []
-        dm = DiscoveryMetadata()
-        record_mcf = dm.parse_record(metadata)
 
-        record = dm.generate(record_mcf)
+        if isinstance(metadata, dict):
+            LOGGER.info('Adding WCMP2 record from dictionary')
+            record = metadata
+            dm = DiscoveryMetadata()
+            distribution_links = dm.get_distribution_links(
+                record['id'], record['properties']['wmo:topicHierarchy'],
+                format_='wcmp2')
+            if 'links' in record:
+                record['links'].extend(distribution_links)
+            else:
+                record['links'] = distribution_links
+            for link in record['links']:
+                if 'description' in link:
+                    link['title'] = link.pop('description')
+                if 'url' in link:
+                    link['href'] = link.pop('url')
+        else:
+            LOGGER.debug('Transforming MCF into WCMP2 record')
+            dm = DiscoveryMetadata()
+            record_mcf = dm.parse_record(metadata)
+            record = dm.generate(record_mcf)
 
         LOGGER.debug('Publishing to API')
         upsert_collection_item('discovery-metadata', record)
@@ -230,15 +276,44 @@ def publish_discovery_metadata(metadata: str):
         put_data(data_bytes, storage_path, 'application/geo+json')
 
         LOGGER.debug('Publishing message')
-        message = publish_broker_message(record, storage_path,
-                                         record_mcf['wis2box']['centre_id'])
-        upsert_collection_item('messages', json.loads(message))
+        centre_id = record['properties']['wmo:topicHierarchy'].split('/')[3]
+        try:
+            message = publish_broker_message(record, storage_path,
+                                             centre_id)
+        except Exception as err:
+            msg = 'Failed to publish discovery metadata to public broker'
+            LOGGER.error(msg)
+            raise RuntimeError(msg) from err
+        try:
+            upsert_collection_item('messages', json.loads(message))
+        except Exception as err:
+            msg = f'Failed to publish message to API: {err}'
+            LOGGER.error(msg)
+            raise RuntimeError(msg) from err
 
     except Exception as err:
         LOGGER.warning(err)
         raise RuntimeError(err)
 
     return
+
+
+def get_broker_public_endpoint() -> str:
+    """
+    Helper function to use WIS2BOX_URL to create a publically accessible
+    broker endpoint
+    """
+
+    url_parsed = urlparse(URL)
+
+    if url_parsed.scheme == 'https':
+        scheme = 'mqtts'
+        port = 8883
+    else:
+        scheme = 'mqtt'
+        port = 1883
+
+    return f'{scheme}://everyone:everyone@{url_parsed.hostname}:{port}'
 
 
 @click.group('discovery')
@@ -269,13 +344,19 @@ def publish(ctx, filepath, verbosity):
         publish_discovery_metadata(filepath.read())
     except Exception as err:
         raise click.ClickException(f'Failed to publish: {err}')
+    refresh_data_mappings()
+    time.sleep(1)
+    refresh_data_mappings()
+    click.echo('Discovery metadata published')
 
 
 @click.command()
 @click.pass_context
 @click.argument('identifier')
+@click.option('--force', '-f', default=False, is_flag=True,
+              help='Force delete associated data from API')
 @cli_helpers.OPTION_VERBOSITY
-def unpublish(ctx, identifier, verbosity):
+def unpublish(ctx, identifier, verbosity, force=False):
     """Deletes a discovery metadata record from the catalogue"""
 
     click.echo(f'Unpublishing discovery metadata {identifier}')
@@ -283,6 +364,14 @@ def unpublish(ctx, identifier, verbosity):
         delete_collection_item('discovery-metadata', identifier)
     except Exception:
         raise click.ClickException('Invalid metadata identifier')
+    refresh_data_mappings()
+    time.sleep(1)
+    refresh_data_mappings()
+    click.echo('Discovery metadata unpublished')
+
+    if force:
+        click.echo('Deleting associated data from the API')
+        remove_collection(identifier)
 
 
 discovery_metadata.add_command(publish)

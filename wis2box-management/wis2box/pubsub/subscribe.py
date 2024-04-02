@@ -30,12 +30,13 @@ import click
 
 from wis2box import cli_helpers
 import wis2box.data as data_
-from wis2box.api import (remove_collection, setup_collection,
-                         upsert_collection_item)
+
+from wis2box.api import (setup_collection, upsert_collection_item,
+                         delete_collection_item, remove_collection)
+
 from wis2box.data_mappings import get_data_mappings
 from wis2box.data.message import MessageData
-from wis2box.env import (BROKER_HOST, BROKER_PORT, BROKER_USERNAME,
-                         BROKER_PASSWORD, STORAGE_SOURCE, STORAGE_ARCHIVE)
+from wis2box.env import (DOCKER_BROKER, STORAGE_SOURCE, STORAGE_ARCHIVE)
 from wis2box.handler import Handler, NotHandledError
 import wis2box.metadata.discovery as discovery_metadata
 from wis2box.plugin import load_plugin, PLUGINS
@@ -119,7 +120,7 @@ class WIS2BoxSubscriber:
                 LOGGER.info(f'Do not process archived-data: {key}')
             # start a new process to handle the received data
             while len(mp.active_children()) == mp.cpu_count():
-                sleep(0.1)
+                sleep(0.05)
             mp.Process(target=self.handle, args=(filepath,)).start()
         elif topic == 'wis2box/data/publication':
             LOGGER.debug('Publishing data')
@@ -133,10 +134,15 @@ class WIS2BoxSubscriber:
             metadata = message
             discovery_metadata.publish_discovery_metadata(metadata)
             data_.add_collection_data(metadata)
+            self.data_mappings = get_data_mappings()
         elif topic.startswith('wis2box/dataset/unpublication'):
             LOGGER.debug('Unpublishing dataset')
             identifier = topic.split('/')[-1]
-            remove_collection(identifier)
+            delete_collection_item('discovery-metadata', identifier)
+            if message.get('force', False):
+                LOGGER.info('Deleting data')
+                remove_collection(identifier)
+            self.data_mappings = get_data_mappings()
         else:
             LOGGER.debug('Ignoring message')
 
@@ -151,7 +157,7 @@ def subscribe(ctx, verbosity):
 
     defs = {
         'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
-        'url': f'mqtt://{BROKER_USERNAME}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}',  # noqa
+        'url': DOCKER_BROKER,  # noqa
         'client_type': 'subscriber'
     }
 
