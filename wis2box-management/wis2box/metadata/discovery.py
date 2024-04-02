@@ -25,6 +25,7 @@ from datetime import date, datetime
 import json
 import logging
 import time
+from urllib.parse import urlparse
 
 from typing import Union
 
@@ -35,12 +36,12 @@ from wis2box.api import (delete_collection_item, remove_collection,
                          setup_collection, upsert_collection_item)
 from wis2box.data_mappings import refresh_data_mappings
 from wis2box.env import (API_URL, BROKER_PUBLIC,
-                         STORAGE_PUBLIC, STORAGE_SOURCE)
+                         STORAGE_PUBLIC, STORAGE_SOURCE, URL)
 from wis2box.metadata.base import BaseMetadata
 from wis2box.plugin import load_plugin, PLUGINS
 from wis2box.pubsub.message import WISNotificationMessage
 from wis2box.storage import put_data
-from wis2box.util import json_serial, remove_auth_from_url
+from wis2box.util import json_serial
 
 LOGGER = logging.getLogger(__name__)
 
@@ -138,7 +139,7 @@ class DiscoveryMetadata(BaseMetadata):
         }
 
         mqp_link = {
-            'href': remove_auth_from_url(BROKER_PUBLIC, 'everyone:everyone'),
+            'href': get_broker_public_endpoint(),
             'type': 'application/json',
             'name': topic,
             'description': 'Notifications',
@@ -295,6 +296,24 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
         raise RuntimeError(err)
 
     return
+
+
+def get_broker_public_endpoint() -> str:
+    """
+    Helper function to use WIS2BOX_URL to create a publically accessible
+    broker endpoint
+    """
+
+    url_parsed = urlparse(URL)
+
+    if url_parsed.scheme == 'https':
+        scheme = 'mqtts'
+        port = 8883
+    else:
+        scheme = 'mqtt'
+        port = 1883
+
+    return f'{scheme}://everyone:everyone@{url_parsed.hostname}:{port}'
 
 
 @click.group('discovery')
