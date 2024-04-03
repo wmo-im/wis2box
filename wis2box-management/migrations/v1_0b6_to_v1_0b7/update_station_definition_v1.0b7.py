@@ -21,7 +21,6 @@
 import argparse
 import csv
 import json
-import logging
 import os
 from pathlib import Path
 
@@ -30,7 +29,7 @@ from elasticsearch.helpers import bulk
 
 from wis2box.log import LOGGER, setup_logger
 
-LOG_LEVEL = os.getenv("LOG_LEVEL","DEBUG").upper()
+LOG_LEVEL = os.getenv("LOG_LEVEL", "DEBUG").upper()
 setup_logger(loglevel=LOG_LEVEL)
 
 DATADIR = os.getenv("WIS2BOX_DATADIR")
@@ -84,7 +83,6 @@ def migrate(dryrun: bool = False):
             LOGGER.error(f"Error loading mapping file for {codelist}")
             raise e
 
-
     # First migrate / update data in station list CSV file
     # list to store stations
     stations = []
@@ -105,7 +103,7 @@ def migrate(dryrun: bool = False):
                         row[codelist] = apply_mapping(row.get(codelist),
                                                       code_maps.get(codelist))
                     except Exception as e:
-                        LOGGER.error(f"Error processing {codelist} in row {idx}")
+                        LOGGER.error(f"Error processing {codelist} in row {idx}")  # noqa
                         raise e
                 else:
                     pass
@@ -132,6 +130,7 @@ def migrate(dryrun: bool = False):
         except Exception as e:
             LOGGER.error("Error writing updated station file")
             raise e
+
     # now migrate ES data
     # Get elastic search connection
     LOGGER.info("Updating station data in Elasticsearch index")
@@ -140,6 +139,7 @@ def migrate(dryrun: bool = False):
         es = Elasticsearch(es_api)
     except Exception as e:
         LOGGER.error(f"Error connecting to {es_api}")
+        raise e
 
     more_data = True  # flag to keep looping until all data processed
     batch_size = 100  # process in batch sizes of 100
@@ -169,8 +169,7 @@ def migrate(dryrun: bool = False):
             LOGGER.error("Error applying mappings")
             raise e
         if dryrun:
-            LOGGER.info(
-                f"dryrun == True, writing updates to stdout")
+            LOGGER.info("dryrun == True, writing updates to stdout")
             print(updates)
         else:
             LOGGER.info("Updating index ...")
@@ -178,7 +177,8 @@ def migrate(dryrun: bool = False):
                 bulk(es, updates)
             except Exception as e:
                 LOGGER.error("Error applying bulk update")
-                raise(e)
+                raise e
+
 
 if __name__ == "__main__":
     # Parse command-line arguments
