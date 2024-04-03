@@ -1,0 +1,10 @@
+{
+    "Closed": "closed",
+    "Non-reporting": "nonReporting",
+    "Operational": "operational",
+    "Partly operational": "partlyOperational",
+    "Planned": "planned",
+    "Pre-operational": "preOperational",
+    "Stand-by": "standBy",
+    "unknown": "unknown"
+}
