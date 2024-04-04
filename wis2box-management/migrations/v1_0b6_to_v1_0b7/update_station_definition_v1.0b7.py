@@ -95,8 +95,7 @@ def migrate(dryrun: bool = False):
             LOGGER.error("Error creating DictReader")
             raise e
         LOGGER.info("Iterating over rows")
-        idx = 0
-        for row in reader:
+        for idx, row in enumerate(reader):
             for codelist in codelists:
                 if codelist in row:
                     try:
@@ -107,7 +106,6 @@ def migrate(dryrun: bool = False):
                         raise e
                 else:
                     pass
-            idx += 1
             stations.append(row)
 
     if dryrun:
