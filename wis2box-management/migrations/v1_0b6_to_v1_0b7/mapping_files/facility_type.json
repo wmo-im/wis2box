@@ -1,0 +1,16 @@
+{
+    "Air (fixed)": "airFixed",
+    "Air (mobile)": "airMobile",
+    "Lake/River (fixed)": "lakeRiverFixed",
+    "Lake/River (mobile)": "lakeRiverMobile",
+    "Land (fixed)": "landFixed",
+    "Land (mobile)": "landMobile",
+    "Land (on ice)": "landOnIce",
+    "Sea (fixed)": "seaFixed",
+    "Sea (mobile)": "seaMobile",
+    "Sea (on ice)": "seaOnIce",
+    "Space-based": "spaceBased",
+    "Underwater (fixed)": "underwaterFixed",
+    "Underwater (mobile)": "underwaterMobile",
+    "unknown": "unknown"
+}
