@@ -12,13 +12,13 @@ Download
 --------
 
 Download the wis2box setup files from the `wis2box Releases`_ page.  Go to the latest release
-and download the ``wis2box-setup-1.0b6.zip`` file from the Assets section.
+and download the ``wis2box-setup-1.0b7.zip`` file from the Assets section.
 
 .. code-block:: bash
 
-   wget https://github.com/wmo-im/wis2box/releases/download/1.0b6/wis2box-setup-1.0b6.zip
-   unzip wis2box-setup-1.0b6.zip
-   cd wis2box-1.0b6
+   wget https://github.com/wmo-im/wis2box/releases/download/1.0b7/wis2box-setup-1.0b7.zip
+   unzip wis2box-setup-1.0b7.zip
+   cd wis2box-1.0b7
 
 
 Create initial configuration files
