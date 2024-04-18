@@ -63,10 +63,13 @@ def get_data_mappings() -> dict:
                 continue
             if 'data_mappings' not in record['wis2box']:
                 continue
-            key = record['wis2box']['topic_hierarchy']
             value = record['wis2box']['data_mappings']
-            value['metadata_id'] = record['id']
-            data_mappings[key] = value
+            if 'wmo:topicHierarchy' not in record['properties']:
+                LOGGER.error(f'No topic hierarchy for {record["id"]}')
+                continue
+            value['topic_hierarchy'] = record['properties']['wmo:topicHierarchy']
+            metadata_id = record['id']
+            data_mappings[metadata_id] = value
     except Exception as err:
         msg = f'Issue loading data mappings: {err}'
         LOGGER.error(msg)
