@@ -67,36 +67,36 @@ class TopicHierarchy:
         return True
 
 
-def validate_and_load(topic_hierarchy: str,
+def validate_and_load(path: str,
                       data_mappings: dict = None,
                       file_type: str = None,
                       fuzzy: bool = False
                       ) -> Tuple[TopicHierarchy, Tuple[Any]]:
     """
-    Validate topic hierarchy and load plugins
+    Validate path and load plugins
 
-    :param topic_hierarchy: `str` of topic hierarchy path
+    :param path: `str` of path
     :param data_mappings: `dict` of data mappings
     :param file_type: `str` the type of file we are processing, e.g. csv, bufr, xml  # noqa
-    :param fuzzy: `bool` of whether to do fuzzy matching of topic hierarchy
+    :param fuzzy: `bool` of whether to do fuzzy matching of path
                   (e.g. "*foo.bar.baz*).
                   Defaults to `False` (i.e. "foo.bar.baz")
 
-    :returns: tuple of `wis2box.topic_hierarchy.TopicHierarchy` and
+    :returns: tuple of `wis2box.dataset.Dataset` and
               list of plugins objects
     """
 
-    LOGGER.debug(f'Validating topic hierarchy: {topic_hierarchy}')
+    LOGGER.debug(f'Validating path: {path}')
     LOGGER.debug(f'Data mappings {data_mappings}')
 
     if not data_mappings:
         msg = 'Data mappings are empty. Fetching'
         data_mappings = get_data_mappings()
 
-    th = TopicHierarchy(topic_hierarchy)
+    dataset = Dataset(path)
     found = False
 
-    if not th.is_valid():
+    if not dataset.is_valid():
         msg = 'Invalid topic hierarchy'
         raise ValueError(msg)
 

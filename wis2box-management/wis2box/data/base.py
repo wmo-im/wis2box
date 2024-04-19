@@ -25,11 +25,12 @@ from pathlib import Path
 import re
 from typing import Iterator, Union
 
-from wis2box.env import (STORAGE_INCOMING, STORAGE_PUBLIC,
+from wis2box.env import (STORAGE_PUBLIC,
                          STORAGE_SOURCE, BROKER_PUBLIC,
                          DOCKER_BROKER)
 from wis2box.storage import exists, get_data, put_data
-from wis2box.topic_hierarchy import TopicHierarchy
+from wis2box.dataset import Dataset
+
 from wis2box.plugin import load_plugin, PLUGINS
 
 from wis2box.pubsub.message import WISNotificationMessage
@@ -52,7 +53,7 @@ class BaseAbstractData:
         LOGGER.debug('Parsing resource mappings')
         self.filename = None
         self.incoming_filepath = None
-        self.topic_hierarchy = TopicHierarchy(defs['topic_hierarchy'])
+        self.dataset = Dataset(defs['dataset'])
         self.template = defs.get('template', None)
         self.file_filter = defs.get('pattern', '.*')
         self.enable_notification = defs.get('notify', False)
@@ -91,10 +92,6 @@ class BaseAbstractData:
         """
 
         self.discovery_metadata = discovery_metadata
-
-        self.topic_hierarchy = TopicHierarchy(
-            discovery_metadata['metadata']['identifier'])
-
         self.country = discovery_metadata['wis2box']['country']
         self.centre_id = discovery_metadata['wis2box']['centre_id']
 
@@ -146,13 +143,13 @@ class BaseAbstractData:
         LOGGER.info('Publishing WISNotificationMessage to public broker')
         LOGGER.debug(f'Prepare message for: {storage_path}')
 
-        topic = f'origin/a/wis2/{self.topic_hierarchy.dirpath}'
-        data_id = topic.replace('origin/a/wis2/', '')
+        topic = self.dataset.topic_hierarchy
+        metadata_id = self.dataset.metadata_id
 
         operation = 'create' if is_update is False else 'update'
 
         wis_message = WISNotificationMessage(
-            identifier, data_id, storage_path, datetime_, geometry,
+            identifier, metadata_id, storage_path, datetime_, geometry,
             wigos_station_identifier, operation)
 
         # load plugin for public broker
@@ -298,17 +295,6 @@ class BaseAbstractData:
                     continue
 
                 yield f'{STORAGE_PUBLIC}/{rfp}/{identifier}.{format_}'
-
-    @property
-    def directories(self):
-        """Dataset directories"""
-
-        dirpath = self.topic_hierarchy.dirpath
-
-        return {
-            'incoming': f'{STORAGE_INCOMING}/{dirpath}',
-            'public': f'{STORAGE_PUBLIC}/{dirpath}'
-        }
 
     def get_public_filepath(self):
         """Public filepath"""

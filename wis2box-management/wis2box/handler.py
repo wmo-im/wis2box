@@ -25,7 +25,7 @@ from pathlib import Path
 
 from wis2box.api import upsert_collection_item
 from wis2box.storage import get_data
-from wis2box.topic_hierarchy import validate_and_load
+from wis2box.dataset import validate_and_load
 
 from wis2box.plugin import load_plugin
 from wis2box.plugin import PLUGINS
@@ -37,7 +37,7 @@ LOGGER = logging.getLogger(__name__)
 
 class Handler:
     def __init__(self, filepath: str,
-                 topic_hierarchy: str = None,
+                 metadata_id: str = None,
                  data_mappings: dict = None) -> None:
         self.filepath = filepath
         self.plugins = ()
@@ -56,8 +56,7 @@ class Handler:
         if self.filepath.startswith('http'):
             self.input_bytes = get_data(self.filepath)
 
-        if topic_hierarchy is not None:
-            th = topic_hierarchy
+        if metadata_id is not None:
             fuzzy = False
         else:
             th = self.filepath
@@ -68,10 +67,10 @@ class Handler:
             raise NotHandledError(msg)
 
         try:
-            self.topic_hierarchy, self.plugins = validate_and_load(
+            self.metadata_id, self.plugins = validate_and_load(
                 th, data_mappings, self.filetype, fuzzy=fuzzy)
         except Exception as err:
-            msg = f'Topic Hierarchy validation error: {err}'
+            msg = f'Path validation error: {err}'
             # errors in public storage are not handled
             if STORAGE_PUBLIC in self.filepath:
                 raise NotHandledError(msg)
