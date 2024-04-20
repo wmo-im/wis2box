@@ -253,7 +253,7 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
             record_mcf = dm.parse_record(metadata)
             record = dm.generate(record_mcf)
 
-        if ['data_mappings'] not in record['wis2box']:
+        if 'data_mappings' not in record['wis2box']:
             msg = 'Missing wis2box.data_mappings definition'
             LOGGER.error(msg)
             raise RuntimeError(msg)
