@@ -42,6 +42,13 @@ Run the following command to create the initial configuration files for your wis
    The script will propose to automatically create passwords for ``WIS2BOX_STORAGE_PASSWORD`` and ``WIS2BOX_BROKER_PASSWORD``.
    These passwords are for internal use only within the wis2box, and it is recommended to accept the randomly generated passwords.
 
+The script will have created a file "wis2box.env" with the configuration settings required to start your wis2box.
+
+.. note::
+
+   The wis2box.env was initialized with a default base-map URL and attribution.
+   You can edit the environment variables in the ``wis2box.env`` file to customize the base-map URL and attribution.
+
 Starting wis2box
 ----------------
 
@@ -116,7 +123,7 @@ This collection will be filled when you start ingesting data and publishing WIS2
 Runtime configuration
 ---------------------
 
-The following last design time steps are then required once wis2box is running.
+Once wis2box is running you can prepare authentication tokens for updating your stations and running processes in the wis2box-webapp.
 
 Login to the wis2box-management container
 
@@ -124,39 +131,13 @@ Login to the wis2box-management container
 
    python3 wis2box-ctl.py login
 
-The first step is to pubished your dataset using the discovery metadata file you created above.
-
-For example to add the dataset ``metadata/discovery/metadata-synop-centreid.yml`` in the directory you specified for your configuration files:
-
-.. code-block:: bash
-
-   wis2box dataset publish /data/wis2box/metadata/discovery/metadata-synop-centreid.yml
-
-This command publishes an MQTT message with information about your dataset to the WIS2 Global Discovery Catalogue. Repeat this command whenever you have to provide updated metadata about your dataset.
-
-You can review the discovery metadata just cached through the new item at  ``/oapi/collections/discovery-metadata/items``:
-
-You can view the dataset you just added in the API, by re-visiting ``/oapi/collections`` in a web browser.
-
-Repeat this step for any other discovery metadata you wish to publish, such as the ``temp`` dataset.
-
-.. note::
-
-   To ensure that discovery metadata is shared with the WIS2 Global Discovery Catalogue, you must ensure that your discovery metadata is published once the WMO Global Broker is connected and subscribed for your wis2box broker.  If you have published discovery metadata before this stage, you must re-publish using the command above.
-
-.. image:: ../_static/wis2box-api-added-collection.png
-  :width: 800
-  :alt: wis2box API collections list with added collection
-
-Finally it is recommended to prepare authentication tokens for updating your stations and running processes in the wis2box-webapp.
-
 To create a token for running wis2box processes:
 
 .. code-block:: bash
 
    wis2box auth add-token --path processes/wis2box
 
-Record the token value displayed in a safe place, you will need for the :ref:`data-ingest`.
+Record the token value displayed in a safe place, you will need it to run processes in the next section.
 
 To create a token for updating stations:
 
@@ -172,7 +153,6 @@ You can now logout of wis2box-management container:
 
    exit
 
-
 Adding datasets
 ---------------
 
@@ -187,12 +167,59 @@ and adding ``/wis2box-webapp/dataset_editor`` to the URL.
 
 .. image:: ../_static/wis2box-webapp-dataset_editor.png
   :width: 800
-  :alt: wis2box webapp stations page
+  :alt: wis2box webapp dataset editor page
 
 Please note that you need to add one dataset for each topic you want to publish data for. Please define your datasets before adding station metadata.
 
-Alternatively, you can define MCF files for your datasets in the ``metadata/discovery`` directory in your wis2box host directory and publish them from the CLI.
-For more information on publishing datasets using MCF files, see the reference documentation.
+To start creating a new dataset select "Create new" from the dataset editor page:
+
+.. image:: ../_static/wis2box-webapp-dataset_editor_createnew.png
+  :width: 800
+  :alt: wis2box webapp dataset editor page, create new dataset
+
+A new popup will appear where you can define your "centre-id" and the type of dataset you want to create. 
+
+.. note::
+
+   Your centre-id should start with the ccTLD of your country, followed by a - and then the name of your organization, for example "fr-meteofrance".
+   The centre-id has to be lowercase and use alphanumeric characters only.
+   The dropdown list will show all currently registered centre-ids on WIS2.
+
+There are 2 pre-defined dataset types for "weather/surface-based-observations/synop" and "weather/surface-based-observations/temp". 
+We recommend using these pre-defined dataset types for published your "synop" and "temp" data, respectively. 
+The predefined dataset will predefine the topic and data mappings for you.
+
+If you want to create a dataset for a different topic, you can select "other" and define the topic and data mappings yourself.
+
+Please select "Continue to form" to start defining your dataset:
+
+.. image:: ../_static/wis2box-webapp-dataset_editor_continuetoform.png
+  :width: 800
+  :alt: wis2box webapp dataset editor page, continue to form
+
+Make sure to provide a "description" for your dataset, review and add keywords and choose an appropriate bounding box.
+You will also need to provide some contact information for the dataset.
+
+Before publishing the new dataset make to click "Validate form" to check if all required fields are filled in:
+
+.. image:: ../_static/wis2box-webapp-dataset_editor_validateform.png
+  :width: 800
+  :alt: wis2box webapp dataset editor page, validate form
+
+Each dataset is associated with data-mappings plugins that transform the data from the input source format before the data is published.
+If you are using the pre-defined dataset types for "synop" and "temp" data, the data mappings plugins will be pre-defined for you.
+Otherwise, you will need to define the data mappings plugins for your dataset.
+
+Finally, click "submit" to publish the dataset:
+
+.. image:: ../_static/wis2box-webapp-dataset_editor_success.png
+  :width: 800
+  :alt: wis2box webapp dataset editor page, submit
+
+.. note::
+
+   You can also create datasets by defining MCF files in the ``metadata/discovery`` directory in your wis2box host directory and publish them from the CLI.
+   For more information on publishing datasets using MCF files, see the reference documentation.
 
 Adding station metadata
 -----------------------
