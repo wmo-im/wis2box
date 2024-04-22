@@ -401,7 +401,7 @@ def create_config_dir() -> str:
             exit()
         else:
             # if it does not exist, create it
-            config_dir.mkdir()
+            config_dir.mkdir(parents=True)
             # check if the directory was created
             if not config_dir.is_dir():
                 print("ERROR:")
@@ -552,7 +552,7 @@ def create_station_list(config_dir: str) -> None:
     station_metadata_dir = Path(config_dir) / 'metadata' / 'station'
     # create directory for station metadata if it does not exist
     if not station_metadata_dir.exists():
-        station_metadata_dir.mkdir()
+        station_metadata_dir.mkdir(parents=True)
 
     station_list = station_metadata_dir / 'station_list.csv'
     headers = 'station_name,wigos_station_identifier,traditional_station_identifier,facility_type,latitude,longitude,elevation,barometer_height,territory_name,wmo_region' # noqa
