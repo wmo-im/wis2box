@@ -12,13 +12,13 @@ Download
 --------
 
 Download the wis2box setup files from the `wis2box Releases`_ page.  Go to the latest release
-and download the ``wis2box-setup-1.0b6.zip`` file from the Assets section.
+and download the ``wis2box-setup-1.0b7.zip`` file from the Assets section.
 
 .. code-block:: bash
 
-   wget https://github.com/wmo-im/wis2box/releases/download/1.0b6/wis2box-setup-1.0b6.zip
-   unzip wis2box-setup-1.0b6.zip
-   cd wis2box-1.0b6
+   wget https://github.com/wmo-im/wis2box/releases/download/1.0b7/wis2box-setup-1.0b7.zip
+   unzip wis2box-setup-1.0b7.zip
+   cd wis2box-1.0b7
 
 
 Create initial configuration files
@@ -46,8 +46,8 @@ The script will have created a file "wis2box.env" with the configuration setting
 
 .. note::
 
-   The wis2box.env was initialized with a default base-map URL and attribution.
-   You can edit the environment variables in the ``wis2box.env`` file to customize the base-map URL and attribution.
+   You can edit the environment variables ``WIS2BOX_BASEMAP_URL`` and ``WIS2BOX_BASEMAP_ATTRIBUTION``
+   in ``wis2box.env`` to customize the base-map URL and attribution that will be used in the wis2box front-ends.
 
 Starting wis2box
 ----------------
@@ -69,12 +69,15 @@ This might take a while the first time, as Docker images will be downloaded.
    
 .. note::
 
-   If you get the error:
+   In case you get errors from the Docker daemon stating 'Permission denied', such as:
 
    ``docker.errors.DockerException: Error while fetching server API version: ('Connection aborted.', PermissionError(13, 'Permission denied'))``
 
-   Please ensure your username is added to the docker group ``sudo usermod -aG docker <your-username>``.
-   Logout and log back in so that your group membership is re-evaluated.
+   Please ensure your username is added to the docker group using the command:
+   
+   ``sudo usermod -aG docker <your-username>``.
+   
+   And logout and log back in so that your group membership is re-evaluated.
 
 
 Once the command above is completed, check that all services are running (and healthy).
@@ -83,13 +86,12 @@ Once the command above is completed, check that all services are running (and he
 
    python3 wis2box-ctl.py status
 
-Which should display the following:
+Check that all services are Up and not unhealthy:
 
 .. code-block:: bash
 
             Name                       Command                  State                           Ports
    -----------------------------------------------------------------------------------------------------------------------
-   cadvisor                 /usr/bin/cadvisor -logtostderr   Up (healthy)   8080/tcp
    elasticsearch            /bin/tini -- /usr/local/bi ...   Up (healthy)   9200/tcp, 9300/tcp
    grafana                  /run.sh                          Up             0.0.0.0:3000->3000/tcp
    loki                     /usr/bin/loki -config.file ...   Up             3100/tcp
@@ -102,23 +104,11 @@ Which should display the following:
    wis2box-auth             /entrypoint.sh                   Up
    wis2box-minio            /usr/bin/docker-entrypoint ...   Up (healthy)   0.0.0.0:9000->9000/tcp, 0.0.0.0:9001->9001/tcp
    wis2box-ui               /docker-entrypoint.sh ngin ...   Up             0.0.0.0:9999->80/tcp
+   wis2box-webapp           sh /wis2box-webapp/ ...          Up (healthy)   4173/tcp
+
 
 Refer to the :ref:`troubleshooting` section if this is not the case. 
 
-You should now be able to view collections on the wis2box API by visiting the URL you specified during the configuration step,
- and adding ``/oapi/collections`` to the URL.	
-
-.. image:: ../_static/wis2box-api-initial.png
-  :width: 800
-  :alt: Initial wis2box API collections list
-
-The API will show one (initially empty) collection named 'Data Notifications'. 
-
-This collection will be filled when you start ingesting data and publishing WIS2 notifications.
-
-.. note::
-
-   Additional collections will be added during the runtime configuration.
 
 Runtime configuration
 ---------------------
@@ -156,46 +146,38 @@ You can now logout of wis2box-management container:
 Adding datasets
 ---------------
 
-In order to publish data using the wis2box you need to create a dataset with discovery metadata and data mappings plugins.
-
-Discovery metadata provides the data description needed for users to discover your data when searching the WIS2 Global Discovery Catalogue.
-
+In order to publish data using the wis2box you need to create a dataset with discovery metadata and data mappings plugins. The metadata provides the data description needed for users to discover your data when searching the WIS2 Global Discovery Catalogue.
 Data mappings plugins are used to transform the data from the input source format before the data is published.
 
-You can use the wis2box-webapp to create datasets interactively: the dataset editor can be accessed by visiting the URL you specified during the configuration step,
-and adding ``/wis2box-webapp/dataset_editor`` to the URL.
+You can use the wis2box-webapp to create datasets interactively using the dataset editor.
+The dataset editor can be accessed using your web browser by visiting the URL you specified during the configuration step, and adding ``/wis2box-webapp/dataset_editor`` to the URL.
+
+You should see the following page:
 
 .. image:: ../_static/wis2box-webapp-dataset_editor.png
-  :width: 800
+  :width: 1000
   :alt: wis2box webapp dataset editor page
 
-Please note that you need to add one dataset for each topic you want to publish data for. Please define your datasets before adding station metadata.
+To create a new dataset select "Create new" from the dataset editor page.
 
-To start creating a new dataset select "Create new" from the dataset editor page:
+A popup will appear where you can define your "centre-id" and the type of dataset you want to create:
 
-.. image:: ../_static/wis2box-webapp-dataset_editor_createnew.png
-  :width: 800
-  :alt: wis2box webapp dataset editor page, create new dataset
-
-A new popup will appear where you can define your "centre-id" and the type of dataset you want to create. 
+.. image:: ../_static/wis2box-webapp-dataset_editor_continuetoform.png
+  :width: 600
+  :alt: wis2box webapp dataset editor page, continue to form
 
 .. note::
 
-   Your centre-id should start with the ccTLD of your country, followed by a - and then the name of your organization, for example "fr-meteofrance".
+   Your centre-id should start with the ccTLD of your country, followed by a - and the (abbreviated) name of your organization, for example ``fr-meteofrance``.
    The centre-id has to be lowercase and use alphanumeric characters only.
-   The dropdown list will show all currently registered centre-ids on WIS2.
+   The dropdown list shows all currently registered centre-ids on WIS2 as well as any centre-id you have already created in your wis2box.
 
 There are 2 pre-defined dataset types for "weather/surface-based-observations/synop" and "weather/surface-based-observations/temp". 
-We recommend using these pre-defined dataset types for published your "synop" and "temp" data, respectively. 
+We recommend using these pre-defined dataset types to publish your "synop" and "temp" data, respectively. 
 The predefined dataset will predefine the topic and data mappings for you.
-
 If you want to create a dataset for a different topic, you can select "other" and define the topic and data mappings yourself.
 
-Please select "Continue to form" to start defining your dataset:
-
-.. image:: ../_static/wis2box-webapp-dataset_editor_continuetoform.png
-  :width: 800
-  :alt: wis2box webapp dataset editor page, continue to form
+Please select "Continue to form" to start defining your dataset.
 
 Make sure to provide a "description" for your dataset, review and add keywords and choose an appropriate bounding box.
 You will also need to provide some contact information for the dataset.
@@ -203,7 +185,7 @@ You will also need to provide some contact information for the dataset.
 Before publishing the new dataset make to click "Validate form" to check if all required fields are filled in:
 
 .. image:: ../_static/wis2box-webapp-dataset_editor_validateform.png
-  :width: 800
+  :width: 1000
   :alt: wis2box webapp dataset editor page, validate form
 
 Each dataset is associated with data-mappings plugins that transform the data from the input source format before the data is published.
@@ -224,7 +206,11 @@ Finally, click "submit" to publish the dataset:
 Adding station metadata
 -----------------------
 
-The next step is to add station metadata to your wis2box. This can be done interactively in the wis2box-webapp UI on the 'stations' page.
+The next step is to add station metadata to your wis2box. This can be done interactively using the wis2box-webapp or by bulk inserting stations from a CSV file.
+
+Please note only data for stations that have been added to the wis2box will be ingested and result in WIS2 notifications being published.
+
+If you want to bulk insert station-data from a CSV file, please refer to the :ref:`bulk-insert-stations` section.
 
 The station editor can be accessed by visiting the URL you specified during the configuration step, and adding ``/wis2box-webapp/station`` to the URL.
 
@@ -232,7 +218,29 @@ The station editor can be accessed by visiting the URL you specified during the 
   :width: 800
   :alt: wis2box webapp stations page
 
-Please note only data for stations that have been added to the wis2box will be ingested and result in WIS2 notifications being published.
+Select "Create new" to start adding a new station.
+
+You need to provide a WIGOS-station-identifier that will be used to import information about the station from OSCAR:
+
+.. image:: ../_static/wis2box-webapp-stations-search.png
+  :width: 800
+  :alt: wis2box webapp station editor page, import station from OSCAR
+
+You can search for the station in OSCAR by providing the WIGOS-station-identifier and clicking "search",
+if the station is found a new form will be displayed with the station information.
+If the station is not found you have the option to fill the station-form manually.
+
+Check the form for any missing information.
+You will need to select a WIS2-topic you want to associate the station with.
+The station-editor will show you the available topics to choose from based on the datasets you have created.
+If you don't see the topic you want to associate the station with, you need to create a dataset for that topic first.
+
+To store the station metadata  click "save" and provide the 'collections/stations' token you created in the previous section:
+
+.. image:: ../_static/wis2box-webapp-stations-save.png
+  :width: 800
+  :alt: wis2box webapp station editor page, submit
+
 
 Bulk inserting stations from CSV
 --------------------------------
@@ -246,14 +254,10 @@ You can also bulk insert a set of stations from a CSV file, by defining the stat
 
 After doing a bulk insert please review the stations in wis2box-webapp and associate each station to the correct topics.
 
-Adding topics to stations from the command line
------------------------------------------------
-
 If you want to associate all stations in your station metadata to one topic, you can use the following command:
 
 .. code-block:: bash
 
-   python3 wis2box-ctl.py login
    wis2box metadata station add-topic <topic-id>
 
 If you want to add a topic to a single station, you can use the following command:
@@ -269,8 +273,11 @@ If you want to add a topic to all stations from a specific territory, for exampl
 
    python3 wis2box-ctl.py login
    wis2box metadata station add-topic --territory-name Italy <topic-id>
-   
-The next is the :ref:`data-ingest`.
+
+next steps
+----------
+
+The next step is to prepare data ingestion into your wis2box, see :ref:`data-ingest`.
 
 .. _`wis2box Releases`: https://github.com/wmo-im/wis2box/releases
 .. _`WIS2 topic hierarchy`: https://github.com/wmo-im/wis2-topic-hierarchy
