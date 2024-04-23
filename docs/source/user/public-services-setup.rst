@@ -27,7 +27,7 @@ You can edit ``nginx/nginx.conf`` to control which services are exposed through 
 You can edit ``docker-compose.override.yml`` to change the port on which the ``web-proxy`` service exposes HTTP on the localhost.
 
 .. note::
-    The canonical-link referenced in WIS2-notifications by your wis2box will use the base-path ``WIS2BOX_URL/data``.
+    The canonical link referenced in WIS2 notification messages by your wis2box will use the basepath ``WIS2BOX_URL/data``.
     This path has to be publicly accessible by the client receiving the WIS2 notifications, or the data referenced cannot be downloaded
 
 To share your data with the WIS2 network, ensure that ``WIS2BOX_URL`` as defined in ``wis2box.env`` points to the externally accessible URL for your HTTP services. 
