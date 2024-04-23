@@ -68,8 +68,6 @@ RUN cd /app \
     # add wis2box user
     && useradd -ms /bin/bash wis2box
 
-RUN pip3 install https://github.com/david-i-berry/wis2box-migrations/archive/main.zip
-
 WORKDIR /home/wis2box
 
 # add wis2box.cron to crontab
