@@ -5,6 +5,23 @@ Troubleshooting
 
 This page lists several commonly seen issues and how to address them.
 
+wis2box-ctl.py status: one or more containers are restarting
+------------------------------------------------------------
+
+If wis2box services (containers) are restarting and/or unhealthy when executing the command ``python3 wis2box-ctl.py status``, please check the logs of the services to identify the issue. 
+
+You can use the 'Explore' option in Grafana running on port 3000 of your instance to view the logs of the wis2box services.
+
+Open a browser and navigate to ``http://<your-instance-ip>:3000``.  Select 'Explore' from the menu on the left,
+then select 'wis2box-loki' as the datasource and use ``label=container_name`` as illustrated in the image below:
+
+.. image:: ../_static/troubleshooting_grafana.png
+   :alt: Explore option in Grafana
+   :width: 1000
+   :align: center
+
+Select the ``container_name`` for the service you want to inspect, click on the 'Run query' button and scroll down to view the logs.
+
 No station on map in wis2box-ui
 -------------------------------
 

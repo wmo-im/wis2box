@@ -27,17 +27,19 @@ You can edit ``nginx/nginx.conf`` to control which services are exposed through 
 You can edit ``docker-compose.override.yml`` to change the port on which the ``web-proxy`` service exposes HTTP on the localhost.
 
 .. note::
-    The WIS2 notifications published by wis2box includes the path ``<wis2box-url>/data/``.
-    This path has to be publicly accessible by the client receiving the WIS2 notification over MQTT, or the data referenced cannot be downloaded
+    The canonical link referenced in WIS2 notification messages by your wis2box will use the basepath ``WIS2BOX_URL/data``.
+    This path has to be publicly accessible by the client receiving the WIS2 notifications, or the data referenced cannot be downloaded
 
 To share your data with the WIS2 network, ensure that ``WIS2BOX_URL`` as defined in ``wis2box.env`` points to the externally accessible URL for your HTTP services. 
 
-After updating ``WIS2BOX_URL``, please stop and start wis2box using ``wis2box-ctl.py`` and republish your data using the command ``wis2box metadata discovery publish``.
+After updating ``WIS2BOX_URL``, please stop and start wis2box using ``wis2box-ctl.py`` and republish your data using the command ``wis2box metadata discovery republish``:
 
-.. note::
+.. code-block:: bash
 
-   By default the environment variable ``WIS2BOX_URL`` resolves to ``http://localhost``.
-   This URL will define the ``/data`` URL used in the canonical link as part of your data in MQTT, as well as the dataset location in your discovery metadata.
+  python3 wis2box-ctl.py stop
+  python3 wis2box-ctl.py start
+  python3 wis2box-ctl.py login
+  wis2box metadata discovery republish
 
 wis2box API
 -----------
