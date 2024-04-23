@@ -1,0 +1,10 @@
+@id,dct:description,rdf:type,rdfs:label,skos:notation
+<http://codes.wmo.int/wmdr/WMORegion/africa>,'Africa'@en,skos:Concept,Africa,africa
+<http://codes.wmo.int/wmdr/WMORegion/antarctica>,'Antarctica'@en,skos:Concept,Antarctica,antarctica
+<http://codes.wmo.int/wmdr/WMORegion/asia>,'Asia'@en,skos:Concept,Asia,asia
+<http://codes.wmo.int/wmdr/WMORegion/europe>,'Europe'@en,skos:Concept,Europe,europe
+<http://codes.wmo.int/wmdr/WMORegion/inapplicable>,'inapplicable'@en,skos:Concept,inapplicable,inapplicable
+<http://codes.wmo.int/wmdr/WMORegion/northCentralAmericaCaribbean>,"'North America, Central America and the Caribbean'@en",skos:Concept,"North America, Central America and the Caribbean",northCentralAmericaCaribbean
+<http://codes.wmo.int/wmdr/WMORegion/southAmerica>,'South America'@en,skos:Concept,South America,southAmerica
+<http://codes.wmo.int/wmdr/WMORegion/southWestPacific>,'South-West Pacific'@en,skos:Concept,South-West Pacific,southWestPacific
+<http://codes.wmo.int/wmdr/WMORegion/unknown>,'unknown'@en,skos:Concept,unknown,unknown
