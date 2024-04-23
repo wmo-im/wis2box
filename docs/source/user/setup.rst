@@ -47,7 +47,7 @@ The script will have created a file "wis2box.env" with the configuration setting
 .. note::
 
    You can edit the environment variables ``WIS2BOX_BASEMAP_URL`` and ``WIS2BOX_BASEMAP_ATTRIBUTION``
-   in ``wis2box.env`` to customize the base-map URL and attribution that will be used in the wis2box front-ends.
+   in ``wis2box.env`` to customize the base-map URL and attribution that will be used in the wis2box frontends.
 
 Starting wis2box
 ----------------
@@ -73,11 +73,11 @@ This might take a while the first time, as Docker images will be downloaded.
 
    ``docker.errors.DockerException: Error while fetching server API version: ('Connection aborted.', PermissionError(13, 'Permission denied'))``
 
-   Please ensure your username is added to the docker group using the command:
+   Please ensure your username is added to the Docker group using the command:
    
    ``sudo usermod -aG docker <your-username>``.
    
-   And logout and log back in so that your group membership is re-evaluated.
+   Logout and log back in so that your group membership is re-evaluated.
 
 
 Once the command above is completed, check that all services are running (and healthy).
@@ -168,9 +168,9 @@ A popup will appear where you can define your "centre-id" and the type of datase
 
 .. note::
 
-   Your centre-id should start with the ccTLD of your country, followed by a - and the (abbreviated) name of your organization, for example ``fr-meteofrance``.
+   Your centre-id should start with the ccTLD of your country, followed by a - and an abbreviated name of your organization, for example ``fr-meteofrance``.
    The centre-id has to be lowercase and use alphanumeric characters only.
-   The dropdown list shows all currently registered centre-ids on WIS2 as well as any centre-id you have already created in your wis2box.
+   The dropdown list shows all currently registered centre-ids on WIS2 as well as any centre-id you have already created in wis2box.
 
 There are 2 pre-defined dataset types for "weather/surface-based-observations/synop" and "weather/surface-based-observations/temp". 
 We recommend using these pre-defined dataset types to publish your "synop" and "temp" data, respectively. 
@@ -208,7 +208,7 @@ Adding station metadata
 
 The next step is to add station metadata to your wis2box. This can be done interactively using the wis2box-webapp or by bulk inserting stations from a CSV file.
 
-Please note only data for stations that have been added to the wis2box will be ingested and result in WIS2 notifications being published.
+Please note only data for stations that have been added to wis2box will be ingested and result in WIS2 notifications being published.
 
 If you want to bulk insert station-data from a CSV file, please refer to the :ref:`bulk-insert-stations` section.
 
@@ -220,19 +220,19 @@ The station editor can be accessed by visiting the URL you specified during the 
 
 Select "Create new" to start adding a new station.
 
-You need to provide a WIGOS-station-identifier that will be used to import information about the station from OSCAR:
+You need to provide a WIGOS station identifier that will be used to import information about the station from OSCAR:
 
 .. image:: ../_static/wis2box-webapp-stations-search.png
   :width: 800
   :alt: wis2box webapp station editor page, import station from OSCAR
 
-You can search for the station in OSCAR by providing the WIGOS-station-identifier and clicking "search",
-if the station is found a new form will be displayed with the station information.
-If the station is not found you have the option to fill the station-form manually.
+You can search for the station in OSCAR by providing the WIGOS station identifier and clicking "search".
+If the station is found a new form will be displayed with the station information.
+If the station is not found you have the option to fill the station form manually.
 
 Check the form for any missing information.
-You will need to select a WIS2-topic you want to associate the station with.
-The station-editor will show you the available topics to choose from based on the datasets you have created.
+You will need to select a WIS2 topic you would like to associate the station with.
+The station editor will show you the available topics to choose from based on the datasets you have created.
 If you don't see the topic you want to associate the station with, you need to create a dataset for that topic first.
 
 To store the station metadata  click "save" and provide the 'collections/stations' token you created in the previous section:
@@ -274,10 +274,10 @@ If you want to add a topic to all stations from a specific territory, for exampl
    python3 wis2box-ctl.py login
    wis2box metadata station add-topic --territory-name Italy <topic-id>
 
-next steps
+Next steps
 ----------
 
-The next step is to prepare data ingestion into your wis2box, see :ref:`data-ingest`.
+The next step is to prepare data ingestion into wis2box, see :ref:`data-ingest`.
 
 .. _`wis2box Releases`: https://github.com/wmo-im/wis2box/releases
 .. _`WIS2 topic hierarchy`: https://github.com/wmo-im/wis2-topic-hierarchy
