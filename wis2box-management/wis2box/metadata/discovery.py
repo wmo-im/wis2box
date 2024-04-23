@@ -27,6 +27,7 @@ import logging
 import time
 from urllib.parse import urlparse
 
+from owslib.ogcapi.records import Records
 from typing import Union
 
 from pygeometa.schemas.wmo_wcmp2 import WMOWCMP2OutputSchema
@@ -35,12 +36,12 @@ from wis2box import cli_helpers
 from wis2box.api import (delete_collection_item, remove_collection,
                          setup_collection, upsert_collection_item)
 from wis2box.data_mappings import refresh_data_mappings
-from wis2box.env import (API_URL, BROKER_PUBLIC,
+from wis2box.env import (API_URL, BROKER_PUBLIC, DOCKER_API_URL,
                          STORAGE_PUBLIC, STORAGE_SOURCE, URL)
 from wis2box.metadata.base import BaseMetadata
 from wis2box.plugin import load_plugin, PLUGINS
 from wis2box.pubsub.message import WISNotificationMessage
-from wis2box.storage import put_data
+from wis2box.storage import put_data, delete_data
 from wis2box.util import json_serial
 
 LOGGER = logging.getLogger(__name__)
@@ -238,10 +239,8 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
             distribution_links = dm.get_distribution_links(
                 record['id'], record['properties']['wmo:topicHierarchy'],
                 format_='wcmp2')
-            if 'links' in record:
-                record['links'].extend(distribution_links)
-            else:
-                record['links'] = distribution_links
+            # update links, do not extend or we get duplicates
+            record['links'] = distribution_links
             for link in record['links']:
                 if 'description' in link:
                     link['title'] = link.pop('description')
@@ -265,7 +264,8 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
         record.pop('wis2box')
 
         LOGGER.debug('Sanitizing links')
-        old_links = record.pop('links')
+        if 'links' in record:
+            old_links = record.pop('links')
 
         for ol in old_links:
             if API_URL not in ol['href']:
@@ -339,6 +339,26 @@ def setup(ctx, verbosity):
 
 @click.command()
 @click.pass_context
+@cli_helpers.OPTION_VERBOSITY
+def republish(ctx, verbosity):
+    """Republish all published discovery metadata"""
+
+    # read existing records
+    oar = Records(DOCKER_API_URL)
+    try:
+        records = oar.collection_items('discovery-metadata')
+        for record in records['features']:
+            click.echo(f'Republishing {record["id"]}')
+            try:
+                publish_discovery_metadata(record)
+            except Exception as err:
+                raise click.ClickException(f'Failed to publish: {err}')
+    except Exception as err:
+        click.echo(f'Could not retrieve records: {err}')
+
+
+@click.command()
+@click.pass_context
 @cli_helpers.ARGUMENT_FILEPATH
 @cli_helpers.OPTION_VERBOSITY
 def publish(ctx, filepath, verbosity):
@@ -364,7 +384,7 @@ def publish(ctx, filepath, verbosity):
 def unpublish(ctx, identifier, verbosity, force=False):
     """Deletes a discovery metadata record from the catalogue"""
 
-    click.echo(f'Unpublishing discovery metadata {identifier}')
+    click.echo(f'Un-publishing discovery metadata {identifier}')
     try:
         delete_collection_item('discovery-metadata', identifier)
     except Exception:
@@ -377,8 +397,15 @@ def unpublish(ctx, identifier, verbosity, force=False):
     if force:
         click.echo('Deleting associated data from the API')
         remove_collection(identifier)
+        click.echo('Removing data from object storage')
+        storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/metadata/{identifier}.json" # noqa
+        try:
+            delete_data(storage_path)
+        except Exception:
+            raise click.ClickException('Failed to remove data from object storage') # noqa
 
 
 discovery_metadata.add_command(publish)
 discovery_metadata.add_command(setup)
 discovery_metadata.add_command(unpublish)
+discovery_metadata.add_command(republish)
