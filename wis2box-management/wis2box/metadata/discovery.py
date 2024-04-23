@@ -336,6 +336,7 @@ def setup(ctx, verbosity):
     click.echo('Setting up discovery metadata repository')
     setup_collection(meta=gcm())
 
+
 @click.command()
 @click.pass_context
 @cli_helpers.OPTION_VERBOSITY
@@ -354,6 +355,7 @@ def republish(ctx, verbosity):
                 raise click.ClickException(f'Failed to publish: {err}')
     except Exception as err:
         click.echo(f'Could not retrieve records: {err}')
+
 
 @click.command()
 @click.pass_context
@@ -382,7 +384,7 @@ def publish(ctx, filepath, verbosity):
 def unpublish(ctx, identifier, verbosity, force=False):
     """Deletes a discovery metadata record from the catalogue"""
 
-    click.echo(f'Unpublishing discovery metadata {identifier}')
+    click.echo(f'Un-publishing discovery metadata {identifier}')
     try:
         delete_collection_item('discovery-metadata', identifier)
     except Exception:
@@ -396,11 +398,11 @@ def unpublish(ctx, identifier, verbosity, force=False):
         click.echo('Deleting associated data from the API')
         remove_collection(identifier)
         click.echo('Removing data from object storage')
-        storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/metadata/{identifier}.json"
+        storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/metadata/{identifier}.json" # noqa
         try:
             delete_data(storage_path)
         except Exception:
-            raise click.ClickException('Failed to remove data from object storage')
+            raise click.ClickException('Failed to remove data from object storage') # noqa
 
 
 discovery_metadata.add_command(publish)
