@@ -5,8 +5,7 @@ Public services setup
 
 To share your data with the WIS2 network, you need to expose some of the wis2box services to the Global Services:
 
-* The Global Cache needs to be able to access to your HTTP endpoint to download data published by the wis2box instance.
-The web-proxy service in the wis2box stack will proxy the content of ``wis2box-public`` bucket at ``/data/`` on port 80, or on port 443 when using SSL
+* The Global Cache needs to be able to access to your HTTP endpoint to download data published by the wis2box instance.  The web-proxy service in the wis2box stack will proxy the content of ``wis2box-public`` bucket at ``/data/`` on port 80, or on port 443 when using SSL
 * The Global Broker needs to be able to subscribe to your MQTT endpoint to receive WIS2 notifications published by the wis2box instance.  mosquitto is available on port 1883 on your host by default, or on port 8883 when using SSL
 
 Security considerations

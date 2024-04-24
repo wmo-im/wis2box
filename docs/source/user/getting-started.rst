@@ -18,7 +18,7 @@ When choosing the environment for the wis2box, consider the following:
 
 .. note::
     
-    Before exposing the wis2box to the Internet, please review the 'security considerations' section in the :ref:`public-services` section. 
+    Before exposing the wis2box to the Internet, please review the 'security considerations' section in the :ref:`public-services-setup` section. 
 
 Network requirements
 --------------------

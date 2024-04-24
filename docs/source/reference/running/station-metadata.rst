@@ -3,7 +3,7 @@
 Station metadata
 ================
 
-The authoritative source of station metadata for international reporting surface based stations is :ref:`OSCAR/Surface`_.
+The authoritative source of station metadata for international reporting surface based stations is `OSCAR/Surface`_.
 
 The wis2box API can be used to retrieve station metadata from OSCAR/Surface and cache a subset of this station metadata in the backend.
 

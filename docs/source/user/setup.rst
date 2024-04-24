@@ -210,7 +210,7 @@ The next step is to add station metadata to your wis2box. This can be done inter
 
 Please note only data for stations that have been added to wis2box will be ingested and result in WIS2 notifications being published.
 
-If you want to bulk insert station-data from a CSV file, please refer to the :ref:`bulk-insert-stations` section.
+If you want to bulk insert station metadata from a CSV file, please refer to the `Bulk inserting stations from CSV`_ section.
 
 The station editor can be accessed by visiting the URL you specified during the configuration step, and adding ``/wis2box-webapp/station`` to the URL.
 
