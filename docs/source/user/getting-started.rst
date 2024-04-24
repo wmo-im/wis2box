@@ -12,9 +12,9 @@ The recommended OS is Ubuntu 20.04 LTS.
 
 When choosing the environment for the wis2box, consider the following:
 
-* The wis2box-instance should have good Internet connectivity, to download the docker images used in the wis2box-stack
-* In order for the wis2box-instance to function as a WIS2-node, you need to ensure that the HTTP and MQTT ports on the instance can be made accessible over the public Internet.
-* Ensure that the system providing input data can access the wis2box-instance
+* The wis2box instance should have suitable Internet connectivity, to download the required Docker images used in the wis2box stack
+* In order for the wis2box instance to function as a WIS2 Node, HTTP and MQTT ports on the instance need to be accessible over the public Internet
+* Ensure that the system providing input data can access the wis2box instance
 
 .. note::
     
