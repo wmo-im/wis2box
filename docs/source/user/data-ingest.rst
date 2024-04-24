@@ -38,15 +38,15 @@ The plugins you have configured for your dataset mappings will determine the act
 
 The wis2box provides 3 types of built-in plugins to publish data in BUFR format:
 
-* `bufr2bufr` : the input is received in bufr format and split by subset, where each subset is published as a separate bufr message
-* `synop2bufr` : the input is received in FM-12 synop format and converted to bufr format. The year and month are extracted from the file-pattern
-* `csv2bufr` : the input is received in csv format and converted to bufr format
+* `bufr2bufr` : the input is received in BUFR format and split by subset, where each subset is published as a separate bufr message
+* `synop2bufr` : the input is received in FM-12 SYNOP format and converted to BUFR format. The year and month are extracted from the file pattern
+* `csv2bufr` : the input is received in csv format and converted to BUFR format
 
-When using the csv2bufr plugin, the columns are mapped to bufr-encoded values using a mappings-template.
-You can find the reference for the built-in 'AWS'-mappings template here [aws-full.csv](../_static/aws-full.csv)
+When using the csv2bufr plugin, the columns are mapped to BUFR encoded values using a template.
+The reference for the built-in 'AWS' mappings template can be found at [aws-full.csv](../_static/aws-full.csv)
 
-To publish data for other data-formats you can use the 'Universal' plugin, which will pass through the data without any conversion.
-Please note that you will need to ensure that the date-timestamp can be extracted from the file-pattern when using this plugin.
+To publish data for other data formats you can use the 'Universal' plugin, which will pass through the data without any conversion.
+Please note that you will need to ensure that the date timestamp can be extracted from the file pattern when using this plugin.
 
 MinIO user interface
 --------------------
