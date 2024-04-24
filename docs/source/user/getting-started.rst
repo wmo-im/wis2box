@@ -8,7 +8,17 @@ The recommended OS is Ubuntu 20.04 LTS.
 
 .. note::
 
-   wis2box may work on other operating systems (for example AlmaLinux), but the officially supported OS is Ubuntu.
+   wis2box may work on other operating systems (for example AlmaLinux or Windows), but the officially supported OS is Ubuntu.
+
+When choosing the environment for the wis2box, consider the following:
+
+* The wis2box-instance should have good Internet connectivity, to download the docker images used in the wis2box-stack
+* In order for the wis2box-instance to function as a WIS2-node, you need to ensure that the HTTP and MQTT ports on the instance can be made accessible over the public Internet.
+* Ensure that the system providing input data can access the wis2box-instance
+
+.. note::
+    
+    Before exposing the wis2box to the Internet, please review the 'security considerations' section in the :ref:`public-services` section. 
 
 Network requirements
 --------------------
