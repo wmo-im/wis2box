@@ -9,13 +9,13 @@ The wis2box API can be used to retrieve station metadata from OSCAR/Surface and 
 
 The station metadata can be cached in two ways:
 
-* from the command-line in the wis2box-container by populating the station list CSV file
-* or using the station editor in the wis2box-webapp, available at ``WIS2BOX_URL/wis2box-webapp/station``
+* from the command-line in the wis2box-management container by populating the station list CSV file
+* from the station editor in the wis2box-webapp, available at ``$WIS2BOX_URL/wis2box-webapp/station``
 
 Using the station editor in the wis2box-webapp
 ----------------------------------------------
 
-When using the station editor in the wis2box-webapp, you can provide a WIGOS Station Identifier (WSI) and the station metadata will be fetched from OSCAR/Surface.
+When using the station editor in the wis2box-webapp, if a WIGOS Station Identifier (WSI) is provided, the associated station metadata will be populated from OSCAR/Surface.
 
 After the data has been fetched you can populate any missing fields and associate the station with one or more topics.
 
@@ -28,7 +28,7 @@ specifying one line per station as follows:
 .. literalinclude:: ../../../../examples/config/station_list.csv
 
 Then login in to the wis2box-container and run the command ``wis2box metadata station publish-collection``
-to insert all the stations in the station list into the backend.
+to insert all stations in the station list into the backend.
 
 Within the wis2box-container you can fetch the required station metadata from OSCAR/Surface using the following command:
 
@@ -45,22 +45,22 @@ file as follows:
 
    wis2box metadata station get WSI >> ~/wis2box-data/metadata/station/station_list.csv
 
-After using the command-line to cache the station metadata, you will need to associate the stations with one or more topics to see the stations in the wis2box-ui.
+After using the command-line to cache the station metadata, you will need to associate the stations with one or more topics to visualize the stations in the wis2box-ui.
 
-If you want to associate all stations in your station metadata to one topic, you can use the following command:
+To associate all stations in your station metadata to one topic, you can use the following command:
 
 .. code-block:: bash
 
    wis2box metadata station add-topic <topic-id>
 
-If you want to add a topic to a single station, you can use the following command:
+To add a topic to a single station, you can use the following command:
 
 .. code-block:: bash
 
    python3 wis2box-ctl.py login
    wis2box metadata station add-topic --wsi <station-id> <topic-id>
 
-If you want to add a topic to all stations from a specific territory, for example Italy, you can use the following command:
+To add a topic to all stations from a specific territory, for example Italy, you can use the following command:
 
 .. code-block:: bash
 
