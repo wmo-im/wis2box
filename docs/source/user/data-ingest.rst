@@ -42,11 +42,18 @@ The wis2box provides 3 types of built-in plugins to publish data in BUFR format:
 * `synop2bufr` : the input is received in FM-12 SYNOP format and converted to BUFR format. The year and month are extracted from the file pattern
 * `csv2bufr` : the input is received in csv format and converted to BUFR format
 
-When using the csv2bufr plugin, the columns are mapped to BUFR encoded values using a template.
-The reference for the built-in 'AWS' mappings template can be found at [aws-full.csv](../_static/aws-full.csv)
-
 To publish data for other data formats you can use the 'Universal' plugin, which will pass through the data without any conversion.
 Please note that you will need to ensure that the date timestamp can be extracted from the file pattern when using this plugin.
+
+The AWS template in csv2bufr plugin
+-----------------------------------
+
+When using the csv2bufr plugin, the columns are mapped to BUFR encoded values using a template as defined in the repository `csv2bufr-templates`_.
+
+An example of a CSV file that can be ingested using the 'AWS' mappings template can be downloaded here :download:`AWS-example <../_static/aws-example.csv>`
+
+The CSV-columns description of the AWS-template can be downloaded here :download:`AWS-reference <../_static/aws-minimal.csv>`
+
 
 MinIO user interface
 --------------------
@@ -226,3 +233,4 @@ Next: :ref:`public-services-setup`
 .. _`wis2box-ftp`: https://github.com/wmo-im/wis2box-ftp
 .. _`wis2box-data-subscriber`: https://github.com/wmo-im/wis2box-data-subscriber
 .. _`WIS2 topic hierarchy`: https://github.com/wmo-im/wis2-topic-hierarchy
+.. _`csv2bufr-templates`: https://github.com/wmo-im/csv2bufr-templates
