@@ -3,7 +3,7 @@
 Station metadata
 ================
 
-The authoritative source of station metadata for international reporting surface based stations is `OSCAR/Surface`_.
+The authoritative source of station metadata for internationally reporting surface based stations is `OSCAR/Surface`_.
 
 The wis2box API can be used to retrieve station metadata from OSCAR/Surface and cache a subset of this station metadata in the backend.
 
@@ -11,6 +11,12 @@ The station metadata can be cached in two ways:
 
 * from the command-line in the wis2box-management container by populating the station list CSV file
 * from the station editor in the wis2box-webapp, available at ``$WIS2BOX_URL/wis2box-webapp/station``
+
+The plugins for converting data to bufr will use the station metadata in the following ways:
+
+* synop2bufr: The station metadata is used to derives the WIGOS-station-identifier by matching with the traditional station identifierin the FM-12 input data. The station metadata is also used to encode the location and barometer height above sea-level into the BUFR message.
+* csv2bufr: The station metadata list is used to whitelist records to publish. If no match is found in the station list for an input record based on the WSI, the record is not published.
+* bufr2bufr: If the WIGOS Station Identifier (WSI) is missing in the input BUFR data, the WSI is looked up in the station metadata list using the traditional station identifier (block and station number, ship callsign etc.) and inserted into the BUFR message. Similarly, if the location or station elevation are missing in the input BUFR data, these are looked up in the station metadata list and inserted into the BUFR message as required before further processing.
 
 Using the station editor in the wis2box-webapp
 ----------------------------------------------
