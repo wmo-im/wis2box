@@ -153,6 +153,16 @@ See below a Python example to upload data using the MinIO package:
     If you are running the script on the same host as wis2box, you can use the endpoint ``http://localhost:9000`` as in the example. 
     Otherwise, replace localhost with the IP address of the host running wis2box. 
 
+.. note::
+
+    You need to install the MinIO package for python otherwise you get the error ``ModuleNotFoundError: No module named 'minio'``.
+    
+    To install the MinIO package, run the following command:
+
+    .. code-block:: bash
+
+        pip3 install minio
+        
 wis2box-ftp
 -----------
 
