@@ -17,7 +17,7 @@ wis2box enables World Meteorological Organization (WMO) members to publish and d
 * Free and Open Source (FOSS)
 * containerized: use of Docker, enabling easy deployment to cloud or on-premises infrastructure
 
-Live demonstration instances of wis2box can be found at at https://demo.wis2box.wis.wmo.int.
+wis2box deployments currently sharing data on the WIS2 network can be found at https://demo.wis2box.wis.wmo.int.
 
 User guide
 ==========

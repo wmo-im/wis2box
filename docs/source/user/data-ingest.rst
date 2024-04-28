@@ -31,6 +31,30 @@ Interactive data ingestion requires an execution token, which can be generated u
 
    Be sure to record the token value, as it will not be shown again. If you lose the token, you can generate a new one.
 
+data mappings plugins
+---------------------
+
+The plugins you have configured for your dataset mappings will determine the actions taken when data is received in the MinIO storage bucket.
+
+The wis2box provides 3 types of built-in plugins to publish data in BUFR format:
+
+* `bufr2bufr` : the input is received in BUFR format and split by subset, where each subset is published as a separate bufr message
+* `synop2bufr` : the input is received in FM-12 SYNOP format and converted to BUFR format. The year and month are extracted from the file pattern
+* `csv2bufr` : the input is received in csv format and converted to BUFR format
+
+To publish data for other data formats you can use the 'Universal' plugin, which will pass through the data without any conversion.
+Please note that you will need to ensure that the date timestamp can be extracted from the file pattern when using this plugin.
+
+The AWS template in csv2bufr plugin
+-----------------------------------
+
+When using the csv2bufr plugin, the columns are mapped to BUFR encoded values using a template as defined in the repository `csv2bufr-templates`_.
+
+An example of a CSV file that can be ingested using the 'AWS' mappings template can be downloaded here :download:`AWS-example <../_static/aws-minimal.csv>`
+
+The CSV columns description of the AWS template can be downloaded here :download:`AWS-reference <../_static/aws-minimal.csv>`
+
+
 MinIO user interface
 --------------------
 
@@ -129,6 +153,16 @@ See below a Python example to upload data using the MinIO package:
     If you are running the script on the same host as wis2box, you can use the endpoint ``http://localhost:9000`` as in the example. 
     Otherwise, replace localhost with the IP address of the host running wis2box. 
 
+.. note::
+
+    The MinIO package is required for running the script above.
+    
+    To install the MinIO package, run the following command:
+
+    .. code-block:: bash
+
+        pip3 install minio
+        
 wis2box-ftp
 -----------
 
@@ -209,3 +243,4 @@ Next: :ref:`public-services-setup`
 .. _`wis2box-ftp`: https://github.com/wmo-im/wis2box-ftp
 .. _`wis2box-data-subscriber`: https://github.com/wmo-im/wis2box-data-subscriber
 .. _`WIS2 topic hierarchy`: https://github.com/wmo-im/wis2-topic-hierarchy
+.. _`csv2bufr-templates`: https://github.com/wmo-im/csv2bufr-templates

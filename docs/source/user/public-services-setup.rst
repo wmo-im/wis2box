@@ -5,13 +5,31 @@ Public services setup
 
 To share your data with the WIS2 network, you need to expose some of the wis2box services to the Global Services:
 
-* The Global Cache needs to be able to access to your HTTP endpoint at port 80 to download data published by the wis2box instance
-* The Global Broker needs to be able to subscribe to your MQTT endpoint at port 1883 to receive WIS2 notifications published by the wis2box instance
+* The Global Cache needs to be able to access to your HTTP endpoint to download data published by the wis2box instance.  The web-proxy service in the wis2box stack will proxy the content of ``wis2box-public`` bucket at ``/data/`` on port 80, or on port 443 when using SSL
+* The Global Broker needs to be able to subscribe to your MQTT endpoint to receive WIS2 notifications published by the wis2box instance.  mosquitto is available on port 1883 on your host by default, or on port 8883 when using SSL
 
-Nginx (HTTP)
-^^^^^^^^^^^^
+Security considerations
+^^^^^^^^^^^^^^^^^^^^^^^
 
-wis2box runs a local nginx container allowing access to the following HTTP based services on port 80:
+When exposing your services to the public Internet, it is important to consider the security implications of doing so.
+
+Please ensure that you follow these best practices to ensure your wis2box-instance is secure:
+
+* Ensure that your wis2box instance runs behind a firewall and only exposes the necessary ports to the public internet (e.g. 80 or 443 for HTTP, 1883 or 8883 for MQTT)
+* MQTT subscribers should use ``everyone/everyone`` as the username/password to subscribe to the WIS2 notifications published by your wis2box instance
+* Never share the values of ``WIS2BOX_BROKER_PASSWORD`` and ``WIS2BOX_STORAGE_PASSWORD`` as they are only for internal use
+* Store the authentication tokens used in the wis2box-webapp securely and do not share them with unauthorized users
+* Use SSL/TLS encryption to secure your services
+* Consider customizing the default web configuration defined in ``nginx/nginx.conf`` to expose only the services to be shared with the public
+
+The wis2box development team is not responsible for the security of your wis2box-instance and it is your responsibility to ensure that your wis2box instance is secure.
+
+GitHub issues and discussions provide a resourece and forum to discuss general wis2box features, bugs and updates.  For specific security related questions, please write to ``wis2-support at wmo.int``.
+
+web-proxy (nginx)
+^^^^^^^^^^^^^^^^^
+
+wis2box runs a local nginx container allowing access to the following HTTP based services:
 
 .. csv-table::
    :header: Function, URL
@@ -24,7 +42,11 @@ wis2box runs a local nginx container allowing access to the following HTTP based
 
 You can edit ``nginx/nginx.conf`` to control which services are exposed through the nginx-container include in your stack.
 
-You can edit ``docker-compose.override.yml`` to change the port on which the ``web-proxy`` service exposes HTTP on the localhost.
+By default the web-proxy service is exposed on port 80 on the host running wis2box.
+
+SSL can be enabled by setting the ``WIS2BOX_SSL_CERT`` and ``WIS2BOX_SSL_KEY`` environment variables to the location of your SSL certificate and private key respectively.
+
+When SSL is enabled, the web-proxy service is exposed on port 443 on the host running wis2box and uses the configuration defined in ``nginx/nginx-ssl.conf``.
 
 .. note::
     The canonical link referenced in WIS2 notification messages by your wis2box will use the basepath ``WIS2BOX_URL/data``.
