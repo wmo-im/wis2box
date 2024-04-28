@@ -26,7 +26,8 @@ from pathlib import Path
 
 from elasticsearch import Elasticsearch
 
-from wis2box.env import DATADIR, STORAGE_PUBLIC, STORAGE_SOURCE
+from wis2box.env import (API_BACKEND_URL, DATADIR, STORAGE_PUBLIC,
+                         STORAGE_SOURCE)
 from wis2box.log import LOGGER, setup_logger
 from wis2box.storage import put_data, delete_data
 from wis2box.util import json_serial, yaml_load
@@ -34,33 +35,36 @@ from wis2box.util import json_serial, yaml_load
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'DEBUG').upper()
 setup_logger(loglevel=LOG_LEVEL)
 
-es_api = os.getenv('WIS2BOX_API_BACKEND_URL')
 es_index = 'discovery-metadata'
 maxrecords = 1000
 
 data_mappings_file = Path(DATADIR) / 'data-mappings.yml'
 
-with data_mappings_file.open() as fh:
-    DATA_MAPPINGS = yaml_load(fh)
+try:
+    with data_mappings_file.open() as fh:
+        DATA_MAPPINGS = yaml_load(fh)
+except FileNotFoundError as err:
+    LOGGER.error(f'Data mappings file not found at {data_mappings_file}')
+    raise err
 
 
 def migrate(dryrun):
     LOGGER.info('Updating station data in Elasticsearch index')
     LOGGER.info('Connecting to API ...')
     try:
-        es = Elasticsearch(es_api)
-    except Exception as e:
-        LOGGER.error(f'Error connecting to {es_api}')
-        raise e
+        es = Elasticsearch(API_BACKEND_URL)
+    except Exception as err:
+        LOGGER.error(f'Error connecting to {API_BACKEND_URL}')
+        raise err
 
     LOGGER.info('Updating discovery metadata')
     try:
         res = es.search(index=es_index,
                         query={'match_all': {}},
                         size=maxrecords)
-    except Exception as e:
+    except Exception as err:
         LOGGER.error(f'Error fetching data from {es_index}')
-        raise e
+        raise err
 
     nhits = res['hits']['hits']
     LOGGER.info(f'Processing {nhits} records')
@@ -93,9 +97,9 @@ def migrate(dryrun):
                         record, default=json_serial).encode('utf-8')
                     put_data(data_bytes, storage_path, 'application/geo+json')
 
-                except Exception as e:
+                except Exception as err:
                     LOGGER.error('Error applying update')
-                    raise e
+                    raise err
 
 
 if __name__ == '__main__':
