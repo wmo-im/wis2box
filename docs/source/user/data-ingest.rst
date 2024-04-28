@@ -50,9 +50,9 @@ The AWS template in csv2bufr plugin
 
 When using the csv2bufr plugin, the columns are mapped to BUFR encoded values using a template as defined in the repository `csv2bufr-templates`_.
 
-An example of a CSV file that can be ingested using the 'AWS' mappings template can be downloaded here :download:`AWS-example <../_static/aws-example.csv>`
+An example of a CSV file that can be ingested using the 'AWS' mappings template can be downloaded here :download:`AWS-example <../_static/aws-minimal.csv>`
 
-The CSV-columns description of the AWS-template can be downloaded here :download:`AWS-reference <../_static/aws-minimal.csv>`
+The CSV columns description of the AWS template can be downloaded here :download:`AWS-reference <../_static/aws-minimal.csv>`
 
 
 MinIO user interface
@@ -155,7 +155,7 @@ See below a Python example to upload data using the MinIO package:
 
 .. note::
 
-    You need to install the MinIO package for python otherwise you get the error ``ModuleNotFoundError: No module named 'minio'``.
+    The MinIO package is required for running the script above.
     
     To install the MinIO package, run the following command:
 
