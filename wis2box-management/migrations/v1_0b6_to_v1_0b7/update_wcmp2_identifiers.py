@@ -75,6 +75,11 @@ def migrate(dryrun):
         LOGGER.info(f"Updating discovery metadata record {record['id']}")
 
         th = record['wis2box']['topic_hierarchy']
+        try:
+            th = record['wis2box']['topic_hierarchy']
+        except KeyError as err:
+            LOGGER.info(f'Missing key {err}; skipping record')
+            continue
 
         if th not in DATA_MAPPINGS['data'].keys():
             LOGGER.info('No matching topic found')
