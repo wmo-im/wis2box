@@ -26,7 +26,7 @@ LABEL maintainer="tomkralidis@gmail.com; mlimper@wmo.int"
 ARG WIS2BOX_PIP3_EXTRA_PACKAGES
 ENV TZ="Etc/UTC" \
     DEBIAN_FRONTEND="noninteractive" \
-    DEBIAN_PACKAGES="cron bash vim curl git libffi-dev python3-cryptography libssl-dev libudunits2-0 python3 python3-pip curl python3-paho-mqtt python3-dateparser python3-tz python3-setuptools unzip"
+    DEBIAN_PACKAGES="cron bash vim curl git libffi-dev python3-cryptography libssl-dev libudunits2-0 apache2-utils python3 python3-pip curl python3-paho-mqtt python3-dateparser python3-tz python3-setuptools unzip"
 
 RUN if [ "$WIS2BOX_PIP3_EXTRA_PACKAGES" = "None" ]; \
     then export WIS2BOX_PIP3_EXTRA_PACKAGES=echo; \

@@ -9,6 +9,7 @@ services:
       - wis2box-ui
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - htpasswd:/etc/nginx/.htpasswd:ro
 
   wis2box-ui:
     container_name: wis2box-ui
@@ -121,6 +122,7 @@ services:
       - wis2box.env
     volumes:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
+      - htpasswd:/home/wis2box/.htpasswd:rw
     depends_on:
       minio:
         condition: service_healthy
@@ -146,3 +148,4 @@ volumes:
   minio-data:
   auth-data:
   api-config:
+  htpasswd:

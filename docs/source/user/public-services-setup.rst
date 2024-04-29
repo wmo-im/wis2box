@@ -83,7 +83,8 @@ wis2box user interface
 
 The wis2box user interface uses the wis2box API to visualize the data configured and shared through wis2box.
 
-The 'MAP' or 'EXPLORE' option of each dataset allows you to visualize Weather Observations per station.
+The 'MAP' or 'EXPLORE' option of each dataset allows you to visualize Weather Observations per station for data published in the '../synop' collection
+and requires the 'bufr2geojson' plugin to be configured for your dataset.
 
 .. image:: ../_static/wis2box-map-view.png
   :width: 800
@@ -92,6 +93,31 @@ The 'MAP' or 'EXPLORE' option of each dataset allows you to visualize Weather Ob
 .. image:: ../_static/wis2box-data-view.png
   :width: 800
   :alt: wis2box UI data graph visualization
+
+Please note that the user interface currently only supports the visualization of Weather Observations per station for data published in the '../synop' collection.
+
+wis2box-webapp
+--------------
+
+The wis2box-webapp provides a web interface to help you configure wis2box and view WIS2 notifications published by your wis2box instance, along with the ability to interactively submit data using forms.
+
+The webapp is accessible at `WIS2BOX_URL/wis2box-webapp` and uses basic authentication to control access to the web interface. 
+The credentials are defined in the ``wis2box.env`` file by the following environment variables:
+
+.. code-block:: bash
+
+  WIS2BOX_WEBAPP_USERNAME=wis2box-admin
+  WIS2BOX_WEBAPP_PASSWORD=<your-password>
+
+The wis2box-webapp provides access to the following interfaces:
+
+- **SYNOP Form**: to interactively submit FM-12 data using a form
+- **CSV Form**: to interactively submit CSV data, using the 'AWS'-template for the CSV-to-BUFR transformation
+- **Dataset editor**: to create/edit/delete datasets along with their metadata and data mappings configuration
+- **Station editor**: to create/edit/delete stations and associate stations with topics
+- **Monitoring**: to monitor the WIS2 notifications published by your wis2box instance
+
+See the section :ref:`setup` for more information on how to use the webapp to setup your wis2box instance.
 
 Mosquitto (MQTT)
 ^^^^^^^^^^^^^^^^
