@@ -107,27 +107,29 @@ def migrate(dryrun: bool = False):
                 else:
                     pass
             stations.append(row)
-
-    if dryrun:
-        LOGGER.info(
-            f"dryrun == True, writing updated {station_file} to stdout")
-        print(','.join(map(str, stations[0].keys())))
-        for station in stations:
-            print(','.join(map(str, station.values())))
+    if len(stations)>0:
+        if dryrun:
+            LOGGER.info(
+                f"dryrun == True, writing updated {station_file} to stdout")
+            print(','.join(map(str, stations[0].keys())))
+            for station in stations:
+                print(','.join(map(str, station.values())))
+        else:
+            # now write data to file
+            LOGGER.info(
+                f"Writing updated {station_file} to {station_file}.v1.0b7")
+            try:
+                with open(f"{station_file}.v1.0b7", 'w') as fh:
+                    columns = list(stations[0].keys())
+                    writer = csv.DictWriter(fh, fieldnames=columns)
+                    writer.writeheader()
+                    for station in stations:
+                        writer.writerow(station)
+            except Exception as e:
+                LOGGER.error("Error writing updated station file")
+                raise e
     else:
-        # now write data to file
-        LOGGER.info(
-            f"Writing updated {station_file} to {station_file}.v1.0b7")
-        try:
-            with open(f"{station_file}.v1.0b7", 'w') as fh:
-                columns = list(stations[0].keys())
-                writer = csv.DictWriter(fh, fieldnames=columns)
-                writer.writeheader()
-                for station in stations:
-                    writer.writerow(station)
-        except Exception as e:
-            LOGGER.error("Error writing updated station file")
-            raise e
+        LOGGER.info("No stations in station_list.csv to be updated")
 
     # now migrate ES data
     # Get elastic search connection
