@@ -45,6 +45,16 @@ wis2box api setup
 wis2box metadata discovery setup
 wis2box metadata station setup
 
+# check if WIS2BOX_WEBAPP_USERNAME and WIS2BOX_WEBAPP_PASSWORD are set, otherwise set them
+if [ -z "$WIS2BOX_WEBAPP_USERNAME" ]; then
+    echo "WARNING: WIS2BOX_WEBAPP_USERNAME is not set in wis2box.env, using WIS2BOX_WEBAPP_USERNAME=wis2box-user"
+    export WIS2BOX_WEBAPP_USERNAME=wis2box-user
+fi
+if [ -z "$WIS2BOX_WEBAPP_PASSWORD" ]; then
+    echo "WARNING: WIS2BOX_WEBAPP_PASSWORD is not set in wis2box.env, using WIS2BOX_STORAGE_PASSWORD"
+    export WIS2BOX_WEBAPP_PASSWORD=${WIS2BOX_STORAGE_PASSWORD}
+fi
+
 # create /home/wis2box/.htpasswd/webapp if not exists
 # otherwise, delete the file and create it
 if [ ! -f /home/wis2box/.htpasswd/webapp ]; then
