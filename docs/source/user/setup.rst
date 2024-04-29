@@ -153,14 +153,13 @@ The following sections will explain how to create datasets and stations in your 
 You can access the wis2box-webapp by visiting the URL you specified during the configuration step in your web browser and adding ``/wis2box-webapp`` to the URL.
 For example, if you specified ``http://mywis2box.example.com`` as the URL, you can access the wis2box-webapp by visiting ``http://mywis2box.example.com/wis2box-webapp``.
 
-The wis2box-webapp used basic authentication to protect access to the webapp:
-The default username is ``wis2box-user`` and the password is the one specified when you ran the script ``wis2box-create-config.py``.
+The wis2box-webapp used basic authentication to control access to the webapp.  The default username is ``wis2box-user`` and the password is the value specified when running the script ``wis2box-create-config.py``.
 
-You can check the value of your WIS2BOX_WEBAPP_USERNAME and WIS2BOX_WEBAPP_PASSWORD in the ``wis2box.env`` file as follows:
+The values of ``WIS2BOX_WEBAPP_USERNAME`` and ``WIS2BOX_WEBAPP_PASSWORD`` can be found in the ``wis2box.env`` file as follows:
 
 .. code-block:: bash
 
-   less wis2box.env | grep WIS2BOX_WEBAPP
+   cat wis2box.env | grep WIS2BOX_WEBAPP
 
 
 Adding datasets
