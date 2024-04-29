@@ -39,7 +39,9 @@ Run the following command to create the initial configuration files for your wis
    The script will also ask for the URL of your wis2box. Please provide the public URL of your wis2box, for example ``http://mywis2box.example.com``. 
    For testing purpose you can also provide the internal IP address you use to access the host, for example ``http://192.168.0.3`` and you change the URL in configuration files at a later point in time.
 
-   The script will propose to automatically create passwords for ``WIS2BOX_STORAGE_PASSWORD`` and ``WIS2BOX_BROKER_PASSWORD``.
+   The script will propose to automatically create a password for ``WIS2BOX_WEBAPP_PASSWORD``. This password is used to access the wis2box-webapp interface.
+
+   The script will also propose to automatically create passwords for ``WIS2BOX_STORAGE_PASSWORD`` and ``WIS2BOX_BROKER_PASSWORD``.
    These passwords are for internal use only within the wis2box, and it is recommended to accept the randomly generated passwords.
 
 The script will have created a file "wis2box.env" with the configuration settings required to start your wis2box.
@@ -143,14 +145,31 @@ You can now logout of wis2box-management container:
 
    exit
 
+Accessing the wis2box-webapp
+----------------------------
+
+The following sections will explain how to create datasets and stations in your wis2box using the wis2box-webapp.
+
+You can access the wis2box-webapp by visiting the URL you specified during the configuration step in your web browser and adding ``/wis2box-webapp`` to the URL.
+For example, if you specified ``http://mywis2box.example.com`` as the URL, you can access the wis2box-webapp by visiting ``http://mywis2box.example.com/wis2box-webapp``.
+
+The wis2box-webapp used basic authentication to protect access to the webapp:
+The default username is ``wis2box-user`` and the password is the one specified when you ran the script ``wis2box-create-config.py``.
+
+You can check the value of your WIS2BOX_WEBAPP_USERNAME and WIS2BOX_WEBAPP_PASSWORD in the ``wis2box.env`` file as follows:
+
+.. code-block:: bash
+
+   less wis2box.env | grep WIS2BOX_WEBAPP
+
+
 Adding datasets
 ---------------
 
 In order to publish data using the wis2box you need to create a dataset with discovery metadata and data mappings plugins. The metadata provides the data description needed for users to discover your data when searching the WIS2 Global Discovery Catalogue.
 Data mappings plugins are used to transform the data from the input source format before the data is published.
 
-You can use the wis2box-webapp to create datasets interactively using the dataset editor.
-The dataset editor can be accessed using your web browser by visiting the URL you specified during the configuration step, and adding ``/wis2box-webapp/dataset_editor`` to the URL.
+You can use the wis2box-webapp to create datasets interactively using the dataset editor. Open the wis2box-webapp in your web browser and select the dataset editor from the menu on the left
 
 You should see the following page:
 
@@ -212,7 +231,7 @@ Please note only data for stations that have been added to wis2box will be inges
 
 If you want to bulk insert station metadata from a CSV file, please refer to the `Bulk inserting stations from CSV`_ section.
 
-The station editor can be accessed by visiting the URL you specified during the configuration step, and adding ``/wis2box-webapp/station`` to the URL.
+The station editor can be accessed in the wis2box-webapp by selecting "Stations" from the menu on the left.
 
 .. image:: ../_static/wis2box-webapp-stations.png
   :width: 800
