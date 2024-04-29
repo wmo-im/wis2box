@@ -107,7 +107,7 @@ def migrate(dryrun: bool = False):
                 else:
                     pass
             stations.append(row)
-    if len(stations)>0:
+    if len(stations) > 0:
         if dryrun:
             LOGGER.info(
                 f"dryrun == True, writing updated {station_file} to stdout")
