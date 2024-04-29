@@ -99,9 +99,9 @@ Please note that the user interface currently only supports the visualization of
 wis2box-webapp
 --------------
 
-The wis2box-webapp provides a web interface to help you configure your wis2box and view WIS2-notifications published by your wis2box instance, along with the ability to interactively submit data using forms.
+The wis2box-webapp provides a web interface to help you configure wis2box and view WIS2 notifications published by your wis2box instance, along with the ability to interactively submit data using forms.
 
-The webapp is accessible at `WIS2BOX_URL/wis2box-webapp` and uses basic authentication to protect access to the web interface. 
+The webapp is accessible at `WIS2BOX_URL/wis2box-webapp` and uses basic authentication to control access to the web interface. 
 The credentials are defined in the ``wis2box.env`` file by the following environment variables:
 
 .. code-block:: bash
