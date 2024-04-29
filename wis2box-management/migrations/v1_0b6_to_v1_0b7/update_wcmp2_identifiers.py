@@ -49,7 +49,7 @@ except FileNotFoundError as err:
 
 
 def migrate(dryrun):
-    LOGGER.info('Updating station data in Elasticsearch index')
+    LOGGER.info('Updating discovery data in Elasticsearch index')
     LOGGER.info('Connecting to API ...')
     try:
         es = Elasticsearch(API_BACKEND_URL)
@@ -57,7 +57,6 @@ def migrate(dryrun):
         LOGGER.error(f'Error connecting to {API_BACKEND_URL}')
         raise err
 
-    LOGGER.info('Updating discovery metadata')
     try:
         res = es.search(index=es_index,
                         query={'match_all': {}},
@@ -73,19 +72,19 @@ def migrate(dryrun):
         record = hit['_source']
         old_record_id = record['id']
         record['id'] = old_record_id.replace('x-wmo', 'wmo')
+        LOGGER.info(f"Updating discovery metadata record {record['id']}")
 
         th = record['wis2box']['topic_hierarchy']
 
         if th not in DATA_MAPPINGS['data'].keys():
-            print("TH", th)
-            print("DATA MAPPINGS", DATA_MAPPINGS['data'].keys())
             LOGGER.info('No matching topic found')
         else:
             record['wis2box']['data_mappings'] = DATA_MAPPINGS['data'][th]
+            record_str = json.dumps(record, default=json_serial, indent=4)
 
             if dryrun:
                 LOGGER.info('dryrun == True, writing updates to stdout')
-                print(record)
+                LOGGER.info(f'Updated record: {record_str}')
             else:
                 LOGGER.info('Updating index ...')
                 try:
@@ -93,10 +92,8 @@ def migrate(dryrun):
                     es.index(index=es_index, id=record['id'], document=record)
                     storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/metadata/{old_record_id}.json" # noqa
                     delete_data(storage_path)
-                    data_bytes = json.dumps(
-                        record, default=json_serial).encode('utf-8')
+                    data_bytes = record_str.encode('utf-8')
                     put_data(data_bytes, storage_path, 'application/geo+json')
-
                 except Exception as err:
                     LOGGER.error('Error applying update')
                     raise err
