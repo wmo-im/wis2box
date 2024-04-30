@@ -252,6 +252,11 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
             record_mcf = dm.parse_record(metadata)
             record = dm.generate(record_mcf)
 
+        if 'x-wmo' in record['id']:
+            msg = 'Change x-wmo to wmo in metadata identifier'
+            LOGGER.error(msg)
+            raise RuntimeError(msg)
+
         if 'data_mappings' not in record['wis2box']:
             msg = 'Missing wis2box.data_mappings definition'
             LOGGER.error(msg)
