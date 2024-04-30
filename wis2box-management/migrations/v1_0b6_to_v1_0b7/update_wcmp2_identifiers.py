@@ -84,6 +84,7 @@ def migrate(dryrun):
         else:
             record['id'] = new_record_id
             record['properties']['identifier'] = new_record_id
+            record['properties']['id'] = new_record_id
             record['wis2box'] = {
                 'data_mappings': DATA_MAPPINGS['data'][th],
                 'topic_hierarchy': th,
