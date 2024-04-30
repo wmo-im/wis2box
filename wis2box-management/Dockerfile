@@ -57,9 +57,6 @@ RUN apt-get update -y && apt-get install -y ${DEBIAN_PACKAGES} \
 # copy wdmr codelists
 COPY ./wmdr-codelists /home/wis2box/wmdr-codelists
 
-# copy migrations
-COPY ./migrations /home/wis2box/migrations
-
 # copy the app
 COPY . /app
 # install wis2box
