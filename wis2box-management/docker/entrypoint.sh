@@ -33,9 +33,6 @@ printenv | grep -v "no_proxy" >> /etc/environment
 service cron start
 service cron status
 
-echo "Caching topic hierarchy CSVs"
-pywis-topics bundle sync
-
 # wis2box commands
 # TODO: avoid re-creating environment if it already exists
 # TODO: catch errors and avoid bounce in conjuction with restart: always
@@ -44,6 +41,9 @@ wis2box environment show
 wis2box api setup
 wis2box metadata discovery setup
 wis2box metadata station setup
+
+echo "Caching topic hierarchy CSVs"
+pywis-topics bundle sync
 
 # check if WIS2BOX_WEBAPP_USERNAME and WIS2BOX_WEBAPP_PASSWORD are set, otherwise set them
 if [ -z "$WIS2BOX_WEBAPP_USERNAME" ]; then
@@ -55,15 +55,22 @@ if [ -z "$WIS2BOX_WEBAPP_PASSWORD" ]; then
     export WIS2BOX_WEBAPP_PASSWORD=${WIS2BOX_STORAGE_PASSWORD}
 fi
 
+# create directory /home/wis2box/.htpasswd/ if not exists
+if [ ! -d /home/wis2box/.htpasswd/ ]; then
+    echo "Creating /home/wis2box/.htpasswd/"
+    mkdir /home/wis2box/.htpasswd/
+fi
+
 # create /home/wis2box/.htpasswd/webapp if not exists
 # otherwise, delete the file and create it
+# in case of failure continue
 if [ ! -f /home/wis2box/.htpasswd/webapp ]; then
     echo "Creating /home/wis2box/.htpasswd/webapp"
-    htpasswd -bc /home/wis2box/.htpasswd/webapp $WIS2BOX_WEBAPP_USERNAME $WIS2BOX_WEBAPP_PASSWORD
+    htpasswd -bc /home/wis2box/.htpasswd/webapp $WIS2BOX_WEBAPP_USERNAME $WIS2BOX_WEBAPP_PASSWORD || true
 else
     rm /home/wis2box/.htpasswd/webapp
     echo "Re-creating /home/wis2box/.htpasswd/webapp"
-    htpasswd -bc /home/wis2box/.htpasswd/webapp $WIS2BOX_WEBAPP_USERNAME $WIS2BOX_WEBAPP_PASSWORD
+    htpasswd -bc /home/wis2box/.htpasswd/webapp $WIS2BOX_WEBAPP_USERNAME $WIS2BOX_WEBAPP_PASSWORD || true
 fi
 
 # Check if the path is restricted and capture the output
