@@ -29,7 +29,7 @@ from elasticsearch.helpers import bulk
 
 from wis2box.log import LOGGER, setup_logger
 
-LOG_LEVEL = os.getenv("LOG_LEVEL", "DEBUG").upper()
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
 setup_logger(loglevel=LOG_LEVEL)
 
 DATADIR = os.getenv("WIS2BOX_DATADIR")

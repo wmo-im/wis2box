@@ -32,7 +32,7 @@ from wis2box.log import LOGGER, setup_logger
 from wis2box.storage import put_data, delete_data
 from wis2box.util import json_serial, yaml_load
 
-LOG_LEVEL = os.getenv('LOG_LEVEL', 'DEBUG').upper()
+LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
 setup_logger(loglevel=LOG_LEVEL)
 
 es_index = 'discovery-metadata'
@@ -71,23 +71,26 @@ def migrate(dryrun):
     for hit in nhits:
         record = hit['_source']
         old_record_id = record['id']
-        record['id'] = old_record_id.replace('x-wmo', 'wmo')
-        LOGGER.info(f"Updating discovery metadata record {record['id']}")
+        new_record_id = old_record_id.replace('x-wmo', 'wmo')
+        LOGGER.info(f"Updating discovery metadata record {old_record_id}")
 
         th = record['properties']['wmo:topicHierarchy']
-        th = th.replace('origin/a/wis2/', '').replace('/', '')
+        th = th.replace('origin/a/wis2/', '').replace('/', '.')
         centre_id = th.split('.')[0]
 
         if th not in DATA_MAPPINGS['data'].keys():
-            LOGGER.info('No matching topic found')
+            LOGGER.error(f'Error updating record {old_record_id}:')
+            LOGGER.error(f'{th} not found in {DATA_MAPPINGS["data"].keys()}')
         else:
+            record['id'] = new_record_id
+            record['properties']['identifier'] = new_record_id
             record['wis2box'] = {
                 'data_mappings': DATA_MAPPINGS['data'][th],
                 'topic_hierarchy': th,
                 'retention': 'P30D',
                 'centre_id': centre_id
             }
-
+            # TODO update links ?
             record_str = json.dumps(record, default=json_serial, indent=4)
 
             if dryrun:
@@ -99,9 +102,13 @@ def migrate(dryrun):
                     es.delete(index=es_index, id=old_record_id)
                     es.index(index=es_index, id=record['id'], document=record)
                     storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/metadata/{old_record_id}.json" # noqa
+                    LOGGER.info(f'Delete old storage path: {storage_path}')
                     delete_data(storage_path)
+                    storage_path = f"{STORAGE_SOURCE}/{STORAGE_PUBLIC}/metadata/{new_record_id}.json" # noqa
+                    LOGGER.info(f'Upload to new storage path: {storage_path}')
                     data_bytes = record_str.encode('utf-8')
                     put_data(data_bytes, storage_path, 'application/geo+json')
+                    # TODO update data-collection index ?
                 except Exception as err:
                     LOGGER.error('Error applying update')
                     raise err
