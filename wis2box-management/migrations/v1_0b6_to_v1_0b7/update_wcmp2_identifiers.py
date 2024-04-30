@@ -74,17 +74,20 @@ def migrate(dryrun):
         record['id'] = old_record_id.replace('x-wmo', 'wmo')
         LOGGER.info(f"Updating discovery metadata record {record['id']}")
 
-        th = record['wis2box']['topic_hierarchy']
-        try:
-            th = record['wis2box']['topic_hierarchy']
-        except KeyError as err:
-            LOGGER.info(f'Missing key {err}; skipping record')
-            continue
+        th = record['properties']['wmo:topicHierarchy']
+        th = th.replace('origin/a/wis2/', '').replace('/', '')
+        centre_id = th.split('.')[0]
 
         if th not in DATA_MAPPINGS['data'].keys():
             LOGGER.info('No matching topic found')
         else:
-            record['wis2box']['data_mappings'] = DATA_MAPPINGS['data'][th]
+            record['wis2box'] = {
+                'data_mappings': DATA_MAPPINGS['data'][th],
+                'topic_hierarchy': th,
+                'retention': 'P30D',
+                'centre_id': centre_id
+            }
+
             record_str = json.dumps(record, default=json_serial, indent=4)
 
             if dryrun:
