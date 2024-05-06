@@ -34,13 +34,11 @@ RUN if [ "$WIS2BOX_PIP3_EXTRA_PACKAGES" = "None" ]; \
     fi
 
 # install dependencies
-# FIXME: csv2bufr/bufr2geojson: remove and install from requirements.txt once we have a stable release
-# FIXME: pygeometa: remove and install from requirements.txt once we have a stable release
 RUN apt-get update -y && apt-get install -y ${DEBIAN_PACKAGES} \
     # install wis2box data pipeline dependencies
     && pip3 install --no-cache-dir \
-    https://github.com/wmo-cop/pyoscar/archive/refs/tags/0.6.4.zip \
-    https://github.com/geopython/pygeometa/archive/master.zip \
+    https://github.com/wmo-cop/pyoscar/archive/refs/tags/0.7.0.zip \
+    https://github.com/geopython/pygeometa/archive/0.16.0.zip \
     https://github.com/wmo-im/pywis-topics/archive/refs/tags/0.2.0.zip \
     # install shapely
     && pip3 install --no-cache-dir cython pygeos==0.13 \
