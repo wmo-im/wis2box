@@ -16,7 +16,7 @@ and download the .zip file from the Assets section.
 
 .. code-block:: bash
 
-   https://github.com/wmo-im/wis2box/releases/download/1.0b7/wis2box-setup-1.0b7.zip
+   wget https://github.com/wmo-im/wis2box/releases/download/1.0b7/wis2box-setup-1.0b7.zip
    unzip wis2box-setup-1.0b7.zip
    cd wis2box-1.0b7
 
