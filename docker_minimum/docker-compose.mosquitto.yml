@@ -1,0 +1,11 @@
+services:
+  mosquitto:
+    build: 
+      context: ../wis2box-broker
+    restart: always
+    environment:
+      - WIS2BOX_BROKER_USERNAME=localbroker-admin
+      - WIS2BOX_BROKER_PASSWORD=localbroker-password
+      - WIS2BOX_BROKER_QUEUE_MAX=1000
+    ports:
+      - 7883:1883

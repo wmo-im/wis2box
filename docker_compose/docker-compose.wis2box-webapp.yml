@@ -1,9 +1,0 @@
-services:
-  wis2box-webapp:
-    container_name: wis2box-webapp
-    image: ghcr.io/wmo-im/wis2box-webapp:latest
-    environment:
-      - WIS2BOX_API_URL=${WIS2BOX_API_URL}
-      - WIS2BOX_URL=${WIS2BOX_URL}
-      - WIS2BOX_BASEMAP_URL=${WIS2BOX_BASEMAP_URL}
-      - WIS2BOX_BASEMAP_ATTRIBUTION=${WIS2BOX_BASEMAP_ATTRIBUTION}

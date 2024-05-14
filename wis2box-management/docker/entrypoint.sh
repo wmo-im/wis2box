@@ -73,6 +73,17 @@ else
     htpasswd -bc /home/wis2box/.htpasswd/webapp $WIS2BOX_WEBAPP_USERNAME $WIS2BOX_WEBAPP_PASSWORD || true
 fi
 
+# check if WIS2BOX_AUTH_URL is set, if not skip running the remaining commands
+auth_url=${WIS2BOX_AUTH_URL}
+if [ -z "$auth_url" ]; then
+    echo "WIS2BOX_AUTH_URL is not set, skipping authentication setup"
+    echo "END /entrypoint.sh"
+    exec "$@"
+else
+    echo "WIS2BOX_AUTH_URL is set to $auth_url"
+    echo "Proceed to restrict processes/wis2box and collections/stations"
+fi
+
 # Check if the path is restricted and capture the output
 is_restricted=$(wis2box auth is-restricted-path --path processes/wis2box)
 if [ "$is_restricted" = "True" ]; then
