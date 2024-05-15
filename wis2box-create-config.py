@@ -307,7 +307,7 @@ def create_wis2box_env(config_dir: str) -> None:
         fh.write('WIS2BOX_API_BACKEND_URL=http://elasticsearch:9200\n')
         fh.write('\n')
         fh.write('# logging\n')
-        fh.write('WIS2BOX_LOGGING_LOGLEVEL=ERROR\n')
+        fh.write('WIS2BOX_LOGGING_LOGLEVEL=WARNING\n')
         fh.write('WIS2BOX_LOGGING_LOGFILE=stdout\n')
         fh.write('\n')
         fh.write('# WIS2BOX WEBAPP credentials\n')
