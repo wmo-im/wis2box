@@ -65,7 +65,7 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
 
         payload = {
             'inputs': {
-                'channel': self.topic_hierarchy.dirpath,
+                'channel': self.topic_hierarchy.replace('origin/a/wis2/', ''),
                 'template': self.template,
                 'notify': False,
                 'data': data
@@ -113,4 +113,4 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
 
     def get_local_filepath(self, date_):
         yyyymmdd = date_.strftime('%Y-%m-%d')
-        return (Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath)
+        return (Path(yyyymmdd) / 'wis' / self.topic_hierarchy)

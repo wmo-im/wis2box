@@ -25,50 +25,16 @@ import click
 
 from wis2box import cli_helpers
 from wis2box.data import add_collection
-from wis2box.data_mappings import get_data_mappings
 from wis2box.metadata.discovery import publish, unpublish
 
 LOGGER = logging.getLogger(__name__)
-
-class Dataset:
-    def __init__(self, path: Union[Path, str]) -> None:
-        self.path = str(path)
-        self.dotpath = None
-        self.dirpath = None
-
-        self.metadata_id = None
-        self.topic_hierarchy = None
-
-        # determine if path matches a metadata_id
-        for metadata_id, data_mappings in get_data_mappings().items():
-            if metadata_id in self.path:
-                self.metadata_id = metadata_id
-                self.topic_hierarchy = data_mappings['topic_hierarchy']
-
-        if self.metadata_id is None:
-            # otherwise directory represents topic_hierarchy
-            if not self.path.startswith('origin/a/wis2'):
-                self.topic_hierarchy = f'origin/a/wis2/{self.path}'
-            else:
-                self.topic_hierarchy = self.path
-            for metadata_id, data_mappings in get_data_mappings().items():
-                if self.topic_hierarchy == data_mappings['topic_hierarchy']:
-                    self.metadata_id = metadata_id
-
-        if '/' in self.path:
-            LOGGER.debug('Transforming from directory to dotted path')
-            self.dirpath = self.path
-            self.dotpath = self.path.replace('/', '.')
-        elif '.' in self.path:
-            LOGGER.debug('Transforming from dotted to directory path')
-            self.dotpath = self.path
-            self.dirpath = self.path.replace('.', '/')
 
 
 @click.group()
 def dataset():
     """Dataset workflow"""
     pass
+
 
 @click.command('publish')
 @click.pass_context

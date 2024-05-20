@@ -108,7 +108,7 @@ def auth():
 
 @click.command()
 @click.pass_context
-@cli_helpers.OPTION_DATASET
+@cli_helpers.OPTION_METADATA_ID
 def is_restricted_dataset(ctx, metadata_id):
     """Check if dataset has access control"""
     click.echo(not is_resource_open(metadata_id))
@@ -124,7 +124,7 @@ def is_restricted_path(ctx, path):
 
 @click.command()
 @click.pass_context
-@cli_helpers.OPTION_DATASET
+@cli_helpers.OPTION_METADATA_ID
 @click.argument('token')
 def has_access_dataset(ctx, metadata_id, token):
     """Check if a token has access to a dataset"""
@@ -142,7 +142,7 @@ def has_access_path(ctx, path, token):
 
 @click.command()
 @click.pass_context
-@cli_helpers.OPTION_DATASET
+@cli_helpers.OPTION_METADATA_ID
 @click.option('--path', '-p')
 @click.option('--yes', '-y', default=False, is_flag=True, help='Automatic yes')
 @click.argument('token', required=False)
@@ -168,12 +168,11 @@ def add_token(ctx, metadata_id, path, yes, token):
 
 @click.command()
 @click.pass_context
-@cli_helpers.OPTION_DATASET
+@cli_helpers.OPTION_METADATA_ID
 @click.option('--path', '-p')
 @click.argument('token', required=False, nargs=-1)
 def remove_token(ctx, metadata_id, path, token):
     """Delete one to many tokens for a dataset"""
-
 
     if metadata_id is not None:
         path = metadata_id

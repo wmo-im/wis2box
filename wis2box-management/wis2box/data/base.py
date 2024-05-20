@@ -29,7 +29,6 @@ from wis2box.env import (STORAGE_PUBLIC,
                          STORAGE_SOURCE, BROKER_PUBLIC,
                          DOCKER_BROKER)
 from wis2box.storage import exists, get_data, put_data
-from wis2box.dataset import Dataset
 
 from wis2box.plugin import load_plugin, PLUGINS
 
@@ -53,7 +52,8 @@ class BaseAbstractData:
         LOGGER.debug('Parsing resource mappings')
         self.filename = None
         self.incoming_filepath = None
-        self.dataset = Dataset(defs['dataset'])
+        self.metadata_id = defs.get('metadata_id', None)
+        self.topic_hierarchy = defs.get('topic_hierarchy', None)
         self.template = defs.get('template', None)
         self.file_filter = defs.get('pattern', '.*')
         self.enable_notification = defs.get('notify', False)
@@ -143,8 +143,8 @@ class BaseAbstractData:
         LOGGER.info('Publishing WISNotificationMessage to public broker')
         LOGGER.debug(f'Prepare message for: {storage_path}')
 
-        topic = self.dataset.topic_hierarchy
-        metadata_id = self.dataset.metadata_id
+        topic = self.topic_hierarchy
+        metadata_id = self.metadata_id
 
         operation = 'create' if is_update is False else 'update'
 

@@ -25,7 +25,7 @@ from pathlib import Path
 
 from wis2box.api import upsert_collection_item
 from wis2box.storage import get_data
-from wis2box.dataset import validate_and_load
+from wis2box.data_mappings import validate_and_load
 
 from wis2box.plugin import load_plugin
 from wis2box.plugin import PLUGINS
@@ -56,19 +56,12 @@ class Handler:
         if self.filepath.startswith('http'):
             self.input_bytes = get_data(self.filepath)
 
-        if metadata_id is not None:
-            fuzzy = False
-        else:
-            th = self.filepath
-            fuzzy = True
-
-        if '/metadata/' in th:
+        if '/metadata/' in self.filepath:
             msg = 'Passing on handling metadata in workflow'
             raise NotHandledError(msg)
-
         try:
             self.metadata_id, self.plugins = validate_and_load(
-                th, data_mappings, self.filetype, fuzzy=fuzzy)
+                self.filepath, data_mappings, self.filetype)
         except Exception as err:
             msg = f'Path validation error: {err}'
             # errors in public storage are not handled
@@ -131,7 +124,7 @@ class Handler:
         return True
 
     def publish(self) -> bool:
-        index_name = self.topic_hierarchy.dotpath
+        index_name = self.metadata_id
         if self.input_bytes:
             geojson = json.load(self.input_bytes)
             upsert_collection_item(index_name, geojson)

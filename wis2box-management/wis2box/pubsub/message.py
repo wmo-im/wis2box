@@ -53,19 +53,16 @@ class PubSubMessage:
     Generic message class
     """
 
-    def __init__(self, type_: str, identifier: str, metadata_id: str, filepath: str,
-                 datetime_: datetime, geometry: dict = None,
-                 wigos_station_identifier: str = None) -> None:
+    def __init__(self, type_: str, identifier: str, filepath: str,
+                 datetime_: datetime, geometry: dict = None) -> None:
         """
         Initializer
 
         :param type_: message type
         :param identifier: identifier
-        :param metadata_id: metadata_id
         :param filepath: `Path` of file
         :param datetime_: `datetime` object of temporal aspect of data
         :param geometry: `dict` of GeoJSON geometry object
-        :param wigos_station_identifier: WSI associated with the data
 
         :returns: `wis2box.pubsub.message.PubSubMessage` message object
         """
@@ -135,9 +132,9 @@ class WISNotificationMessage(PubSubMessage):
         super().__init__('wis2-notification-message', identifier,
                          metadata_id, filepath, datetime_, geometry)
 
-        data_id = f'{metadata_id}/{self.identifier}'.replace('origin/a/wis2/', '')
+        data_id = f'{metadata_id}/{self.identifier}'
 
-        if '/metadata' in metadata_id:
+        if '/metadata' in filepath:
             mimetype = 'application/geo+json'
         else:
             suffix = self.filepath.split('.')[-1]
@@ -175,6 +172,7 @@ class WISNotificationMessage(PubSubMessage):
             'geometry': self.geometry,
             'properties': {
                 'data_id': data_id,
+                'metadata_id': metadata_id,
                 'datetime': self.datetime,
                 'pubtime': self.publish_datetime,
                 'integrity': {

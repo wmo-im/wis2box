@@ -37,7 +37,6 @@ from wis2box.metadata.discovery import DiscoveryMetadata
 from wis2box.storage import put_data, move_data, list_content, delete_data
 from wis2box.util import older_than, walk_path
 
-
 LOGGER = logging.getLogger(__name__)
 
 
@@ -194,20 +193,31 @@ def clean(ctx, days, verbosity):
 @click.command()
 @click.pass_context
 @cli_helpers.OPTION_TOPIC_HIERARCHY
+@cli_helpers.OPTION_METADATA_ID
 @cli_helpers.OPTION_PATH
 @cli_helpers.OPTION_RECURSIVE
 @cli_helpers.OPTION_VERBOSITY
-def ingest(ctx, topic_hierarchy, path, recursive, verbosity):
+def ingest(ctx, topic_hierarchy, metadata_id, path, recursive, verbosity):
     """Ingest data file or directory"""
 
-    data_mappings = get_data_mappings()
+    # either topic_hierarchy or metadata_id must be provided
+    if topic_hierarchy and metadata_id:
+        raise click.ClickException('Only one of topic_hierarchy or metadata_id can be provided') # noqa
+
+    if not topic_hierarchy and not metadata_id:
+        raise click.ClickException('Please specify a metadata_id using the option --metadata-id') # noqa
+
+    rfp = None
+    if metadata_id:
+        data_mappings = get_data_mappings()
+        if metadata_id not in data_mappings:
+            raise click.ClickException(f'Metadata ID {metadata_id} not found in data mappings') # noqa
+        rfp = metadata_id
+    else:
+        rfp = topic_hierarchy.replace('.', '/')
 
     for file_to_process in walk_path(path, '.*', recursive):
         click.echo(f'Processing {file_to_process}')
-        handler = Handler(filepath=file_to_process,
-                          topic_hierarchy=topic_hierarchy,
-                          data_mappings=data_mappings)
-        rfp = handler.topic_hierarchy.dirpath
         path = f'{STORAGE_INCOMING}/{rfp}/{file_to_process.name}'
 
         with file_to_process.open('rb') as fh:
