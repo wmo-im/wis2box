@@ -137,6 +137,7 @@ def validate_and_load(path: str,
     def data_defs(plugin):
         return {
             'metadata_id': metadata_id,
+            'íncoming_filepath': path,
             'topic_hierarchy': topic_hierarchy,
             'codepath': plugin['plugin'],
             'pattern': plugin['file-pattern'],

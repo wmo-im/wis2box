@@ -130,7 +130,7 @@ class WISNotificationMessage(PubSubMessage):
                  operation: str = 'create') -> None:
 
         super().__init__('wis2-notification-message', identifier,
-                         metadata_id, filepath, datetime_, geometry)
+                         filepath, datetime_, geometry)
 
         data_id = f'{metadata_id}/{self.identifier}'
 
