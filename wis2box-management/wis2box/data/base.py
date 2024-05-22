@@ -51,7 +51,7 @@ class BaseAbstractData:
 
         LOGGER.debug('Parsing resource mappings')
         self.filename = None
-        self.incoming_filepath = None
+        self.incoming_filepath = defs.get('incoming_filepath', None)
         self.metadata_id = defs.get('metadata_id', None)
         self.topic_hierarchy = defs.get('topic_hierarchy', None)
         self.template = defs.get('template', None)
@@ -63,9 +63,10 @@ class BaseAbstractData:
 #        if discovery_metadata:
 #            self.setup_discovery_metadata(discovery_metadata)
 
-    def publish_failure_message(self, description, wsi=None):
+    def publish_failure_message(self, description, wsi=None, identifier=None):
         message = {
-            'filepath': self.incoming_filepath,
+            'incoming_filepath': self.incoming_filepath,
+            'identifier': identifier,
             'description': description
         }
         if wsi is not None:
@@ -246,12 +247,10 @@ class BaseAbstractData:
 
                 if self.enable_notification and is_new:
                     LOGGER.debug('Sending notification to broker')
-
                     try:
                         datetime_ = item['_meta']['properties']['datetime']
                     except KeyError:
                         datetime_ = item['_meta'].get('data_date')
-
                     self.notify(identifier, storage_path,
                                 datetime_,
                                 item['_meta'].get('geometry'), wsi, is_update)
@@ -259,9 +258,10 @@ class BaseAbstractData:
                     LOGGER.debug('No notification sent')
         except Exception as err:
             msg = f'Failed to publish item {identifier}: {err}'
-            LOGGER.error(msg, exc_info=True)
+            LOGGER.error(msg)
             self.publish_failure_message(
                     description='Failed to publish item',
+                    identifier=identifier,
                     wsi=wsi)
         return True
 
