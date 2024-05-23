@@ -98,10 +98,7 @@ def setup_collection(meta: dict = {}) -> bool:
         LOGGER.error(f'Invalid configuration: {meta}')
         return False
 
-    if 'topic_hierarchy' in meta:
-        data_name = meta['topic_hierarchy']
-    else:
-        data_name = meta['id']
+    data_name = meta['id']
 
     backend = load_backend()
     if not backend.has_collection(data_name):

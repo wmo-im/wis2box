@@ -132,7 +132,7 @@ class WISNotificationMessage(PubSubMessage):
         super().__init__('wis2-notification-message', identifier,
                          filepath, datetime_, geometry)
 
-        data_id = f'{metadata_id}/{self.identifier}'
+        data_id = f'{self.identifier}'
 
         if '/metadata' in filepath:
             mimetype = 'application/geo+json'
@@ -172,7 +172,6 @@ class WISNotificationMessage(PubSubMessage):
             'geometry': self.geometry,
             'properties': {
                 'data_id': data_id,
-                'metadata_id': metadata_id,
                 'datetime': self.datetime,
                 'pubtime': self.publish_datetime,
                 'integrity': {
@@ -183,6 +182,9 @@ class WISNotificationMessage(PubSubMessage):
             'links': links,
             'generated-by': f'wis2box {__version__}'
         }
+
+        if metadata_id is not None:
+            self.message['properties']['metadata_id'] = metadata_id
 
         if self.length < 4096:
             LOGGER.debug('Including data inline via properties.content')

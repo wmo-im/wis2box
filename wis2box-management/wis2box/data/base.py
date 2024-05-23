@@ -150,7 +150,7 @@ class BaseAbstractData:
         operation = 'create' if is_update is False else 'update'
 
         wis_message = WISNotificationMessage(
-            identifier, metadata_id, storage_path, datetime_, geometry,
+            f'{metadata_id}/{identifier}', metadata_id, storage_path, datetime_, geometry,
             wigos_station_identifier, operation)
 
         # load plugin for public broker

@@ -1,6 +1,6 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: it-roma_met_centre.data.core.weather.surface-based-observations.synop
+    topic_hierarchy: it-roma_met_centre/data/core/weather/surface-based-observations/synop
     country: ita
     centre_id: it-roma_met_centre
     data_mappings:

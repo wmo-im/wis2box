@@ -1,6 +1,6 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: int-wmo-test.data.core.weather.surface-based-observations.ship
+    topic_hierarchy: int-wmo-test/data/core/weather/surface-based-observations/ship
     country: int
     centre_id: int-wmo-test
     data_mappings:
