@@ -142,8 +142,6 @@ class PygeoapiConfig(BaseConfig):
 
         if meta['id'] in ['discovery-metadata', 'messages', 'stations']:
             resource_id = meta['id']
-        else:
-            resource_id = meta['topic_hierarchy']
 
         if meta['id'] in ['discovery-metadata', 'stations']:
             editable = True
