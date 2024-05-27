@@ -104,7 +104,7 @@ def validate_and_load(path: str,
     topic_hierarchy = None
     # determine if path matches a metadata_id
     for key in data_mappings.keys():
-        if key in path:
+        if key.replace('urn:wmo:md:', '') in path:
             metadata_id = key
             topic_hierarchy = data_mappings[key]['topic_hierarchy']
     # else try to match topic_hierarchy
@@ -114,7 +114,8 @@ def validate_and_load(path: str,
                 metadata_id = key
                 topic_hierarchy = data_mappings['topic_hierarchy']
     if metadata_id is None:
-        msg = f'Could not match {path} to dataset, available keys are: {list(data_mappings.keys())}'  # noqa
+        options = [key.replace('urn:wmo:md:', '') for key in data_mappings.keys()]
+        msg = f'Could not match {path} to dataset, options are: {options}'  # noqa
         raise ValueError(msg)
 
     plugins = data_mappings[metadata_id]['plugins']
