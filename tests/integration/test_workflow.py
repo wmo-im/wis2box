@@ -167,7 +167,7 @@ def test_data_ingest():
 
     assert item_api['reportId'] == 'WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500'
     assert item_api['properties']['resultTime'] == '2021-07-07T14:55:00Z'  # noqa
-    item_source = f'2021-07-07/mw-mw_met_centre:surface-weather-observations/{item_api["reportId"]}.bufr4' # noqa
+    item_source = f'2021-07-07/wis/mw-mw_met_centre:surface-weather-observations/{item_api["reportId"]}.bufr4' # noqa
     r = SESSION.get(f'{URL}/data/{item_source}')  # noqa
     assert r.status_code == codes.ok
 
