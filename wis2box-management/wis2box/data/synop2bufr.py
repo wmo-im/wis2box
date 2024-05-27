@@ -124,4 +124,4 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
 
     def get_local_filepath(self, date_):
         yyyymmdd = date_.strftime('%Y-%m-%d')
-        return (Path(yyyymmdd) / 'wis' / self.topic_hierarchy)
+        return (Path(yyyymmdd) / 'wis' / self.metadata_id.replace('urn:wmo:md:',''))

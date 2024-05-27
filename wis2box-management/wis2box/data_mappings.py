@@ -114,10 +114,7 @@ def validate_and_load(path: str,
                 metadata_id = key
                 topic_hierarchy = data_mappings['topic_hierarchy']
     if metadata_id is None:
-        msg = f'Could not match {path} to dataset. Did not match any of the following: '  # noqa
-        options = [v["topic_hierarchy"] for v in data_mappings.values()]
-        options += [k for k in data_mappings.keys()]
-        msg += ', '.join(options)
+        msg = f'Could not match {path} to dataset, available keys are: {list(data_mappings.keys())}'  # noqa
         raise ValueError(msg)
 
     plugins = data_mappings[metadata_id]['plugins']

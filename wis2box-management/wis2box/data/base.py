@@ -150,8 +150,8 @@ class BaseAbstractData:
         operation = 'create' if is_update is False else 'update'
 
         wis_message = WISNotificationMessage(
-            f'{metadata_id}/{identifier}', metadata_id, storage_path, datetime_, geometry,
-            wigos_station_identifier, operation)
+            f"{metadata_id.replace('urn:wmo:md:', '')}/{identifier}", metadata_id,
+            storage_path, datetime_, geometry, wigos_station_identifier, operation)
 
         # load plugin for public broker
         defs = {

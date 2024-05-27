@@ -140,13 +140,15 @@ class PygeoapiConfig(BaseConfig):
 
         editable = False
 
-        if meta['id'] in ['discovery-metadata', 'messages', 'stations']:
-            resource_id = meta['id']
+        resource_id = meta['id']
 
         if meta['id'] in ['discovery-metadata', 'stations']:
             editable = True
+        else:
+            # avoid colons in resource id
+            resource_id = resource_id.lower().replace(':', '-')
 
-        LOGGER.debug(f'Resource id: {resource_id}')
+        LOGGER.info(f'Prepare collection with resource_id={resource_id}')
 
         type_ = meta.get('type', 'feature')
 
