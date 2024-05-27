@@ -100,4 +100,4 @@ class ObservationDataBUFR(BaseAbstractData):
 
     def get_local_filepath(self, date_):
         yyyymmdd = date_.strftime('%Y-%m-%d')
-        return Path(yyyymmdd) / 'wis' / self.metadata_id.replace('urn:wmo:md:','')
+        return Path(yyyymmdd) / 'wis' / self.metadata_id.replace('urn:wmo:md:', '') # noqa

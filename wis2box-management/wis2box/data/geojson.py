@@ -71,4 +71,4 @@ class ObservationDataGeoJSON(BaseAbstractData):
 
     def get_local_filepath(self, date_):
         yyyymmdd = date_[0:10]  # date_.strftime('%Y-%m-%d')
-        return Path(yyyymmdd) / 'wis' / self.metadata_id.replace('urn:wmo:md:','')
+        return Path(yyyymmdd) / 'wis' / self.metadata_id.replace('urn:wmo:md:', '') # noqa

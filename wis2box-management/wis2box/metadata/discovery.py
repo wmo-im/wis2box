@@ -178,7 +178,8 @@ def publish_broker_message(record: dict, storage_path: str,
     topic = f'origin/a/wis2/{centre_id.lower()}/metadata'  # noqa
 
     datetime_ = datetime.strptime(record['properties']['created'], '%Y-%m-%dT%H:%M:%SZ')  # noqa
-    wis_message = WISNotificationMessage(identifier=f"{centre_id.lower()}/metadata/{record['id']}",
+    identifier = f"{centre_id.lower()}/metadata/{record['id']}"
+    wis_message = WISNotificationMessage(identifier=identifier,
                                          metadata_id=None,
                                          filepath=storage_path,
                                          datetime_=datetime_,
