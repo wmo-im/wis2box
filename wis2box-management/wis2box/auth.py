@@ -182,7 +182,7 @@ def remove_token(ctx, metadata_id, path, token):
     if metadata_id is not None:
         data_mappings = get_data_mappings()
         if metadata_id not in data_mappings:
-            raise click.ClickException(f'Metadata ID {metadata_id} not found in data mappings')
+            raise click.ClickException(f'Metadata ID {metadata_id} not found in data mappings') # noqa
         path = metadata_id
     elif path is not None:
         path = path
