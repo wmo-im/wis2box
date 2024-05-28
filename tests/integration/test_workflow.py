@@ -267,7 +267,7 @@ def test_message_api():
     assert r['numberMatched'] == sum(counts.values())
 
     # we want to find a particular message with data ID
-    target_data_id = "urn:wmo:md:cd-brazza_met_centre:surface-weather-observations/WIGOS_0-20000-0-64406_20230803T090000" # noqa
+    target_data_id = "cd-brazza_met_centre:surface-weather-observations/WIGOS_0-20000-0-64406_20230803T090000" # noqa
 
     msg = None
     for feature in r['features']:
