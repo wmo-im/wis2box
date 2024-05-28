@@ -167,7 +167,7 @@ def test_data_ingest():
 
     assert item_api['reportId'] == 'WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500'
     assert item_api['properties']['resultTime'] == '2021-07-07T14:55:00Z'  # noqa
-    item_source = f'2021-07-07/wis/mw-mw_met_centre:surface-weather-observations/{item_api["reportId"]}.bufr4' # noqa
+    item_source = f'2021-07-07/wis/{ID}/{item_api["reportId"]}.bufr4' # noqa
     r = SESSION.get(f'{URL}/data/{item_source}')  # noqa
     assert r.status_code == codes.ok
 
@@ -267,7 +267,7 @@ def test_message_api():
     assert r['numberMatched'] == sum(counts.values())
 
     # we want to find a particular message with data ID
-    target_data_id = "cd-brazza_met_centre:surface-weather-observations/" \
+    target_data_id = "urn:wmo:md:cd-brazza_met_centre:surface-weather-observations/" \
         "WIGOS_0-20000-0-64406_20230803T090000"
 
     msg = None

@@ -27,28 +27,27 @@ Explicit topic hierarchy workflow
 .. code-block:: bash
 
    # process a single CSV file
-   wis2box data ingest --topic-hierarchy foo.bar.baz -p /path/to/file.csv
+   wis2box data ingest --metadata-id urn:wmo:md:centre-id:mydata -p /path/to/file.csv
 
    # process a directory of CSV files
-   wis2box data ingest --topic-hierarchy foo.bar.baz -p /path/to/dir
+   wis2box data ingest --metadata-id urn:wmo:md:centre-id:mydata  -p /path/to/dir
 
    # process a directory of CSV files recursively
-   wis2box data ingest --topic-hierarchy foo.bar.baz -p /path/to/dir -r
+   wis2box data ingest --metadata-id urn:wmo:md:centre-id:mydata -p /path/to/dir -r
 
 
-Implicit topic hierarchy workflow
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
+Implicit metadata_id workflow
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. code-block:: bash
 
-   # process incoming data; topic hierarchy is inferred from fuzzy filepath equivalent
-   # wis2box will detect 'foo/bar/baz' as topic hierarchy 'foo.bar.baz'
+   # process incoming data; metadata_id is inferred from fuzzy filepath equivalent
+   # wis2box will detect 'mydata' as metadata_id 'urn:md:wmo:mydata'
    wis2box data ingest -p /path/to/foo/bar/baz/data/file.csv
 
 
 Event driven ingest, processing and publishing
 ----------------------------------------------
 
-Once all metadata and topic hierarchies are setup, event driven workflow
+Once all datasets are setup, event driven workflow
 will immediately start to listen on files in the ``wis2box-incoming`` storage bucket as they are
-placed in the appropriate topic hierarchy directory.
+placed in the appropriate directory that can be matched to a metadata_id.

@@ -32,11 +32,11 @@ To add a token to PUT/POST/DELETE requests to the stations collection, use the f
 
 This will generate a random token that can be use to update the stations collection.
 
-Adding Access Control on topics
+Adding Access Control on datasets
 -------------------------------
 
-All topic hierarchies in wis2box are open by default. A topic becomes closed, with access control applied, the
-first time a token is generated for a topic hierarchy.
+All dataset in wis2box are open by default. A dataset becomes closed, with access control applied, the
+first time a token is generated for a dataset
 
 .. note::
 
@@ -44,7 +44,7 @@ first time a token is generated for a topic hierarchy.
 
 .. code-block:: bash
 
-    wis2box auth add-token --topic-hierarchy mw-mw_met_centre.data.core.weather.surface-based-observations.synop mytoken
+    wis2box auth add-token --metadata-id urn:wmo:md:mw-mw_met_centre:surface-weather-observations mytoken
 
 
 If no token is provided, a random string will be generated. Be sure to the record token now, there is no
@@ -58,8 +58,8 @@ Token credentials can be validated using the wis2box command line utility.
 .. code-block:: bash
 
     wis2box auth show
-    wis2box auth has-access-topic --topic-hierarchy mw-mw_met_centre.data.core.weather.surface-based-observations.synop mytoken
-    wis2box auth has-access-topic --topic-hierarchy mw-mw_met_centre.data.core.weather.surface-based-observations.synop notmytoken
+    wis2box auth has-access-topic --metadata-id urn:wmo:md:mw-mw_met_centre:surface-weather-observations mytoken
+    wis2box auth has-access-topic --metadata-id urn:wmo:md:mw-mw_met_centre:surface-weather-observations notmytoken
 
 
 Once a token has been generated, access to any data of that topic in the WAF or API requires token authentication.

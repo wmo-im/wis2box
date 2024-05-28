@@ -25,7 +25,9 @@ import requests
 from secrets import token_hex
 
 from wis2box import cli_helpers
+from wis2box.data_mappings import get_data_mappings
 from wis2box.env import AUTH_URL
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -39,7 +41,7 @@ def create_token(path: str, token: str) -> bool:
 
     :returns: `bool` of result
     """
-    data = {'path': path, 'token': token}
+    data = {'topic': path, 'token': token}
 
     r = requests.post(f'{AUTH_URL}/add_token', data=data)
     LOGGER.info(r.json().get('description'))
@@ -56,7 +58,7 @@ def delete_token(path: str, token: str = '') -> bool:
 
     :returns: `bool` of result
     """
-    data = {'path': path}
+    data = {'topic': path}
 
     if token != '':
         # Delete all tokens for a given th
@@ -150,6 +152,9 @@ def add_token(ctx, metadata_id, path, yes, token):
     """Add access token for a path or dataset"""
 
     if metadata_id is not None:
+        data_mappings = get_data_mappings()
+        if metadata_id not in data_mappings:
+            raise click.ClickException(f'Metadata ID {metadata_id} not found in data mappings') # noqa
         path = metadata_id
     elif path is not None:
         path = path
@@ -175,6 +180,9 @@ def remove_token(ctx, metadata_id, path, token):
     """Delete one to many tokens for a dataset"""
 
     if metadata_id is not None:
+        data_mappings = get_data_mappings()
+        if metadata_id not in data_mappings:
+            raise click.ClickException(f'Metadata ID {metadata_id} not found in data mappings')
         path = metadata_id
     elif path is not None:
         path = path
