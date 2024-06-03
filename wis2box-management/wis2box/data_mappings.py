@@ -109,10 +109,10 @@ def validate_and_load(path: str,
             topic_hierarchy = data_mappings[key]['topic_hierarchy']
     # else try to match topic_hierarchy
     if metadata_id is None:
-        for key, v in data_mappings.items():
-            if (v['topic_hierarchy']).replace('origin/a/wis2/', '') in path:  # noqa
+        for key, value in data_mappings.items():
+            if (value['topic_hierarchy']).replace('origin/a/wis2/', '') in path:  # noqa
                 metadata_id = key
-                topic_hierarchy = v['topic_hierarchy']
+                topic_hierarchy = value['topic_hierarchy']
                 break
     if metadata_id is None:
         options = [key for key in data_mappings.keys()] # noqa

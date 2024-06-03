@@ -33,7 +33,7 @@ To add a token to PUT/POST/DELETE requests to the stations collection, use the f
 This will generate a random token that can be use to update the stations collection.
 
 Adding Access Control on datasets
--------------------------------
+---------------------------------
 
 All dataset in wis2box are open by default. A dataset becomes closed, with access control applied, the
 first time a token is generated for a dataset

@@ -51,10 +51,10 @@ class BaseAbstractData:
 
         LOGGER.debug('Parsing resource mappings')
         self.filename = None
-        self.incoming_filepath = defs.get('incoming_filepath', None)
-        self.metadata_id = defs.get('metadata_id', None)
-        self.topic_hierarchy = defs.get('topic_hierarchy', None)
-        self.template = defs.get('template', None)
+        self.incoming_filepath = defs.get('incoming_filepath')
+        self.metadata_id = defs.get('metadata_id')
+        self.topic_hierarchy = defs.get('topic_hierarchy')
+        self.template = defs.get('template')
         self.file_filter = defs.get('pattern', '.*')
         self.enable_notification = defs.get('notify', False)
         self.buckets = defs.get('buckets', ())

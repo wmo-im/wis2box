@@ -38,7 +38,7 @@ OPTION_TOPIC_HIERARCHY = click.option('--topic-hierarchy', '-th',
                                       help='Topic hierarchy')
 
 OPTION_METADATA_ID = click.option('--metadata-id', '-mdi',
-                                  help='Metadata ID')
+                                  help='Metadata identifier')
 
 OPTION_RECURSIVE = click.option('--recursive', '-r', default=False,
                                 is_flag=True,

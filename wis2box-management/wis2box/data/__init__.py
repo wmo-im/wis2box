@@ -211,7 +211,7 @@ def ingest(ctx, topic_hierarchy, metadata_id, path, recursive, verbosity):
     if metadata_id:
         data_mappings = get_data_mappings()
         if metadata_id not in data_mappings:
-            raise click.ClickException(f'Metadata ID {metadata_id} not found in data mappings') # noqa
+            raise click.ClickException(f'metadata_id={metadata_id} not found in data mappings') # noqa
         rfp = metadata_id
     else:
         rfp = topic_hierarchy.replace('.', '/')

@@ -81,11 +81,11 @@ Select 'browse' on the ``wis2box-incoming`` bucket and select 'Choose or create 
 .. note::
     The folder in which the file is placed will be used to determine the dataset to which the file belongs.
     
-    The wis2box-management container will match the path of the file to the dataset defined in the data mappings by checking it either contains the metadata_id or the topic (excluding 'origin/a/wis2/').
+    The wis2box-management container will match the path of the file to the dataset defined in the data mappings by checking it either contains the metadata identifier or the topic (excluding 'origin/a/wis2/').
     
-    For example, using a filepath matching the metadata_id:
+    For example, using a filepath matching the metadata identifier:
 
-    * Metadata ID: ``urn:wmo:md:it-roma_met_centre:surface-weather-observations.synop``
+    * Metadata identifier: ``urn:wmo:md:it-roma_met_centre:surface-weather-observations.synop``
     * upload data in path containing: ``it-roma_met_centre:surface-weather-observations.synop``
 
     For example using a filepath matching the topic hierarchy:
@@ -93,7 +93,7 @@ Select 'browse' on the ``wis2box-incoming`` bucket and select 'Choose or create 
     * Topic Hierarchy: ``origin/a/wis2/cd-brazza_met_centre/data/core/weather/surface-based-observations/synop``
     * upload data in the path containing: ``cd-brazza_met_centre/data/core/weather/surface-based-observations/synop``
 
-    The error message ``Path validation error: Could not match http://minio:9000/wis2box-incoming/... to dataset, ...`` indicates you stored a file in a folder that could not be matched to a dataset.
+    The error message ``Path validation error: Could not match http://minio:9000/wis2box-incoming/... to dataset, ...`` indicates that a file was stored in a directory that could not be matched to a dataset.
 
 After uploading a file to ``wis2box-incoming`` storage bucket, you can browse the content in the ``wis2box-public`` bucket.  If the data ingest was successful, new data will appear as follows:
 
