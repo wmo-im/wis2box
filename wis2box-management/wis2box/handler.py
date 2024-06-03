@@ -25,7 +25,7 @@ from pathlib import Path
 
 from wis2box.api import upsert_collection_item
 from wis2box.storage import get_data
-from wis2box.topic_hierarchy import validate_and_load
+from wis2box.data_mappings import validate_and_load
 
 from wis2box.plugin import load_plugin
 from wis2box.plugin import PLUGINS
@@ -37,7 +37,7 @@ LOGGER = logging.getLogger(__name__)
 
 class Handler:
     def __init__(self, filepath: str,
-                 topic_hierarchy: str = None,
+                 metadata_id: str = None,
                  data_mappings: dict = None) -> None:
         self.filepath = filepath
         self.plugins = ()
@@ -56,22 +56,14 @@ class Handler:
         if self.filepath.startswith('http'):
             self.input_bytes = get_data(self.filepath)
 
-        if topic_hierarchy is not None:
-            th = topic_hierarchy
-            fuzzy = False
-        else:
-            th = self.filepath
-            fuzzy = True
-
-        if '/metadata/' in th:
+        if '/metadata/' in self.filepath:
             msg = 'Passing on handling metadata in workflow'
             raise NotHandledError(msg)
-
         try:
-            self.topic_hierarchy, self.plugins = validate_and_load(
-                th, data_mappings, self.filetype, fuzzy=fuzzy)
+            self.metadata_id, self.plugins = validate_and_load(
+                self.filepath, data_mappings, self.filetype)
         except Exception as err:
-            msg = f'Topic Hierarchy validation error: {err}'
+            msg = f'Path validation error: {err}'
             # errors in public storage are not handled
             if STORAGE_PUBLIC in self.filepath:
                 raise NotHandledError(msg)
@@ -132,7 +124,7 @@ class Handler:
         return True
 
     def publish(self) -> bool:
-        index_name = self.topic_hierarchy.dotpath
+        index_name = self.metadata_id
         if self.input_bytes:
             geojson = json.load(self.input_bytes)
             upsert_collection_item(index_name, geojson)

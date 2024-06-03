@@ -61,16 +61,15 @@ class WIS2BoxSubscriber:
             handler = Handler(filepath=filepath,
                               data_mappings=self.data_mappings)
             if handler.handle():
-                LOGGER.info('Data processed')
+                LOGGER.debug('Data processed')
                 for plugin in handler.plugins:
                     for filepath in plugin.files():
-                        LOGGER.info(f'Public filepath: {filepath}')
+                        LOGGER.debug(f'Public filepath: {filepath}')
         except NotHandledError as err:
-            msg = f'not handled error: {err}'
-            LOGGER.debug(msg)
+            msg = f'not handled: {err}'
+            LOGGER.info(msg)
         except ValueError as err:
-            msg = f'handle() error: {err}'
-            LOGGER.error(msg)
+            LOGGER.error(err)
         except Exception as err:
             msg = f'handle() error: {err}'
             raise err

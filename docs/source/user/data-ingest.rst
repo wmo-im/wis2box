@@ -79,16 +79,21 @@ Select 'browse' on the ``wis2box-incoming`` bucket and select 'Choose or create 
     :alt: MinIO new folder path
 
 .. note::
-    The folder in which the file is placed defines the topic you want to share the data on and should match the datasets defined in your data mappings.
+    The folder in which the file is placed will be used to determine the dataset to which the file belongs.
     
-    The first 3 levels of the WIS2 topic hierarchy ``origin/a/wis2`` are automatically included by wis2box when publishing data notification messages.
+    The wis2box-management container will match the path of the file to the dataset defined in the data mappings by checking it either contains the metadata identifier or the topic (excluding 'origin/a/wis2/').
+    
+    For example, using a filepath matching the metadata identifier:
 
-    For example:
+    * Metadata identifier: ``urn:wmo:md:it-roma_met_centre:surface-weather-observations.synop``
+    * upload data in path containing: ``it-roma_met_centre:surface-weather-observations.synop``
+
+    For example using a filepath matching the topic hierarchy:
     
-    * data to be published on: ``origin/a/wis2/cd-brazza_met_centre/data/core/weather/surface-based-observations/synop``
-    * upload data in the path: ``cd-brazza_met_centre/data/core/weather/surface-based-observations/synop``
-    
-    The error message ``Topic Hierarchy validation error: No plugins for minio:9000/wis2box-incoming/... in data mappings`` indicates you stored a file in a folder for which no matching dataset was defined in the data mappings.
+    * Topic Hierarchy: ``origin/a/wis2/cd-brazza_met_centre/data/core/weather/surface-based-observations/synop``
+    * upload data in the path containing: ``cd-brazza_met_centre/data/core/weather/surface-based-observations/synop``
+
+    The error message ``Path validation error: Could not match http://minio:9000/wis2box-incoming/... to dataset, ...`` indicates that a file was stored in a directory that could not be matched to a dataset.
 
 After uploading a file to ``wis2box-incoming`` storage bucket, you can browse the content in the ``wis2box-public`` bucket.  If the data ingest was successful, new data will appear as follows:
 
@@ -132,7 +137,8 @@ See below a Python example to upload data using the MinIO package:
     from minio import Minio
 
     filepath = '/home/wis2box-user/local-data/mydata.bin'
-    minio_path = '/it-roma_met_centre/data/core/weather/surface-based-observations/synop/'
+    # path should match the metadata or the topic in the data mappings
+    minio_path = 'urn:wmo:md:it-roma_met_centre:surface-weather-observations'
 
     endpoint = 'http://localhost:9000'
     WIS2BOX_STORAGE_USERNAME = 'wis2box'

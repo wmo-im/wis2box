@@ -53,19 +53,16 @@ class PubSubMessage:
     Generic message class
     """
 
-    def __init__(self, type_: str, identifier: str, topic: str, filepath: str,
-                 datetime_: datetime, geometry: dict = None,
-                 wigos_station_identifier: str = None) -> None:
+    def __init__(self, type_: str, identifier: str, filepath: str,
+                 datetime_: datetime, geometry: dict = None) -> None:
         """
         Initializer
 
         :param type_: message type
         :param identifier: identifier
-        :param topic: topic
         :param filepath: `Path` of file
         :param datetime_: `datetime` object of temporal aspect of data
         :param geometry: `dict` of GeoJSON geometry object
-        :param wigos_station_identifier: WSI associated with the data
 
         :returns: `wis2box.pubsub.message.PubSubMessage` message object
         """
@@ -128,16 +125,16 @@ class PubSubMessage:
 
 
 class WISNotificationMessage(PubSubMessage):
-    def __init__(self, identifier: str, topic: str, filepath: str,
+    def __init__(self, identifier: str, metadata_id: str, filepath: str,
                  datetime_: str, geometry=None, wigos_station_identifier=None,
                  operation: str = 'create') -> None:
 
         super().__init__('wis2-notification-message', identifier,
-                         topic, filepath, datetime_, geometry)
+                         filepath, datetime_, geometry)
 
-        data_id = f'{topic}/{self.identifier}'.replace('origin/a/wis2/', '')
+        data_id = f'{self.identifier}'
 
-        if '/metadata' in topic:
+        if '/metadata' in filepath:
             mimetype = 'application/geo+json'
         else:
             suffix = self.filepath.split('.')[-1]
@@ -185,6 +182,9 @@ class WISNotificationMessage(PubSubMessage):
             'links': links,
             'generated-by': f'wis2box {__version__}'
         }
+
+        if metadata_id is not None:
+            self.message['properties']['metadata_id'] = metadata_id
 
         if self.length < 4096:
             LOGGER.debug('Including data inline via properties.content')

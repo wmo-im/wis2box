@@ -1,6 +1,6 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: int-wmo-test.data.core.weather.surface-based-observations.wind_profiler
+    topic_hierarchy: int-wmo-test/data/core/weather/surface-based-observations/wind_profiler
     country: int
     centre_id: int-wmo-test
     data_mappings:

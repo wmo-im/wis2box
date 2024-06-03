@@ -29,18 +29,18 @@ set -e
 #ensure environment-variables are available for cronjob
 printenv | grep -v "no_proxy" >> /etc/environment
 
-# ensure cron is running
-service cron start
-service cron status
-
 # wis2box commands
 # TODO: avoid re-creating environment if it already exists
 # TODO: catch errors and avoid bounce in conjuction with restart: always
+wis2box metadata discovery setup
+wis2box metadata station setup
 wis2box environment create
 wis2box environment show
 wis2box api setup
-wis2box metadata discovery setup
-wis2box metadata station setup
+
+# ensure cron is running
+service cron start
+service cron status
 
 echo "Caching topic hierarchy CSVs"
 pywis-topics bundle sync

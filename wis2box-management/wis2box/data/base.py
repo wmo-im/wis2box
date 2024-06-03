@@ -25,11 +25,11 @@ from pathlib import Path
 import re
 from typing import Iterator, Union
 
-from wis2box.env import (STORAGE_INCOMING, STORAGE_PUBLIC,
+from wis2box.env import (STORAGE_PUBLIC,
                          STORAGE_SOURCE, BROKER_PUBLIC,
                          DOCKER_BROKER)
 from wis2box.storage import exists, get_data, put_data
-from wis2box.topic_hierarchy import TopicHierarchy
+
 from wis2box.plugin import load_plugin, PLUGINS
 
 from wis2box.pubsub.message import WISNotificationMessage
@@ -51,9 +51,10 @@ class BaseAbstractData:
 
         LOGGER.debug('Parsing resource mappings')
         self.filename = None
-        self.incoming_filepath = None
-        self.topic_hierarchy = TopicHierarchy(defs['topic_hierarchy'])
-        self.template = defs.get('template', None)
+        self.incoming_filepath = defs.get('incoming_filepath')
+        self.metadata_id = defs.get('metadata_id')
+        self.topic_hierarchy = defs.get('topic_hierarchy')
+        self.template = defs.get('template')
         self.file_filter = defs.get('pattern', '.*')
         self.enable_notification = defs.get('notify', False)
         self.buckets = defs.get('buckets', ())
@@ -62,9 +63,10 @@ class BaseAbstractData:
 #        if discovery_metadata:
 #            self.setup_discovery_metadata(discovery_metadata)
 
-    def publish_failure_message(self, description, wsi=None):
+    def publish_failure_message(self, description, wsi=None, identifier=None):
         message = {
-            'filepath': self.incoming_filepath,
+            'incoming_filepath': self.incoming_filepath,
+            'identifier': identifier,
             'description': description
         }
         if wsi is not None:
@@ -91,10 +93,6 @@ class BaseAbstractData:
         """
 
         self.discovery_metadata = discovery_metadata
-
-        self.topic_hierarchy = TopicHierarchy(
-            discovery_metadata['metadata']['identifier'])
-
         self.country = discovery_metadata['wis2box']['country']
         self.centre_id = discovery_metadata['wis2box']['centre_id']
 
@@ -146,13 +144,14 @@ class BaseAbstractData:
         LOGGER.info('Publishing WISNotificationMessage to public broker')
         LOGGER.debug(f'Prepare message for: {storage_path}')
 
-        topic = f'origin/a/wis2/{self.topic_hierarchy.dirpath}'
-        data_id = topic.replace('origin/a/wis2/', '')
+        topic = self.topic_hierarchy
+        metadata_id = self.metadata_id
 
         operation = 'create' if is_update is False else 'update'
 
         wis_message = WISNotificationMessage(
-            identifier, data_id, storage_path, datetime_, geometry,
+            f"{metadata_id.replace('urn:wmo:md:','')}/{identifier}",
+            metadata_id, storage_path, datetime_, geometry,
             wigos_station_identifier, operation)
 
         # load plugin for public broker
@@ -249,12 +248,10 @@ class BaseAbstractData:
 
                 if self.enable_notification and is_new:
                     LOGGER.debug('Sending notification to broker')
-
                     try:
                         datetime_ = item['_meta']['properties']['datetime']
                     except KeyError:
                         datetime_ = item['_meta'].get('data_date')
-
                     self.notify(identifier, storage_path,
                                 datetime_,
                                 item['_meta'].get('geometry'), wsi, is_update)
@@ -262,9 +259,10 @@ class BaseAbstractData:
                     LOGGER.debug('No notification sent')
         except Exception as err:
             msg = f'Failed to publish item {identifier}: {err}'
-            LOGGER.error(msg, exc_info=True)
+            LOGGER.error(msg)
             self.publish_failure_message(
                     description='Failed to publish item',
+                    identifier=identifier,
                     wsi=wsi)
         return True
 
@@ -298,17 +296,6 @@ class BaseAbstractData:
                     continue
 
                 yield f'{STORAGE_PUBLIC}/{rfp}/{identifier}.{format_}'
-
-    @property
-    def directories(self):
-        """Dataset directories"""
-
-        dirpath = self.topic_hierarchy.dirpath
-
-        return {
-            'incoming': f'{STORAGE_INCOMING}/{dirpath}',
-            'public': f'{STORAGE_PUBLIC}/{dirpath}'
-        }
 
     def get_public_filepath(self):
         """Public filepath"""

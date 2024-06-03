@@ -1,6 +1,6 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: ro-rnimh.data.core.weather.surface-based-observations.synop
+    topic_hierarchy: ro-rnimh/data/core/weather/surface-based-observations/synop
     country: rou
     centre_id: ro-rnimh
     data_mappings:

@@ -65,10 +65,10 @@ class ObservationDataGeoJSON(BaseAbstractData):
                     continue
 
                 LOGGER.debug('Publishing data to API')
-                upsert_collection_item(self.topic_hierarchy.dotpath, the_data)
+                upsert_collection_item(self.metadata_id, the_data)
 
         return True
 
     def get_local_filepath(self, date_):
         yyyymmdd = date_[0:10]  # date_.strftime('%Y-%m-%d')
-        return Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath
+        return Path(yyyymmdd) / 'wis' / self.metadata_id

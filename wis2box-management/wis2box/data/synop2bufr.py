@@ -75,7 +75,7 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
         # post data do wis2box-api/oapi/processes/synop2bufr
         payload = {
             'inputs': {
-                'channel': self.topic_hierarchy.dirpath,
+                'channel': self.topic_hierarchy.replace('origin/a/wis2/', ''),
                 'year': year,
                 'month': month,
                 'notify': False,
@@ -124,4 +124,4 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
 
     def get_local_filepath(self, date_):
         yyyymmdd = date_.strftime('%Y-%m-%d')
-        return (Path(yyyymmdd) / 'wis' / self.topic_hierarchy.dirpath)
+        return Path(yyyymmdd) / 'wis' / self.metadata_id

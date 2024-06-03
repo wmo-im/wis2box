@@ -1,6 +1,6 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: cn-cma.data.core.weather.prediction.forecast.medium-range.probabilistic.global
+    topic_hierarchy: cn-cma/data/core/weather/prediction/forecast/medium-range/probabilistic/global
     country: chn
     centre_id: cn-cma
     data_mappings:
