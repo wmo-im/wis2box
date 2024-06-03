@@ -1,0 +1,16 @@
+{
+    "broker_url": "${BROKER_URL}",
+    "broker_port": $BROKER_PORT,
+    "username": "${BROKER_USERNAME}",
+    "password":  "${BROKER_PASSWORD}",
+    "protocol": "${BROKER_PROTOCOL}",
+    "topics": {},
+    "download_dir": "${DOWNLOAD_DIR}",
+    "max_mb_download_dir": ${MAX_MB_DOWNLOAD_DIR},
+    "retention_period_hours": "${RETENTION_PERIOD_HOURS}",
+    "flask_host": "${FLASK_HOST}",
+    "flask_port": "${FLASK_PORT}",
+    "download_workers": $DOWNLOAD_WORKERS,
+    "save_logs": $SAVE_LOGS,
+    "log_dir": "${LOG_DIR}"
+}
