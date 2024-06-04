@@ -142,7 +142,7 @@ class PygeoapiConfig(BaseConfig):
 
         resource_id = meta['id']
 
-        if meta['id'] in ['discovery-metadata', 'stations']:
+        if meta['id'] in ['stations']:
             editable = True
         else:
             # avoid colons in resource id
