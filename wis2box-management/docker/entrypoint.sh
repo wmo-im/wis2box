@@ -89,7 +89,16 @@ if [ "$is_restricted" = "True" ]; then
 else
     echo "restricting collections/stations"
     # Add the token
-    wis2box auth add-token --path collections -y
+    wis2box auth add-token --path collections/stations -y
+fi
+# repeat for collections/discovery-metadata
+is_restricted=$(wis2box auth is-restricted-path --path collections/discovery-metadata)
+if [ "$is_restricted" = "True" ]; then
+    echo "collections/discovery-metadata execution is restricted"
+else
+    echo "restricting collections/discovery-metadata"
+    # Add the token
+    wis2box auth add-token --path collections/discovery-metadata -y
 fi
 # repeat for wis2-downloader
 is_restricted=$(wis2box auth is-restricted-path --path wis2-downloader)
