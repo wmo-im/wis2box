@@ -6,6 +6,7 @@ download_dir = os.environ.get('DOWNLOAD_DIR', '/app/downloads')
 # get retention period from environment variable
 retention_period_hours = int(os.environ.get('RETENTION_PERIOD_HOURS', 24))
 
+
 def clean_directory(directory):
     # get the current time
     current_time = time.time()
@@ -31,7 +32,8 @@ def clean_directory(directory):
             if not os.listdir(file_path):
                 os.rmdir(file_path)
                 directories_removed += 1
-    print(f'CLEANER: removed {files_removed} old files and {directories_removed} empty directories')
+    print(f'CLEANER: removed {files_removed} old files and {directories_removed} empty directories') # noqa
+
 
 # start cleaning from the download directory
 clean_directory(download_dir)
