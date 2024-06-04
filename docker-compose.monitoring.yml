@@ -16,6 +16,8 @@ x-logging: &logging
       mode: non-blocking
       max-buffer-size: 4m
       loki-retries: "3"
+      max-size: "10m"
+      max-file: 1
 
 services:
   # The Loki database for storing logs.
