@@ -11,71 +11,86 @@ This section provides guidance how to download data from WIS2 Global Services.
 WIS2 Global Services include a Global Broker that provides users the ability to subscribe to data (via topics) and download to their
 local environment / workstation / decision support system from the WIS2 Global Cache.
 
-The pywis-pubsub tool
----------------------
+wis2-downloader
+---------------
 
-wis2box enables subscribe and data download workflow the WIS2 network, by using the ``wis2box-subscribe-download`` container, inside of which runs the `pywis-pubsub tool <https://github.com/wmo-im/pywis-pubsub>`_
+wis2box enables subscribe and data download workflow the WIS2 network, by using the ``wis2-downloader`` container, inside of which runs the `wis2-downloader tool <https://github.com/wmo-im/wis2-downloader`_
 
-``pywis-pubsub`` is a Python package that provides publish, subscription and download capability of data from WIS2 Global Services.
+``wis2-downloader`` is a Python package that provides subscription and download capability, by connecting to pre-defined MQTT-broker.
 
-Before starting the ``wis2box-subscribe-download`` container, the default configuration (provided in ``wis2box-subscribe-download/local.yml``)
-must be updated, by defining the URL of the MQTT broker as well as the desired topic(s) to subscribe to.
+The following environment variables are used by the ``wis2-downloader``:
 
-In addition, the storage path should be updated to specify where downloaded data should be saved to.
+- ``DOWNLOAD_BROKER_HOST``: The hostname of the MQTT-broker to connect to. Defaults to ``globalbroker.meteo.fr``
+- ``DOWNLOAD_BROKER_PORT``: The port of the MQTT-broker to connect to. Defaults to ``443`` (HTTPS for websockets)
+- ``DOWNLOAD_BROKER_USERNAME``: The username to use to connect to the MQTT-broker. Defaults to ``everyone``
+- ``DOWNLOAD_BROKER_PASSWORD``: The password to use to connect to the MQTT-broker. Defaults to ``everyone``
+- ``DOWNLOAD_BROKER_PROTOCOL``: The protocol to use to connect to the MQTT-broker. Defaults to ``websockets``
+- ``DOWNLOAD_RETENTION_PERIOD_HOURS``: The retention period in hours for the downloaded data. Defaults to ``24``
+- ``DOWNLOAD_WORKERS``: The number of download workers to use. Defaults to ``8``. Determines the number of parallel downloads.
 
-.. code-block:: yaml
+To override the default configuration, you can set the environment variables in the wis2box.env file.
 
-   # fully qualified URL of broker
-   broker: mqtts://username:password@host:port
+By default the wis2-downloader is not subscribed to any topics. You can add subscriptions using the API endpoint, as described below.
 
-   # whether to run checksum verification when downloading data (default true)
-   verify_data: true
+The files downloaded by the wis2-downloader will be saved in `${WIS2BOX_HOST_DATADIR}/downloads`, where `${WIS2BOX_HOST_DATADIR}` is the directory on your host you defined in the `wis2box.env` file.
 
-   # whether to validate broker messages (default true)
-   validate_message: true
+Maintaining and Monitoring Subscriptions
+----------------------------------------
 
-   # list of 1..n topics to subscribe to
-   subscribe_topics:
-       - 'cache/a/wis2/topic1/#'
-       - 'cache/a/wis2/topic2/#'
+The wis2-downloader has an API-endpoint that is proxied on the path `/wis2-downloader` on the wis2box host-url. This endpoint can be used to add, delete and list subscriptions.
 
-   # storage: filesystem
-   storage:
-       type: fs
-       options:
-           path: /tmp/foo/bar
+The endpoint is secured using an API token, that can be created using the 'wis2box auth' command inside the wis2box-management container as follows:
 
-To start a continuous subscribe and download process, run the ``wis2box-subscribe-download`` container as follows (``-d`` for detached mode, ``--build`` to ensure changes in ``local.yml`` are built into the container):
+```bash
+python3 wis2box.ctl.py execute wis2box auth add-token --path wis2-downloader -y
+```
 
-.. code-block:: bash
+Record the generated token, so you can use it to authenticate requests to the API.
 
-   docker compose -f docker.subscribe-download.yml up -d --build
+Listing subscriptions
+~~~~~~~~~~~~~~~~~~~~~
 
-To stop the subscribe and download process, run the following command:
+To list the active subscriptions, a GET request can be made to the `wis2-downloader/list` endpoint, making sure to pass the API token as a header:
 
-.. code-block:: bash
+```bash
+curl http://localhost/wis2-downloader/list -H "Authorization: Bearer <API-token>"
+```
 
-   docker compose -f docker.subscribe-download.yml down
+The list of the currently active subscriptions should be returned as a JSON object.
+
+Adding subscriptions
+~~~~~~~~~~~~~~~~~~~~
+
+Subscriptions can be added via a GET request to the `./add` endpoint that is proxied on /wis2-downloader on the wis2box host, with the following form:
+
+```bash
+curl http://localhost/wis2-downloader/add?topic=<topic-name>&target=<download-directory> -H "Authorization: Bearer <API-token>"
+```
+
+- `topic` specifies the topic to subscribe to. *Special characters (+, #) must be URL encoded, i.e. `+` = `%2B`, `#` = `%23`.*
+- `target` specifies the directory to save the downloads to, relative to `download_dir` from `config.json`. *If this is not provided, the directory will default to that of the topic hierarchy.*
+
+For example:
+```bash
+curl http://localhost/wis2-downloader/add?topic=cache/a/wis2/%2B/data/core/weather/%23&target=example_data -H "Authorization: Bearer <API-token>"
+```
+
+The list of active subscriptions after addition should be returned as a JSON object.
+
+Deleting subscriptions
+~~~~~~~~~~~~~~~~~~~~~~
+
+Subscriptions are deleted similarly via a GET request to the `./delete` endpoint, with the following form:
+```bash
+curl http://<flask-host>:<flask-port>/delete?topic=<topic-name> -H "Authorization: Bearer <API-token>"
+```
+
+For example:
+```bash
+curl http://localhost:8080/delete?topic=cache/a/wis2/%2B/data/core/weather/%23 -H "Authorization: Bearer <API-token>"
+```
+
+The list of active subscriptions after deletion should be returned as a JSON object.
 
 
-Running pywis-pubsub interactively
-----------------------------------
 
-pywis-pubsub can also be run interactively from inside the wis2box main container as follows:
-
-.. code-block:: bash
-
-   # login to wis2box main container
-   python3 wis2box-ctl.py login
-
-   # edit a local configuration by using wis2box-subscribe-download/local.yml as a template
-   vi /data/wis2box/local.yml
-
-   # connect, and simply display data notifications
-   pywis-pubsub subscribe --config local.yml
-
-   # connect, and additionally download messages
-   pywis-pubsub subscribe --config local.yml --download
-
-   # connect, and filter messages by bounding box geometry
-   pywis-pubsub subscribe --config local.yml --bbox=-142,42,-52,84

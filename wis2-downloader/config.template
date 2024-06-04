@@ -1,16 +1,15 @@
 {
-    "broker_url": "${BROKER_URL}",
-    "broker_port": $BROKER_PORT,
-    "username": "${BROKER_USERNAME}",
-    "password":  "${BROKER_PASSWORD}",
-    "protocol": "${BROKER_PROTOCOL}",
+    "broker_url": "${DOWNLOAD_BROKER_HOST}",
+    "broker_port": $DOWNLOAD_BROKER_PORT,
+    "username": "${DOWNLOAD_BROKER_USERNAME}",
+    "password":  "${DOWNLOAD_BROKER_PASSWORD}",
+    "protocol": "${DOWNLOAD_BROKER_PROTOCOL}",
     "topics": {},
     "download_dir": "${DOWNLOAD_DIR}",
-    "max_mb_download_dir": ${MAX_MB_DOWNLOAD_DIR},
-    "retention_period_hours": "${RETENTION_PERIOD_HOURS}",
+    "retention_period_hours": "${DOWNLOAD_RETENTION_PERIOD_HOURS}",
     "flask_host": "${FLASK_HOST}",
     "flask_port": "${FLASK_PORT}",
     "download_workers": $DOWNLOAD_WORKERS,
-    "save_logs": $SAVE_LOGS,
-    "log_dir": "${LOG_DIR}"
+    "save_logs": false,
+    "log_dir": "logs"
 }
