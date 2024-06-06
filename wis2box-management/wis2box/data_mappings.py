@@ -152,8 +152,8 @@ def validate_and_load(path: str,
             for key in gts_mappings.keys():
                 # check if string defined by key is contained in path
                 if key in path:
-                    data_defs['gts_ttaaii'] = gts_mappings['ttaaii']
-                    data_defs['gts_cccc'] = gts_mappings['cccc']
+                    data_defs['gts_ttaaii'] = gts_mappings[key]['ttaaii']
+                    data_defs['gts_cccc'] = gts_mappings[key]['cccc']
                     break
         return data_defs
 
