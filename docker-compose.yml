@@ -53,12 +53,14 @@ services:
 
   minio:
     container_name: wis2box-minio
-    image: minio/minio:RELEASE.2022-12-02T19-19-22Z.fips
+    image: minio/minio
     mem_limit: 512m
     memswap_limit: 512m
     restart: always
     env_file:
       - wis2box.env
+    environment:
+      - MINIO_BROWSER_LOGIN_ANIMATION=off
     command: server --console-address ":9001" /data
     # in a production-setup minio needs to be
     volumes:
