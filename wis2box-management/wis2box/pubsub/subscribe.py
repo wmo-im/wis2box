@@ -50,9 +50,9 @@ LOGGER = logging.getLogger(__name__)
 def get_gts_mappings():
     # read gts mappings from CSV file in DATADIR
     gts_mappings = {}
-    mapping_file = f'{DATADIR}/gts_headers_mappings.csv'
+    mapping_file = 'gts_headers_mapping.csv'
     try:
-        with open(mapping_file, 'r') as f:
+        with open(f'{DATADIR}/{mapping_file}', 'r') as f:
             for line in f:
                 key = line.strip().split(',')[0]
                 if key == 'string_in_filepath':
@@ -63,7 +63,7 @@ def get_gts_mappings():
                 gts_mappings[key] = value
                 LOGGER.info(f'GTS mapping: string_in_filepath={key}, {value}')
     except FileNotFoundError:
-        LOGGER.info(f'To add GTS headers, please create {mapping_file}')
+        LOGGER.warning(f'To add GTS headers, please create {mapping_file} in WIS2BOX_HOST_DATADIR') # noqa
     except Exception as err:
         LOGGER.error(f'Error reading GTS mappings: {err}')
     return gts_mappings
