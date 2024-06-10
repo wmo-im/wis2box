@@ -145,9 +145,9 @@ services:
     depends_on:
       - wis2box-management
 
-  wis2-downloader:
-    container_name: wis2-downloader
-    build: ./wis2-downloader
+  wis2downloader:
+    container_name: wis2downloader
+    build: ./wis2downloader
     env_file:
       - wis2box.env
     volumes:

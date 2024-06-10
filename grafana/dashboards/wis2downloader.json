@@ -31,7 +31,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
+          "uid": "PABAFD29CE247021E"
         },
         "fieldConfig": {
           "defaults": {
@@ -85,7 +85,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "uid": "PABAFD29CE247021E"
             },
             "editorMode": "builder",
             "exemplar": false,
@@ -118,7 +118,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
+          "uid": "PABAFD29CE247021E"
         },
         "fieldConfig": {
           "defaults": {
@@ -168,7 +168,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "uid": "PABAFD29CE247021E"
             },
             "editorMode": "builder",
             "expr": "queue_size",
@@ -183,7 +183,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
+          "uid": "PABAFD29CE247021E"
         },
         "fieldConfig": {
           "defaults": {
@@ -236,7 +236,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "uid": "PABAFD29CE247021E"
             },
             "editorMode": "builder",
             "exemplar": false,
@@ -255,7 +255,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
+          "uid": "PABAFD29CE247021E"
         },
         "fieldConfig": {
           "defaults": {
@@ -310,7 +310,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "uid": "PABAFD29CE247021E"
             },
             "editorMode": "builder",
             "exemplar": false,
@@ -329,7 +329,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
+          "uid": "PABAFD29CE247021E"
         },
         "fieldConfig": {
           "defaults": {
@@ -387,7 +387,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "uid": "PABAFD29CE247021E"
             },
             "editorMode": "builder",
             "exemplar": false,
@@ -402,7 +402,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "uid": "PABAFD29CE247021E"
             },
             "editorMode": "builder",
             "exemplar": false,
@@ -418,7 +418,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "uid": "PABAFD29CE247021E"
             },
             "editorMode": "code",
             "exemplar": false,
@@ -438,7 +438,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
+          "uid": "PABAFD29CE247021E"
         },
         "fieldConfig": {
           "defaults": {
@@ -497,7 +497,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "uid": "PABAFD29CE247021E"
             },
             "editorMode": "builder",
             "exemplar": false,
@@ -512,7 +512,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "uid": "PABAFD29CE247021E"
             },
             "editorMode": "builder",
             "exemplar": false,
@@ -528,7 +528,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "uid": "PABAFD29CE247021E"
             },
             "editorMode": "code",
             "exemplar": false,
@@ -548,7 +548,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
+          "uid": "PABAFD29CE247021E"
         },
         "description": "",
         "fieldConfig": {
@@ -675,7 +675,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "uid": "PABAFD29CE247021E"
             },
             "editorMode": "builder",
             "expr": "sum(increase(downloaded_bytes_total[1m]))",
@@ -691,7 +691,7 @@
       {
         "datasource": {
           "type": "loki",
-          "uid": "P982945308D3682D1"
+          "uid": "P55348B596EBB51C3"
         },
         "gridPos": {
           "h": 18,
@@ -714,10 +714,10 @@
           {
             "datasource": {
               "type": "loki",
-              "uid": "P982945308D3682D1"
+              "uid": "P55348B596EBB51C3"
             },
             "editorMode": "builder",
-            "expr": "{container_name=\"wis2-downloader\"} != `Queue` != `GET` != `CLEAN`",
+            "expr": "{container_name=\"wis2downloader\"} != `Queue` != `GET` != `CLEAN`",
             "queryType": "range",
             "refId": "A"
           }
@@ -729,7 +729,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
+          "uid": "PABAFD29CE247021E"
         },
         "fieldConfig": {
           "defaults": {
@@ -837,7 +837,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
+              "uid": "PABAFD29CE247021E"
             },
             "editorMode": "builder",
             "expr": "sum(increase(downloaded_files_total[1m]))",
@@ -863,7 +863,7 @@
     },
     "timepicker": {},
     "timezone": "",
-    "title": "wis2-downloader monitoring dashboard",
+    "title": "wis2downloader monitoring dashboard",
     "uid": "zB4GjVaIk",
     "version": 5,
     "weekStart": ""

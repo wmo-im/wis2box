@@ -24,6 +24,8 @@
 # .github/workflows/tests-docker.yml has been executed
 
 import csv
+import os
+
 from pathlib import Path
 
 from pywis_pubsub.validation import validate_message
@@ -39,6 +41,21 @@ SESSION.hooks = {
    'response': lambda r, *args, **kwargs: r.raise_for_status()
 }
 
+
+def test_wis2downloader():
+    """Test if the wis2downloader has downloaded 
+    the expected number of files in the download directory"""
+
+    DOWNLOAD_DIR = DATADIR / 'downloads'
+
+    # count the number of files received in the download directory
+    # over all subdirectories
+    total_files = 0
+    for root, dirs, files in os.walk(DOWNLOAD_DIR):
+        print(f'Found {len(files)} files in {root}')
+        total_files += len(files)
+
+    assert total_files == 385
 
 def test_metadata_station_cache():
     """Test station metadata caching"""

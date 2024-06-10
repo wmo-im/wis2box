@@ -14,8 +14,6 @@ echo "END /entrypoint.sh"
 echo "Download directory in container: $DOWNLOAD_DIR"
 # print the retention period hours
 echo "Retention period in hours: $RETENTION_PERIOD_HOURS"
-# print the maximum MB allowed in the download directory
-echo "Maximum MB allowed in the download directory: $MAX_MB_DOWNLOAD_DIR"
 
 # ensure DOWNLOAD_DIR exists
 if [ ! -d $DOWNLOAD_DIR ]; then
@@ -23,6 +21,17 @@ if [ ! -d $DOWNLOAD_DIR ]; then
     mkdir -p $DOWNLOAD_DIR
 fi
 envsubst < config.template > config.json
+
+# if session-info.json does not exists in $DOWNLOAD_DIR, create it
+if [ ! -f $DOWNLOAD_DIR/session-info.json ]; then
+    echo "Creating session-info.json"
+    echo "{" > $DOWNLOAD_DIR/session-info.json
+    echo '  "topics": {},' >> $DOWNLOAD_DIR/session-info.json
+    # generate a random string for client_id
+    echo "Generating random client_id"
+    echo '  "client_id": "wis2box-wis2downloader-'$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)'"' >> $DOWNLOAD_DIR/session-info.json
+    echo "}" >> $DOWNLOAD_DIR/session-info.json
+fi
 
 # print the config
 echo "Config:"

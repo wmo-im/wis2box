@@ -30,6 +30,7 @@ from wis2box.env import environment
 from wis2box.metadata import metadata
 from wis2box.pubsub import pubsub
 from wis2box.auth import auth
+from wis2box.downloader import downloader
 
 
 @click.group()
@@ -46,3 +47,4 @@ cli.add_command(dataset)
 cli.add_command(metadata)
 cli.add_command(auth)
 cli.add_command(pubsub)
+cli.add_command(downloader)

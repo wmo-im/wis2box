@@ -26,8 +26,8 @@ scrape_configs:
   - targets: ['cadvisor:8080']
     labels:
       alias: 'cadvisor'
-- job_name: wis2-downloader
+- job_name: wis2downloader
   metrics_path: /metrics
   scheme: http
   static_configs:
-  - targets: ['wis2-downloader:5000']
+  - targets: ['wis2downloader:5000']
