@@ -26,9 +26,13 @@ jobs:
         docker version
         docker compose version
         python3 -V
-    - name: setup wis2box configuration
+    - name: Get Public IP
+      id: ip
+      uses: haythem/public-ip@v1.3
+    - name: setup wis2box configuration, replace localhost with public IP ⚙️
       run: |
         cp tests/test.env wis2box.env
+        sed -i "s/localhost/${{ steps.ip.outputs.ipv4 }}/g" wis2box.env
         cat wis2box.env
         python3 wis2box-ctl.py config
     - name: build wis2box
