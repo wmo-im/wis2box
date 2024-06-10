@@ -48,14 +48,35 @@ def test_wis2downloader():
 
     DOWNLOAD_DIR = DATADIR / 'downloads'
 
+    topic_nfiles_dict = {
+        'origin/a/wis2/mw-mw_met_centre/data/core/weather/surface-based-observations/synop': 23, # noqa
+        'origin/a/wis2/dz-alger_met_centre/data/core/weather/surface-based-observations/synop': 28, # noqa
+        'origin/a/wis2/cn-cma/data/core/weather/prediction/forecast/medium-range/probabilistic/global': 10, # noqa
+        'origin/a/wis2/ro-rnimh/data/core/weather/surface-based-observations/synop': 49, # noqa
+        'origin/a/wis2/cd-brazza_met_centre/data/core/weather/surface-based-observations/synop': 14, # noqa
+        'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/buoy': 2, # noqa
+        'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/wind_profiler': 1, # noqa
+        'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/ship': 5, # noqa
+        'origin/a/wis2/it-roma_met_centre/data/core/weather/surface-based-observations/synop': 31 # noqa
+    }
+
+    topic_nfiles_dict_found = {}
+    for key in topic_nfiles_dict.keys():
+        topic_nfiles_dict_found[key] = 0
+
     # count the number of files received in the download directory
     # over all subdirectories
     total_files = 0
     for root, dirs, files in os.walk(DOWNLOAD_DIR):
-        print(f'Found {len(files)} files in {root}')
         total_files += len(files)
+        for key in topic_nfiles_dict.keys():
+            if key in root:
+                topic_nfiles_dict_found[key] += len(files)
 
-    assert total_files == 385
+    # check if the number of files downloaded for each topic
+    # matches the expected number
+    for key in topic_nfiles_dict.keys():
+        assert topic_nfiles_dict[key] == topic_nfiles_dict_found[key]
 
 
 def test_metadata_station_cache():
