@@ -145,6 +145,14 @@ services:
     depends_on:
       - wis2box-management
 
+  wis2-downloader:
+    container_name: wis2-downloader
+    build: ./wis2-downloader
+    env_file:
+      - wis2box.env
+    volumes:
+      - ${WIS2BOX_HOST_DATADIR}/downloads:/app/downloads:rw
+
 volumes:
   es-data:
   minio-data:
