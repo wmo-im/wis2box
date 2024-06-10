@@ -43,7 +43,7 @@ SESSION.hooks = {
 
 
 def test_wis2downloader():
-    """Test if the wis2downloader has downloaded 
+    """Test if the wis2downloader has downloaded
     the expected number of files in the download directory"""
 
     DOWNLOAD_DIR = DATADIR / 'downloads'
@@ -56,6 +56,7 @@ def test_wis2downloader():
         total_files += len(files)
 
     assert total_files == 385
+
 
 def test_metadata_station_cache():
     """Test station metadata caching"""

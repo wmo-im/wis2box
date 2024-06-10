@@ -30,10 +30,12 @@ LOGGER = logging.getLogger(__name__)
 
 DOWNLOAD_URL = 'http://wis2downloader:5000'
 
+
 @click.group()
 def downloader():
     """Interact with the wis2downloader"""
     pass
+
 
 @click.command('list-subscriptions')
 @click.pass_context
@@ -41,7 +43,7 @@ def downloader():
 def list_subscriptions(ctx, verbosity):
     """list all subscriptions"""
 
-    # make a GET requests to http://<downloader-host>:<downloader-port>/subscriptions
+    # make a GET requests to http://{DOWNLOAD_URL}/subscriptions
     try:
         response = requests.get(f'{DOWNLOAD_URL}/subscriptions')
         # check response status
@@ -52,18 +54,19 @@ def list_subscriptions(ctx, verbosity):
             click.echo(f'Error: {response.status_code}')
             click.echo(response.text)
     except requests.exceptions.ConnectionError:
-        click.echo(f'Error: Connection refused')
+        click.echo('Error: Connection refused')
         click.echo(f'Is the wis2downloader running on {DOWNLOAD_URL}?')
+
 
 @click.command('add-subscription')
 @click.pass_context
 @click.option('--topic', '-t', help='The topic to subscribe to', required=True)
 def add_subscription(ctx, topic):
     """add a subscription"""
-    
+
     topic.replace('#', '%23')
     topic.replace('+', '%2B')
-    # make a POST request to http://<downloader-host>:<downloader-port>/subscriptions
+    # make a POST request to http://{DOWNLOAD_URL}/subscriptions
     try:
         response = requests.post(f'{DOWNLOAD_URL}/subscriptions?topic={topic}')
         # check response status
@@ -76,9 +79,9 @@ def add_subscription(ctx, topic):
             click.echo(f'Error: {response.status_code}')
             click.echo(response.text)
     except requests.exceptions.ConnectionError:
-        click.echo(f'Error: Connection refused')
+        click.echo('Error: Connection refused')
         click.echo(f'Is the wis2downloader running on {DOWNLOAD_URL}?')
-    
+
 
 @click.command('remove-subscription')
 @click.pass_context
@@ -88,9 +91,9 @@ def remove_subscription(ctx, topic):
 
     topic.replace('#', '%23')
     topic.replace('+', '%2B')
-    # make a DELETE request to http://<downloader-host>:<downloader-port>/subscriptions
+    # make a DELETE request to http://{DOWNLOAD_URL}/subscriptions
     try:
-        response = requests.delete(f'{DOWNLOAD_URL}/subscriptions?topic={topic}')
+        response = requests.delete(f'{DOWNLOAD_URL}/subscriptions?topic={topic}')  # noqa
         # check response status
         if response.status_code == 200:
             click.echo('Subscription deleted')
@@ -101,10 +104,10 @@ def remove_subscription(ctx, topic):
             click.echo(f'Error: {response.status_code}')
             click.echo(response.text)
     except requests.exceptions.ConnectionError:
-        click.echo(f'Error: Connection refused')
+        click.echo('Error: Connection refused')
         click.echo(f'Is the wis2downloader running on {DOWNLOAD_URL}?')
+
 
 downloader.add_command(list_subscriptions)
 downloader.add_command(add_subscription)
 downloader.add_command(remove_subscription)
-
