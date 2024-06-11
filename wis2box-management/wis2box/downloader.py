@@ -64,15 +64,14 @@ def list_subscriptions(ctx, verbosity):
 def add_subscription(ctx, topic):
     """add a subscription"""
 
-    topic = topic.replace('#', '%23')
-    topic = topic.replace('+', '%2B')
     # make a POST request to http://{DOWNLOAD_URL}/subscriptions
     try:
-        response = requests.post(f'{DOWNLOAD_URL}/subscriptions?topic={topic}')
+        response = requests.post(f'{DOWNLOAD_URL}/subscriptions',
+                                 json={'topic': topic})
         # check response status
-        if response.status_code == 200:
+        if response.status_code == 201:
             click.echo('Subscription added')
-            click.echo('Current subscriptions:')
+            click.echo('Added subscription:')
             click.echo(response.text)
         else:
             click.echo('Subscription not added')
@@ -89,11 +88,11 @@ def add_subscription(ctx, topic):
 def remove_subscription(ctx, topic):
     """remove a subscription"""
 
-    topic = topic.replace('#', '%23')
-    topic = topic.replace('+', '%2B')
+    topic = topic.replace('%23', '#')
+    topic = topic.replace('%2B', '+')
     # make a DELETE request to http://{DOWNLOAD_URL}/subscriptions
     try:
-        response = requests.delete(f'{DOWNLOAD_URL}/subscriptions?topic={topic}')  # noqa
+        response = requests.delete(f'{DOWNLOAD_URL}/subscriptions/{topic}')  # noqa
         # check response status
         if response.status_code == 200:
             click.echo('Subscription deleted')
