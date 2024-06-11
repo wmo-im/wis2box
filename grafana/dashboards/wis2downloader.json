@@ -678,7 +678,7 @@
               "uid": "PABAFD29CE247021E"
             },
             "editorMode": "builder",
-            "expr": "sum(increase(downloaded_bytes_total[1m]))",
+            "expr": "increase(sum(downloaded_bytes_total or vector(0))[1m:])",
             "hide": false,
             "legendFormat": "Data downloaded per minute",
             "range": true,
