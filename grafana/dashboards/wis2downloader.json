@@ -822,6 +822,7 @@
           "y": 13
         },
         "id": 2,
+        "interval": "60s",
         "options": {
           "legend": {
             "calcs": [],
@@ -840,7 +841,7 @@
               "uid": "PABAFD29CE247021E"
             },
             "editorMode": "builder",
-            "expr": "sum(increase(downloaded_files_total[1m]))",
+            "expr": "increase(sum(downloaded_files_total or vector(0))[1m:])",
             "legendFormat": "Files downloaded per minute",
             "range": true,
             "refId": "A"
@@ -863,7 +864,7 @@
     },
     "timepicker": {},
     "timezone": "",
-    "title": "wis2downloader monitoring dashboard",
+    "title": "wis2downloader dashboard",
     "uid": "zB4GjVaIk",
     "version": 5,
     "weekStart": ""
