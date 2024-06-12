@@ -12,8 +12,8 @@ ENV DOWNLOAD_BROKER_USERNAME "everyone"
 ENV DOWNLOAD_BROKER_PASSWORD "everyone"
 ENV DOWNLOAD_BROKER_TRANSPORT "websockets"
 ENV DOWNLOAD_WORKERS 8
-ENV DOWNLOAD_MAX_VOLUME_MB 100
-ENV SAVE_LOGS false
+ENV DOWNLOAD_MIN_FREE_SPACE_GB 1
+ENV DOWNLOAD_VALIDATE_TOPICS "false"
 ENV LOG_PATH /app/logs
 ENV WIS2DOWNLOADER_CONFIG "/app/config.json"
 
@@ -28,8 +28,8 @@ COPY . /app
 # Set the working directory to /app
 WORKDIR /app
 
-# install wis2downloader from github branch=minor-fixes
-RUN pip3 install https://github.com/wmo-im/wis2downloader/archive/minor-fixes.zip
+# install wis2downloader from github main branch
+RUN pip3 install https://github.com/wmo-im/wis2downloader/archive/main.zip
 
 # add wis2box.cron to crontab
 COPY ./clean.cron /etc/cron.d/clean.cron

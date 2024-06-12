@@ -27,7 +27,7 @@ The following environment variables are used by the ``wis2downloader``:
 - ``DOWNLOAD_BROKER_TRANSPORT``: ``websockets`` or ``tcp``, the transport-mechanism to use to connect to the MQTT-broker. Defaults to ``websockets``,
 - ``DOWNLOAD_RETENTION_PERIOD_HOURS``: The retention period in hours for the downloaded data. Defaults to ``24``
 - ``DOWNLOAD_WORKERS``: The number of download workers to use. Defaults to ``8``. Determines the number of parallel downloads.
-- ``DOWNLOAD_MAX_VOLUME_MB``: The maximum volume in MB to download, to avoid the host running out of disk space. Defaults to ``100``.
+- ``DOWNLOAD_MIN_FREE_SPACE_GB``: The minimum free space in GB to keep on the volume hosting the downloads. Defaults to ``1``.
 
 To override the default configuration, you can set the environment variables in the wis2box.env file.
 

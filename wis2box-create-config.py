@@ -367,7 +367,7 @@ def create_wis2box_env(config_dir: str) -> None:
         fh.write('# download transport mechanism (tcp or websockets)\n')
         fh.write('DOWNLOAD_BROKER_TRANSPORT=tcp\n')
         fh.write('# maximum MB in download directory\n')
-        fh.write('DOWNLOAD_MAX_VOLUME_MB=100\n')
+        fh.write('DOWNLOAD_MIN_FREE_SPACE_GB=1\n')
         fh.write('\n')
 
     print('*' * 80)
