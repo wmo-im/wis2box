@@ -1,17 +1,22 @@
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile
 from minio import Minio
-from models import UploadData
+
 
 # Get environment variables
-HOST = os.getenv('WIS2BOX_STORAGE_SOURCE', 'http://minio:9000')
+
+HOST = os.getenv('WIS2BOX_STORAGE_SOURCE', 'minio:9000')
+# Remove beginning http:// or https:// from the host to prevent invalid
+# endpoint issues with the Minio client
+HOST = HOST.replace('http://', '').replace('https://', '')
+
 ACCESS_KEY = os.getenv('WIS2BOX_STORAGE_USERNAME')
-SECRET_KEY = os.getenv('WIS2BOX_STORAGE_PASSWORD')
-INCOMING_BUCKET = os.getenv('WIS2BOX_STORAGE_INCOMING')
+SECRET_KEY = os.getenv('WIS2BOX_STORAGE_SECRET_PASSWORD')
+INCOMING_BUCKET = 'wis2box-incoming'
 
 # Initialize Minio client
 client = Minio(
-    HOST,
+    endpoint=HOST,
     access_key=ACCESS_KEY,
     secret_key=SECRET_KEY,
     secure=True
@@ -21,14 +26,19 @@ client = Minio(
 app = FastAPI()
 
 
-@app.post("/upload_data")
-async def upload_data(data: UploadData):
+@app.post("/upload-file/")
+def upload_file(data: UploadFile):
+    if not data:
+        return {
+            "message": "No file uploaded"
+        }
     try:
         # Upload the data to the incoming bucket
-        client.put_object(INCOMING_BUCKET, data.title,
-                          data.content, len(data.content))
+        client.fput_object(bucket_name=INCOMING_BUCKET,
+                           object_name=data.filename,
+                           file_path=data.file)
         return {
-            "message": f"Data uploaded successfully to {INCOMING_BUCKET}/{data.title}"  # noqa
+            "message": f"Data uploaded successfully to {INCOMING_BUCKET}/{data.filename}"  # noqa
         }
     except Exception as e:
         return {
