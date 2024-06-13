@@ -61,10 +61,12 @@ class BaseAbstractData:
         self.output_data = {}
         self.discovery_metadata = {}
         self.gts = None
-        if defs.get('gts_ttaaii') and defs.get('gts_cccc'):
+        gts_ttaaii = defs.get('gts_ttaaii')
+        gts_cccc = defs.get('gts_cccc')
+        if None not in [gts_ttaaii, gts_cccc]:
             self.gts = {
-                'ttaaii': defs.get('gts_ttaaii'),
-                'cccc': defs.get('gts_cccc')
+                'ttaaii': gts_ttaaii,
+                'cccc': gts_cccc
             }
 
 #        if discovery_metadata:
