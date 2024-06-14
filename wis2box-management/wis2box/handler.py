@@ -37,8 +37,8 @@ LOGGER = logging.getLogger(__name__)
 
 class Handler:
     def __init__(self, filepath: str,
-                 metadata_id: str = None,
-                 data_mappings: dict = None) -> None:
+                 data_mappings: dict = None,
+                 gts_mappings: dict = None) -> None:
         self.filepath = filepath
         self.plugins = ()
         self.input_bytes = None
@@ -61,7 +61,7 @@ class Handler:
             raise NotHandledError(msg)
         try:
             self.metadata_id, self.plugins = validate_and_load(
-                self.filepath, data_mappings, self.filetype)
+                self.filepath, data_mappings, gts_mappings, self.filetype)
         except Exception as err:
             msg = f'Path validation error: {err}'
             # errors in public storage are not handled

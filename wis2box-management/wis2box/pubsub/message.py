@@ -126,7 +126,8 @@ class PubSubMessage:
 
 class WISNotificationMessage(PubSubMessage):
     def __init__(self, identifier: str, metadata_id: str, filepath: str,
-                 datetime_: str, geometry=None, wigos_station_identifier=None,
+                 datetime_: str, geometry=None,
+                 wigos_station_identifier=None, gts: dict = None,
                  operation: str = 'create') -> None:
 
         super().__init__('wis2-notification-message', identifier,
@@ -185,6 +186,10 @@ class WISNotificationMessage(PubSubMessage):
 
         if metadata_id is not None:
             self.message['properties']['metadata_id'] = metadata_id
+
+        # if gts-dictionary is provided, include it in the message properties
+        if gts is not None:
+            self.message['properties']['gts'] = gts
 
         if self.length < 4096:
             LOGGER.debug('Including data inline via properties.content')

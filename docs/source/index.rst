@@ -33,6 +33,7 @@ The user guide helps you setup your own wis2box instance.
    user/getting-started
    user/setup
    user/data-ingest
+   user/gts-headers-in-wis2
    user/public-services-setup
    user/downloading-data
 

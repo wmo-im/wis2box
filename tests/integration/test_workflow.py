@@ -331,6 +331,9 @@ def test_message_api():
     assert props['content']['size'] == 253
     assert props['content']['encoding'] == 'base64'
     assert props['content']['value'] is not None
+    assert 'gts' in props
+    assert props['gts']['ttaaii'] == 'SICG20'
+    assert props['gts']['cccc'] == 'FCBB'
 
     link_rel = msg['links'][0]
 

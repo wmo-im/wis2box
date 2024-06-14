@@ -60,6 +60,15 @@ class BaseAbstractData:
         self.buckets = defs.get('buckets', ())
         self.output_data = {}
         self.discovery_metadata = {}
+        self.gts = None
+        gts_ttaaii = defs.get('gts_ttaaii')
+        gts_cccc = defs.get('gts_cccc')
+        if None not in [gts_ttaaii, gts_cccc]:
+            self.gts = {
+                'ttaaii': gts_ttaaii,
+                'cccc': gts_cccc
+            }
+
 #        if discovery_metadata:
 #            self.setup_discovery_metadata(discovery_metadata)
 
@@ -152,7 +161,8 @@ class BaseAbstractData:
         wis_message = WISNotificationMessage(
             f"{metadata_id.replace('urn:wmo:md:','')}/{identifier}",
             metadata_id, storage_path, datetime_, geometry,
-            wigos_station_identifier, operation)
+            wigos_station_identifier, self.gts,
+            operation)
 
         # load plugin for public broker
         defs = {
