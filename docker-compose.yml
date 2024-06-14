@@ -53,12 +53,14 @@ services:
 
   minio:
     container_name: wis2box-minio
-    image: minio/minio:RELEASE.2022-12-02T19-19-22Z.fips
+    image: minio/minio
     mem_limit: 512m
     memswap_limit: 512m
     restart: always
     env_file:
       - wis2box.env
+    environment:
+      - MINIO_BROWSER_LOGIN_ANIMATION=off
     command: server --console-address ":9001" /data
     # in a production-setup minio needs to be
     volumes:
@@ -142,6 +144,14 @@ services:
       - auth-data:/data/wis2box:rw
     depends_on:
       - wis2box-management
+
+  wis2-downloader:
+    container_name: wis2-downloader
+    build: ./wis2-downloader
+    env_file:
+      - wis2box.env
+    volumes:
+      - ${WIS2BOX_HOST_DATADIR}/downloads:/app/downloads:rw
 
 volumes:
   es-data:

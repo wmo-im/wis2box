@@ -91,6 +91,15 @@ else
     # Add the token
     wis2box auth add-token --path collections/stations -y
 fi
+# repeat for wis2-downloader
+is_restricted=$(wis2box auth is-restricted-path --path wis2-downloader)
+if [ "$is_restricted" = "True" ]; then
+    echo "wis2-downloader is restricted"
+else
+    echo "restricting wis2-downloader"
+    # Add the token
+    wis2box auth add-token --path wis2-downloader -y
+fi
 
 echo "END /entrypoint.sh"
 exec "$@"
