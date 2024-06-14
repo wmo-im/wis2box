@@ -1,0 +1,18 @@
+{
+    "broker_hostname": "${DOWNLOAD_BROKER_HOST}",
+    "broker_port": ${DOWNLOAD_BROKER_PORT},
+    "broker_username": "${DOWNLOAD_BROKER_USERNAME}",
+    "broker_password":  "${DOWNLOAD_BROKER_PASSWORD}",
+    "broker_protocol": "${DOWNLOAD_BROKER_TRANSPORT}",
+    "download_workers": ${DOWNLOAD_WORKERS},
+    "min_free_space": ${DOWNLOAD_MIN_FREE_SPACE_GB},
+    "validate_topics": ${DOWNLOAD_VALIDATE_TOPICS},
+    "mqtt_session_info": "${DOWNLOAD_DIR}/.session-info.json",
+    "download_dir": "${DOWNLOAD_DIR}",
+    "log_level": "INFO",
+    "base_url": "http://localhost:5000",
+    "flask_host": "0.0.0.0",
+    "flask_port": 5000,
+    "save_logs": false,
+    "log_path": "logs"
+}

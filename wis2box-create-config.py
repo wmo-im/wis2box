@@ -358,6 +358,17 @@ def create_wis2box_env(config_dir: str) -> None:
         fh.write('MINIO_NOTIFY_MQTT_TOPIC_WIS2BOX=wis2box/storage\n')
         fh.write('MINIO_NOTIFY_MQTT_QOS_WIS2BOX=1\n')
         fh.write('\n')
+        # downloader settings
+        fh.write('# downloader settings\n')
+        fh.write('DOWNLOAD_BROKER_HOST=globalbroker.meteo.fr\n')
+        fh.write('DOWNLOAD_BROKER_PORT=8883\n')
+        fh.write('DOWNLOAD_BROKER_USERNAME=everyone\n')
+        fh.write('DOWNLOAD_BROKER_PASSWORD=everyone\n')
+        fh.write('# download transport mechanism (tcp or websockets)\n')
+        fh.write('DOWNLOAD_BROKER_TRANSPORT=tcp\n')
+        fh.write('# maximum MB in download directory\n')
+        fh.write('DOWNLOAD_MIN_FREE_SPACE_GB=1\n')
+        fh.write('\n')
 
     print('*' * 80)
     print('The file wis2box.env has been created in the current directory.')

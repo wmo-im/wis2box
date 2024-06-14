@@ -114,7 +114,7 @@ services:
     <<: *logging
   web-proxy:
     <<: *logging
-  wis2-downloader:
+  wis2downloader:
     <<: *logging
 
 volumes:

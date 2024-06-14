@@ -10,17 +10,17 @@ ENV DOWNLOAD_BROKER_HOST "globalbroker.meteo.fr"
 ENV DOWNLOAD_BROKER_PORT 443
 ENV DOWNLOAD_BROKER_USERNAME "everyone"
 ENV DOWNLOAD_BROKER_PASSWORD "everyone"
-ENV DOWNLOAD_BROKER_PROTOCOL "websockets"
+ENV DOWNLOAD_BROKER_TRANSPORT "websockets"
 ENV DOWNLOAD_WORKERS 8
-ENV FLASK_HOST "0.0.0.0"
-ENV FLASK_PORT 5000
-ENV SAVE_LOGS false
-ENV LOGS_DIR /app/logs
+ENV DOWNLOAD_MIN_FREE_SPACE_GB 1
+ENV DOWNLOAD_VALIDATE_TOPICS "false"
+ENV LOG_PATH /app/logs
+ENV WIS2DOWNLOADER_CONFIG "/app/config.json"
 
 # update pyopenssl and pin requests and urllib3 to avoid SSL error
 RUN pip install pyopenssl --upgrade && pip install requests==2.26.0 urllib3==1.26.0
-# install cron and envsubst
-RUN apt-get update && apt-get install -y cron gettext-base
+# install cron and envsubst and guincorn
+RUN apt-get update && apt-get install -y cron gettext-base gunicorn
 
 # copy all the code to the Docker image
 COPY . /app
@@ -28,8 +28,8 @@ COPY . /app
 # Set the working directory to /app
 WORKDIR /app
 
-# install wis2-downloader
-RUN pip install https://github.com/wmo-im/wis2-downloader/archive/main.zip
+# install wis2downloader from github main branch
+RUN pip3 install https://github.com/wmo-im/wis2downloader/archive/main.zip
 
 # add wis2box.cron to crontab
 COPY ./clean.cron /etc/cron.d/clean.cron
@@ -42,5 +42,5 @@ RUN chmod +x /app/entrypoint.sh
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]
 
-# Run wis2-downloader when the container launches
-CMD ["wis2downloader","--config","/app/config.json"]
+# Run wis2downloader when the container launches
+CMD ["gunicorn","--bind","0.0.0.0:5000","--pythonpath","/usr/local/lib/python3.9/site-packages/","--workers", "1", "wis2downloader.app:app"]
