@@ -12,7 +12,7 @@ WIS2 Global Services include a Global Broker that provides users the ability to 
 local environment / workstation / decision support system from the WIS2 Global Cache.
 
 wis2downloader
----------------
+--------------
 
 wis2box enables subscribe and data download workflow the WIS2 network, by using the ``wis2downloader`` container, inside of which runs the `wis2downloader tool <https://github.com/wmo-im/wis2downloader`_
 
@@ -49,9 +49,9 @@ Listing subscriptions
 
 To list the current subscriptions, you can use the following command:
 
-```
-python3 wis2box.ctl.py execute wis2box downloader list-subscriptions
-```
+.. code-block:: console
+
+  python3 wis2box.ctl.py execute wis2box downloader list-subscriptions
 
 This will return a JSON object with the current subscriptions.
 
@@ -60,9 +60,9 @@ Adding a subscription
 
 To add a subscription, you can use the following command:
 
-```
-python3 wis2box.ctl.py execute wis2box downloader add-subscription --topic <topic>
-```
+.. code-block:: console
+
+  python3 wis2box.ctl.py execute wis2box downloader add-subscription --topic <topic>
 
 This will add a subscription to the topic you specify and return the JSON object with the current subscriptions.
 
@@ -71,22 +71,24 @@ Deleting a subscription
 
 To delete a subscription, you can use the following command:
 
-```
-python3 wis2box.ctl.py execute wis2box downloader delete-subscription --topic <topic>
-```
+.. code-block:: console
+
+  python3 wis2box.ctl.py execute wis2box downloader delete-subscription --topic <topic>
 
 This will delete the subscription to the topic you specify and return the JSON object with the current subscriptions.
 
 
 Managing subscriptions from outside the wis2box
-----------------------------------------------
+-----------------------------------------------
 
 The wis2downloader API-endpoint is proxied on the path `/wis2downloader` on the wis2box host-url, allowing you to interact with it using curl or other HTTP clients from any machine that can reach the wis2box host.
 
 The wis2box-proxy by default secures the path `/wis2downloader` with a bearer token, which can be generated using the `wis2box auth` command as follows:
 
-```
-python3 wis2box.ctl.py execute wis2box auth add-token --path wis2downloader -y
-```
+.. code-block:: console
+
+  python3 wis2box.ctl.py execute wis2box auth add-token --path wis2downloader -y
+
+
 
 
