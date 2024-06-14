@@ -88,8 +88,8 @@ def add_subscription(ctx, topic):
 def remove_subscription(ctx, topic):
     """remove a subscription"""
 
-    topic = topic.replace('%23', '#')
-    topic = topic.replace('%2B', '+')
+    topic = topic.replace('#', '%23')
+    topic = topic.replace('+', '%2B')
     # make a DELETE request to http://{DOWNLOAD_URL}/subscriptions
     try:
         response = requests.delete(f'{DOWNLOAD_URL}/subscriptions/{topic}')  # noqa
