@@ -28,8 +28,8 @@ COPY . /app
 # Set the working directory to /app
 WORKDIR /app
 
-# install wis2downloader from github main branch
-RUN pip3 install https://github.com/wmo-im/wis2downloader/archive/main.zip
+# install wis2downloader from pypi
+RUN pip install wis2downloader
 
 # add wis2box.cron to crontab
 COPY ./clean.cron /etc/cron.d/clean.cron
