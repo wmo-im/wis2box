@@ -38,11 +38,20 @@ The files downloaded by the wis2downloader will be saved in `${WIS2BOX_HOST_DATA
 Maintaining and Monitoring Subscriptions
 ----------------------------------------
 
-The wis2downloader has an API-endpoint that can be used to add, delete and list subscriptions. 
+Inside the 'wis2downloader' container, you can use the CLI to list, add and delete subscriptions.
 
-You can use the `wis2box downloader` commands to interact with the API, which will call the API over the internal docker network.
+You can also interact with the `wis2downloader` API-endpoint from outside the wis2box-host using curl or other HTTP clients and providing an authentication token in the request headers.
 
-The next sections describe how to use the `wis2box downloader` commands to list, add and delete subscriptions.
+Logging into the wis2downloader container
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To log into the wis2downloader container, you can use the following command:
+
+.. code-block:: console
+
+  python3 wis2box-ctl.py login wis2downloader
+
+This will log you into the container and you can use the CLI to interact with the subscriptions.
 
 Listing subscriptions
 ~~~~~~~~~~~~~~~~~~~~~
@@ -51,7 +60,7 @@ To list the current subscriptions, you can use the following command:
 
 .. code-block:: console
 
-  python3 wis2box.ctl.py execute wis2box downloader list-subscriptions
+  wis2downloader list-subscriptions
 
 This will return a JSON object with the current subscriptions.
 
@@ -62,7 +71,7 @@ To add a subscription, you can use the following command:
 
 .. code-block:: console
 
-  python3 wis2box.ctl.py execute wis2box downloader add-subscription --topic <topic>
+  wis2downloader add-subscription --topic <topic>
 
 This will add a subscription to the topic you specify and return the JSON object with the current subscriptions.
 
@@ -73,7 +82,7 @@ To delete a subscription, you can use the following command:
 
 .. code-block:: console
 
-  python3 wis2box.ctl.py execute wis2box downloader delete-subscription --topic <topic>
+  wis2downloader delete-subscription --topic <topic>
 
 This will delete the subscription to the topic you specify and return the JSON object with the current subscriptions.
 
