@@ -20,15 +20,6 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-      - name: Run Trivy vulnerability scanner on wis2box-api
-        uses: aquasecurity/trivy-action@0.20.0
-        with:
-          image-ref: 'ghcr.io/wmo-im/wis2box-api:latest'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
       - name: Run Trivy vulnerability scanner on wis2box-webapp
         uses: aquasecurity/trivy-action@0.20.0
         with:
@@ -42,6 +33,15 @@ jobs:
         uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: 'ghcr.io/wmo-im/wis2box-ui:latest'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+      - name: Run Trivy vulnerability scanner on wis2box-api
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: 'ghcr.io/wmo-im/wis2box-api:latest'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
