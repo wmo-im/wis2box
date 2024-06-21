@@ -1,13 +1,10 @@
-name: build
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+name: Run Trivy vulnerability scanner
+
+on: [ push ]
+
 jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-20.04
+  main:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
