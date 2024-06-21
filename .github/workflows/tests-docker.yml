@@ -49,10 +49,8 @@ jobs:
         curl http://localhost/oapi/collections/discovery-metadata
         curl http://localhost/oapi/collections/messages
     - name: downloader subscribe to topics
-      env: 
-        SUBSCRIPTION_TOPIC: origin/a/wis2/+/data/core/#
       run: |
-        python3 wis2box-ctl.py execute wis2box downloader add-subscription --topic $SUBSCRIPTION_TOPIC
+        python3 wis2box-ctl.py execute curl -X 'POST' 'http://wis2downloader:5000/subscriptions' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{ "topic": "origin/a/wis2/+/data/core/#"}'
     - name: populate stations from CSV 📡
       run: |
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection
