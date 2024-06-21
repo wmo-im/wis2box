@@ -101,10 +101,20 @@ class WIS2BoxSubscriber:
 
     def handle_publish(self, message):
         LOGGER.debug('Loading MessageData plugin to publish data from message') # noqa
+        topic_hierarchy = message['channel'].replace('origin/a/wis2/', '')
+        metadata_id = message.get('metadata_id')
+        # if metadata_id not provided determine from topic_hierarchy
+        if metadata_id is None:
+            for key, value in self.data_mappings.items():
+                if (value['topic_hierarchy']).replace('origin/a/wis2/', '') == topic_hierarchy: # noqa
+                    metadata_id = key
+                    break
+
         defs = {
-            'topic_hierarchy': message['channel'].replace('origin/a/wis2/', ''), # noqa
+            'topic_hierarchy': topic_hierarchy,
             '_meta': message['_meta'],
-            'notify': True
+            'notify': True,
+            'metadata_id': metadata_id
         }
         MessageData(defs=defs)
         plugin = MessageData(defs=defs)
