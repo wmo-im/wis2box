@@ -36,7 +36,8 @@ from wis2box.api import (setup_collection, upsert_collection_item,
 
 from wis2box.data_mappings import get_data_mappings
 from wis2box.data.message import MessageData
-from wis2box.env import (DOCKER_BROKER, STORAGE_SOURCE, STORAGE_ARCHIVE)
+from wis2box.env import (DATADIR, DOCKER_BROKER,
+                         STORAGE_SOURCE, STORAGE_ARCHIVE)
 from wis2box.handler import Handler, NotHandledError
 import wis2box.metadata.discovery as discovery_metadata
 from wis2box.plugin import load_plugin, PLUGINS
@@ -46,10 +47,33 @@ from wis2box.pubsub.message import gcm
 LOGGER = logging.getLogger(__name__)
 
 
+def get_gts_mappings():
+    # read gts mappings from CSV file in DATADIR
+    gts_mappings = {}
+    mapping_file = 'gts_headers_mapping.csv'
+    try:
+        with open(f'{DATADIR}/{mapping_file}', 'r') as f:
+            for line in f:
+                key = line.strip().split(',')[0]
+                if key == 'string_in_filepath':
+                    continue
+                ttaaii = line.strip().split(',')[1]
+                cccc = line.strip().split(',')[2]
+                value = {'ttaaii': ttaaii, 'cccc': cccc}
+                gts_mappings[key] = value
+                LOGGER.info(f'GTS mapping: string_in_filepath={key}, {value}')
+    except FileNotFoundError:
+        LOGGER.warning(f'To add GTS headers, please create {mapping_file} in WIS2BOX_HOST_DATADIR') # noqa
+    except Exception as err:
+        LOGGER.error(f'Error reading GTS mappings: {err}')
+    return gts_mappings
+
+
 class WIS2BoxSubscriber:
 
     def __init__(self, broker):
         self.data_mappings = get_data_mappings()
+        self.gts_mappings = get_gts_mappings()
         self.broker = broker
         self.broker.bind('on_message', self.on_message_handler)
         self.broker.sub('wis2box/#')
@@ -59,7 +83,8 @@ class WIS2BoxSubscriber:
             LOGGER.info(f'Processing {filepath}')
             # load handler
             handler = Handler(filepath=filepath,
-                              data_mappings=self.data_mappings)
+                              data_mappings=self.data_mappings,
+                              gts_mappings=self.gts_mappings)
             if handler.handle():
                 LOGGER.debug('Data processed')
                 for plugin in handler.plugins:
@@ -76,10 +101,21 @@ class WIS2BoxSubscriber:
 
     def handle_publish(self, message):
         LOGGER.debug('Loading MessageData plugin to publish data from message') # noqa
+        topic_hierarchy = message['channel']
+        metadata_id = message.get('metadata_id')
+        # if metadata_id not provided determine from topic_hierarchy
+        if metadata_id is None:
+            for key, value in self.data_mappings.items():
+                if topic_hierarchy in (value['topic_hierarchy']):
+                    topic_hierarchy = (value['topic_hierarchy'])
+                    metadata_id = key
+                    break
+
         defs = {
-            'topic_hierarchy': message['channel'].replace('origin/a/wis2/', ''), # noqa
+            'topic_hierarchy': topic_hierarchy,
             '_meta': message['_meta'],
-            'notify': True
+            'notify': True,
+            'metadata_id': metadata_id
         }
         MessageData(defs=defs)
         plugin = MessageData(defs=defs)

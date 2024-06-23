@@ -82,6 +82,7 @@ def get_data_mappings() -> dict:
 
 def validate_and_load(path: str,
                       data_mappings: dict = None,
+                      gts_mappings: dict = None,
                       file_type: str = None
                       ) -> Tuple[str, Tuple[Any]]:
     """
@@ -135,7 +136,8 @@ def validate_and_load(path: str,
     LOGGER.debug(f'Adding plugin definition for {file_type}')
 
     def data_defs(plugin):
-        return {
+        notify = plugin.get('notify', False)
+        data_defs = {
             'metadata_id': metadata_id,
             'íncoming_filepath': path,
             'topic_hierarchy': topic_hierarchy,
@@ -143,9 +145,17 @@ def validate_and_load(path: str,
             'pattern': plugin['file-pattern'],
             'template': plugin.get('template'),
             'buckets': plugin.get('buckets', ()),
-            'notify': plugin.get('notify', False),
+            'notify': notify,
             'format': file_type
         }
+        if notify and gts_mappings:
+            for key in gts_mappings.keys():
+                # check if string defined by key is contained in path
+                if key in path:
+                    data_defs['gts_ttaaii'] = gts_mappings[key]['ttaaii']
+                    data_defs['gts_cccc'] = gts_mappings[key]['cccc']
+                    break
+        return data_defs
 
     plugins_ = [load_plugin('data', data_defs(p), data_mappings)
                 for p in plugins[file_type]]
