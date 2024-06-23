@@ -104,18 +104,20 @@ def split(value: str) -> list:
     return value.split()
 
 
-def walk_path(path: str) -> list:
+def find_files(path: str, extension: str) -> list:
     """
-    Walks os directory path collecting all CSV files.
+    Walks directory path collecting all files of a given extention.
 
-    :param path: required, string. os directory.
+    :param path: `str` of directory path
+    :param extension: `str` of file extension
 
-    :returns: list. List of csv filepaths.
+    :returns: `list` of Python filepaths
     """
+
     file_list = []
     for root, _, files in os.walk(path, topdown=False):
         for name in files:
-            if name.endswith('.py'):
+            if name.endswith(extension):
                 file_list.append(os.path.join(root, name))
 
     return file_list
@@ -230,7 +232,7 @@ def make(args) -> None:
         run(args, split(
             f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} ps {containers}'))
     elif args.command == "lint":
-        files = walk_path(".")
+        files = find_files(".", '.py')
         run(args, ('python3', '-m', 'flake8', *files))
 
 
