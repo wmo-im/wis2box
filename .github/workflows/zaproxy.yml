@@ -1,0 +1,40 @@
+name: Run ZAP Baseline Scan ⚙️
+
+on: [ push, pull_request ]
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: build wis2box
+      run: |
+        python3 wis2box-ctl.py build
+        python3 wis2box-ctl.py update
+    - name: start containers using tests/test.env ⚙️
+      run: |
+        cp tests/test.env wis2box.env
+        python3 wis2box-ctl.py start
+        python3 wis2box-ctl.py status -a
+        sleep 30
+    - name: populate stations from CSV 📡
+      run: |
+        python3 wis2box-ctl.py execute wis2box metadata station publish-collection
+    - name: add Malawi synop data to the system 🇲🇼
+      env:
+        TOPIC_HIERARCHY: mw-mw_met_centre.data.core.weather.surface-based-observations.synop
+        CHANNEL: origin/a/wis2/mw-mw_met_centre/data/core/weather/surface-based-observations/synop
+        TERRITORY: MWI
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/mw-surface-weather-observations.yml
+        DISCOVERY_METADATA_ID: urn:wmo:md:mw-mw_met_centre:surface-weather-observations
+      run: |
+        python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
+        python3 wis2box-ctl.py execute wis2box metadata station add-topic --territory-name $TERRITORY  $CHANNEL
+        python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
+        sleep 10
+    - name: ZAP baseline Scan
+      uses: zaproxy/action-baseline@v0.12.0
+      with:
+        target: 'http://localhost'
+        #rules_file_name: '.zap/rules.tsv'

@@ -1,0 +1,68 @@
+wis2box:
+    retention: P30D
+    topic_hierarchy: mw-mw_met_centre.data.core.weather.surface-based-observations.synop
+    country: mwi
+    centre_id: mw-mw_met_centre
+    data_mappings:
+        plugins:
+            csv:
+                - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
+                  template: CampbellAfrica-v1-template
+                  notify: true
+                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.csv$'
+            bufr4:
+                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
+                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
+
+mcf:
+    version: 1.0
+
+metadata:
+    identifier: urn:wmo:md:mw-mw_met_centre:surface-weather-observations
+    hierarchylevel: dataset
+
+identification:
+    title: Surface weather observations from Malawi
+    abstract: Surface weather observations from Malawi
+    dates:
+        creation: 2021-11-29
+    keywords:
+        default:
+            keywords:
+                - surface weather
+                - temperature
+                - observations
+        wmo:
+            keywords:
+                - weather
+            keywords_type: theme
+            vocabulary:
+                name: Earth system disciplines as defined by the WMO Unified Data Policy, Resolution 1 (Cg-Ext(2021), Annex 1.
+                url: https://codes.wmo.int/wis/topic-hierarchy/earth-system-discipline
+    extents:
+        spatial:
+            - bbox: [32.6881653175,-16.8012997372,35.7719047381,-9.23059905359]
+              crs: 4326
+        temporal:
+            - begin: 2021-11-29
+              end: null
+              resolution: P1H
+    url: https://example.org/malawi-surface-weather-observations
+    wmo_data_policy: core
+
+contact:
+    host:
+        organization: Department of Climate Change and Meteorologial Services (DCCMS)
+        url: https://www.metmalawi.gov.mw
+        individualname: Firstname Lastname
+        positionname: Position Name
+        phone: "+2651822014"
+        fax: "+2651822215"
+        address: P.O. Box 1808
+        city: Blantyre
+        administrativearea: Blantyre District
+        postalcode: M3H 5T4
+        country: Malawi
+        email: you@example.org
+        hoursofservice: 0700h - 1500h UTC
+        contactinstructions: email
