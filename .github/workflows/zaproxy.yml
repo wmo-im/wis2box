@@ -8,16 +8,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: build wis2box
-      run: |
-        python3 wis2box-ctl.py build
-        python3 wis2box-ctl.py update
-    - name: start containers using tests/test.env ⚙️
+    - name: build and start containers using tests/test.env ⚙️
       run: |
         cp tests/test.env wis2box.env
+        python3 wis2box-ctl.py build
         python3 wis2box-ctl.py start
         python3 wis2box-ctl.py status -a
         sleep 30
+        python3 wis2box-ctl.py status -a
     - name: populate stations from CSV 📡
       run: |
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection
