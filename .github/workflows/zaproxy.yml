@@ -1,6 +1,6 @@
 name: Run ZAP Baseline Scan ⚙️
 
-on: [ push, pull_request ]
+on: [ push ]
 
 jobs:
   main:
@@ -35,4 +35,4 @@ jobs:
       uses: zaproxy/action-baseline@v0.12.0
       with:
         target: 'http://localhost'
-        #rules_file_name: '.zap/rules.tsv'
+        rules_file_name: '.zap/rules.tsv'
