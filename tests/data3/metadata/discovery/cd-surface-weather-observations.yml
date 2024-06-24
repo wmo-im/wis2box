@@ -1,0 +1,69 @@
+wis2box:
+    retention: P180D
+    topic_hierarchy: cd-brazza_met_centre/data/core/weather/surface-based-observations/synop
+    country: cog
+    centre_id: cd-brazza_met_centre
+    data_mappings:
+        plugins:
+            txt:
+                - plugin: wis2box.data.synop2bufr.ObservationDataSYNOP2BUFR
+                  notify: true
+                  file-pattern: '^.*_(\d{4})(\d{2}).*\.txt$'
+            bufr4:
+                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
+                  buckets:
+                    - ${WIS2BOX_STORAGE_PUBLIC}
+                  file-pattern: '^.*\.bufr4$'
+
+mcf:
+    version: 1.0
+
+metadata:
+    identifier: urn:wmo:md:cd-brazza_met_centre:surface-weather-observations
+    hierarchylevel: dataset
+
+identification:
+    title: Surface weather observations from Republic of Congo
+    abstract: Surface weather observations from Republic of Congo
+    dates:
+        creation: 2023-03-26
+    keywords:
+        default:
+            keywords:
+                - surface weather
+                - temperature
+                - observations
+        wmo:
+            keywords:
+                - weather
+            keywords_type: theme
+            vocabulary:
+                name: Earth system disciplines as defined by the WMO Unified Data Policy, Resolution 1 (Cg-Ext(2021), Annex 1.
+                url: https://codes.wmo.int/topic-hierarchy/earth-system-discipline
+    extents:
+        spatial:
+            - bbox: [11.0937728207,-5.03798674888,18.4530652198,3.72819651938]
+              crs: 4326
+        temporal:
+            - begin: 2023-03-26
+              end: null
+              resolution: P1H
+    url: https://example.org/malawi-surface-weather-observations
+    wmo_data_policy: core
+
+contact:
+    host:
+        organization: Congo National Meteorological Service (DMN)
+        url: https://www.dirmet.cg
+        individualname: Firstname Lastname
+        positionname: Position Name
+        phone: null
+        fax: null
+        address: P.O. Box 208
+        city: Brazzaville
+        administrativearea: null
+        postalcode: null
+        country: Republic of Congo
+        email: you@example.com
+        hoursofservice: 0700h - 1500h UTC
+        contactinstructions: email
