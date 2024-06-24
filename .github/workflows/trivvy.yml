@@ -12,6 +12,7 @@ jobs:
         run: |
           docker build -t wis2box-management:test wis2box-management
       - name: Run Trivy vulnerability scanner on wis2box-management
+        if: always()
         uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: 'wis2box-management:test'
@@ -21,6 +22,7 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
       - name: Run Trivy vulnerability scanner on wis2box-webapp
+        if: always()
         uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: 'ghcr.io/wmo-im/wis2box-webapp:latest'
@@ -30,6 +32,7 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
       - name: Run Trivy vulnerability scanner on wis2box-ui
+        if: always()
         uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: 'ghcr.io/wmo-im/wis2box-ui:latest'
@@ -39,6 +42,7 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
       - name: Run Trivy vulnerability scanner on wis2box-api
+        if: always()
         uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: 'ghcr.io/wmo-im/wis2box-api:latest'
