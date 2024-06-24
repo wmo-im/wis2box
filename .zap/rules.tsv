@@ -17,3 +17,6 @@
 10049	IGNORE	Non-Storable Content	Informational
 10112	IGNORE	Session Management Response Identified	Informational
 10049	IGNORE	Storable and Cacheable Content	Informational
+10009	IGNORE	In Page Banner Information Leak	Low
+10036	IGNORE	"Server Leaks Version Information via ""Server"" HTTP Response Header Field"	Low
+10110	IGNORE	Dangerous JS Functions	Low

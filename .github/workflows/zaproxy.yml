@@ -36,3 +36,5 @@ jobs:
       with:
         target: 'http://localhost'
         rules_file_name: '.zap/rules.tsv'
+        cmd_options: '-I'
+        allow_issue_writing: 'false'
