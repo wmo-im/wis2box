@@ -40,7 +40,7 @@ jobs:
     - name: ZAP baseline Scan on wis2box-webapp 🕵️‍♂️
       uses: zaproxy/action-baseline@v0.12.0
       env:
-        ZAP_AUTH_HEADER_VALUE: "Basic d2lzMmJveC11c2VyOndpczJib3h0ZXN0MTIzCg=="
+        ZAP_AUTH_HEADER_VALUE: "Basic d2lzMmJveC11c2VyOndpczJib3h0ZXN0MTIz"
         ZAP_AUTH_HEADER: "Authorization"
       with:
         target: 'http://localhost/wis2box-webapp'
