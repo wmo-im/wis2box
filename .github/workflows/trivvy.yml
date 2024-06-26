@@ -21,6 +21,45 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
+      - name: Build wis2box-mqtt-metrics-collector
+        run: |
+          docker build -t wis2box-mqtt-metrics-collector:test wis2box-mqtt-metrics-collector
+      - name: Run Trivy vulnerability scanner on wis2box-mqtt-metrics-collector
+        if: always()
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: 'wis2box-mqtt-metrics-collector:test'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+      - name: Build wis2box-broker
+        run: |
+          docker build -t wis2box-broker:test wis2box-broker
+      - name: Run Trivy vulnerability scanner on wis2box-broker
+        if: always()
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: 'wis2box-broker:test'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+      - name: Build wis2downloader
+        run: |
+          docker build -t wis2downloader:test wis2downloader
+      - name: Run Trivy vulnerability scanner on wis2downloader
+        if: always()
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: 'wis2downloader:test'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
       - name: Run Trivy vulnerability scanner on wis2box-webapp
         if: always()
         uses: aquasecurity/trivy-action@0.20.0
