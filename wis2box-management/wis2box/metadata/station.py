@@ -78,7 +78,7 @@ def get_wmdr_codelists() -> dict:
             reader = csv.reader(fh)
             next(reader)
             for row in reader:
-                codelists[key].append(row[4])
+                codelists[key].append(row[1])
 
     return codelists
 

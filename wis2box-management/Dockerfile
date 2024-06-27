@@ -49,8 +49,12 @@ RUN apt-get update -y && apt-get install -y ${DEBIAN_PACKAGES} \
     && apt autoremove -y  \
     && apt-get -q clean \
     && rm -rf /var/lib/apt/lists/* \
-    # create directory for wmdr codelists
-    && mkdir -p /home/wis2box/wmdr-codelists 
+    # cache WMDR codelists
+    && mkdir -p /home/wis2box/wmdr-codelists \
+    && curl -s "https://codes.wmo.int/wmdr/FacilityType?_format=csv&_view=with_metadata&status=valid" > /home/wis2box/wmdr-codelists/FacilityType.csv \
+    && curl -s "https://codes.wmo.int/wmdr/InstrumentOperatingStatus?_format=csv&_view=with_metadata&status=valid" > /home/wis2box/wmdr-codelists/InstrumentOperatingStatus.csv \
+    && curl -s "https://codes.wmo.int/wmdr/TerritoryName?_format=csv&_view=with_metadata&status=valid" > /home/wis2box/wmdr-codelists/TerritoryName.csv \
+    && curl -s "https://codes.wmo.int/wmdr/WMORegion?_format=csv&_view=with_metadata&status=valid" > /home/wis2box/wmdr-codelists/WMORegion.csv
 
 # copy wdmr codelists
 COPY ./wmdr-codelists /home/wis2box/wmdr-codelists
