@@ -1,0 +1,6 @@
+@id,dct:description,rdf:type,rdfs:label,skos:notation
+<http://codes.wmo.int/wmdr/InstrumentOperatingStatus/inactive>,'The instrument is deployed but presently not in service'@en,skos:Concept,Not in service / inactive,inactive
+<http://codes.wmo.int/wmdr/InstrumentOperatingStatus/inapplicable>,'None of the codes in the table are applicable in the context of this particular observation'@en,skos:Concept,inapplicable,inapplicable
+<http://codes.wmo.int/wmdr/InstrumentOperatingStatus/operational>,'The instrument is declared operational and subject to routine maintenance'@en,skos:Concept,Operational,operational
+<http://codes.wmo.int/wmdr/InstrumentOperatingStatus/testing>,'The instrument is deployed for testing purposes and the information provided may not be reliable'@en,skos:Concept,Testing / commissioning,testing
+<http://codes.wmo.int/wmdr/InstrumentOperatingStatus/unknown>,'The instrument operating status is unknown'@en,skos:Concept,unknown,unknown
