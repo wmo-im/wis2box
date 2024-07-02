@@ -78,7 +78,6 @@ class WIS2BoxSubscriber:
         self.broker = broker
         self.broker.bind('on_message', self.on_message_handler)
         self.broker.sub('wis2box/#')
-        self.broker.sub('cap-editor/#')
 
     def handle(self, filepath):
         try:
