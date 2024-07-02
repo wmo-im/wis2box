@@ -36,6 +36,7 @@ from wis2box.api import (setup_collection, upsert_collection_item,
 
 from wis2box.data_mappings import get_data_mappings
 from wis2box.data.message import MessageData
+from wis2box.data.cap_message import CAPMessageData
 from wis2box.env import (DATADIR, DOCKER_BROKER,
                          STORAGE_SOURCE, STORAGE_ARCHIVE)
 from wis2box.handler import Handler, NotHandledError
@@ -77,6 +78,7 @@ class WIS2BoxSubscriber:
         self.broker = broker
         self.broker.bind('on_message', self.on_message_handler)
         self.broker.sub('wis2box/#')
+        self.broker.sub('cap-editor/#')
 
     def handle(self, filepath):
         try:
@@ -99,7 +101,7 @@ class WIS2BoxSubscriber:
             msg = f'handle() error: {err}'
             raise err
 
-    def handle_publish(self, message):
+    def handle_publish(self, message, publisher='wis2box'):
         LOGGER.debug('Loading MessageData plugin to publish data from message') # noqa
         topic_hierarchy = message['channel']
         metadata_id = message.get('metadata_id')
@@ -110,15 +112,17 @@ class WIS2BoxSubscriber:
                     topic_hierarchy = (value['topic_hierarchy'])
                     metadata_id = key
                     break
-
         defs = {
             'topic_hierarchy': topic_hierarchy,
             '_meta': message['_meta'],
             'notify': True,
             'metadata_id': metadata_id
         }
-        MessageData(defs=defs)
-        plugin = MessageData(defs=defs)
+        plugin = None
+        if publisher == 'cap-editor':
+            plugin = CAPMessageData(defs=defs)
+        else:
+            plugin = MessageData(defs=defs)
         try:
             input_bytes = base64.b64decode(message['data'].encode('utf-8'))
             plugin.transform(
@@ -157,6 +161,9 @@ class WIS2BoxSubscriber:
             while len(mp.active_children()) == mp.cpu_count():
                 sleep(0.05)
             mp.Process(target=self.handle, args=(filepath,)).start()
+        elif topic == 'wis2box/cap/publication':
+            LOGGER.debug('Publishing data received by cap-editor')
+            self.handle_publish(message, publisher='cap-editor')
         elif topic == 'wis2box/data/publication':
             LOGGER.debug('Publishing data')
             self.handle_publish(message)
