@@ -26,6 +26,7 @@ from datetime import datetime
 from typing import Union
 
 from wis2box.data.base import BaseAbstractData
+from capvalidator import validate_xml
 
 LOGGER = logging.getLogger(__name__)
 
@@ -63,10 +64,21 @@ class CAPMessageData(BaseAbstractData):
         rmk = filename.split('.')[0]
         input_bytes = self.as_bytes(input_data)
 
+        xml_content = self.as_string(input_bytes)
+        LOGGER.info(
+            f'Received CAP with the following content:\n {xml_content}')
+
         # convert isoformat to datetime
-        self._meta['data_date'] = datetime.fromisoformat(self._meta['data_date']) # noqa
+        self._meta['data_date'] = datetime.fromisoformat(self._meta['data_date'])  # noqa
         # add relative filepath to _meta
-        self._meta['relative_filepath'] = self.get_local_filepath(self._meta['data_date']) # noqa
+        self._meta['relative_filepath'] = self.get_local_filepath(self._meta['data_date'])  # noqa
+
+        # validate the CAP XML string content using the capvalidator package
+        result = validate_xml(xml_content)
+        if not result.passed:
+            LOGGER.error(
+                f'Invalid CAP XML, not publishing. Reason: {result.message}')
+            return False
 
         self.output_data[rmk] = {
             suffix: input_bytes,
