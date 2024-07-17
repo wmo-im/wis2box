@@ -10,6 +10,8 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
       - htpasswd:/etc/nginx/.htpasswd:ro
+    networks:
+      - monitoring
 
   wis2box-ui:
     container_name: wis2box-ui
@@ -19,6 +21,8 @@ services:
       - wis2box.env
     depends_on:
       - wis2box-api
+    networks:
+      - monitoring
 
 #  wis2box-ui-admin:
 #    container_name: wis2box-ui-admin
@@ -32,8 +36,50 @@ services:
   wis2box-webapp:
     container_name: wis2box-webapp
     image: ghcr.io/wmo-im/wis2box-webapp:latest
+    restart: always
     env_file:
       - wis2box.env
+    networks:
+      - monitoring
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana-oss:9.0.3
+    ports:
+      - "3000:3000"
+    restart: always
+    networks:
+      - monitoring
+
+  loki:
+    container_name: loki
+    image: grafana/loki:2.4.1
+    restart: always
+    networks:
+      - monitoring
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:v2.37.0
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - monitoring
+
+  node_exporter:
+    image: prom/node-exporter
+    networks:
+      - monitoring
+
+  mqtt_metrics_collector:
+    container_name: mqtt_metrics_collector
+    image: wis2box_project-mqtt_metrics_collector
+    restart: always  
+    networks:
+      - monitoring
 
   wis2box-api:
     container_name: wis2box-api
@@ -50,6 +96,8 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost/oapi/admin/resources"]
       interval: 5s
       retries: 100
+    networks:
+      - monitoring
 
   minio:
     container_name: wis2box-minio
@@ -73,6 +121,8 @@ services:
     depends_on:
       mosquitto:
         condition: service_started
+    networks:
+      - monitoring
 
   elasticsearch:
     container_name: elasticsearch
@@ -86,6 +136,8 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - cluster.name=es-wis2box
       - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
     mem_limit: 1.5g
     memswap_limit: 1.5g
     volumes:
@@ -101,6 +153,8 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:9200"]
       interval: 5s
       retries: 100
+    networks:
+      - monitoring
 
   mosquitto:
     container_name: mosquitto
@@ -110,6 +164,8 @@ services:
       context: ./wis2box-broker
     env_file:
       - wis2box.env
+    networks:
+      - monitoring
 
   wis2box-management:
     container_name: wis2box-management
@@ -133,6 +189,8 @@ services:
       wis2box-api:
         condition: service_healthy
     command: ["wis2box", "pubsub" , "subscribe"]
+    networks:
+      - monitoring
 
   wis2box-auth:
     container_name: wis2box-auth
@@ -144,17 +202,28 @@ services:
       - auth-data:/data/wis2box:rw
     depends_on:
       - wis2box-management
+    networks:
+      - monitoring
 
   wis2downloader:
     container_name: wis2downloader
+    image: wis2box_project-wis2downloader
+    restart: always
     build: ./wis2downloader
     env_file:
       - wis2box.env
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/downloads:/app/downloads:rw
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    driver: bridge
 
 volumes:
   es-data:
+    driver: local
   minio-data:
   auth-data:
   api-config:
