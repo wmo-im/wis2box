@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<?xml-stylesheet type="text/xsl" href="https://www.meteo.sc/cap-alert-style.xsl"?>
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+    <identifier>urn:oid:2.49.0.0.690.0.2024.5.19.13.18.0</identifier>
+    <sender>info@meteo.gov.sc</sender>
+    <sent>2024-05-19T17:18:00+04:00</sent>
+    <status>Actual</status>
+    <msgType>Alert</msgType>
+    <scope>Public</scope>
+    <info>
+        <language>en</language>
+        <category>Met</category>
+        <event>Strong Winds</event>
+        <urgency>Immediate</urgency>
+        <severity>Moderate</severity>
+        <certainty>Observed</certainty>
+        <audience>General Public</audience>
+        <effective>2024-05-19T17:30:00+04:00</effective>
+        <onset>2024-05-19T17:30:00+04:00</onset>
+        <expires>2024-05-19T23:30:00+04:00</expires>
+        <senderName>Seychelles Meteorological Authority</senderName>
+        <headline>Moderate to strong south-easterly winds over Aldabra area</headline>
+        <description>Moderate to strong south-easterly winds over Aldabra area associated with a severe tropical storm Ialy on 19th May 2024 from 5pm to 11pm</description>
+        <instruction>Beware of strong south-easterly winds of 40km/hr gusting to 60km/hr causing rough seas. Mariners are advised to take extra precautions when navigating these areas</instruction>
+        <web>https://www.meteo.sc/alerts/severe-tropical-storm-ialy-is-expected-to-cause-moderate-to-strong-south-easterly-winds-over-aldabra-area-on-19th-may-2024/</web>
+        <contact>info@meteo.gov.sc</contact>
+        <area>
+            <areaDesc>Aldabra area</areaDesc>
+            <polygon>-9.186965,46.078276 -9.336746,45.936002 -9.57065,45.983427 -9.748309,46.116216 -9.897844,46.249006 -10.000609,46.42922 -9.953902,46.694799 -9.692216,46.770679 -9.467752,46.770679 -9.327387,46.742224 -9.186965,46.694799 -9.140146,46.533555 -9.121416,46.362825 -9.186965,46.078276</polygon>
+        </area>
+    </info>
+</alert>
