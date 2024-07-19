@@ -19,7 +19,7 @@
 #
 ###############################################################################
 
-FROM ubuntu:focal
+FROM ubuntu:jammy
 
 LABEL maintainer="tomkralidis@gmail.com; mlimper@wmo.int"
 
@@ -40,6 +40,8 @@ RUN apt-get update -y && apt-get install -y ${DEBIAN_PACKAGES} \
     https://github.com/wmo-cop/pyoscar/archive/refs/tags/0.7.0.zip \
     https://github.com/geopython/pygeometa/archive/refs/tags/0.16.0.zip \
     https://github.com/wmo-im/pywis-topics/archive/refs/tags/0.2.0.zip \
+    # install cap validator
+    && pip3 install --no-cache-dir capvalidator>=0.1.0-dev2 \
     # install shapely
     && pip3 install --no-cache-dir cython pygeos==0.13 \
     && pip3 install shapely \

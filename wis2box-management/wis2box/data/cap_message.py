@@ -86,4 +86,5 @@ class CAPMessageData(BaseAbstractData):
 
     def get_local_filepath(self, date_):
         yyyymmdd = date_.strftime('%Y-%m-%d')
-        return Path(yyyymmdd) / 'wis' / self.metadata_id
+        # return Path(yyyymmdd) / 'wis' / self.metadata_id
+        return Path(yyyymmdd) / 'wis' / 'test'
