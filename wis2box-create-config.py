@@ -393,7 +393,7 @@ def create_config_dir() -> str:
         if answer == "exit":
             exit()
 
-        print("Please enter the directory on the host where wis2box-configuration-files are to be stored:") # noqa
+        print("Please enter the directory on the host to be used for WIS2BOX_HOST_DATADIR:") # noqa
         config_dir = input()
 
         if config_dir == "":
