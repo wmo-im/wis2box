@@ -1,0 +1,27 @@
+services: 
+  wis2box-api:
+    image: ghcr.io/wmo-im/wis2box-api:latest
+    restart: always
+    environment:
+      - WIS2BOX_API_URL=http://localhost/oapi
+      - WIS2BOX_API_BACKEND_URL=http://elasticsearch:9200
+      - WIS2BOX_BASEMAP_URL=https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
+      - WIS2BOX_BASEMAP_ATTRIBUTION="<a href="https://osm.org/copyright">OpenStreetMap</a> contributors"
+      - WIS2BOX_BROKER_USERNAME=localbroker-admin
+      - WIS2BOX_BROKER_PASSWORD=localbroker-password
+      - WIS2BOX_BROKER_HOST=mosquitto
+      - WIS2BOX_BROKER_PORT=1883
+      - WIS2BOX_LOGGING_LOGLEVEL=INFO
+      - WIS2BOX_DATADIR=/data/wis2box
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    volumes:
+      - api-config:/data/wis2box/config/pygeoapi/:rw
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/oapi/admin/resources"]
+      interval: 5s
+      retries: 100
+
+volumes:
+  api-config:
