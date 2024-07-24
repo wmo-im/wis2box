@@ -1,0 +1,23 @@
+10202	IGNORE	Absence of Anti-CSRF Tokens	Medium
+10038	IGNORE	Content Security Policy (CSP) Header Not Set	Medium
+10098	IGNORE	Cross-Domain Misconfiguration	Medium
+10020	IGNORE	Missing Anti-clickjacking Header	Medium
+90003	IGNORE	Sub Resource Integrity Attribute Missing	Medium
+90022	IGNORE	Application Error Disclosure	Medium
+10054	IGNORE	Cookie with SameSite Attribute None	Low
+10017	IGNORE	Cross-Domain JavaScript Source File Inclusion	Low
+10023	IGNORE	Information Disclosure - Debug Error Messages	Low
+10063	IGNORE	Permissions Policy Header Not Set	Low
+10037	IGNORE	"Server Leaks Information via ""X-Powered-By"" HTTP Response Header Field(s)"	Low
+10096	IGNORE	Timestamp Disclosure - Unix	Low
+10021	IGNORE	X-Content-Type-Options Header Missing	Low
+10027	IGNORE	Information Disclosure - Suspicious Comments	Informational
+90033	IGNORE	Loosely Scoped Cookie	Informational
+10109	IGNORE	Modern Web Application	Informational
+10049	IGNORE	Non-Storable Content	Informational
+10112	IGNORE	Session Management Response Identified	Informational
+10049	IGNORE	Storable and Cacheable Content	Informational
+10009	IGNORE	In Page Banner Information Leak	Low
+10036	IGNORE	"Server Leaks Version Information via ""Server"" HTTP Response Header Field"	Low
+10110	IGNORE	Dangerous JS Functions	Low
+10105	IGNORE	Authentication Credentials Captured	Medium
