@@ -64,6 +64,18 @@ class BasePubSubClient:
 
         raise NotImplementedError()
 
+    def test(self, topic='wis2box/test', message='test') -> bool:
+        """
+        Test the connection to the broker
+
+        :param topic: `str` of topic
+        :param message: `str` of message
+
+        :returns: `bool` of test result
+        """
+
+        raise NotImplementedError()
+
     def bind(self, event: str, function: Callable[..., Any]) -> None:
         """
         Binds an event to a function

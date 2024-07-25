@@ -111,6 +111,37 @@ def environment():
 @click.command()
 @click.pass_context
 @cli_helpers.OPTION_VERBOSITY
+def test(ctx, verbosity):
+    """Tests the environment is set up correctly"""
+
+    click.echo(f'Setting up logging (loglevel={LOGLEVEL}, logfile={LOGFILE})')
+    setup_logger(LOGLEVEL, LOGFILE)
+
+    click.echo('Testing BROKER_PUBLIC')
+    # load plugin for plugin-broker
+    defs = {
+        'codepath': PLUGINS['pubsub']['mqtt']['plugin'],
+        'url': BROKER_PUBLIC,
+        'client_type': 'publisher'
+    }
+    broker = load_plugin('pubsub', defs)
+
+    try:
+        result = broker.test(topic='origin/a/wis2/test', message='wis2box pub test')
+    except Exception as err:
+        LOGGER.error(err)
+        raise EnvironmentError(err)
+
+    if result:
+        click.echo('Broker test successful')
+    else:
+        LOGGER.error('Could not connect to broker defined by WI2BOX_BROKER_PUBLIC')
+        click.echo('Broker test failed')
+        exit(1)
+
+@click.command()
+@click.pass_context
+@cli_helpers.OPTION_VERBOSITY
 def create(ctx, verbosity):
     """Creates baseline data/metadata directory structure"""
 
@@ -163,3 +194,4 @@ def show(ctx, verbosity):
 
 environment.add_command(create)
 environment.add_command(show)
+environment.add_command(test)
