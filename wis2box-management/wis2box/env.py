@@ -127,7 +127,7 @@ def test(ctx, verbosity):
     broker = load_plugin('pubsub', defs)
 
     try:
-        result = broker.test(topic='origin/a/wis2/test', message='wis2box pub test')
+        result = broker.test(topic='origin/a/wis2/test', message='wis2box pub test') # noqa
     except Exception as err:
         LOGGER.error(err)
         raise EnvironmentError(err)
@@ -135,9 +135,10 @@ def test(ctx, verbosity):
     if result:
         click.echo('Broker test successful')
     else:
-        LOGGER.error('Could not connect to broker defined by WI2BOX_BROKER_PUBLIC')
+        LOGGER.error('Could not connect to broker defined by WI2BOX_BROKER_PUBLIC') # noqa
         click.echo('Broker test failed')
         exit(1)
+
 
 @click.command()
 @click.pass_context

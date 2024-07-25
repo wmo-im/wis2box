@@ -153,14 +153,14 @@ class MQTTPubSubClient(BasePubSubClient):
             else:
                 msg = f'Test: Failed to connect to MQTT-broker: {mqtt_client.connack_string(rc)}' # noqa
                 LOGGER.error(msg)
-        
+
         def on_message(client, userdata, message):
             LOGGER.debug(f'Test: Received message {message.payload.decode()}')
             self.test_status = 'success'
 
         self.conn.on_connect = on_connect
         self.conn.on_message = on_message
-    
+
         self.conn.loop_start()
         sleep(0.1)
         self.conn.publish(topic, message, qos=1)
