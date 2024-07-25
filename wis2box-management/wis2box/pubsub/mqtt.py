@@ -68,7 +68,11 @@ class MQTTPubSubClient(BasePubSubClient):
         if self.broker_url.scheme == 'mqtts':
             self.conn.tls_set(tls_version=2)
 
-        self.conn.connect(self.broker_url.hostname, self._port)
+        try:
+            self.conn.connect(self.broker_url.hostname, self._port)
+        except Exception as e:
+            LOGGER.error(f'MQTT Broker connect error: {e}')
+            self.test_status = e
         LOGGER.debug('Connection initiated')
 
     def pub(self, topic: str, message: str, qos: int = 1) -> bool:
@@ -157,6 +161,11 @@ class MQTTPubSubClient(BasePubSubClient):
         def on_message(client, userdata, message):
             LOGGER.debug(f'Test: Received message {message.payload.decode()}')
             self.test_status = 'success'
+
+        if self.test_status != 'unknown':
+            msg = f'Test: failed to connect to MQTT-broker: {self.test_status}' # noqa
+            LOGGER.error(msg)
+            return self.test_status == 'success'
 
         self.conn.on_connect = on_connect
         self.conn.on_message = on_message
