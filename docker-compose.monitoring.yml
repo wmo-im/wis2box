@@ -25,6 +25,7 @@ services:
     <<: *logging
     container_name: loki
     image: grafana/loki:2.4.1
+    restart: always
     command: -config.file=/etc/loki/loki-config.yml
     volumes:
       - loki-data:/loki
@@ -54,12 +55,15 @@ services:
     <<: *logging
     image: prom/prometheus:v2.37.0
     container_name: prometheus
+    restart: always
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.retention.time=10d'
+    ports:
+      - "9090:9090"
   # uncomment cadvisor to monitor containers
   # cadvisor:
   #  image: gcr.io/cadvisor/cadvisor:v0.45.0
@@ -77,6 +81,7 @@ services:
   grafana:
     <<: *logging
     container_name: grafana
+    restart: always
     env_file:
       - wis2box.env
     image: grafana/grafana-oss:9.0.3

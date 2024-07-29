@@ -29,6 +29,17 @@ services:
 #    depends_on:
 #      - wis2box-api
 
+  wis2box-webapp:
+    container_name: wis2box-webapp
+    image: ghcr.io/wmo-im/wis2box-webapp:latest
+    env_file:
+      - wis2box.env
+    restart: always
+
+  node_exporter:
+    image: prom/node-exporter
+    restart: always
+
   wis2box-api:
     container_name: wis2box-api
     image: ghcr.io/wmo-im/wis2box-api:latest
@@ -97,6 +108,15 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:9200"]
       interval: 5s
       retries: 100
+
+  mosquitto:
+    container_name: mosquitto
+    #image: ghcr.io/wmo-im/wis2box-broker:1.0.beta1
+    restart: always
+    build:
+      context: ./wis2box-broker
+    env_file:
+      - wis2box.env
 
   wis2box-management:
     container_name: wis2box-management
