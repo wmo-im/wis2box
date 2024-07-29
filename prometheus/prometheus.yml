@@ -31,9 +31,6 @@ scrape_configs:
   scheme: http
   static_configs:
   - targets: ['wis2downloader:5000']
-- job_name: 'node_exporter'
-  static_configs:
-  - targets: ['node_exporter:9100']
 - job_name: 'prometheus'
   static_configs:
   - targets: ['localhost:9090']
