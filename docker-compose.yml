@@ -36,10 +36,6 @@ services:
       - wis2box.env
     restart: always
 
-  node_exporter:
-    image: prom/node-exporter
-    restart: always
-
   wis2box-api:
     container_name: wis2box-api
     image: ghcr.io/wmo-im/wis2box-api:latest
