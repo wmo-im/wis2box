@@ -162,6 +162,12 @@ class WIS2BoxSubscriber:
             mp.Process(target=self.handle, args=(filepath,)).start()
         elif topic == 'wis2box/cap/publication':
             LOGGER.debug('Publishing data received by cap-editor')
+            # Determine the data policy from the message
+            policy = 'core'
+            if message.get('is_recommended'):
+                policy = 'recommended' if message['is_recommended'] else 'core'
+            # Set the channel based on centre ID and data policy
+            message['channel'] = f"{message['centre_id']}/data/{policy}/weather/advisories-warnings" # noqa
             self.handle_publish(message, publisher='cap-editor')
         elif topic == 'wis2box/data/publication':
             LOGGER.debug('Publishing data')
