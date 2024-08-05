@@ -24,7 +24,6 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -137,7 +136,7 @@
           }
         ]
       },
-      "pluginVersion": "9.0.3",
+      "pluginVersion": "",
       "targets": [
         {
           "datasource": {
@@ -642,6 +641,6 @@
   "timezone": "",
   "title": "wis2box data publication dashboard",
   "uid": "KkBocEA4k",
-  "version": 4,
+  "version": 1,
   "weekStart": ""
 }
