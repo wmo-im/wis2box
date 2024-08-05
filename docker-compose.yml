@@ -160,7 +160,6 @@ services:
 
 volumes:
   es-data:
-    driver: local
   minio-data:
   auth-data:
   api-config:
