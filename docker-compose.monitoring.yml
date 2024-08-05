@@ -25,14 +25,16 @@ services:
     <<: *logging
     container_name: loki
     image: grafana/loki:2.4.1
+    restart: always
     command: -config.file=/etc/loki/loki-config.yml
     volumes:
       - loki-data:/loki
       - ./loki/loki-config.yml:/etc/loki/loki-config.yml
-    networks:
-      vpcbr: # this is the place where we assign the static ipv4 address
-        ipv4_address: 10.5.0.2
-      default:
+
+  node_exporter:
+    image: prom/node-exporter
+    restart: always
+
   # mqtt_metrics_collector, listens to mqtt-broker
   mqtt_metrics_collector:
     <<: *logging
@@ -54,12 +56,16 @@ services:
     <<: *logging
     image: prom/prometheus:v2.37.0
     container_name: prometheus
+    restart: always
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.retention.time=10d'
+    ports:
+      - "9090:9090"
+
   # uncomment cadvisor to monitor containers
   # cadvisor:
   #  image: gcr.io/cadvisor/cadvisor:v0.45.0
@@ -76,10 +82,11 @@ services:
   # Grafana, graphical monitoring dashboards for wis2box using data from loki and prometheus
   grafana:
     <<: *logging
+    image: grafana/grafana-oss:9.0.3
     container_name: grafana
+    restart: always
     env_file:
       - wis2box.env
-    image: grafana/grafana-oss:9.0.3
     volumes:
       - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/datasources:/etc/grafana/provisioning/datasources
@@ -100,6 +107,16 @@ services:
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
     ports:
       - 3000:3000
+
+  # Elasticsearch Exporter for monitoring Elasticsearch metrics
+  elasticsearch-exporter:
+    <<: *logging
+    image: quay.io/prometheuscommunity/elasticsearch-exporter:latest
+    command:
+      - '--es.uri=http://elasticsearch:9200'
+      - '--es.indices_settings'
+    restart: always
+
   wis2box-management:
     <<: *logging
   mosquitto:
@@ -108,6 +125,14 @@ services:
     <<: *logging
   elasticsearch:
     <<: *logging
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.6.2
+    environment:
+      - discovery.type=single-node
+      - network.host=0.0.0.0
+    ports:
+      - "9200:9200"
+
   wis2box-auth:
     <<: *logging
   minio:
@@ -120,3 +145,4 @@ services:
 volumes:
   loki-data:
   prometheus-data:
+

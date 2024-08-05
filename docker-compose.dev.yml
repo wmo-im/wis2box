@@ -5,15 +5,27 @@ services:
       - ./wis2box-management/wis2box/wis2box.cron:/etc/cron.d/wis2box:ro
       - ./wis2box-management/wis2box:/app/wis2box
     command: ["wis2box", "pubsub" , "subscribe"]
+    depends_on:
+      - minio
+      - mosquitto
+      - wis2box-api
 
   wis2box-api:
     volumes:
       - ../wis2box-api/wis2box_api:/app/wis2box_api
+    depends_on:
+      - elasticsearch
 
   wis2box-auth:
     volumes:
       - ../wis2box-auth/wis2box_auth:/app/wis2box_auth
+    depends_on:
+      - wis2box-management
 
   elasticsearch:
     ports:
       - 9200:9200
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 5s
+      retries: 100
