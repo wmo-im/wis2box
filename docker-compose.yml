@@ -34,6 +34,7 @@ services:
     image: ghcr.io/wmo-im/wis2box-webapp:latest
     env_file:
       - wis2box.env
+    restart: always
 
   wis2box-api:
     container_name: wis2box-api
@@ -86,6 +87,8 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - cluster.name=es-wis2box
       - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
     mem_limit: 1.5g
     memswap_limit: 1.5g
     volumes:
@@ -147,6 +150,8 @@ services:
 
   wis2downloader:
     container_name: wis2downloader
+    image: wis2box_project-wis2downloader
+    restart: always
     build: ./wis2downloader
     env_file:
       - wis2box.env
@@ -155,6 +160,7 @@ services:
 
 volumes:
   es-data:
+    driver: local
   minio-data:
   auth-data:
   api-config:
