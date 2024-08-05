@@ -40,6 +40,15 @@ class BaseBackend:
         self.username = defs.get('username')
         self.password = defs.get('password')
 
+    def list_collections(self) -> list:
+        """
+        List collections
+
+        :returns: `list` of collection names
+        """
+
+        raise NotImplementedError()
+
     def add_collection(self, name: str) -> bool:
         """
         Add a collection

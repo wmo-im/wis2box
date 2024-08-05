@@ -33,6 +33,15 @@ class BaseConfig:
         :param defs: `dict` of connection parameters
         """
 
+    def list_collections(self) -> list:
+        """
+        List collections
+
+        :returns: `list` of collection names
+        """
+
+        raise NotImplementedError()
+
     def get_collection(self, name: str) -> dict:
         """
         Get a collection
