@@ -21,7 +21,7 @@ To enable the WIS2 to GTS Gateway to correctly identify the data to be republish
      }
    }
 
-wis2box can add these to WIS2 Notifications automatically, provided you specify the additional file `gts_headers_mappings.json` that contains the required information to map the GTS headers to the incoming filenames.
+wis2box can add these to WIS2 Notifications automatically, provided you specify the additional file `gts_headers_mappings.csv` that contains the required information to map the GTS headers to the incoming filenames.
 
 Note that this is optional and only required if you want to turn off the existing system responsible for sending data to the GTS during the transition period.
 
