@@ -268,7 +268,11 @@ You can also bulk insert a set of stations from a CSV file, by defining the stat
 .. code-block:: bash
 
    python3 wis2box-ctl.py login
-   wis2box metadata station publish-collection
+   wis2box metadata station publish-collection --path /data/wis2box/metadata/stations/station_list.csv --topic-hierarchy mw-mw_met_centre.data.core.weather.surface-based-observations.synop
+
+.. note::
+
+   The ``topic-hierarchy`` option above is only an example; The actual topic hierarchy you should use is based on your centre id and dataset published.
 
 After doing a bulk insert please review the stations in wis2box-webapp and associate each station to the correct topics.
 

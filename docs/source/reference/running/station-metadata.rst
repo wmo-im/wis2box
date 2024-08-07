@@ -35,7 +35,7 @@ specifying one line per station as follows:
 
 .. literalinclude:: ../../../../examples/config/station_list.csv
 
-Then login in to the wis2box-container and run the command ``wis2box metadata station publish-collection``
+Then login in to the wis2box-container and run the command ``wis2box metadata station publish-collection /data/wis2box/metadata/station/station_list.csv``
 to insert all stations in the station list into the backend.
 
 Within the wis2box-container you can fetch the required station metadata from OSCAR/Surface using the following command:

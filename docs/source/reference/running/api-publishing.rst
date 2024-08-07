@@ -22,7 +22,7 @@ will generate local station collection GeoJSON for API publication.
 
 .. code-block:: bash
 
-   wis2box metadata station publish-collection
+   wis2box metadata station publish-collection /data/wis2box/metadata/station/station_list.csv
 
 
 .. note:: This command also runs automatically at startup and thereafter every 10 minutes

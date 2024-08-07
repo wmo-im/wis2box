@@ -62,7 +62,7 @@ Load initial stations:
 
 .. code-block:: bash
 
-    wis2box metadata station publish-collection
+    wis2box metadata station publish-collection /data/wis2box/metadata/station/station_list.csv
 
 Ingest data using the data ingest command to push data to the ``wis2box-incoming`` bucket:
 
@@ -81,7 +81,7 @@ Publish stations:
 
 .. code-block:: bash
 
-    wis2box metadata station publish-collection
+    wis2box metadata station publish-collection /data/wis2box/metadata/station/station_list.csv
 
 Logout of wis2box-management container:
 
