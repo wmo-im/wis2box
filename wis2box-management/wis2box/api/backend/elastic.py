@@ -196,6 +196,15 @@ class ElasticBackend(BaseBackend):
         """
         return collection_id.lower().replace(':', '-')
 
+    def list_collections(self) -> list:
+        """
+        List collections
+
+        :returns: `list` of collection names
+        """
+
+        return [index for index in self.conn.indices.get_alias(index="*")]
+
     def add_collection(self, collection_id: str) -> dict:
         """
         Add a collection
