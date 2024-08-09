@@ -18,7 +18,7 @@ ENV LOG_PATH /app/logs
 ENV WIS2DOWNLOADER_CONFIG "/app/config.json"
 
 # update pyopenssl and pin requests and urllib3 to avoid SSL error
-RUN pip install pyopenssl --upgrade && pip install requests==2.26.0 urllib3==1.26.0
+RUN pip install pyopenssl --upgrade && pip install requests==2.32.3 urllib3==1.26.0
 # install cron and envsubst and guincorn
 RUN apt-get update && apt-get install -y cron gettext-base gunicorn
 
@@ -29,7 +29,7 @@ COPY . /app
 WORKDIR /app
 
 # install wis2downloader from pypi
-RUN pip install wis2downloader
+RUN pip install wis2downloader==0.3.0
 
 # add wis2box.cron to crontab
 COPY ./clean.cron /etc/cron.d/clean.cron
