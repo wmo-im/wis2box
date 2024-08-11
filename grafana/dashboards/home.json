@@ -29,6 +29,40 @@
   "panels": [
     {
       "datasource": {
+        "type": "datasource",
+        "uid": "grafana"
+      },
+      "description": "show all the alerting list",
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 14,
+      "options": {
+        "alertName": "",
+        "dashboardAlerts": false,
+        "dashboardTitle": "",
+        "maxItems": 10,
+        "showOptions": "current",
+        "sortOrder": 1,
+        "stateFilter": {
+          "alerting": true,
+          "execution_error": false,
+          "no_data": false,
+          "ok": false,
+          "paused": false,
+          "pending": false
+        },
+        "tags": []
+      },
+      "pluginVersion": "9.0.3",
+      "title": "Current Alerts Overview",
+      "type": "alertlist"
+    },
+    {
+      "datasource": {
         "type": "prometheus",
         "uid": "PABAFD29CE247021E"
       },
@@ -115,7 +149,7 @@
         "h": 15,
         "w": 10,
         "x": 0,
-        "y": 0
+        "y": 6
       },
       "id": 12,
       "interval": "24h",
@@ -136,7 +170,7 @@
           }
         ]
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.0.3",
       "targets": [
         {
           "datasource": {
@@ -328,7 +362,7 @@
         "h": 5,
         "w": 14,
         "x": 10,
-        "y": 0
+        "y": 6
       },
       "id": 2,
       "interval": "1m",
@@ -424,7 +458,7 @@
         "h": 5,
         "w": 14,
         "x": 10,
-        "y": 5
+        "y": 11
       },
       "id": 6,
       "interval": "1m",
@@ -503,8 +537,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -519,7 +552,7 @@
         "h": 5,
         "w": 14,
         "x": 10,
-        "y": 10
+        "y": 16
       },
       "id": 10,
       "interval": "1m",
@@ -562,7 +595,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 15
+        "y": 21
       },
       "id": 8,
       "options": {

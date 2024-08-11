@@ -24,10 +24,43 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
   "links": [],
   "liveNow": false,
   "panels": [
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "grafana"
+      },
+      "description": "show all the alerting alert",
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 21,
+      "options": {
+        "alertName": "",
+        "dashboardAlerts": false,
+        "dashboardTitle": "",
+        "maxItems": 10,
+        "showOptions": "current",
+        "sortOrder": 1,
+        "stateFilter": {
+          "alerting": true,
+          "execution_error": false,
+          "no_data": false,
+          "ok": false,
+          "paused": false,
+          "pending": false
+        },
+        "tags": []
+      },
+      "pluginVersion": "",
+      "title": "Current Alerts Overview",
+      "type": "alertlist"
+    },
     {
       "datasource": {
         "type": "prometheus",
@@ -61,7 +94,7 @@
         "h": 6,
         "w": 9,
         "x": 0,
-        "y": 0
+        "y": 5
       },
       "id": 14,
       "options": {
@@ -148,7 +181,7 @@
         "h": 4,
         "w": 3,
         "x": 9,
-        "y": 0
+        "y": 5
       },
       "id": 18,
       "options": {
@@ -215,7 +248,7 @@
         "h": 4,
         "w": 6,
         "x": 12,
-        "y": 0
+        "y": 5
       },
       "id": 16,
       "interval": "1h",
@@ -325,7 +358,7 @@
         "h": 4,
         "w": 6,
         "x": 18,
-        "y": 0
+        "y": 5
       },
       "id": 19,
       "interval": "1h",
@@ -523,7 +556,7 @@
         "h": 9,
         "w": 15,
         "x": 9,
-        "y": 4
+        "y": 9
       },
       "id": 2,
       "interval": "60s",
@@ -575,7 +608,7 @@
         "h": 16,
         "w": 9,
         "x": 0,
-        "y": 6
+        "y": 11
       },
       "id": 6,
       "options": {
@@ -648,8 +681,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "light-green",
-                "value": null
+                "color": "light-green"
               }
             ]
           },
@@ -716,7 +748,7 @@
         "h": 9,
         "w": 15,
         "x": 9,
-        "y": 13
+        "y": 18
       },
       "id": 9,
       "interval": "60s",
@@ -764,6 +796,6 @@
   "timezone": "",
   "title": "wis2downloader dashboard",
   "uid": "zB4GjVaIk",
-  "version": 5,
+  "version": 1,
   "weekStart": ""
 }

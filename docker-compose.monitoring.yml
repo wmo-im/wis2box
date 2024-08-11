@@ -31,10 +31,6 @@ services:
       - loki-data:/loki
       - ./loki/loki-config.yml:/etc/loki/loki-config.yml
 
-  node_exporter:
-    image: prom/node-exporter
-    restart: always
-
   # mqtt_metrics_collector, listens to mqtt-broker
   mqtt_metrics_collector:
     <<: *logging
@@ -90,6 +86,7 @@ services:
     volumes:
       - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/datasources:/etc/grafana/provisioning/datasources
+  # if alert want to link emails this place should mount local cofiguration to grafana
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
@@ -116,23 +113,14 @@ services:
       - '--es.uri=http://elasticsearch:9200'
       - '--es.indices_settings'
     restart: always
-
+  elasticsearch:
+    <<: *logging
   wis2box-management:
     <<: *logging
   mosquitto:
     <<: *logging
   wis2box-api:
     <<: *logging
-  elasticsearch:
-    <<: *logging
-    container_name: elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.6.2
-    environment:
-      - discovery.type=single-node
-      - network.host=0.0.0.0
-    ports:
-      - "9200:9200"
-
   wis2box-auth:
     <<: *logging
   minio:

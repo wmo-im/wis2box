@@ -34,14 +34,6 @@ scrape_configs:
   static_configs:
   - targets: ['wis2downloader:5000']
 
-- job_name: 'prometheus'
-  static_configs:
-  - targets: ['localhost:9090']
-
-- job_name: 'node_exporter'
-  static_configs:
-  - targets: ['node_exporter:9100']
-
 - job_name: 'elasticsearch-exporter'
   scrape_interval: 15s
   static_configs:
