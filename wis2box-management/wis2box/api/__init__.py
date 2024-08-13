@@ -242,7 +242,7 @@ def api():
 @click.pass_context
 @cli_helpers.OPTION_VERBOSITY
 def setup(ctx, verbosity):
-    """Add collection items to API using discovery-metadata"""
+    """Add collection items to API using discovery metadata"""
 
     api_config = load_config()
     api_collections = api_config.list_collections()
