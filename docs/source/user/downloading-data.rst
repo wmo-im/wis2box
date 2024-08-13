@@ -14,7 +14,7 @@ local environment / workstation / decision support system from the WIS2 Global C
 wis2downloader
 --------------
 
-wis2box enables subscribe and data download workflow the WIS2 network, by using the ``wis2downloader`` container, inside of which runs the `wis2downloader tool <https://github.com/wmo-im/wis2downloader`_
+wis2box enables subscribe and data download workflow the WIS2 network, by using the ``wis2downloader`` container, inside of which runs the `wis2downloader`_ utility.
 
 ``wis2downloader`` is a Python package that provides subscription and download capability, by connecting to pre-defined MQTT-broker.
 
@@ -98,6 +98,7 @@ The wis2box-proxy by default secures the path `/wis2downloader` with a bearer to
 
   python3 wis2box.ctl.py execute wis2box auth add-token --path wis2downloader -y
 
+.. _`wis2downloader`: https://github.com/wmo-im/wis2downloader
 
 
 
