@@ -104,13 +104,12 @@ class WIS2BoxSubscriber:
         LOGGER.debug('Loading MessageData plugin to publish data from message') # noqa
         topic_hierarchy = message['channel']
         metadata_id = message.get('metadata_id')
-        # if metadata_id not provided determine from topic_hierarchy
+
         if metadata_id is None:
-            for key, value in self.data_mappings.items():
-                if topic_hierarchy in (value['topic_hierarchy']):
-                    topic_hierarchy = (value['topic_hierarchy'])
-                    metadata_id = key
-                    break
+            msg = 'metadata_id not found in message, cannot publish data'
+            LOGGER.error(msg)
+            return False
+
         defs = {
             'topic_hierarchy': topic_hierarchy,
             '_meta': message['_meta'],
