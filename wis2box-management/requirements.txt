@@ -9,4 +9,4 @@ pywis-pubsub
 pywis-topics
 PyYAML
 requests
-capvalidator
+capvalidator>=0.1.0-dev3

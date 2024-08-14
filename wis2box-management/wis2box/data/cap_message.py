@@ -72,11 +72,14 @@ class CAPMessageData(BaseAbstractData):
         self._meta['relative_filepath'] = self.get_local_filepath(self._meta['data_date'])  # noqa
 
         # validate the CAP XML string content using the capvalidator package
-        result = validate_xml(input_bytes)
+        result = validate_xml(input_bytes, strict=False)
         if not result.passed:
             LOGGER.error(
                 f'Invalid CAP XML, not publishing. Reason: {result.message}')
             return False
+
+        LOGGER.info(
+            f'CAP XML is valid, publishing to wis2box. {result.message}')
 
         self.output_data[rmk] = {
             suffix: input_bytes,
@@ -86,5 +89,4 @@ class CAPMessageData(BaseAbstractData):
 
     def get_local_filepath(self, date_):
         yyyymmdd = date_.strftime('%Y-%m-%d')
-        # return Path(yyyymmdd) / 'wis' / self.metadata_id
         return Path(yyyymmdd) / 'wis' / 'test'
