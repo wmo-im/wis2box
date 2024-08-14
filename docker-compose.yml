@@ -45,8 +45,6 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
-    volumes:
-      - api-config:/data/wis2box/config/pygeoapi/:rw
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/oapi/admin/resources"]
       interval: 5s
@@ -159,5 +157,4 @@ volumes:
   es-data:
   minio-data:
   auth-data:
-  api-config:
   htpasswd:
