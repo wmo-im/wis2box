@@ -16,6 +16,7 @@ echo "Setting mosquitto authentication"
 if [ ! -e "/mosquitto/config/password.txt" ]; then
     echo "Adding wis2box users to mosquitto password file"
     mosquitto_passwd -b -c /mosquitto/config/password.txt $WIS2BOX_BROKER_USERNAME $WIS2BOX_BROKER_PASSWORD
+    mosquitto_passwd -b /mosquitto/config/password.txt $WIS2BOX_CAP_USERNAME $WIS2BOX_CAP_PASSWORD
     mosquitto_passwd -b /mosquitto/config/password.txt everyone everyone
 else
     echo "Mosquitto password file already exists. Skipping wis2box user addition."
