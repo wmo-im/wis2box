@@ -169,6 +169,7 @@ class WISNotificationMessage(PubSubMessage):
         self.message = {
             'id': str(uuid.uuid4()),
             'type': 'Feature',
+            'conformsTo': ['http://wis.wmo.int/spec/wnm/1/conf/core'],
             'version': 'v04',
             'geometry': self.geometry,
             'properties': {
