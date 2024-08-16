@@ -1,6 +1,6 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: int-wmo-test/data/core/weather/cap-alerts
+    topic_hierarchy: int-wmo-test/data/core/weather/advisories-warnings
     centre_id: int-wmo-test
     data_mappings:
         plugins:
