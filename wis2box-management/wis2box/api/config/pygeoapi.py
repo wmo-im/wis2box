@@ -55,6 +55,23 @@ class PygeoapiConfig(BaseConfig):
         self.http.mount('https://', adapter)
         self.http.mount('http://', adapter)
 
+    def list_collections(self) -> list:
+        """
+        List collections
+
+        :returns: `list` of collection names
+        """
+
+        collections = []
+
+        r = self.http.get(self.url)
+        r.raise_for_status()
+        resources = r.json()
+        for key in resources:
+            if resources[key]['type'] == 'collection':
+                collections.append(key)
+        return collections
+
     def get_collection(self, name: str) -> dict:
         """
         Get a collection

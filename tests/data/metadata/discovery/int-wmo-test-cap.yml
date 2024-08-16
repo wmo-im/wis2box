@@ -4,6 +4,12 @@ wis2box:
     centre_id: int-wmo-test
     data_mappings:
         plugins:
+            xml:
+                - plugin: wis2box.data.cap_message.CAPMessageData
+                  notify: true
+                  buckets:
+                      - ${WIS2BOX_STORAGE_INCOMING}
+                  file-pattern: '^.*\.xml$'
 
 mcf:
     version: 1.0

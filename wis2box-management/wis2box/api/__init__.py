@@ -25,6 +25,8 @@ import requests
 
 from time import sleep
 
+from owslib.ogcapi.records import Records
+
 from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
@@ -102,7 +104,6 @@ def setup_collection(meta: dict = {}) -> bool:
 
     backend = load_backend()
     if not backend.has_collection(data_name):
-
         if not backend.add_collection(data_name):
             msg = f'Unable to setup backend for collection {data_name}'
             LOGGER.error(msg)
@@ -241,13 +242,29 @@ def api():
 @click.pass_context
 @cli_helpers.OPTION_VERBOSITY
 def setup(ctx, verbosity):
-    """Add collection items to API backend"""
+    """Add collection items to API using discovery metadata"""
 
     api_config = load_config()
-    if not api_config.has_collection(''):
-        click.echo('API not ready')
-    else:
-        click.echo('API ready')
+    api_collections = api_config.list_collections()
+    # print resources in api_config
+    click.echo(f'Collections in api_config: {api_collections}')
+    backend = load_backend()
+    backend_collections = backend.list_collections()
+    click.echo(f'Collections in backend: {backend_collections}')
+
+    oar = Records(DOCKER_API_URL)
+    try:
+        records = oar.collection_items('discovery-metadata')
+    except Exception as err:
+        click.echo(f'Issue loading discovery-metadata: {err}')
+        return False
+    for record in records['features']:
+        metadata_id = record['id']
+        if metadata_id not in api_collections:
+            click.echo(f'Adding collection: {metadata_id}')
+            from wis2box.data import gcm
+            meta = gcm(record)
+            setup_collection(meta=meta)
 
 
 @click.command()

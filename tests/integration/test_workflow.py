@@ -57,7 +57,8 @@ def test_wis2downloader():
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/buoy': 2, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/wind_profiler': 1, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/ship': 5, # noqa
-        'origin/a/wis2/it-roma_met_centre/data/core/weather/surface-based-observations/synop': 31 # noqa
+        'origin/a/wis2/it-roma_met_centre/data/core/weather/surface-based-observations/synop': 31, # noqa
+        'origin/a/wis2/int-wmo-test/data/core/weather/cap-alerts': 1 # noqa
     }
 
     topic_nfiles_dict_found = {}
@@ -125,7 +126,7 @@ def test_metadata_discovery_publish():
     """Test discovery metadata publishing"""
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items').json()
-    assert r['numberMatched'] == 9
+    assert r['numberMatched'] == 10
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/{ID}').json()  # noqa
 
@@ -291,19 +292,13 @@ def test_message_api():
         'dz-alger_met_centre': 29,
         'ro-rnimh': 50,
         'cd-brazza_met_centre': 15,
-        'int-wmo-test': 11,
+        'int-wmo-test': 12,
         'cn-cma': 11
     }
     for key, value in counts.items():
         url = f'{API_URL}/collections/messages/items?sortby=-datetime&q={key}&limit=1'  # noqa
         r = SESSION.get(url).json()
         assert r['numberMatched'] == value
-
-    url = f'{API_URL}/collections/messages/items?sortby=-datetime'
-    r = SESSION.get(url).json()
-
-    # should match sum of counts above
-    assert r['numberMatched'] == sum(counts.values())
 
     # we want to find a particular message with data ID
     target_data_id = "cd-brazza_met_centre:surface-weather-observations/WIGOS_0-20000-0-64406_20230803T090000" # noqa

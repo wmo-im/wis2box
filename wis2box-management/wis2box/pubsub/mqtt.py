@@ -22,6 +22,7 @@
 import logging
 import random
 
+from time import sleep
 from typing import Any, Callable
 
 from paho.mqtt import client as mqtt_client
@@ -43,6 +44,7 @@ class MQTTPubSubClient(BasePubSubClient):
         """
 
         super().__init__(broker)
+        self.test_status = 'unknown'
         self.type = 'mqtt'
         self._port = self.broker_url.port
         self.client_id = f"wis2box-mqtt-{self.broker['client_type']}-{random.randint(0, 1000)}"  # noqa
@@ -66,7 +68,11 @@ class MQTTPubSubClient(BasePubSubClient):
         if self.broker_url.scheme == 'mqtts':
             self.conn.tls_set(tls_version=2)
 
-        self.conn.connect(self.broker_url.hostname, self._port)
+        try:
+            self.conn.connect(self.broker_url.hostname, self._port)
+        except Exception as e:
+            LOGGER.error(f'MQTT Broker connect error: {e}')
+            self.test_status = e
         LOGGER.debug('Connection initiated')
 
     def pub(self, topic: str, message: str, qos: int = 1) -> bool:
@@ -135,6 +141,42 @@ class MQTTPubSubClient(BasePubSubClient):
         """
 
         setattr(self.conn, event, function)
+
+    def test(self, topic='wis2box/test', message='test') -> bool:
+        """
+        Test the connection to the broker
+
+        :returns: `bool` of test result
+        """
+
+        def on_connect(client, userdata, flags, rc):
+            if rc == 0:
+                LOGGER.debug(f'Test: Connected to broker {self.broker}')
+                client.subscribe(topic, qos=1)
+                LOGGER.debug(f'Test: Subscribed to topic {topic}')
+            else:
+                msg = f'Test: Failed to connect to MQTT-broker: {mqtt_client.connack_string(rc)}' # noqa
+                LOGGER.error(msg)
+
+        def on_message(client, userdata, message):
+            LOGGER.debug(f'Test: Received message {message.payload.decode()}')
+            self.test_status = 'success'
+
+        if self.test_status != 'unknown':
+            msg = f'Test: failed to connect to MQTT-broker: {self.test_status}' # noqa
+            LOGGER.error(msg)
+            return self.test_status == 'success'
+
+        self.conn.on_connect = on_connect
+        self.conn.on_message = on_message
+
+        self.conn.loop_start()
+        sleep(0.1)
+        self.conn.publish(topic, message, qos=1)
+        sleep(0.1)
+        self.conn.loop_stop()
+
+        return self.test_status == 'success'
 
     def __repr__(self):
         return '<MQTTPubSubClient>'

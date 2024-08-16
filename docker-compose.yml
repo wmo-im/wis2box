@@ -44,8 +44,6 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
-    volumes:
-      - api-config:/data/wis2box/config/pygeoapi/:rw
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/oapi/admin/resources"]
       interval: 5s
@@ -53,7 +51,7 @@ services:
 
   minio:
     container_name: wis2box-minio
-    image: minio/minio
+    image: minio/minio:RELEASE.2024-08-03T04-33-23Z-cpuv1
     mem_limit: 512m
     memswap_limit: 512m
     restart: always
@@ -157,5 +155,4 @@ volumes:
   es-data:
   minio-data:
   auth-data:
-  api-config:
   htpasswd:
