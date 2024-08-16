@@ -59,8 +59,6 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.retention.time=10d'
-    ports:
-      - "9090:9090"
 
   # uncomment cadvisor to monitor containers
   # cadvisor:
@@ -78,11 +76,11 @@ services:
   # Grafana, graphical monitoring dashboards for wis2box using data from loki and prometheus
   grafana:
     <<: *logging
-    image: grafana/grafana-oss:9.0.3
     container_name: grafana
     restart: always
     env_file:
       - wis2box.env
+    image: grafana/grafana-oss:9.0.3
     volumes:
       - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/datasources:/etc/grafana/provisioning/datasources
