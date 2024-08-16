@@ -24,6 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
+  "id": 3,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -57,7 +58,7 @@
         },
         "tags": []
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.0.3",
       "title": "Current Alerts Overview",
       "type": "alertlist"
     },
@@ -94,7 +95,7 @@
         "frequency": "1m",
         "handler": 1,
         "message": "testing notifications",
-        "name": "Alert: High Storage Usage in Elasticsearch Cluster \"es-wis2box\"",
+        "name": "Alert: Elasticsearch Disk Space Utilization > 90%",
         "noDataState": "no_data",
         "notifications": [
           {
@@ -110,7 +111,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "continuous-GrYlRd"
+            "mode": "thresholds"
           },
           "custom": {
             "axisLabel": "",
@@ -195,7 +196,7 @@
         ]
       },
       "gridPos": {
-        "h": 7,
+        "h": 8,
         "w": 24,
         "x": 0,
         "y": 3
@@ -262,42 +263,6 @@
       }
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                10
-              ],
-              "type": "lt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "avg"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "5m",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "Block devices monitoring check",
-        "name": "Alert: Low Free Disk Space in Elasticsearch Cluster \"es-wis2box\"",
-        "noDataState": "no_data",
-        "notifications": []
-      },
       "datasource": {
         "type": "prometheus",
         "uid": "PABAFD29CE247021E"
@@ -342,22 +307,21 @@
           },
           "displayName": "the total amount of free disk space, in gigabytes, available across all data nodes in the es-wis2box Elasticsearch cluster",
           "mappings": [],
-          "max": 150,
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "semi-dark-green",
+                "color": "red",
                 "value": null
               },
               {
-                "color": "dark-red",
-                "value": 10
+                "color": "yellow",
+                "value": 2
               },
               {
-                "color": "yellow",
-                "value": 20
+                "color": "green",
+                "value": 4
               }
             ]
           },
@@ -366,10 +330,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
+        "h": 9,
         "w": 24,
         "x": 0,
-        "y": 10
+        "y": 11
       },
       "id": 22,
       "options": {
@@ -399,14 +363,7 @@
           "refId": "A"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "lt",
-          "value": 10,
-          "visible": true
-        }
-      ],
+      "thresholds": [],
       "title": "Elasticsearch Available Disk Space (GB)",
       "type": "timeseries",
       "xaxis": {
