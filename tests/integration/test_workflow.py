@@ -58,7 +58,7 @@ def test_wis2downloader():
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/wind_profiler': 1, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/ship': 5, # noqa
         'origin/a/wis2/it-roma_met_centre/data/core/weather/surface-based-observations/synop': 31, # noqa
-        'origin/a/wis2/int-wmo-test/data/core/weather/cap-alerts': 1 # noqa
+        'origin/a/wis2/int-wmo-test/data/core/weather/advisories-warnings': 1 # noqa
     }
 
     topic_nfiles_dict_found = {}
