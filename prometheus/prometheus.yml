@@ -8,7 +8,8 @@ global:
 alerting:
   alertmanagers:
   - static_configs:
-    - targets: []
+    - targets: 
+      # - alertmanager:9093
   
 scrape_configs:
 - job_name: minio-job
