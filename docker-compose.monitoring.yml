@@ -25,14 +25,12 @@ services:
     <<: *logging
     container_name: loki
     image: grafana/loki:2.4.1
+    restart: always
     command: -config.file=/etc/loki/loki-config.yml
     volumes:
       - loki-data:/loki
       - ./loki/loki-config.yml:/etc/loki/loki-config.yml
-    networks:
-      vpcbr: # this is the place where we assign the static ipv4 address
-        ipv4_address: 10.5.0.2
-      default:
+
   # mqtt_metrics_collector, listens to mqtt-broker
   mqtt_metrics_collector:
     <<: *logging
@@ -54,12 +52,16 @@ services:
     <<: *logging
     image: prom/prometheus:v2.37.0
     container_name: prometheus
+    restart: always
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.retention.time=10d'
+    ports:
+      - "9090:9090"
+
   # uncomment cadvisor to monitor containers
   # cadvisor:
   #  image: gcr.io/cadvisor/cadvisor:v0.45.0
@@ -76,13 +78,15 @@ services:
   # Grafana, graphical monitoring dashboards for wis2box using data from loki and prometheus
   grafana:
     <<: *logging
+    image: grafana/grafana-oss:9.0.3
     container_name: grafana
+    restart: always
     env_file:
       - wis2box.env
-    image: grafana/grafana-oss:9.0.3
     volumes:
       - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/datasources:/etc/grafana/provisioning/datasources
+  # if alert want to link emails this place should mount local cofiguration to grafana
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
@@ -100,13 +104,22 @@ services:
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
     ports:
       - 3000:3000
+
+  # Elasticsearch Exporter for monitoring Elasticsearch metrics
+  elasticsearch-exporter:
+    <<: *logging
+    image: quay.io/prometheuscommunity/elasticsearch-exporter:latest
+    command:
+      - '--es.uri=http://elasticsearch:9200'
+      - '--es.indices_settings'
+    restart: always
+  elasticsearch:
+    <<: *logging
   wis2box-management:
     <<: *logging
   mosquitto:
     <<: *logging
   wis2box-api:
-    <<: *logging
-  elasticsearch:
     <<: *logging
   wis2box-auth:
     <<: *logging
@@ -120,3 +133,4 @@ services:
 volumes:
   loki-data:
   prometheus-data:
+

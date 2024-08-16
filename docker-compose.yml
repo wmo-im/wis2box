@@ -34,6 +34,7 @@ services:
     image: ghcr.io/wmo-im/wis2box-webapp:latest
     env_file:
       - wis2box.env
+    restart: always
 
   wis2box-api:
     container_name: wis2box-api
@@ -51,7 +52,7 @@ services:
 
   minio:
     container_name: wis2box-minio
-    image: minio/minio:RELEASE.2024-08-03T04-33-23Z-cpuv1
+    image: minio/minio
     mem_limit: 512m
     memswap_limit: 512m
     restart: always
@@ -145,6 +146,7 @@ services:
 
   wis2downloader:
     container_name: wis2downloader
+    restart: always
     build: ./wis2downloader
     env_file:
       - wis2box.env
