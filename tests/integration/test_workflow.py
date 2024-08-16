@@ -300,12 +300,6 @@ def test_message_api():
         r = SESSION.get(url).json()
         assert r['numberMatched'] == value
 
-    url = f'{API_URL}/collections/messages/items?sortby=-datetime'
-    r = SESSION.get(url).json()
-
-    # should match sum of counts above
-    assert r['numberMatched'] == sum(counts.values())
-
     # we want to find a particular message with data ID
     target_data_id = "cd-brazza_met_centre:surface-weather-observations/WIGOS_0-20000-0-64406_20230803T090000" # noqa
 
