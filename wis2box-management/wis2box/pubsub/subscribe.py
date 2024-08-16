@@ -26,7 +26,6 @@ import multiprocessing as mp
 
 from time import sleep
 
-import base64
 import click
 
 from wis2box import cli_helpers

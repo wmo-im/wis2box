@@ -10,8 +10,9 @@ BROKER_PORT = '1883'
 
 filename = 'tests/data/CAP/sc_example.xml'
 
-# create a message containing the CAP alert in the data field as bade64 encoded bytes
-data = base64.b64encode( open(filename, 'rb').read() ).decode()
+# create a message containing the CAP alert in
+#  the data field as base64 encoded bytes
+data = base64.b64encode(open(filename, 'rb').read()).decode()
 msg = {
     'metadata_id': 'urn:wmo:md:int_wmo_test:cap',
     'data': data,
