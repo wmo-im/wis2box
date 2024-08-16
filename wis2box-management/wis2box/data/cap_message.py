@@ -40,12 +40,14 @@ class CAPMessageData(BaseAbstractData):
     """
 
     def __init__(self, defs: dict) -> None:
-        try:
-            self._meta = defs['_meta']
-        except KeyError:
-            error = f'No _meta in defs: {defs}'
-            LOGGER.error(error)
-            raise KeyError(error)
+        """
+        CAPMessageData data initializer
+
+        :param def: `dict` object of resource mappings
+
+        :returns: `None`
+        """
+
         super().__init__(defs)
 
     def transform(self, input_data: Union[Path, bytes],
@@ -67,9 +69,10 @@ class CAPMessageData(BaseAbstractData):
         # get the sent date from the CAP XML
         sent_date = get_dates(input_bytes).sent
         # convert isoformat to datetime
-        self._meta['data_date'] = datetime.fromisoformat(sent_date)
+        _meta = {}
+        _meta['data_date'] = datetime.fromisoformat(sent_date)
         # add relative filepath to _meta
-        self._meta['relative_filepath'] = self.get_local_filepath(self._meta['data_date'])  # noqa
+        _meta['relative_filepath'] = self.get_local_filepath(_meta['data_date'])  # noqa
 
         # validate the CAP XML string content using the capvalidator package
         result = validate_xml(input_bytes, strict=False)
@@ -83,7 +86,7 @@ class CAPMessageData(BaseAbstractData):
 
         self.output_data[rmk] = {
             suffix: input_bytes,
-            '_meta': self._meta
+            '_meta': _meta
         }
         return True
 

@@ -26,6 +26,7 @@ import multiprocessing as mp
 
 from time import sleep
 
+import base64
 import click
 
 from wis2box import cli_helpers
@@ -36,14 +37,15 @@ from wis2box.api import (setup_collection, upsert_collection_item,
 
 from wis2box.data_mappings import get_data_mappings
 from wis2box.data.message import MessageData
-from wis2box.data.cap_message import CAPMessageData
+
 from wis2box.env import (DATADIR, DOCKER_BROKER,
-                         STORAGE_SOURCE, STORAGE_ARCHIVE)
+                         STORAGE_SOURCE, STORAGE_ARCHIVE,
+                         STORAGE_INCOMING)
 from wis2box.handler import Handler, NotHandledError
 import wis2box.metadata.discovery as discovery_metadata
 from wis2box.plugin import load_plugin, PLUGINS
 from wis2box.pubsub.message import gcm
-
+from wis2box.storage import put_data
 
 LOGGER = logging.getLogger(__name__)
 
@@ -116,11 +118,7 @@ class WIS2BoxSubscriber:
             'notify': True,
             'metadata_id': metadata_id
         }
-        plugin = None
-        if publisher == 'cap-editor':
-            plugin = CAPMessageData(defs=defs)
-        else:
-            plugin = MessageData(defs=defs)
+        plugin = MessageData(defs=defs)
         try:
             input_bytes = base64.b64decode(message['data'].encode('utf-8'))
             plugin.transform(
@@ -161,13 +159,24 @@ class WIS2BoxSubscriber:
             mp.Process(target=self.handle, args=(filepath,)).start()
         elif topic == 'wis2box/cap/publication':
             LOGGER.debug('Publishing data received by cap-editor')
-            # Determine the data policy from the message
-            policy = 'core'
-            if message.get('is_recommended'):
-                policy = 'recommended' if message['is_recommended'] else 'core'
-            # Set the channel based on centre ID and data policy
-            message['channel'] = f"{message['centre_id']}/data/{policy}/weather/advisories-warnings" # noqa
-            self.handle_publish(message, publisher='cap-editor')
+            # get filename and data from message and store in incoming-data
+            metadata_id = message.get('metadata_id')
+            if metadata_id is None:
+                LOGGER.error('metadata_id not found in message')
+                return False
+            filename = message.get('filename')
+            if filename is None:
+                LOGGER.error('filename not found in message')
+                return False
+            data = message.get('data')
+            if data is None:
+                LOGGER.error('data not found in message')
+                return False
+            # convert base64 encoded data to bytes
+            data_bytes = base64.b64decode(data.encode('utf-8'))
+            # store data in incoming-data
+            path = f'{STORAGE_INCOMING}/{metadata_id}/{filename}'
+            put_data(data_bytes, path)
         elif topic == 'wis2box/data/publication':
             LOGGER.debug('Publishing data')
             self.handle_publish(message)

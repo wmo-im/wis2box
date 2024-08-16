@@ -3,22 +3,19 @@ import json
 
 import paho.mqtt.publish as publish
 
-BROKER_USERNAME = 'cap_editor'
-BROKER_PASSWORD = 'testing123'
-BROKER_HOST = 'mosquitto'
+BROKER_USERNAME = 'wis2box'
+BROKER_PASSWORD = 'wis2box'
+BROKER_HOST = 'localhost'
 BROKER_PORT = '1883'
 
-filename = '/data/wis2box/CAP/example_20030618215700.xml'
+filename = 'tests/data/CAP/sc_example.xml'
 
 # create a message containing the CAP alert in the data field as bade64 encoded bytes
 data = base64.b64encode( open(filename, 'rb').read() ).decode()
 msg = {
-    'channel': 'int-wmo-test/data/core/weather/cap-alerts',
+    'metadata_id': 'urn:wmo:md:int_wmo_test:cap',
     'data': data,
-    'filename': filename.split('/')[-1],
-    '_meta': {
-        'data_date': '2020-03-06T18:12:15.700'
-    }
+    'filename': filename.split('/')[-1]
 }
 # publish notification on internal broker
 private_auth = {
