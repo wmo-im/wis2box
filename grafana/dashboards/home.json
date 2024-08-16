@@ -24,10 +24,43 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
   "links": [],
   "liveNow": false,
   "panels": [
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "grafana"
+      },
+      "description": "show all the alerting list",
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 14,
+      "options": {
+        "alertName": "",
+        "dashboardAlerts": false,
+        "dashboardTitle": "",
+        "maxItems": 10,
+        "showOptions": "current",
+        "sortOrder": 1,
+        "stateFilter": {
+          "alerting": true,
+          "execution_error": false,
+          "no_data": false,
+          "ok": false,
+          "paused": false,
+          "pending": false
+        },
+        "tags": []
+      },
+      "pluginVersion": "",
+      "title": "Current Alerts Overview",
+      "type": "alertlist"
+    },
     {
       "datasource": {
         "type": "prometheus",
@@ -116,7 +149,7 @@
         "h": 15,
         "w": 10,
         "x": 0,
-        "y": 0
+        "y": 3
       },
       "id": 12,
       "interval": "24h",
@@ -137,7 +170,7 @@
           }
         ]
       },
-      "pluginVersion": "9.0.3",
+      "pluginVersion": "",
       "targets": [
         {
           "datasource": {
@@ -329,7 +362,7 @@
         "h": 5,
         "w": 14,
         "x": 10,
-        "y": 0
+        "y": 3
       },
       "id": 2,
       "interval": "1m",
@@ -425,7 +458,7 @@
         "h": 5,
         "w": 14,
         "x": 10,
-        "y": 5
+        "y": 8
       },
       "id": 6,
       "interval": "1m",
@@ -520,7 +553,7 @@
         "h": 5,
         "w": 14,
         "x": 10,
-        "y": 10
+        "y": 13
       },
       "id": 10,
       "interval": "1m",
@@ -563,7 +596,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 15
+        "y": 18
       },
       "id": 8,
       "options": {
@@ -642,6 +675,6 @@
   "timezone": "",
   "title": "wis2box data publication dashboard",
   "uid": "KkBocEA4k",
-  "version": 4,
+  "version": 1,
   "weekStart": ""
 }
