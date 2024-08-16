@@ -66,6 +66,7 @@ jobs:
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection --path $STATION_METADATA --topic-hierarchy $TOPIC_HIERARCHY
+        python3 wis2box-ctl.py execute wis2box metadata station add-topic --territory-name $TERRITORY $CHANNEL
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
@@ -82,6 +83,7 @@ jobs:
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection --path $STATION_METADATA --topic-hierarchy $TOPIC_HIERARCHY
+        python3 wis2box-ctl.py execute wis2box metadata station add-topic --territory-name $TERRITORY $CHANNEL
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
@@ -97,6 +99,7 @@ jobs:
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection --path $STATION_METADATA --topic-hierarchy $TOPIC_HIERARCHY
+        python3 wis2box-ctl.py execute wis2box metadata station add-topic --territory-name $TERRITORY $CHANNEL
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
@@ -112,6 +115,7 @@ jobs:
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection --path $STATION_METADATA --topic-hierarchy $TOPIC_HIERARCHY
+        python3 wis2box-ctl.py execute wis2box metadata station add-topic --territory-name $TERRITORY $CHANNEL
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
@@ -127,6 +131,7 @@ jobs:
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection --path $STATION_METADATA --topic-hierarchy $TOPIC_HIERARCHY
+        python3 wis2box-ctl.py execute wis2box metadata station add-topic --territory-name $TERRITORY $CHANNEL
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
@@ -141,6 +146,11 @@ jobs:
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection --path $STATION_METADATA --topic-hierarchy $TOPIC_HIERARCHY
+        python3 wis2box-ctl.py execute wis2box metadata station add-topic --wsi 0-22000-0-3WL23XC $CHANNEL
+        python3 wis2box-ctl.py execute wis2box metadata station add-topic --wsi 0-22000-0-4EEWQMW $CHANNEL
+        python3 wis2box-ctl.py execute wis2box metadata station add-topic --wsi 0-22000-0-4SGNZUJ $CHANNEL
+        python3 wis2box-ctl.py execute wis2box metadata station add-topic --wsi 0-22000-0-EUCDE09 $CHANNEL
+        python3 wis2box-ctl.py execute wis2box metadata station add-topic --wsi 0-22000-0-EUCDE34 $CHANNEL
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
@@ -155,6 +165,7 @@ jobs:
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection --path $STATION_METADATA --topic-hierarchy $TOPIC_HIERARCHY
+        python3 wis2box-ctl.py execute wis2box metadata station add-topic --wsi 0-22000-0-1400011 $CHANNEL
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
@@ -169,6 +180,7 @@ jobs:
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection --path $STATION_METADATA --topic-hierarchy $TOPIC_HIERARCHY
+        python wis2box-ctl.py execute wis2box metadata station add-topic --wsi 0-702-0-48698 $CHANNEL
         curl -s http://localhost/oapi/collections/discovery-metadata/items/$DISCOVERY_METADATA_ID --output /tmp/$DISCOVERY_METADATA_ID
         check-jsonschema --schemafile /tmp/wcmp2-bundled.json /tmp/$DISCOVERY_METADATA_ID
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
