@@ -24,43 +24,10 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
+  "id": 2,
   "links": [],
   "liveNow": false,
   "panels": [
-    {
-      "datasource": {
-        "type": "datasource",
-        "uid": "grafana"
-      },
-      "description": "show all the alerting alert",
-      "gridPos": {
-        "h": 3,
-        "w": 24,
-        "x": 0,
-        "y": 0
-      },
-      "id": 21,
-      "options": {
-        "alertName": "",
-        "dashboardAlerts": false,
-        "dashboardTitle": "",
-        "maxItems": 10,
-        "showOptions": "current",
-        "sortOrder": 1,
-        "stateFilter": {
-          "alerting": true,
-          "execution_error": false,
-          "no_data": false,
-          "ok": false,
-          "paused": false,
-          "pending": false
-        },
-        "tags": []
-      },
-      "pluginVersion": "",
-      "title": "Current Alerts Overview",
-      "type": "alertlist"
-    },
     {
       "datasource": {
         "type": "prometheus",
@@ -94,7 +61,7 @@
         "h": 6,
         "w": 9,
         "x": 0,
-        "y": 3
+        "y": 0
       },
       "id": 14,
       "options": {
@@ -113,7 +80,7 @@
           }
         ]
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.0.3",
       "targets": [
         {
           "datasource": {
@@ -181,7 +148,7 @@
         "h": 4,
         "w": 3,
         "x": 9,
-        "y": 3
+        "y": 0
       },
       "id": 18,
       "options": {
@@ -196,7 +163,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.0.3",
       "targets": [
         {
           "datasource": {
@@ -248,7 +215,7 @@
         "h": 4,
         "w": 6,
         "x": 12,
-        "y": 3
+        "y": 0
       },
       "id": 16,
       "interval": "1h",
@@ -270,7 +237,7 @@
           "valueSize": 20
         }
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.0.3",
       "targets": [
         {
           "datasource": {
@@ -358,7 +325,7 @@
         "h": 4,
         "w": 6,
         "x": 18,
-        "y": 3
+        "y": 0
       },
       "id": 19,
       "interval": "1h",
@@ -380,7 +347,7 @@
           "valueSize": 20
         }
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.0.3",
       "targets": [
         {
           "datasource": {
@@ -556,7 +523,7 @@
         "h": 9,
         "w": 15,
         "x": 9,
-        "y": 7
+        "y": 4
       },
       "id": 2,
       "interval": "60s",
@@ -608,7 +575,7 @@
         "h": 16,
         "w": 9,
         "x": 0,
-        "y": 9
+        "y": 6
       },
       "id": 6,
       "options": {
@@ -681,7 +648,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "light-green"
+                "color": "light-green",
+                "value": null
               }
             ]
           },
@@ -748,7 +716,7 @@
         "h": 9,
         "w": 15,
         "x": 9,
-        "y": 16
+        "y": 13
       },
       "id": 9,
       "interval": "60s",
