@@ -1,0 +1,8 @@
+station_name,wigos_station_identifier,traditional_station_identifier,facility_type,latitude,longitude,elevation,barometer_height,territory_name,wmo_region
+BALAKA,0-454-2-AWSBALAKA,AWSBALAKA,landFixed,-14.983333,34.966666,618,,MWI,africa
+MALOMO,0-454-2-AWSMALOMO,AWSMALOMO,landFixed,-13.14202,33.83727,1088,,MWI,africa
+NAMITAMBO,0-454-2-AWSNAMITAMBO,AWSNAMITAMBO,landFixed,-15.84052,35.27428,806,,MWI,africa
+TOLEZA,0-454-2-AWSTOLEZA,AWSTOLEZA,landFixed,-14.948,34.955,764,,MWI,africa
+KAYEREKERA,0-454-2-AWSKAYEREKERA,AWSKAYEREKERA,landFixed,-9.92951,33.67305,848,,MWI,africa
+LOBI AWS,0-454-2-AWSLOBI,AWSLOBI,landFixed,-14.39528,34.07244,1288,,MWI,africa
+NKHOMA UNIVERSITY,0-454-2-AWSNKHOMA,AWSNKHOMA,landFixed,-14.04422,34.10468,1230,,MWI,africa
