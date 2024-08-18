@@ -63,6 +63,7 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.retention.time=10d'
+      - '--log.level=warn'
 
   # uncomment cadvisor to monitor containers
   # cadvisor:
@@ -104,6 +105,8 @@ services:
       - GF_DISABLE_SIGNOUT_MENU=true
       - GF_SERVER_ROOT_URL=${WIS2BOX_URL:-http://localhost}/monitoring
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_USAGE_STATS_ENABLED=false
+      - GF_LOG_LEVEL=warn
     ports:
       - 3000:3000
 
