@@ -135,7 +135,7 @@ def test(ctx, verbosity):
     if result:
         click.echo('Broker test successful')
     else:
-        LOGGER.error('Could not connect to broker defined by WI2BOX_BROKER_PUBLIC') # noqa
+        LOGGER.error('Could not connect to broker defined by WIS2BOX_BROKER_PUBLIC') # noqa
         click.echo('Broker test failed')
         exit(1)
 
