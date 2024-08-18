@@ -318,6 +318,11 @@ def publish_from_csv(path: Path, topic: str = None) -> None:
             wigos_station_identifier = row['wigos_station_identifier']
             station_list.append(wigos_station_identifier)
             topics = list(check_station_datasets(wigos_station_identifier))
+            topic2 = None if len(topics) == 0 else topics[0]['title']
+
+            if topic is not None:
+                topic2 = topic
+                topics = [topic]
 
             try:
                 barometer_height = float(row['barometer_height'])
@@ -351,7 +356,7 @@ def publish_from_csv(path: Path, topic: str = None) -> None:
                    'territory_name': row['territory_name'],
                    'wmo_region': row['wmo_region'],
                    'url': f"{oscar_baseurl}/{wigos_station_identifier}",
-                   'topic': topic,
+                   'topic': topic2,
                    'topics': [x['topic'] for x in topics],
                    # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
                    'status': 'operational'
