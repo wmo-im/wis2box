@@ -317,12 +317,13 @@ def publish_from_csv(path: Path, topic: str = None) -> None:
         for row in reader:
             wigos_station_identifier = row['wigos_station_identifier']
             station_list.append(wigos_station_identifier)
-            topics = list(check_station_datasets(wigos_station_identifier))
-            topic2 = None if len(topics) == 0 else topics[0]['title']
 
             if topic is not None:
-                topic2 = topic
                 topics = [topic]
+                topic2 = topic
+            else:
+                topics = list(check_station_datasets(wigos_station_identifier))
+                topic2 = None if len(topics) == 0 else topics[0]['title']
 
             try:
                 barometer_height = float(row['barometer_height'])
