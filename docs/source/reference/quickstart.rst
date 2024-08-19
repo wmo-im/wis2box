@@ -62,7 +62,14 @@ Load initial stations:
 
 .. code-block:: bash
 
-    wis2box metadata station publish-collection
+    wis2box metadata station publish-collection --path /data/wis2box/metadata/station/malawi.csv --topic-hierarchy mw-mw_met_centre.data.core.weather.surface-based-observations.synop
+    wis2box metadata station publish-collection --path /data/wis2box/metadata/station/italy.csv --topic-hierarchy it-roma_met_centre.data.core.weather.surface-based-observations.synop
+    wis2box metadata station publish-collection --path /data/wis2box/metadata/station/algeria.csv --topic-hierarchy dz-alger_met_centre.data.core.weather.surface-based-observations.synop
+    wis2box metadata station publish-collection --path /data/wis2box/metadata/station/romania.csv --topic-hierarchy ro-rnimh.data.core.weather.surface-based-observations.synop
+    wis2box metadata station publish-collection --path /data/wis2box/metadata/station/congo.csv --topic-hierarchy cd-brazza_met_centre.data.core.weather.surface-based-observations.synop
+    wis2box metadata station publish-collection --path /data/wis2box/metadata/station/wmo-test-ship.csv --topic-hierarchy int-wmo-test.data.core.weather.surface-based-observations.ship
+    wis2box metadata station publish-collection --path /data/wis2box/metadata/station/wmo-test-buoy.csv --topic-hierarchy int-wmo-test.data.core.weather.surface-based-observations.buoy
+    wis2box metadata station publish-collection --path /data/wis2box/metadata/station/wmo-test-wind-profiler.csv --topic-hierarchy int-wmo-test.data.core.weather.surface-based-observations.wind_profiler
 
 Ingest data using the data ingest command to push data to the ``wis2box-incoming`` bucket:
 
@@ -76,12 +83,6 @@ Ingest data using the data ingest command to push data to the ``wis2box-incoming
     wis2box data ingest --topic-hierarchy int-wmo-test.data.core.weather.surface-based-observations.ship --path $WIS2BOX_DATADIR/observations/wmo/ship
     wis2box data ingest --topic-hierarchy int-wmo-test.data.core.weather.surface-based-observations.buoy --path $WIS2BOX_DATADIR/observations/wmo/buoy
     wis2box data ingest --topic-hierarchy int-wmo-test.data.core.weather.surface-based-observations.wind_profiler --path $WIS2BOX_DATADIR/observations/wmo/wind_profiler
-
-Publish stations:
-
-.. code-block:: bash
-
-    wis2box metadata station publish-collection
 
 Logout of wis2box-management container:
 

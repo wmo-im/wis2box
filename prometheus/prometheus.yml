@@ -17,17 +17,25 @@ scrape_configs:
   scheme: http
   static_configs:
   - targets: ['minio:9000']
+
 - job_name: 'mqtt_metrics_collector'
   scrape_interval: 5s
   static_configs:
   - targets: ['mqtt_metrics_collector:8001']
+
 - job_name: 'cadvisor'
   static_configs:
   - targets: ['cadvisor:8080']
     labels:
       alias: 'cadvisor'
+
 - job_name: wis2downloader
   metrics_path: /metrics
   scheme: http
   static_configs:
   - targets: ['wis2downloader:5000']
+
+- job_name: 'elasticsearch-exporter'
+  scrape_interval: 15s
+  static_configs:
+  - targets: ['elasticsearch-exporter:9114']

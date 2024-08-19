@@ -80,7 +80,7 @@
           }
         ]
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.0.3",
       "targets": [
         {
           "datasource": {
@@ -163,7 +163,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.0.3",
       "targets": [
         {
           "datasource": {
@@ -237,7 +237,7 @@
           "valueSize": 20
         }
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.0.3",
       "targets": [
         {
           "datasource": {
@@ -347,7 +347,7 @@
           "valueSize": 20
         }
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.0.3",
       "targets": [
         {
           "datasource": {
@@ -764,6 +764,6 @@
   "timezone": "",
   "title": "wis2downloader dashboard",
   "uid": "zB4GjVaIk",
-  "version": 5,
+  "version": 1,
   "weekStart": ""
 }
