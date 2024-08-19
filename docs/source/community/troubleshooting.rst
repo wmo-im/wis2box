@@ -99,7 +99,7 @@ To add missing stations, use the station-editor in wis2box-webapp (from wis2box-
 .. code-block:: bash
 
    python3 wis2box-ctl.py login
-   wis2box metadata station publish-collection
+   wis2box metadata station publish-collection --path /data/wis2box/metadata/station/station_list.csv --topic-hierarchy <topic-hierarchy>
 
 
 Error: no such container: wis2box-management

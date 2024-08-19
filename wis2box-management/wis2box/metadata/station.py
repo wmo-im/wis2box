@@ -39,7 +39,7 @@ from wis2box import cli_helpers
 from wis2box.api import (
     delete_collection_item, setup_collection, upsert_collection_item
 )
-from wis2box.env import (DATADIR, API_BACKEND_URL, DOCKER_API_URL,
+from wis2box.env import (API_BACKEND_URL, DOCKER_API_URL,
                          BROKER_HOST, BROKER_USERNAME, BROKER_PASSWORD,
                          BROKER_PORT)
 from wis2box.metadata.base import BaseMetadata
@@ -49,8 +49,6 @@ from wis2box.util import get_typed_value
 
 LOGGER = logging.getLogger(__name__)
 
-STATION_METADATA = DATADIR / 'metadata' / 'station'
-STATIONS = STATION_METADATA / 'station_list.csv'
 WMDR_CODELISTS = Path('/home/wis2box/wmdr-codelists')
 
 
@@ -251,7 +249,8 @@ def check_station_datasets(wigos_station_identifier: str) -> Iterator[dict]:
             yield topic
 
 
-def add_topic_hierarchy(new_topic: str, territory_name: str, wsi: str) -> None:
+def add_topic_hierarchy(new_topic: str, territory_name: str = None,
+                        wsi: str = None) -> None:
     """
     Adds topic hierarchy to topic
 
@@ -264,9 +263,9 @@ def add_topic_hierarchy(new_topic: str, territory_name: str, wsi: str) -> None:
 
     valid_topics = [topic for link, topic in load_datasets()]
     if new_topic not in valid_topics:
-        msg = f'ERROR: Invalid topic: {new_topic}\n'
-        msg += 'Valid topics:\n'
-        msg += '\n'.join(valid_topics)
+        msg = (f'ERROR: Invalid topic: {new_topic}\n'
+               'Valid topics:\n'
+               '\n'.join(valid_topics))
         LOGGER.error(msg)
         return
 
@@ -293,31 +292,56 @@ def add_topic_hierarchy(new_topic: str, territory_name: str, wsi: str) -> None:
         upsert_collection_item('stations', feature)
 
 
-def publish_from_csv() -> None:
+def publish_from_csv(path: Path, new_topic: str = None) -> None:
     """
     Publishes station collection to API config and backend from csv
+
+    :param path: `Path` to station list CSV (default is `None`)
+    :param topic: `str` of topic hierarchy (default is `None`)
 
     :returns: `None`
     """
 
-    if not STATIONS.exists():
-        msg = f'Please create a station metadata file in {STATION_METADATA}'
+    if not path.exists():
+        msg = f'Station file {path} does not exist'
         LOGGER.error(msg)
         raise RuntimeError(msg)
 
+    valid_topics = [topic for link, topic in load_datasets()]
+    stations = load_stations()
+
+    if new_topic is not None:
+        if new_topic not in valid_topics:
+            LOGGER.error(f'Invalid topic: {new_topic}')
+            msg = 'Invalid topic, valid topics are:\n'
+            msg += '\n'.join(valid_topics)
+            click.echo(msg)
+            return
+
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
-    LOGGER.debug(f'Publishing station list from {STATIONS}')
+    LOGGER.debug(f'Publishing station list from {path}')
     station_list = []
-    with STATIONS.open() as fh:
+    with path.open() as fh:
         reader = csv.DictReader(fh)
 
         for row in reader:
             wigos_station_identifier = row['wigos_station_identifier']
             station_list.append(wigos_station_identifier)
-            topics = list(check_station_datasets(wigos_station_identifier))
-            topic = None if len(topics) == 0 else topics[0]['title']
 
+            topics = []
+            topic2 = ''
+            # check if station already exists, if so, get topics
+            if wigos_station_identifier in stations:
+                feature = stations[wigos_station_identifier]
+                topics = feature['properties'].get('topics', [])
+            # remove topics not in valid_topics
+            topics = [x for x in topics if x in valid_topics]
+            # add new_topic if not already in topics
+            if new_topic is not None:
+                topic2 = new_topic
+                if new_topic not in topics:
+                    topics.append(new_topic)
             try:
                 barometer_height = float(row['barometer_height'])
             except ValueError:
@@ -350,8 +374,8 @@ def publish_from_csv() -> None:
                    'territory_name': row['territory_name'],
                    'wmo_region': row['wmo_region'],
                    'url': f"{oscar_baseurl}/{wigos_station_identifier}",
-                   'topic': topic,
-                   'topics': [x['topic'] for x in topics],
+                   'topic': topic2,
+                   'topics': topics,
                    # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
                    'status': 'operational'
                 },
@@ -495,11 +519,16 @@ def setup(ctx, verbosity):
 
 @click.command()
 @click.pass_context
+@cli_helpers.OPTION_PATH
+@cli_helpers.OPTION_TOPIC_HIERARCHY
 @cli_helpers.OPTION_VERBOSITY
-def publish_collection(ctx, verbosity):
+def publish_collection(ctx, path, topic_hierarchy, verbosity):
     """Publish from station_list.csv"""
+    click.echo(f'Publishing stations from {path}')
+    if topic_hierarchy is not None:
+        click.echo(f'associate stations to topic={topic_hierarchy}')
+    publish_from_csv(path, topic_hierarchy)
 
-    publish_from_csv()
     click.echo('Done')
 
 

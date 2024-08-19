@@ -1,0 +1,6 @@
+station_name,wigos_station_identifier,traditional_station_identifier,facility_type,latitude,longitude,elevation,barometer_height,territory_name,wmo_region
+3WL23XC,0-22000-0-3WL23XC,3WL23XC,seaMobile,0,0,0,0,DEU,europe
+4EEWQMW,0-22000-0-4EEWQMW,4EEWQMW,seaMobile,0,0,0,0,DEU,europe
+4SGNZUJ,0-22000-0-4SGNZUJ,4SGNZUJ,seaMobile,0,0,0,0,IRL,europe
+EUCDE09,0-22000-0-EUCDE09,EUCDE09,seaMobile,0,0,0,0,DEU,europe
+EUCDE34,0-22000-0-EUCDE34,EUCDE34,seaMobile,0,0,0,0,DEU,europe
