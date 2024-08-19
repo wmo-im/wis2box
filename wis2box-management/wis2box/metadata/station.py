@@ -342,7 +342,6 @@ def publish_from_csv(path: Path, new_topic: str = None) -> None:
                 topic2 = new_topic
                 if new_topic not in topics:
                     topics.append(new_topic)
-                    feature['properties']['topics'] = topics
             try:
                 barometer_height = float(row['barometer_height'])
             except ValueError:
