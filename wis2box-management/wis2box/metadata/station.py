@@ -292,7 +292,7 @@ def add_topic_hierarchy(new_topic: str, territory_name: str = None,
         upsert_collection_item('stations', feature)
 
 
-def publish_from_csv(path: Path, topic: str = None) -> None:
+def publish_from_csv(path: Path, new_topic: str = None) -> None:
     """
     Publishes station collection to API config and backend from csv
 
@@ -307,6 +307,17 @@ def publish_from_csv(path: Path, topic: str = None) -> None:
         LOGGER.error(msg)
         raise RuntimeError(msg)
 
+    valid_topics = [topic for link, topic in load_datasets()]
+    stations = load_stations()
+
+    if new_topic is not None:
+        if new_topic not in valid_topics:
+            LOGGER.error(f'Invalid topic: {new_topic}')
+            msg = 'Invalid topic, valid topics are:\n'
+            msg += '\n'.join(valid_topics)
+            click.echo(msg)
+            return
+
     oscar_baseurl = 'https://oscar.wmo.int/surface/#/search/station/stationReportDetails'  # noqa
 
     LOGGER.debug(f'Publishing station list from {path}')
@@ -318,13 +329,20 @@ def publish_from_csv(path: Path, topic: str = None) -> None:
             wigos_station_identifier = row['wigos_station_identifier']
             station_list.append(wigos_station_identifier)
 
-            if topic is not None:
-                topics = [topic]
-                topic2 = topic
-            else:
-                topics = list(check_station_datasets(wigos_station_identifier))
-                topic2 = None if len(topics) == 0 else topics[0]['title']
-
+            topics = []
+            topic2 = ''
+            # check if station already exists, if so, get topics
+            if wigos_station_identifier in stations:
+                feature = stations[wigos_station_identifier]
+                topics = feature['properties'].get('topics', [])
+            # remove topics not in valid_topics
+            topics = [x for x in topics if x in valid_topics]
+            # add new_topic if not already in topics
+            if new_topic is not None:
+                topic2 = new_topic
+                if new_topic not in topics:
+                    topics.append(new_topic)
+                    feature['properties']['topics'] = topics
             try:
                 barometer_height = float(row['barometer_height'])
             except ValueError:
@@ -358,7 +376,7 @@ def publish_from_csv(path: Path, topic: str = None) -> None:
                    'wmo_region': row['wmo_region'],
                    'url': f"{oscar_baseurl}/{wigos_station_identifier}",
                    'topic': topic2,
-                   'topics': [x['topic'] for x in topics],
+                   'topics': topics,
                    # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
                    'status': 'operational'
                 },
@@ -384,13 +402,6 @@ def publish_from_csv(path: Path, topic: str = None) -> None:
             except RuntimeError as err:
                 LOGGER.debug(f'Station does not exist: {err}')
             upsert_collection_item('stations', feature)
-
-            if None not in [path, topic]:
-                msg = f"Adding topic {topic} to station {row['wigos_station_identifier']}"  # noqa
-                LOGGER.debug(msg)
-
-                add_topic_hierarchy(topic, row['territory_name'],
-                                    row['wigos_station_identifier'])
 
     LOGGER.info(f'Updated station list: {station_list}')
     # inform mqtt-metrics-collector
@@ -514,7 +525,9 @@ def setup(ctx, verbosity):
 @cli_helpers.OPTION_VERBOSITY
 def publish_collection(ctx, path, topic_hierarchy, verbosity):
     """Publish from station_list.csv"""
-
+    click.echo(f'Publishing stations from {path}')
+    if topic_hierarchy is not None:
+        click.echo(f'associate stations to topic={topic_hierarchy}')
     publish_from_csv(path, topic_hierarchy)
 
     click.echo('Done')

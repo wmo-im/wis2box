@@ -263,38 +263,21 @@ To store the station metadata  click "save" and provide the 'collections/station
 Bulk inserting stations from CSV
 --------------------------------
 
-You can also bulk insert a set of stations from a CSV file, by defining the stations in ``metadata/stations/station_list.csv`` in your wis2box host directory and running the following command:
+You can also bulk insert a set of stations from a CSV file, by defining the stations in ``mystations.csv`` in your wis2box host directory and running the following command:
 
 .. code-block:: bash
 
    python3 wis2box-ctl.py login
-   wis2box metadata station publish-collection --path /data/wis2box/metadata/stations/station_list.csv --topic-hierarchy mw-mw_met_centre.data.core.weather.surface-based-observations.synop
+   wis2box metadata station publish-collection --path /data/wis2box/mystations.csv --topic-hierarchy origin/a/wis2/mw-mw_met_centre/data/core/weather/surface-based-observations/synop
 
 .. note::
 
-   The ``topic-hierarchy`` option above is only an example; The actual topic hierarchy you should use is based on your centre id and dataset published.
+   The ``path`` argument refers to the path of the CSV file within the wis2box-management container.
+   The directory defined by WIS2BOX_HOST_DATADIR is mounted as /data/wis2box in the wis2box-management container.
 
-After doing a bulk insert please review the stations in wis2box-webapp and associate each station to the correct topics.
+   The ``topic-hierarchy`` argument refers to the WIS2 topic hierarchy you want to associate the stations with.
 
-If you want to associate all stations in your station metadata to one topic, you can use the following command:
-
-.. code-block:: bash
-
-   wis2box metadata station add-topic <topic-id>
-
-If you want to add a topic to a single station, you can use the following command:
-
-.. code-block:: bash
-
-   python3 wis2box-ctl.py login
-   wis2box metadata station add-topic --wsi <station-id> <topic-id>
-
-If you want to add a topic to all stations from a specific territory, for example Italy, you can use the following command:
-
-.. code-block:: bash
-
-   python3 wis2box-ctl.py login
-   wis2box metadata station add-topic --territory-name Italy <topic-id>
+After doing a bulk insert please review the stations in wis2box-webapp to ensure the stations were imported correctly.
 
 Next steps
 ----------
