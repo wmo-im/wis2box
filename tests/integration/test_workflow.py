@@ -32,7 +32,7 @@ from pywis_pubsub.validation import validate_message
 from requests import Session, codes
 
 DATADIR = Path('.').parent.absolute() / 'tests/data'
-print(f"{DATADIR}")
+
 URL = 'http://localhost'
 API_URL = f'{URL}/oapi'
 ID = 'urn:wmo:md:mw-mw_met_centre:surface-weather-observations'

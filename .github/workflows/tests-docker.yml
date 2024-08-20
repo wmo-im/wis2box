@@ -65,9 +65,6 @@ jobs:
         python3 wis2box-ctl.py execute wis2box auth add-token -p wis2downloader github123 -y
         echo '{"topic": "origin/a/wis2/+/data/core/#"}' > test.json
         curl -X POST http://localhost/wis2downloader/subscriptions -H "Content-Type: application/json" -H "Authorization: Bearer github123" -d @test.json
-        ls -althF tests/data/downloads
-        ls -althF tests/data
-        docker logs wis2downloader
     - name: add Malawi synop data (csv2bufr synop_bufr template) 🇲🇼
       env:
         TOPIC_HIERARCHY: origin/a/wis2/mw-mw_met_centre/data/core/weather/surface-based-observations/synop
@@ -193,7 +190,6 @@ jobs:
       run: |
         sleep 30
         docker logs wis2box-management
-        docker logs wis2downloader
         pytest -s tests/integration
     - name: run flake8 ⚙️
       run: |
