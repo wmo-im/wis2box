@@ -1,0 +1,1 @@
+*/10 * * * * source /home/wis2downloader/.venv/bin/activate && python /home/wis2downloader/app/clean_downloads.py > /proc/1/fd/1 2>/proc/1/fd/2

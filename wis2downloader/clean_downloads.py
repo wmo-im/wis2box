@@ -2,9 +2,9 @@ import os
 import time
 
 # get download dir from environment variable
-download_dir = os.environ.get('DOWNLOAD_DIR', '/app/downloads')
+download_dir = os.environ.get('DOWNLOAD_DIR', '/home/wis2downloader/app/data/downloads')  # noqa
 # get retention period from environment variable
-retention_period_hours = int(os.environ.get('RETENTION_PERIOD_HOURS', 24))
+retention_period_hours = int(os.environ.get('DOWNLOAD_RETENTION_PERIOD_HOURS', None))  # noqa
 
 
 def clean_directory(directory):
@@ -32,8 +32,9 @@ def clean_directory(directory):
             if not os.listdir(file_path):
                 os.rmdir(file_path)
                 directories_removed += 1
-    print(f'CLEANER: removed {files_removed} old files and {directories_removed} empty directories') # noqa
+    print(f'CLEANER: removed {files_removed} old files and {directories_removed} empty directories')  # noqa
 
 
 # start cleaning from the download directory
-clean_directory(download_dir)
+if retention_period_hours is not None:
+    clean_directory(download_dir)
