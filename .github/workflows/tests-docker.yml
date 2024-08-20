@@ -36,9 +36,10 @@ jobs:
         echo "DOCKER_GID=$(getent group docker | cut -d: -f3)" >> tests/test.env
         echo "DOWNLOADER_UID=12135" >> tests/test.env
         # make sure data dir is in group docker and has 775 permissions
-        mkdir -p ./tests/data/downloads
-        sudo chown -R $(id -u):docker ./tests/data/downloads
-        sudo chmod -R 775 ./tests/data/downloads
+        mkdir -p tests/data/downloads
+        sudo chown -R $(whoami):docker tests/data/downloads
+        sudo chmod -R 775 tests/data/downloads
+        ls -althF tests/data
     - name: setup wis2box configuration, replace localhost with IP on host 📦
       run: |
         export IP=$(hostname -I | awk '{print $1}')
@@ -66,6 +67,8 @@ jobs:
         python3 wis2box-ctl.py execute wis2box auth add-token -p wis2downloader github123 -y
         echo '{"topic": "origin/a/wis2/+/data/core/#"}' > test.json
         curl -X POST http://localhost/wis2downloader/subscriptions -H "Content-Type: application/json" -H "Authorization: Bearer github123" -d @test.json
+        ls -althF tests/data/downloads
+        ls -althF tests/data
     - name: add Malawi synop data (csv2bufr synop_bufr template) 🇲🇼
       env:
         TOPIC_HIERARCHY: origin/a/wis2/mw-mw_met_centre/data/core/weather/surface-based-observations/synop
