@@ -28,9 +28,11 @@ import logging
 from pathlib import Path
 import uuid
 
+from owslib.ogcapi.records import Records
+
 from wis2box import __version__
 from wis2box.util import json_serial
-from wis2box.env import STORAGE_PUBLIC, URL, STORAGE_SOURCE
+from wis2box.env import DOCKER_API_URL, STORAGE_PUBLIC, URL, STORAGE_SOURCE
 from wis2box.storage import get_data
 
 LOGGER = logging.getLogger(__name__)
@@ -209,6 +211,30 @@ class WISNotificationMessage(PubSubMessage):
                 'href': f'https://oscar.wmo.int/surface/#/search/station/stationReportDetails/{wigos_station_identifier}'  # noqa
             }
             self.message['links'].append(link)
+
+        LOGGER.debug(f'Checking for access control (metadata id: {metadata_id})')  # noqa
+        try:
+            oar = Records(DOCKER_API_URL)
+            record = oar.collection_item('discovery-metadata', metadata_id)
+
+            if record['wis2box'].get('has_auth'):
+                LOGGER.debug('Updating message with access control')
+
+                for link in self.message['links']:
+                    if link['href'] == public_file_url:
+                        LOGGER.debug('Adding security object to link')
+                        link['security'] = {
+                            'default': {
+                                'type': 'http',
+                                'scheme': 'bearer',
+                                'description': 'Please contact the data provider for access'  # noqa
+                            }
+                        }
+
+                LOGGER.debug('Removing inline content')
+                self.message['properties'].pop('content', None)
+        except Exception as err:
+            LOGGER.debug(f'Cannot locate metadata record: {err}')
 
 
 def gcm() -> dict:

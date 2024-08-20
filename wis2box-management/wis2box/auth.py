@@ -24,9 +24,12 @@ import logging
 import requests
 from secrets import token_hex
 
+from owslib.ogcapi.records import Records
+
 from wis2box import cli_helpers
+from wis2box.api import upsert_collection_item
 from wis2box.data_mappings import get_data_mappings
-from wis2box.env import AUTH_URL
+from wis2box.env import AUTH_URL, DOCKER_API_URL
 
 
 LOGGER = logging.getLogger(__name__)
@@ -170,6 +173,16 @@ def add_token(ctx, metadata_id, path, yes, token):
     if create_token(path, token):
         click.echo('Token successfully created')
 
+    if metadata_id is not None:
+        click.echo('Adding access control object to discovery metadata')
+
+        oar = Records(DOCKER_API_URL)
+
+        record = oar.collection_item('discovery-metadata', metadata_id)
+        record['wis2box']['has_auth'] = True
+
+        upsert_collection_item('discovery-metadata', record)
+
 
 @click.command()
 @click.pass_context
@@ -191,6 +204,16 @@ def remove_token(ctx, metadata_id, path, token):
 
     if delete_token(path, token):
         click.echo('Token successfully deleted')
+
+    if metadata_id is not None:
+        click.echo('Removing access control object to discovery metadata')
+
+        oar = Records(DOCKER_API_URL)
+
+        record = oar.collection_item('discovery-metadata', metadata_id)
+        record['wis2box'].pop('has_auth', None)
+
+        upsert_collection_item('discovery-metadata', record)
 
 
 auth.add_command(add_token)
