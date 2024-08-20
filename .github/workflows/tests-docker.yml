@@ -32,8 +32,8 @@ jobs:
         sudo useradd -l -u 12135 wis2downloader
         sudo usermod -aG docker wis2downloader
         # Add env parameters to tests/test.env
-        echo "DOCKER_GID=$(getent group docker | cut -d: -f3)" >> tests/test.env
-        echo "DOWNLOADER_ID=12135" >> tests/test.env
+        echo "\nDOCKER_GID=$(getent group docker | cut -d: -f3)" >> tests/test.env
+        echo "DOWNLOADER_UID=12135\n" >> tests/test.env
     - name: setup wis2box configuration, replace localhost with IP on host 📦
       run: |
         export IP=$(hostname -I | awk '{print $1}')
