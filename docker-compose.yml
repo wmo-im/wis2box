@@ -149,6 +149,8 @@ services:
     build:
       context: ./wis2downloader
       dockerfile: Dockerfile
+    env_file:
+      - wis2box.env
     user: ${DOWNLOADER_UID}:${DOCKER_GID}
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/downloads:/app/downloads:rw

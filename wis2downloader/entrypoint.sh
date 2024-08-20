@@ -1,10 +1,6 @@
 #!/bin/bash
 echo "Download directory in container: $DOWNLOAD_DIR"
 
-ls -althF
-ls -althF /home/wis2downloader/app
-ls -althF /home/wis2downloader/app/data
-
 # ensure DOWNLOAD_DIR exists
 if [ ! -d "$DOWNLOAD_DIR" ]; then
     echo "Creating download directory: $DOWNLOAD_DIR"
