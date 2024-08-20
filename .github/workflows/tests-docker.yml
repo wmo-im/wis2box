@@ -28,9 +28,8 @@ jobs:
         python3 -V
     - name: setup wis2downloader
       run: |
-        # make sure user (uid=12135) exists and add to group docker
-        sudo useradd -l -u 12135 wis2downloader
-        sudo usermod -aG docker wis2downloader
+        # make sure current user in docker group
+        sudo usermod -aG docker $(wmoami)
         # Add env parameters to tests/test.env
         echo "" >> tests/test.env  #no new line at end of test.env file
         echo "DOCKER_GID=$(getent group docker | cut -d: -f3)" >> tests/test.env
