@@ -29,7 +29,7 @@ jobs:
     - name: setup wis2downloader
       run: |
         # make sure current user in docker group
-        sudo usermod -aG docker $(wmoami)
+        sudo usermod -aG docker $(whoami)
         # Add env parameters to tests/test.env
         echo "" >> tests/test.env  #no new line at end of test.env file
         echo "DOCKER_GID=$(getent group docker | cut -d: -f3)" >> tests/test.env
