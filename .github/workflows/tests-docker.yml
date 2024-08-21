@@ -193,6 +193,7 @@ jobs:
         docker logs wis2downloader
         ls -althF tests/data
         ls -althFR tests/data
+        sudo find ~ -R "WIGOS_0-20000-0-64459_20230803T090000.bufr"
         pytest -s tests/integration
     - name: run flake8 ⚙️
       run: |
