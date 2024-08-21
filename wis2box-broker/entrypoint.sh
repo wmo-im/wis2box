@@ -16,11 +16,23 @@ echo "Setting mosquitto authentication"
 if [ ! -e "/mosquitto/config/password.txt" ]; then
     echo "Adding wis2box users to mosquitto password file"
     mosquitto_passwd -b -c /mosquitto/config/password.txt $WIS2BOX_BROKER_USERNAME $WIS2BOX_BROKER_PASSWORD
-    mosquitto_passwd -b /mosquitto/config/password.txt $WIS2BOX_CAP_USERNAME $WIS2BOX_CAP_PASSWORD
     mosquitto_passwd -b /mosquitto/config/password.txt everyone everyone
 else
     echo "Mosquitto password file already exists. Skipping wis2box user addition."
 fi
+
+# Automatically generate authentication for topics of form WIS2BOX_BROKER_TOPIC_*
+# as users/passwords of form WIS2BOX_BROKER_USERNAME_* and WIS2BOX_BROKER_PASSWORD_* repsectively
+for i in `env | grep -Ee "\<WIS2BOX_BROKER_USERNAME_[[:alnum:]]+"`; do
+    NAME_TAIL=`echo $i | awk -FWIS2BOX_BROKER_USERNAME_ '{print $2}' | awk -F= '{print $1}'`
+    username=WIS2BOX_BROKER_USERNAME_$NAME_TAIL
+    password=WIS2BOX_BROKER_PASSWORD_$NAME_TAIL
+    topic=WIS2BOX_BROKER_TOPIC_$NAME_TAIL
+    echo ${!username}, ${!password}
+    mosquitto_passwd -b /mosquitto/config/password.txt ${!username} ${!password}
+    echo "user ${!username}" >>  /mosquitto/config/acl.conf
+    echo "topic readwrite ${!topic}" >>  /mosquitto/config/acl.conf
+done
 
 sed -i "s#_WIS2BOX_BROKER_QUEUE_MAX#$WIS2BOX_BROKER_QUEUE_MAX#" /mosquitto/config/mosquitto.conf
 sed -i "s#_WIS2BOX_BROKER_USERNAME#$WIS2BOX_BROKER_USERNAME#" /mosquitto/config/acl.conf

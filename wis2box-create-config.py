@@ -344,11 +344,6 @@ def create_wis2box_env(config_dir: str) -> None:
         # update WIS2BOX_BROKER_PUBLIC settings after updating broker defaults
         fh.write('# update WIS2BOX_BROKER_PUBLIC settings after updating broker defaults\n') # noqa
         fh.write('WIS2BOX_BROKER_PUBLIC=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@mosquitto:1883\n') # noqa
-        # use the default username wis2box for WIS2BOX_CAP
-        fh.write('WIS2BOX_CAP_USERNAME=wis2box\n')
-        # get password for WIS2BOX_CAP_PASSWORD and write it to wis2box.env
-        fh.write(get_password('WIS2BOX_CAP_PASSWORD'))
-        fh.write('\n')
         # update minio settings after updating storage and broker defaults
         fh.write('\n')
         fh.write('# minio settings\n') # noqa
