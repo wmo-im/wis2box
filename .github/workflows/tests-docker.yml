@@ -190,6 +190,7 @@ jobs:
       run: |
         sleep 30
         docker logs wis2box-management
+        docker logs wis2downloader
         pytest -s tests/integration
     - name: run flake8 ⚙️
       run: |
