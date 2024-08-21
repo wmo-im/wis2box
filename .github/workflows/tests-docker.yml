@@ -190,11 +190,6 @@ jobs:
       run: |
         sleep 30
         docker logs wis2box-management
-        echo " 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 "        
-        echo $(find . -type f -name "*.bufr")
-        echo $(find . -type f -name "*.bin")
-        echo $(find . -type f -name "*.csv")
-        echo " 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 "
         pytest -s tests/integration
     - name: run flake8 ⚙️
       run: |

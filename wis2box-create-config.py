@@ -18,15 +18,25 @@
 # under the License.
 #
 ###############################################################################
-
 import datetime
 import json
 import os
+import platform
 from pathlib import Path
 import random
 import string
 from string import Template
 from typing import Tuple
+
+# Identify platform type
+WINDOWS=False
+if platform.system() == 'Windows':
+    WINDOWS=True
+
+if not WINDOWS:
+    import grp
+    import shutil
+    DOCKER_GROUP = grp.getgrnam('docker')
 
 OTHER_TLDS = ['org', 'int']
 
@@ -368,6 +378,10 @@ def create_wis2box_env(config_dir: str) -> None:
         fh.write('DOWNLOAD_BROKER_TRANSPORT=websockets\n')
         fh.write('# maximum MB in download directory\n')
         fh.write('DOWNLOAD_MIN_FREE_SPACE_GB=1\n')
+        fh.write('DOWNLOADER_UID=12135\n')
+        fh.write('DOWNLOAD_MIN_FREE_SPACE_GB=1\n')
+        if not WINDOWS:
+            fh.write(f'DOCKER_GID={DOCKER_GROUP.gr_gid}\n')
         fh.write('\n')
 
     print('*' * 80)
@@ -425,6 +439,11 @@ def create_config_dir() -> str:
                 print("Please check the path and your permissions.")
                 exit()
         print(f"The directory {config_dir} has been created.")
+        if not WINDOWS:
+            download_dir = config_dir / 'downloads'
+            download_dir.mkdir(mode=0o775)
+            shutil.chown(download_dir, group='docker')
+
     except Exception:
         print("ERROR:")
         print(f"The directory {config_dir} could not be created.")
