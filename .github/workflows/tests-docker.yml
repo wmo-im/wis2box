@@ -191,6 +191,9 @@ jobs:
         sleep 30
         docker logs wis2box-management
         docker logs wis2downloader
+        ls -althF tests/data
+        ls -althF tests/data/downloads
+        ls -R tests/data/downloads/*
         pytest -s tests/integration
     - name: run flake8 ⚙️
       run: |
