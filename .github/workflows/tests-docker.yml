@@ -36,8 +36,8 @@ jobs:
         echo "DOWNLOADER_UID=12135" >> tests/test.env
         # make sure data dir is in group docker and has 775 permissions
         mkdir -p tests/data/downloads
-        sudo chown -R $(whoami):docker tests/data/downloads
-        sudo chmod -R 775 tests/data/downloads
+        chown -R $(whoami):docker tests/data/downloads
+        chmod -R 775 tests/data/downloads
     - name: setup wis2box configuration, replace localhost with IP on host 📦
       run: |
         export IP=$(hostname -I | awk '{print $1}')
