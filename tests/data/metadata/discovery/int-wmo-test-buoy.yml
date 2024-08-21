@@ -50,7 +50,7 @@ identification:
     url: https://example.org/fixme
 
 contact:
-    pointOfContact: &contact_poc
+    host: &contact_poc
         organization: World Meteorological Organisation
         url: https://www.wmo.int/
         individualname: Firstname Lastname
@@ -65,5 +65,3 @@ contact:
         email: null
         hoursofservice: 0800h - 1600h UTC
         contactinstructions: email
-
-    distributor: *contact_poc

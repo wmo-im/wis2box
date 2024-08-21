@@ -35,7 +35,7 @@ DATADIR = Path('.').parent.absolute() / 'tests/data'
 
 URL = 'http://localhost'
 API_URL = f'{URL}/oapi'
-ID = 'urn:wmo:md:mw-mw_met_centre:surface-weather-observations'
+ID = 'urn:wmo:md:mw-mw_met_centre-test:surface-weather-observations'
 SESSION = Session()
 SESSION.hooks = {
    'response': lambda r, *args, **kwargs: r.raise_for_status()
@@ -49,10 +49,10 @@ def test_wis2downloader():
     DOWNLOAD_DIR = DATADIR / 'downloads'
 
     topic_nfiles_dict = {
-        'origin/a/wis2/mw-mw_met_centre/data/core/weather/surface-based-observations/synop': 23, # noqa
+        'origin/a/wis2/mw-mw_met_centre-test/data/core/weather/surface-based-observations/synop': 23, # noqa
         'origin/a/wis2/dz-meteoalgerie/data/core/weather/surface-based-observations/synop': 28, # noqa
         'origin/a/wis2/cn-cma/data/core/weather/prediction/forecast/medium-range/probabilistic/global': 10, # noqa
-        'origin/a/wis2/ro-rnimh/data/core/weather/surface-based-observations/synop': 49, # noqa
+        'origin/a/wis2/ro-rnimh-test/data/core/weather/surface-based-observations/synop': 49, # noqa
         'origin/a/wis2/cg-met/data/core/weather/surface-based-observations/synop': 14, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/buoy': 2, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/wind_profiler': 1, # noqa
@@ -150,7 +150,7 @@ def test_metadata_discovery_publish():
     mqtt_link = [d for d in r['links'] if d['href'].startswith('mqtt')][0]
 
     assert 'everyone:everyone' in mqtt_link['href']
-    assert mqtt_link['channel'] == 'origin/a/wis2/mw-mw_met_centre/data/core/weather/surface-based-observations/synop'  # noqa
+    assert mqtt_link['channel'] == 'origin/a/wis2/mw-mw_met_centre-test/data/core/weather/surface-based-observations/synop'  # noqa
 
     params = {
         'q': 'temperature'
@@ -164,10 +164,10 @@ def test_metadata_discovery_publish():
     # test access of discovery metadata from notification message
 
     centre_ids = [
-        'mw-mw_met_centre',
+        'mw-mw_met_centre-test',
         'it-meteoam',
         'dz-meteoalgerie',
-        'ro-rnimh',
+        'ro-rnimh-test',
         'cg-met',
         'int-wmo-test'
     ]
@@ -291,7 +291,7 @@ def test_message_api():
         'dz-meteoalgerie': 29,
         'ro-rnimh': 50,
         'cg-met': 15,
-        'int-wmo-test': 11,
+        'int-wmo': 11,
         'cn-cma': 11
     }
     for key, value in counts.items():
@@ -327,7 +327,7 @@ def test_message_api():
     assert props['integrity']['method'] == 'sha512'
     assert not props['data_id'].startswith('wis2')
     assert not props['data_id'].startswith('origin/a/wis2')
-    assert props['data_id'].startswith('cd')
+    assert props['data_id'].startswith('cg')
     assert props['content']['size'] == 253
     assert props['content']['encoding'] == 'base64'
     assert props['content']['value'] is not None

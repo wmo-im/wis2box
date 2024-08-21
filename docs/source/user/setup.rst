@@ -268,7 +268,7 @@ You can also bulk insert a set of stations from a CSV file, by defining the stat
 .. code-block:: bash
 
    python3 wis2box-ctl.py login
-   wis2box metadata station publish-collection --path /data/wis2box/mystations.csv --topic-hierarchy origin/a/wis2/mw-mw_met_centre/data/core/weather/surface-based-observations/synop
+   wis2box metadata station publish-collection --path /data/wis2box/mystations.csv --topic-hierarchy origin/a/wis2/mw-mw_met_centre-test/data/core/weather/surface-based-observations/synop
 
 .. note::
 
