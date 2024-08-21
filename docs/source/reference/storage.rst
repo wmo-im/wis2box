@@ -106,7 +106,7 @@ The below example copies a local file (``mydata.bin``) to the ``wis2box-incoming
     from minio import Minio
 
     filepath = '/home/wis2box-user/local-data/mydata.bin'
-    minio_path = '/it-roma_met_centre/data/core/weather/surface-based-observations/synop/'
+    minio_path = '/it-meteoam/data/core/weather/surface-based-observations/synop/'
 
     endpoint = 'http://localhost:9000'
     WIS2BOX_STORAGE_USERNAME = 'wis2box'

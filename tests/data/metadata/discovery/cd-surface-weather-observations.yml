@@ -1,8 +1,8 @@
 wis2box:
     retention: P180D
-    topic_hierarchy: cd-brazza_met_centre/data/core/weather/surface-based-observations/synop
+    topic_hierarchy: cg-met/data/core/weather/surface-based-observations/synop
     country: cog
-    centre_id: cd-brazza_met_centre
+    centre_id: cg-met
     data_mappings:
         plugins:
             txt:
@@ -19,7 +19,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:wmo:md:cd-brazza_met_centre:surface-weather-observations
+    identifier: urn:wmo:md:cg-met:surface-weather-observations
     hierarchylevel: dataset
 
 identification:

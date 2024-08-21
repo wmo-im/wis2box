@@ -71,10 +71,10 @@ jobs:
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA_UPDATE
     - name: add Italy synop data (bufr2bufr) 🇮🇹
       env:
-        TOPIC_HIERARCHY: origin/a/wis2/it-roma_met_centre/data/core/weather/surface-based-observations/synop
+        TOPIC_HIERARCHY: origin/a/wis2/it-meteoam/data/core/weather/surface-based-observations/synop
         TERRITORY: ITA
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/it-surface-weather-observations.yml
-        DISCOVERY_METADATA_ID: urn:wmo:md:it-roma_met_centre:surface-weather-observations
+        DISCOVERY_METADATA_ID: urn:wmo:md:it-meteoam:surface-weather-observations
         STATION_METADATA: /data/wis2box/metadata/station/italy.csv
         TEST_DATA: /data/wis2box/observations/italy
       run: |
@@ -85,10 +85,10 @@ jobs:
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
     - name: add Algeria synop data (bufr2bufr) 🇩🇿
       env:
-        TOPIC_HIERARCHY: origin/a/wis2/dz-alger_met_centre/data/core/weather/surface-based-observations/synop
+        TOPIC_HIERARCHY: origin/a/wis2/dz-meteoalgerie/data/core/weather/surface-based-observations/synop
         TERRITORY: DZA
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/dz-surface-weather-observations.yml
-        DISCOVERY_METADATA_ID: urn:wmo:md:dz-alger_met_centre:surface-weather-observations
+        DISCOVERY_METADATA_ID: urn:wmo:md:dz-meteoalgerie:surface-weather-observations
         STATION_METADATA: /data/wis2box/metadata/station/algeria.csv
         TEST_DATA: /data/wis2box/observations/algeria
       run: |
@@ -113,10 +113,10 @@ jobs:
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
     - name: add Congo synop data (synop2bufr) 🇨🇩
       env:
-        TOPIC_HIERARCHY: origin/a/wis2/cd-brazza_met_centre/data/core/weather/surface-based-observations/synop
+        TOPIC_HIERARCHY: origin/a/wis2/cg-met/data/core/weather/surface-based-observations/synop
         TERRITORY: COD
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/cd-surface-weather-observations.yml
-        DISCOVERY_METADATA_ID: urn:wmo:md:cd-brazza_met_centre:surface-weather-observations
+        DISCOVERY_METADATA_ID: urn:wmo:md:cg-met:surface-weather-observations
         STATION_METADATA: /data/wis2box/metadata/station/congo.csv
         TEST_DATA: /data/wis2box/observations/congo
       run: |

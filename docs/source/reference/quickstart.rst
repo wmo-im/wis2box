@@ -63,10 +63,10 @@ Load initial stations:
 .. code-block:: bash
 
     wis2box metadata station publish-collection --path /data/wis2box/metadata/station/malawi.csv --topic-hierarchy mw-mw_met_centre.data.core.weather.surface-based-observations.synop
-    wis2box metadata station publish-collection --path /data/wis2box/metadata/station/italy.csv --topic-hierarchy it-roma_met_centre.data.core.weather.surface-based-observations.synop
-    wis2box metadata station publish-collection --path /data/wis2box/metadata/station/algeria.csv --topic-hierarchy dz-alger_met_centre.data.core.weather.surface-based-observations.synop
+    wis2box metadata station publish-collection --path /data/wis2box/metadata/station/italy.csv --topic-hierarchy it-meteoam.data.core.weather.surface-based-observations.synop
+    wis2box metadata station publish-collection --path /data/wis2box/metadata/station/algeria.csv --topic-hierarchy dz-meteoalgerie.data.core.weather.surface-based-observations.synop
     wis2box metadata station publish-collection --path /data/wis2box/metadata/station/romania.csv --topic-hierarchy ro-rnimh.data.core.weather.surface-based-observations.synop
-    wis2box metadata station publish-collection --path /data/wis2box/metadata/station/congo.csv --topic-hierarchy cd-brazza_met_centre.data.core.weather.surface-based-observations.synop
+    wis2box metadata station publish-collection --path /data/wis2box/metadata/station/congo.csv --topic-hierarchy cg-met.data.core.weather.surface-based-observations.synop
     wis2box metadata station publish-collection --path /data/wis2box/metadata/station/wmo-test-ship.csv --topic-hierarchy int-wmo-test.data.core.weather.surface-based-observations.ship
     wis2box metadata station publish-collection --path /data/wis2box/metadata/station/wmo-test-buoy.csv --topic-hierarchy int-wmo-test.data.core.weather.surface-based-observations.buoy
     wis2box metadata station publish-collection --path /data/wis2box/metadata/station/wmo-test-wind-profiler.csv --topic-hierarchy int-wmo-test.data.core.weather.surface-based-observations.wind_profiler
@@ -76,10 +76,10 @@ Ingest data using the data ingest command to push data to the ``wis2box-incoming
 .. code-block:: bash
 
     wis2box data ingest --topic-hierarchy mw-mw_met_centre.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/malawi
-    wis2box data ingest --topic-hierarchy it-roma_met_centre.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/italy
-    wis2box data ingest --topic-hierarchy dz-alger_met_centre.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/algeria
+    wis2box data ingest --topic-hierarchy it-meteoam.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/italy
+    wis2box data ingest --topic-hierarchy dz-meteoalgerie.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/algeria
     wis2box data ingest --topic-hierarchy ro-rnimh.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/romania
-    wis2box data ingest --topic-hierarchy cd-brazza_met_centre.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/congo
+    wis2box data ingest --topic-hierarchy cg-met.data.core.weather.surface-based-observations.synop --path $WIS2BOX_DATADIR/observations/congo
     wis2box data ingest --topic-hierarchy int-wmo-test.data.core.weather.surface-based-observations.ship --path $WIS2BOX_DATADIR/observations/wmo/ship
     wis2box data ingest --topic-hierarchy int-wmo-test.data.core.weather.surface-based-observations.buoy --path $WIS2BOX_DATADIR/observations/wmo/buoy
     wis2box data ingest --topic-hierarchy int-wmo-test.data.core.weather.surface-based-observations.wind_profiler --path $WIS2BOX_DATADIR/observations/wmo/wind_profiler

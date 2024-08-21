@@ -50,14 +50,14 @@ def test_wis2downloader():
 
     topic_nfiles_dict = {
         'origin/a/wis2/mw-mw_met_centre/data/core/weather/surface-based-observations/synop': 23, # noqa
-        'origin/a/wis2/dz-alger_met_centre/data/core/weather/surface-based-observations/synop': 28, # noqa
+        'origin/a/wis2/dz-meteoalgerie/data/core/weather/surface-based-observations/synop': 28, # noqa
         'origin/a/wis2/cn-cma/data/core/weather/prediction/forecast/medium-range/probabilistic/global': 10, # noqa
         'origin/a/wis2/ro-rnimh/data/core/weather/surface-based-observations/synop': 49, # noqa
-        'origin/a/wis2/cd-brazza_met_centre/data/core/weather/surface-based-observations/synop': 14, # noqa
+        'origin/a/wis2/cg-met/data/core/weather/surface-based-observations/synop': 14, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/buoy': 2, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/wind_profiler': 1, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/ship': 5, # noqa
-        'origin/a/wis2/it-roma_met_centre/data/core/weather/surface-based-observations/synop': 31 # noqa
+        'origin/a/wis2/it-meteoam/data/core/weather/surface-based-observations/synop': 31 # noqa
     }
 
     topic_nfiles_dict_found = {}
@@ -165,10 +165,10 @@ def test_metadata_discovery_publish():
 
     centre_ids = [
         'mw-mw_met_centre',
-        'it-roma_met_centre',
-        'dz-alger_met_centre',
+        'it-meteoam',
+        'dz-meteoalgerie',
         'ro-rnimh',
-        'cd-brazza_met_centre',
+        'cg-met',
         'int-wmo-test'
     ]
 
@@ -287,10 +287,10 @@ def test_message_api():
     # test messages per test dataset
     counts = {
         'mw-mw_met_centre': 25,
-        'it-roma_met_centre': 33,
-        'dz-alger_met_centre': 29,
+        'it-meteoam': 33,
+        'dz-meteoalgerie': 29,
         'ro-rnimh': 50,
-        'cd-brazza_met_centre': 15,
+        'cg-met': 15,
         'int-wmo-test': 11,
         'cn-cma': 11
     }
@@ -306,7 +306,7 @@ def test_message_api():
     assert r['numberMatched'] == sum(counts.values())
 
     # we want to find a particular message with data ID
-    target_data_id = "cd-brazza_met_centre:surface-weather-observations/WIGOS_0-20000-0-64406_20230803T090000" # noqa
+    target_data_id = "cg-met:surface-weather-observations/WIGOS_0-20000-0-64406_20230803T090000" # noqa
 
     msg = None
     for feature in r['features']:

@@ -1,8 +1,8 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: it-roma_met_centre/data/core/weather/surface-based-observations/synop
+    topic_hierarchy: it-meteoam/data/core/weather/surface-based-observations/synop
     country: ita
-    centre_id: it-roma_met_centre
+    centre_id: it-meteoam
     data_mappings:
         plugins:
             bin:
@@ -17,7 +17,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:wmo:md:it-roma_met_centre:surface-weather-observations
+    identifier: urn:wmo:md:it-meteoam:surface-weather-observations
     hierarchylevel: dataset
 
 identification:

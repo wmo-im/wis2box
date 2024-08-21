@@ -85,13 +85,13 @@ Select 'browse' on the ``wis2box-incoming`` bucket and select 'Choose or create 
     
     For example, using a filepath matching the metadata identifier:
 
-    * Metadata identifier: ``urn:wmo:md:it-roma_met_centre:surface-weather-observations.synop``
-    * upload data in path containing: ``it-roma_met_centre:surface-weather-observations.synop``
+    * Metadata identifier: ``urn:wmo:md:it-meteoam:surface-weather-observations.synop``
+    * upload data in path containing: ``it-meteoam:surface-weather-observations.synop``
 
     For example using a filepath matching the topic hierarchy:
     
-    * Topic Hierarchy: ``origin/a/wis2/cd-brazza_met_centre/data/core/weather/surface-based-observations/synop``
-    * upload data in the path containing: ``cd-brazza_met_centre/data/core/weather/surface-based-observations/synop``
+    * Topic Hierarchy: ``origin/a/wis2/cg-met/data/core/weather/surface-based-observations/synop``
+    * upload data in the path containing: ``cg-met/data/core/weather/surface-based-observations/synop``
 
     The error message ``Path validation error: Could not match http://minio:9000/wis2box-incoming/... to dataset, ...`` indicates that a file was stored in a directory that could not be matched to a dataset.
 
@@ -138,7 +138,7 @@ See below a Python example to upload data using the MinIO package:
 
     filepath = '/home/wis2box-user/local-data/mydata.bin'
     # path should match the metadata or the topic in the data mappings
-    minio_path = 'urn:wmo:md:it-roma_met_centre:surface-weather-observations'
+    minio_path = 'urn:wmo:md:it-meteoam:surface-weather-observations'
 
     endpoint = 'http://localhost:9000'
     WIS2BOX_STORAGE_USERNAME = 'wis2box'
@@ -200,7 +200,7 @@ Then start the ``wis2box-ftp`` service with the following command:
 
 When using the wis2box-ftp service to ingest data, please note that the topic is determined by the directory structure in which the data arrives.
 
-For example, to correctly ingest data on the topic ``it-roma_met_centre.data.core.weather.surface-based-observations.synop`` you need to copy the data into the directory ``/it-roma_met_centre/data/core/weather/surface-based-observations/synop`` on the FTP server:
+For example, to correctly ingest data on the topic ``it-meteoam.data.core.weather.surface-based-observations.synop`` you need to copy the data into the directory ``/it-meteoam/data/core/weather/surface-based-observations/synop`` on the FTP server:
 
 .. image:: ../_static/winscp_wis2box-ftp_example.png
     :width: 600
