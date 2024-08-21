@@ -29,9 +29,9 @@ from string import Template
 from typing import Tuple
 
 # Identify platform type
-WINDOWS=False
+WINDOWS = False
 if platform.system() == 'Windows':
-    WINDOWS=True
+    WINDOWS = True
 
 if not WINDOWS:
     import grp
