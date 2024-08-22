@@ -1,8 +1,8 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: dz-alger_met_centre/data/core/weather/surface-based-observations/synop
+    topic_hierarchy: dz-meteoalgerie/data/core/weather/surface-based-observations/synop
     country: dza
-    centre_id: dz-alger_met_centre
+    centre_id: dz-meteoalgerie
     data_mappings:
         plugins:
             bufr4:
@@ -20,7 +20,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:wmo:md:dz-alger_met_centre:surface-weather-observations
+    identifier: urn:wmo:md:dz-meteoalgerie:surface-weather-observations
     hierarchylevel: dataset
 
 identification:

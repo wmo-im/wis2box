@@ -1,8 +1,8 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: ro-rnimh/data/core/weather/surface-based-observations/synop
+    topic_hierarchy: ro-rnimh-test/data/core/weather/surface-based-observations/synop
     country: rou
-    centre_id: ro-rnimh
+    centre_id: ro-rnimh-test
     data_mappings:
         plugins:
             txt:
@@ -19,7 +19,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:wmo:md:ro-rnimh:synoptic-weather-observations
+    identifier: urn:wmo:md:ro-rnimh-test:synoptic-weather-observations
     hierarchylevel: dataset
 
 identification:

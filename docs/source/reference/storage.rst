@@ -67,7 +67,7 @@ The below example copies a local file (``myfile.csv``) to the ``wis2box-incoming
 To allow uploading files into MinIO remotely, the ``wis2box-incoming`` bucket is proxied via Nginx. 
 
 For example, to upload the local file (``WIGOS_0-454-2-AWSNAMITAMBO_2021-11-18T0955.csv with topic``) to the folder 
-``mw-mw_met_centre/data/core/weather/surface-based-observations/synop``:
+``mw-mw_met_centre-test/data/core/weather/surface-based-observations/synop``:
 
 .. code-block:: python
 
@@ -83,7 +83,7 @@ For example, to upload the local file (``WIGOS_0-454-2-AWSNAMITAMBO_2021-11-18T0
 
     s3client = session.client('s3', endpoint_url=endpoint_url)
 
-    folder = 'mw-mw_met_centre/data/core/weather/surface-based-observations/synop'
+    folder = 'mw-mw_met_centre-test/data/core/weather/surface-based-observations/synop'
     with open(filename, 'rb') as fh:
         s3client.upload_fileobj(fh, 'wis2box-incoming', f'{folder}/{filename}')
 
@@ -106,7 +106,7 @@ The below example copies a local file (``mydata.bin``) to the ``wis2box-incoming
     from minio import Minio
 
     filepath = '/home/wis2box-user/local-data/mydata.bin'
-    minio_path = '/it-roma_met_centre/data/core/weather/surface-based-observations/synop/'
+    minio_path = '/it-meteoam/data/core/weather/surface-based-observations/synop/'
 
     endpoint = 'http://localhost:9000'
     WIS2BOX_STORAGE_USERNAME = 'wis2box'

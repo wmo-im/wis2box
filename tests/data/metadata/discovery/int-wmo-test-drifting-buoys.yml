@@ -1,6 +1,6 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: int-wmo-test/data/core/weather/surface-based-observations/buoy
+    topic_hierarchy: int-wmo-test/data/core/ocean/surface-based-observations/drifting-buoys
     country: int
     centre_id: int-wmo-test
     data_mappings:
@@ -16,12 +16,12 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:wmo:md:int-wmo-test:surface-weather-observations:buoy
+    identifier: urn:wmo:md:int-wmo-test:surface-weather-observations:drifting-buoys
     hierarchylevel: dataset
 
 identification:
-    title: Example surface observations from GOOS buoy networks
-    abstract: Surface observations from GOOS buoy networks downloaded from the WIS.
+    title: Example surface observations from GOOS drifting buoy networks
+    abstract: Surface observations from GOOS drifting buoy networks downloaded from the WIS.
     dates:
         creation: 2024-02-16
     keywords:
@@ -30,7 +30,7 @@ identification:
                 - surface weather
                 - temperature
                 - observations
-                - buoy
+                - drifting buoy
         wmo:
             keywords:
                 - weather
@@ -50,7 +50,7 @@ identification:
     url: https://example.org/fixme
 
 contact:
-    pointOfContact: &contact_poc
+    host: &contact_poc
         organization: World Meteorological Organisation
         url: https://www.wmo.int/
         individualname: Firstname Lastname
@@ -65,5 +65,3 @@ contact:
         email: null
         hoursofservice: 0800h - 1600h UTC
         contactinstructions: email
-
-    distributor: *contact_poc
