@@ -377,8 +377,7 @@ def test_message_api():
     assert props['datetime'] == '2023-08-03T09:00:00Z'
     assert props['wigos_station_identifier'] == '0-20000-0-64406'
     assert props['integrity']['method'] == 'sha512'
-    assert not props['data_id'].startswith('wis2')
-    assert not props['data_id'].startswith('origin/a/wis2')
+    assert not props['data_id'].startswith(('origin/a/wis2', 'wis2'))
     assert props['data_id'].startswith('cg')
     assert 'content' not in props
     assert 'gts' in props
