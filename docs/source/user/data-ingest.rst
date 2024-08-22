@@ -200,7 +200,7 @@ Then start the ``wis2box-ftp`` service with the following command:
 
 When using the wis2box-ftp service to ingest data, please note that the topic is determined by the directory structure in which the data arrives.
 
-For example, to correctly ingest data on the topic ``it-meteoam.data.core.weather.surface-based-observations.synop`` you need to copy the data into the directory ``/it-meteoam/data/core/weather/surface-based-observations/synop`` on the FTP server:
+For example, to correctly ingest data on the topic ``it-meteoam/data/core/weather/surface-based-observations/synop`` you need to copy the data into the directory ``/it-meteoam/data/core/weather/surface-based-observations/synop`` on the FTP server:
 
 .. image:: ../_static/winscp_wis2box-ftp_example.png
     :width: 600

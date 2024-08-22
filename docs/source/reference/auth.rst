@@ -68,8 +68,8 @@ easily added to requests using `cURL`_.
 
 .. code-block:: bash
 
-    curl -H "Authorization: Bearer mytoken" "http://localhost/oapi/collections/mw-mw_met_centre-test.data.core.weather.surface-based-observations.synop"
-    curl -H "Authorization: Bearer notmytoken" "http://localhost/oapi/collections/mw-mw_met_centre-test.data.core.weather.surface-based-observations.synop"
+    curl -H "Authorization: Bearer mytoken" "http://localhost/oapi/collections/urn:wmo:md:mw-mw_met_centre-test:surface-weather-observations"
+    curl -H "Authorization: Bearer notmytoken" "http://localhost/oapi/collections/urn:wmo:md:mw-mw_met_centre-test:surface-weather-observations"
 
 
 Removing Access Control
@@ -80,7 +80,7 @@ deleting individual tokens, or all tokens for a given topic hierarchy.
 
 .. code-block:: bash
 
-    wis2box auth remove-tokens --topic-hierarchy mw-mw_met_centre-test.data.core.weather.surface-based-observations.synop
+    wis2box auth remove-tokens --metadata-id "urn:wmo:md:mw-mw_met_centre-test:surface-weather-observations"
     wis2box auth show
 
 
