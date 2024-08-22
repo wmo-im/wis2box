@@ -437,9 +437,10 @@ def create_config_dir() -> str:
                 print("Please check the path and your permissions.")
                 exit()
         print(f"The directory {config_dir} has been created.")
+
+        download_dir = config_dir / 'downloads'
+        download_dir.mkdir(mode=0o775)
         if not WINDOWS:
-            download_dir = config_dir / 'downloads'
-            download_dir.mkdir(mode=0o775)
             shutil.chown(download_dir, group='docker')
 
     except Exception:
