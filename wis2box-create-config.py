@@ -284,11 +284,11 @@ def get_wis2box_url() -> str:
     return wis2box_url
 
 
-def create_wis2box_env(config_dir: str) -> None:
+def create_wis2box_env(host_datadir: str) -> None:
     """
-    creates the wis2box.env file in the config_dir
+    creates the wis2box.env file in the host_datadir
 
-    :param config_dir: `str` of path to the config directory
+    :param host_datadir: `str` of path to the config directory
 
     :returns: None
     """
@@ -297,7 +297,7 @@ def create_wis2box_env(config_dir: str) -> None:
 
     with wis2box_env.open('w') as fh:
         fh.write('# directory on the host with wis2box-configuration\n') # noqa
-        fh.write(f'WIS2BOX_HOST_DATADIR={config_dir}\n')
+        fh.write(f'WIS2BOX_HOST_DATADIR={host_datadir}\n')
         fh.write(f'# directory in the wis2box container with wis2box-configuration\n') # noqa
         fh.write('WIS2BOX_DATADIR=/data/wis2box\n')
         fh.write('\n')
@@ -387,94 +387,93 @@ def create_wis2box_env(config_dir: str) -> None:
     print('*' * 80)
 
 
-def create_config_dir() -> str:
+def create_host_datadir() -> str:
     """
-    Creates the directory config_dir
+    Creates the directory wis2box_host_datadir
 
     If the directory already exists, asks the user if they want to overwrite
     the existing files
 
-    :returns: `str` of path to directory where configuration files
-              are to be stored
+    :returns: `str` of path to directory for wis2box_host_datadir
     """
 
-    config_dir = ""
+    host_datadir = ""
     answer = "n"
 
     while answer != "y":
         if answer == "exit":
             exit()
 
-        print("Please enter the directory on the host where wis2box-configuration-files are to be stored:") # noqa
-        config_dir = input()
+        print("Please enter the directory to be used for WIS2BOX_HOST_DATADIR:") # noqa
+        host_datadir = input()
 
-        if config_dir == "":
+        if host_datadir == "":
             print("The directory cannot be empty.")
             continue
 
-        print("Configuration-files will be stored in the following directory:") # noqa
-        print(f"    {config_dir}")
+        print("The directory to be used for WIS2BOX_HOST_DATADIR will be set to:") # noqa
+        print(f"    {host_datadir}")
         print("Is this correct? (y/n/exit)")
         answer = input()
 
     # check if the directory exists
     try:
-        config_dir = Path(config_dir)
-        if config_dir.is_dir():
+        host_datadir = Path(host_datadir)
+        if host_datadir.is_dir():
             # if it exists warn the user
             # tell them that the directory needs to be remove to continue
             print("WARNING:")
-            print(f"The directory {config_dir} already exists.")
+            print(f"The directory {host_datadir} already exists.")
             print("Please remove the directory to restart the configuration process.") # noqa
             exit()
         else:
             # if it does not exist, create it
-            config_dir.mkdir(parents=True)
+            host_datadir.mkdir(parents=True)
             # check if the directory was created
-            if not config_dir.is_dir():
+            if not host_datadir.is_dir():
                 print("ERROR:")
-                print(f"The directory {config_dir} could not be created.")
+                print(f"The directory {host_datadir} could not be created.")
                 print("Please check the path and your permissions.")
                 exit()
-        print(f"The directory {config_dir} has been created.")
+        print(f"The directory {host_datadir} has been created.")
 
-        download_dir = config_dir / 'downloads'
+        download_dir = host_datadir / 'downloads'
         download_dir.mkdir(mode=0o775)
         if not WINDOWS:
             shutil.chown(download_dir, group='docker')
 
     except Exception:
         print("ERROR:")
-        print(f"The directory {config_dir} could not be created.")
+        print(f"The directory {host_datadir} could not be created.")
         print("Please provide an absolute path to the directory.")
         print("and check your permissions.")
         exit()
 
-    return config_dir
+    return host_datadir
 
 
-def create_metadata_file(config_dir: str, country_name: str,
+def create_metadata_file(host_datadir: str, country_name: str,
                          centre_id: str, centre_name: str, wis2box_email: str,
                          bounding_box: str, template: str) -> str:
     """
-    creates the metadata file in the directory config_dir
+    creates the metadata file in the directory host_datadir
 
-    :param config_dir: `str` of the path to the directory where the configuration files are to be stored # noqa
+    :param host_datadir: `str` of the path to the wis2box-host-datadir
     :param country_name: `str` of the country name of the wis2box
     :param centre_id: `str` of the centre id of the wis2box
     :param centre_name: `str` of centre name of the wis2box
     :param wis2box_email: `str` of centre email
     :param bounding_box: `str` of CSV of bounding box
     :param template: `str` of synop or temp
-    
+
     :returns: `str` of the path to the metadata file
     """
 
     # get current date as a string
     current_date = datetime.datetime.now().strftime("%Y-%m-%d")
 
-    config_dir = Path(config_dir)
-    discovery_metadata_dir = config_dir / 'metadata' / 'discovery'
+    host_datadir = Path(host_datadir)
+    discovery_metadata_dir = host_datadir / 'metadata' / 'discovery'
 
     # create directory for discovery metadata if it does not exist
     if not discovery_metadata_dir.exists():
@@ -504,12 +503,12 @@ def create_metadata_file(config_dir: str, country_name: str,
     return new_config_file.name
 
 
-def create_metadata_files(config_dir: str, country_code: str,
+def create_metadata_files(host_datadir: str, country_code: str,
                           centre_id: str) -> None:
     """
-    creates the metadata files in the directory config_dir
+    creates the metadata files in the directory host_datadir
 
-    :config_dir: `str` of path to directory where configuration files
+    :host_datadir: `str` of path to directory where configuration files
                  are to be stored # noqa
     :country_code: `str` of country code of the country hosting the wis2box
     :centre_id: `str` of centre id of the organization hosting the wis2box
@@ -549,7 +548,7 @@ def create_metadata_files(config_dir: str, country_code: str,
     country_name, bounding_box = get_bounding_box(country_code)
 
     create_metadata_file(
-        config_dir,
+        host_datadir,
         country_name,
         centre_id,
         centre_name,
@@ -558,7 +557,7 @@ def create_metadata_files(config_dir: str, country_code: str,
         template="synop"
     )
     create_metadata_file(
-        config_dir,
+        host_datadir,
         country_name,
         centre_id,
         centre_name,
@@ -568,22 +567,22 @@ def create_metadata_files(config_dir: str, country_code: str,
     )
 
     print("*" * 80)
-    print(f"Metadata files for {centre_id} created in directory {config_dir}.") # noqa
+    print(f"Metadata files for {centre_id} created in directory {host_datadir}.") # noqa
     print("Please review the files and edit where necessary.")
     print("*" * 80)
 
 
-def create_station_list(config_dir: str) -> None:
+def create_station_list(host_datadir: str) -> None:
     """
-    creates the station list file in the directory config_dir
+    creates the station list file in the directory host_datadir
 
-    :param config_dir: `str` of path to directory where configuration files
+    :param host_datadir: `str` of path to directory where configuration files
                        are to be stored
 
     :returns: None
     """
 
-    station_metadata_dir = Path(config_dir) / 'metadata' / 'station'
+    station_metadata_dir = Path(host_datadir) / 'metadata' / 'station'
     # create directory for station metadata if it does not exist
     if not station_metadata_dir.exists():
         station_metadata_dir.mkdir(parents=True)
@@ -594,41 +593,41 @@ def create_station_list(config_dir: str) -> None:
         fh2.write(headers)
 
 
-def get_config_dir() -> str:
+def get_host_datadir() -> str:
     """
     reads the value of WIS2BOX_HOST_DATADIR from wis2box.env
 
-    returns: `str` of path to directory where configuration files
-             are to be stored
+    returns: `str` of path for WIS2BOX_HOST_DATADIR
     """
 
-    config_dir = None
+    host_datadir = None
 
     with Path("wis2box.env").open() as fh:
         lines = fh.readlines()
 
         for line in lines:
             if "WIS2BOX_HOST_DATADIR" in line:
-                config_dir = line.split("=")[1].strip()
+                host_datadir = line.split("=")[1].strip()
 
-        if not config_dir:
+        if not host_datadir:
             print("WARNING:")
             print("The file wis2box.env does not contain the variable WIS2BOX_HOST_DATADIR.") # noqa
             print("Please edit the file and add the variable WIS2BOX_HOST_DATADIR.") # noqa
             print("Or remove wis2box.env and run 'python3 wis2box-create-config.py' again.") # noqa
             exit()
 
-    return config_dir
+    return host_datadir
 
 
 def main():
     """
     mainline function
 
-    creates the configuration files for the wis2box
+    creates the wis2box.env file
+    and sets up the directory for WIS2BOX_HOST_DATADIR
     """
 
-    config_dir = None
+    host_datadir = None
     dev_env = Path("wis2box.env")
 
     # check if wis2box.env exists
@@ -644,18 +643,18 @@ def main():
         elif answer == "exit":
             exit()
         else:
-            config_dir = get_config_dir()
+            host_datadir = get_host_datadir()
 
-    # if config_dir is not defined
-    if not config_dir:
-        config_dir = create_config_dir()
+    # if host_datadir is not defined
+    if not host_datadir:
+        host_datadir = create_host_datadir()
 
-    create_station_list(config_dir)
+    create_station_list(host_datadir)
 
     # if wis2box.env does not exist
-    # create it and write config_dir as the value for WIS2BOX_HOST_DATADIR to wis2box.env # noqa
+    # create it and write host_datadir as the value for WIS2BOX_HOST_DATADIR to wis2box.env # noqa
     if not dev_env.is_file():
-        create_wis2box_env(config_dir)
+        create_wis2box_env(host_datadir)
 
     print("The configuration is complete.")
     exit()
