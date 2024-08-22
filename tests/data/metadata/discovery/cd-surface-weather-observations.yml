@@ -1,6 +1,6 @@
 wis2box:
     retention: P180D
-    topic_hierarchy: cg-met/data/core/weather/surface-based-observations/synop
+    topic_hierarchy: cg-met/data/recommended/weather/surface-based-observations/synop
     country: cog
     centre_id: cg-met
     data_mappings:
@@ -49,7 +49,7 @@ identification:
               end: null
               resolution: P1H
     url: https://example.org/malawi-surface-weather-observations
-    wmo_data_policy: core
+    wmo_data_policy: recommended
 
 contact:
     host:

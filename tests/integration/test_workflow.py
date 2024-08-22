@@ -53,7 +53,7 @@ def test_wis2downloader():
         'origin/a/wis2/dz-meteoalgerie/data/core/weather/surface-based-observations/synop': 28, # noqa
         'origin/a/wis2/cn-cma/data/core/weather/prediction/forecast/medium-range/probabilistic/global': 10, # noqa
         'origin/a/wis2/ro-rnimh-test/data/core/weather/surface-based-observations/synop': 49, # noqa
-        'origin/a/wis2/cg-met/data/core/weather/surface-based-observations/synop': 14, # noqa
+        'origin/a/wis2/cg-met/data/recommended/weather/surface-based-observations/synop': 14, # noqa
         'origin/a/wis2/int-wmo-test/data/core/ocean/surface-based-observations/drifting-buoys': 2, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/wind-profile': 1, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/ship-hourly': 5, # noqa
@@ -196,6 +196,17 @@ def test_metadata_discovery_publish():
         r = r.json()
         assert r['conformsTo'][0] == 'http://wis.wmo.int/spec/wcmp/2/conf/core'
 
+        id_ = 'urn:wmo:md:cd-brazza_met_centre:surface-weather-observations'
+        r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/{id_}').json()  # noqa
+
+        assert 'has_auth' in r['wis2box']
+        assert r['wis2box']['has_auth']
+
+        for link in r['links']:
+            if link['rel'] == 'collection' and link['title'] == id_:
+                assert link['security']['default']['type'] == 'http'
+                assert link['security']['default']['scheme'] == 'bearer'
+
 
 def test_data_ingest():
     """Test data ingest/process publish"""
@@ -305,8 +316,49 @@ def test_message_api():
     # should match sum of counts above
     assert r['numberMatched'] == sum(counts.values())
 
-    # we want to find a particular message with data ID
-    target_data_id = "cg-met:surface-weather-observations/WIGOS_0-20000-0-64406_20230803T090000" # noqa
+    # we want to find a particular message with data ID for core data
+    target_data_id = 'mw-mw_met_centre:surface-weather-observations/WIGOS_0-454-2-AWSLOBI_20211111T125500'  # noqa
+
+    msg = None
+    for feature in r['features']:
+        if feature['properties']['data_id'] == target_data_id:
+            msg = feature
+            break
+
+    assert msg is not None
+
+    is_valid, _ = validate_message(msg)
+    assert is_valid
+
+    assert msg['geometry'] is not None
+
+    props = msg['properties']
+    assert props['datetime'] == '2021-11-11T12:55:00Z'
+    assert props['wigos_station_identifier'] == '0-454-2-AWSLOBI'
+    assert props['integrity']['method'] == 'sha512'
+    assert not props['data_id'].startswith(('origin/a/wis2', 'wis2'))
+    assert props['data_id'].startswith('mw')
+    assert props['content']['size'] == 247
+    assert props['content']['encoding'] == 'base64'
+    assert props['content']['value'] is not None
+
+    link_rel = msg['links'][0]
+
+    assert link_rel['type'] == 'application/x-bufr'
+
+    r = SESSION.get(link_rel['href'])
+
+    assert r.status_code == codes.ok
+
+    assert str(r.headers['Content-Length']) == str(link_rel['length'])
+
+    assert b'BUFR' in r.content
+
+    # we want to find a particular message with data ID for recommended data
+    url = f'{API_URL}/collections/messages/items?sortby=-datetime&q=cd-brazza_met_centre'  # noqa
+    r = SESSION.get(url).json()
+
+    target_data_id = "cd-brazza_met_centre:surface-weather-observations/WIGOS_0-20000-0-64406_20230803T090000" # noqa
 
     msg = None
     for feature in r['features']:
@@ -327,10 +379,8 @@ def test_message_api():
     assert props['integrity']['method'] == 'sha512'
     assert not props['data_id'].startswith('wis2')
     assert not props['data_id'].startswith('origin/a/wis2')
-    assert props['data_id'].startswith('cg')
-    assert props['content']['size'] == 253
-    assert props['content']['encoding'] == 'base64'
-    assert props['content']['value'] is not None
+    assert props['data_id'].startswith('cd')
+    assert 'content' not in props
     assert 'gts' in props
     assert props['gts']['ttaaii'] == 'SICG20'
     assert props['gts']['cccc'] == 'FCBB'
@@ -338,11 +388,5 @@ def test_message_api():
     link_rel = msg['links'][0]
 
     assert link_rel['type'] == 'application/x-bufr'
-
-    r = SESSION.get(link_rel['href'])
-
-    assert r.status_code == codes.ok
-
-    assert str(r.headers['Content-Length']) == str(link_rel['length'])
-
-    assert b'BUFR' in r.content
+    assert link_rel['security']['default']['type'] == 'http'
+    assert link_rel['security']['default']['scheme'] == 'bearer'

@@ -112,7 +112,7 @@ jobs:
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
     - name: add Congo synop data (synop2bufr) 🇨🇩
       env:
-        TOPIC_HIERARCHY: origin/a/wis2/cg-met/data/core/weather/surface-based-observations/synop
+        TOPIC_HIERARCHY: origin/a/wis2/cg-met/data/recommended/weather/surface-based-observations/synop
         TERRITORY: COD
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/cd-surface-weather-observations.yml
         DISCOVERY_METADATA_ID: urn:wmo:md:cg-met:surface-weather-observations
@@ -123,6 +123,7 @@ jobs:
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection --path $STATION_METADATA --topic-hierarchy $TOPIC_HIERARCHY
         curl -s http://localhost/data/metadata/$DISCOVERY_METADATA_ID.json --output /tmp/$DISCOVERY_METADATA_ID
         pywcmp ets validate /tmp/$DISCOVERY_METADATA_ID
+        python3 wis2box-ctl.py execute wis2box auth add-token --metadata-id $DISCOVERY_METADATA_ID -p token123 -y
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
     - name: add example hourly ship data (bufr2bufr) WMO
       env:
