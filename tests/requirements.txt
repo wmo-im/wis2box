@@ -1,5 +1,5 @@
 flake8
+paho-mqtt<2
 pytest
 pywis-pubsub
 requests
-paho-mqtt<2
