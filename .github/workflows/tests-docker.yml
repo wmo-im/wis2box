@@ -124,39 +124,39 @@ jobs:
         curl -s http://localhost/data/metadata/$DISCOVERY_METADATA_ID.json --output /tmp/$DISCOVERY_METADATA_ID
         pywcmp ets validate /tmp/$DISCOVERY_METADATA_ID
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
-    - name: add example ship data (bufr2bufr) WMO
+    - name: add example hourly ship data (bufr2bufr) WMO
       env:
-        TOPIC_HIERARCHY: origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/ship
-        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/int-wmo-test-ship.yml
-        DISCOVERY_METADATA_ID: urn:wmo:md:int-wmo-test:surface-weather-observations:ship
-        STATION_METADATA: /data/wis2box/metadata/station/wmo-test-ship.csv
-        TEST_DATA: /data/wis2box/observations/wmo/ship
+        TOPIC_HIERARCHY: origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/ship-hourly
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/int-wmo-test-ship-hourly.yml
+        DISCOVERY_METADATA_ID: urn:wmo:md:int-wmo-test:surface-weather-observations:ship-hourly
+        STATION_METADATA: /data/wis2box/metadata/station/wmo-test-ship-hourly.csv
+        TEST_DATA: /data/wis2box/observations/wmo/ship-hourly
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection --path $STATION_METADATA --topic-hierarchy $TOPIC_HIERARCHY
         curl -s http://localhost/data/metadata/$DISCOVERY_METADATA_ID.json --output /tmp/$DISCOVERY_METADATA_ID
         pywcmp ets validate /tmp/$DISCOVERY_METADATA_ID
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
-    - name: add example buoy data (bufr2bufr) WMO
+    - name: add example drifting buoy data (bufr2bufr) WMO
       env:
-        TOPIC_HIERARCHY: origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/buoy
-        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/int-wmo-test-buoy.yml
-        DISCOVERY_METADATA_ID: urn:wmo:md:int-wmo-test:surface-weather-observations:buoy
-        STATION_METADATA: /data/wis2box/metadata/station/wmo-test-buoy.csv
-        TEST_DATA: /data/wis2box/observations/wmo/buoy
+        TOPIC_HIERARCHY: origin/a/wis2/int-wmo-test/data/core/ocean/surface-based-observations/drifting-buoys
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/int-wmo-test-drifting-buoys.yml
+        DISCOVERY_METADATA_ID: urn:wmo:md:int-wmo-test:surface-weather-observations:drifting-buoys
+        STATION_METADATA: /data/wis2box/metadata/station/wmo-test-drifting-buoys.csv
+        TEST_DATA: /data/wis2box/observations/wmo/drifting-buoys
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection --path $STATION_METADATA --topic-hierarchy $TOPIC_HIERARCHY
         curl -s http://localhost/data/metadata/$DISCOVERY_METADATA_ID.json --output /tmp/$DISCOVERY_METADATA_ID
         pywcmp ets validate /tmp/$DISCOVERY_METADATA_ID
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
-    - name: add example wind profiler data (bufr2bufr) WMO
+    - name: add example wind profile data (bufr2bufr) WMO
       env:
-        TOPIC_HIERARCHY: origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/wind_profiler
-        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/int-wmo-test-wind_profiler.yml
-        DISCOVERY_METADATA_ID: urn:wmo:md:int-wmo-test:surface-weather-observations:wind_profiler
-        STATION_METADATA: /data/wis2box/metadata/station/wmo-test-wind_profiler.csv
-        TEST_DATA: /data/wis2box/observations/wmo/wind_profiler
+        TOPIC_HIERARCHY: origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/wind-profile
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/int-wmo-test-wind-profile.yml
+        DISCOVERY_METADATA_ID: urn:wmo:md:int-wmo-test:surface-weather-observations:wind-profiler
+        STATION_METADATA: /data/wis2box/metadata/station/wmo-test-wind-profile.csv
+        TEST_DATA: /data/wis2box/observations/wmo/wind-profile
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection --path $STATION_METADATA --topic-hierarchy $TOPIC_HIERARCHY

@@ -1,36 +1,36 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: int-wmo-test/data/core/weather/surface-based-observations/ship
+    topic_hierarchy: int-wmo-test/data/core/ocean/surface-based-observations/drifting-buoys
     country: int
     centre_id: int-wmo-test
     data_mappings:
         plugins:
             bin:
-                - plugin: wis2box.data.bufr4.ObservationDataBUFR
-                  notify: true
-                  buckets:
-                      - ${WIS2BOX_STORAGE_INCOMING}
-                  file-pattern: '^A_[A-Z0-9]{6}.*_._[A-Z]{4}_(\d{4}\d{2}\d{2}).*\.bin$'
+              - plugin: wis2box.data.bufr4.ObservationDataBUFR
+                notify: true
+                buckets:
+                  - ${WIS2BOX_STORAGE_INCOMING}
+                file-pattern: '^A_[A-Z0-9]{6}.*_._[A-Z]{4}_(\d{4}\d{2}\d{2}).*\.bin$'
 
 mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:wmo:md:int-wmo-test:surface-weather-observations:ship
+    identifier: urn:wmo:md:int-wmo-test:surface-weather-observations:drifting-buoys
     hierarchylevel: dataset
 
 identification:
-    title: Example surface weather observations GOOS Voluntary Observing Ships
-    abstract: Example surface weather observations from GOOS Voluntary Observing Ships downloaded from the WIS.
+    title: Example surface observations from GOOS drifting buoy networks
+    abstract: Surface observations from GOOS drifting buoy networks downloaded from the WIS.
     dates:
-        creation: 2024-03-04
+        creation: 2024-02-16
     keywords:
         default:
             keywords:
                 - surface weather
                 - temperature
                 - observations
-                - ship
+                - drifting buoy
         wmo:
             keywords:
                 - weather
@@ -62,6 +62,6 @@ contact:
         administrativearea: null
         postalcode: null
         country: null
-        email: you@example.org
+        email: null
         hoursofservice: 0800h - 1600h UTC
         contactinstructions: email
