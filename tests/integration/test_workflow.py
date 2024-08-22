@@ -54,7 +54,7 @@ def test_wis2downloader():
         'origin/a/wis2/cn-cma/data/core/weather/prediction/forecast/medium-range/probabilistic/global': 10, # noqa
         'origin/a/wis2/ro-rnimh-test/data/core/weather/surface-based-observations/synop': 49, # noqa
         'origin/a/wis2/cg-met/data/core/weather/surface-based-observations/synop': 14, # noqa
-        'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/drifting-buoys': 2, # noqa
+        'origin/a/wis2/int-wmo-test/data/core/ocean/surface-based-observations/drifting-buoys': 2, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/wind-profile': 1, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/ship-hourly': 5, # noqa
         'origin/a/wis2/it-meteoam/data/core/weather/surface-based-observations/synop': 31 # noqa
