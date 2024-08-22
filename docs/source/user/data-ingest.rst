@@ -16,7 +16,7 @@ wis2box-webapp
 The wis2box-webapp is a web application that includes the following forms for data validation and ingestion:
 
 * user interface to ingest `FM-12 SYNOP data <https://library.wmo.int/idviewer/35713/33>`_
-* user interface to ingest CSV data using the :ref:`AWS template<aws-templates>`
+* user interface to ingest CSV data using the :ref:`AWS template<aws-template>`
 
 The wis2box-webapp is available on your host at `http://<your-public-ip>/wis2box-webapp`.
 
@@ -45,7 +45,7 @@ The wis2box provides 3 types of built-in plugins to publish data in BUFR format:
 To publish data for other data formats you can use the 'Universal' plugin, which will pass through the data without any conversion.
 Please note that you will need to ensure that the date timestamp can be extracted from the file pattern when using this plugin.
 
-.. aws-templates:
+.. _aws-template:
 
 The AWS template in csv2bufr plugin
 -----------------------------------
