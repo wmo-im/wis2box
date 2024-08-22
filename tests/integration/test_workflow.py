@@ -379,7 +379,7 @@ def test_message_api():
     assert props['integrity']['method'] == 'sha512'
     assert not props['data_id'].startswith('wis2')
     assert not props['data_id'].startswith('origin/a/wis2')
-    assert props['data_id'].startswith('cd')
+    assert props['data_id'].startswith('cg')
     assert 'content' not in props
     assert 'gts' in props
     assert props['gts']['ttaaii'] == 'SICG20'
