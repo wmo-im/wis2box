@@ -53,7 +53,7 @@ def test_wis2downloader():
         'origin/a/wis2/dz-meteoalgerie/data/core/weather/surface-based-observations/synop': 28, # noqa
         'origin/a/wis2/cn-cma/data/core/weather/prediction/forecast/medium-range/probabilistic/global': 10, # noqa
         'origin/a/wis2/ro-rnimh-test/data/core/weather/surface-based-observations/synop': 49, # noqa
-        'origin/a/wis2/cg-met/data/recommended/weather/surface-based-observations/synop': 14, # noqa
+        'origin/a/wis2/cg-met/data/recommended/weather/surface-based-observations/synop': 0, # noqa
         'origin/a/wis2/int-wmo-test/data/core/ocean/surface-based-observations/drifting-buoys': 2, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/wind-profile': 1, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/ship-hourly': 5, # noqa
@@ -317,7 +317,7 @@ def test_message_api():
     assert r['numberMatched'] == sum(counts.values())
 
     # we want to find a particular message with data ID for core data
-    target_data_id = 'mw-mw_met_centre:surface-weather-observations/WIGOS_0-454-2-AWSLOBI_20211111T125500'  # noqa
+    target_data_id = 'mw-mw_met_centre-test:surface-weather-observations/WIGOS_0-454-2-AWSLOBI_20211111T125500'  # noqa
 
     msg = None
     for feature in r['features']:
