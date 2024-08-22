@@ -266,6 +266,15 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
             LOGGER.error(msg)
             raise RuntimeError(msg)
 
+        oar = Records(DOCKER_API_URL)
+        try:
+            LOGGER.debug('Checking if record / auth enabled')
+            r = oar.collection_item('discovery-metadata', record['id']).json()
+            if r['wis2box'].get('has_auth', False):
+                record['wis2box']['has_auth'] = True
+        except Exception:
+            LOGGER.debug('No auth defined')
+
         LOGGER.debug('Publishing to API')
         upsert_collection_item('discovery-metadata', record)
 

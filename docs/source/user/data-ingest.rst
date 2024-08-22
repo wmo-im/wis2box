@@ -90,8 +90,8 @@ Select 'browse' on the ``wis2box-incoming`` bucket and select 'Choose or create 
 
     For example using a filepath matching the topic hierarchy:
     
-    * Topic Hierarchy: ``origin/a/wis2/cd-brazza_met_centre/data/core/weather/surface-based-observations/synop``
-    * upload data in the path containing: ``cd-brazza_met_centre/data/core/weather/surface-based-observations/synop``
+    * Topic Hierarchy: ``origin/a/wis2/cd-brazza_met_centre/data/recommended/weather/surface-based-observations/synop``
+    * upload data in the path containing: ``cd-brazza_met_centre/data/recommended/weather/surface-based-observations/synop``
 
     The error message ``Path validation error: Could not match http://minio:9000/wis2box-incoming/... to dataset, ...`` indicates that a file was stored in a directory that could not be matched to a dataset.
 
