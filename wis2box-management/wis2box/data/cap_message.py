@@ -19,14 +19,14 @@
 #
 ###############################################################################
 
-import logging
-
-from pathlib import Path
 from datetime import datetime
+import logging
+from pathlib import Path
 from typing import Union
 
-from wis2box.data.base import BaseAbstractData
 from capvalidator import validate_cap_message, get_dates
+
+from wis2box.data.base import BaseAbstractData
 
 LOGGER = logging.getLogger(__name__)
 
