@@ -1,4 +1,3 @@
-capvalidator>=0.1.0-dev4
 elasticsearch
 iso3166
 isodate
@@ -10,3 +9,4 @@ pywis-pubsub
 pywis-topics
 PyYAML
 requests
+capvalidator>=0.1.0-dev3

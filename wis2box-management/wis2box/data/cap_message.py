@@ -19,14 +19,14 @@
 #
 ###############################################################################
 
-from datetime import datetime
 import logging
+
 from pathlib import Path
+from datetime import datetime
 from typing import Union
 
-from capvalidator import validate_cap_message, get_dates
-
 from wis2box.data.base import BaseAbstractData
+from capvalidator import validate_xml, get_dates
 
 LOGGER = logging.getLogger(__name__)
 
@@ -75,7 +75,7 @@ class CAPMessageData(BaseAbstractData):
         _meta['relative_filepath'] = self.get_local_filepath(_meta['data_date'])  # noqa
 
         # validate the CAP XML string content using the capvalidator package
-        result = validate_cap_message(input_bytes, strict=False)
+        result = validate_xml(input_bytes, strict=False)
         if not result.passed:
             LOGGER.error(
                 f'Invalid CAP XML, not publishing. Reason: {result.message}')
