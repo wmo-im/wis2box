@@ -150,7 +150,7 @@ services:
     restart: always
     env_file:
       - wis2box.env
-    user: ${DOWNLOADER_UID}:${DOCKER_GID}
+    user: 12135:${DOCKER_GID}
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/downloads:/home/wis2downloader/app/data/downloads
 

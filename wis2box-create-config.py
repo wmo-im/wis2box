@@ -378,8 +378,6 @@ def create_wis2box_env(config_dir: str) -> None:
         fh.write('DOWNLOAD_BROKER_TRANSPORT=websockets\n')
         fh.write('# maximum MB in download directory\n')
         fh.write('DOWNLOAD_MIN_FREE_SPACE_GB=1\n')
-        fh.write('DOWNLOADER_UID=12135\n')
-        fh.write('DOWNLOAD_MIN_FREE_SPACE_GB=1\n')
         if not WINDOWS:
             fh.write(f'DOCKER_GID={DOCKER_GROUP.gr_gid}\n')
         fh.write('\n')
