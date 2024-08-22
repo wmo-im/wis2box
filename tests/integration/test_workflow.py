@@ -196,10 +196,16 @@ def test_metadata_discovery_publish():
         r = r.json()
         assert r['conformsTo'][0] == 'http://wis.wmo.int/spec/wcmp/2/conf/core'
 
-        r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/urn:wmo:md:cd-brazza_met_centre:surface-weather-observations').json()  # noqa
+        id_ = 'urn:wmo:md:cd-brazza_met_centre:surface-weather-observations'
+        r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/{id_}').json()  # noqa
 
         assert 'has_auth' in r['wis2box']
         assert r['wis2box']['has_auth']
+
+        for link in r['links']:
+            if link['rel'] == 'collection' and link['title'] == id_:
+                assert link['security']['default']['type'] == 'http'
+                assert link['security']['default']['scheme'] == 'bearer'
 
 
 def test_data_ingest():

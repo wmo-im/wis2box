@@ -181,6 +181,17 @@ def add_token(ctx, metadata_id, path, yes, token):
         record = oar.collection_item('discovery-metadata', metadata_id)
         record['wis2box']['has_auth'] = True
 
+        for link in record['links']:
+            if link['rel'] == 'collection' and link['title'] == metadata_id:
+                LOGGER.debug('Adding security object to link')
+                link['security'] = {
+                    'default': {
+                        'type': 'http',
+                        'scheme': 'bearer',
+                        'description': 'Please contact the data provider for access'  # noqa
+                    }
+                }
+
         upsert_collection_item('discovery-metadata', record)
 
 
@@ -212,6 +223,9 @@ def remove_token(ctx, metadata_id, path, token):
 
         record = oar.collection_item('discovery-metadata', metadata_id)
         record['wis2box'].pop('has_auth', None)
+        for link in record['links']:
+            if 'security' in link:
+                link.pop('security', None)
 
         upsert_collection_item('discovery-metadata', record)
 
