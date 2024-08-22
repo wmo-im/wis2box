@@ -196,7 +196,7 @@ def test_metadata_discovery_publish():
         r = r.json()
         assert r['conformsTo'][0] == 'http://wis.wmo.int/spec/wcmp/2/conf/core'
 
-        id_ = 'urn:wmo:md:cd-brazza_met_centre:surface-weather-observations'
+        id_ = 'urn:wmo:md:cg-met:surface-weather-observations'
         r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/{id_}').json()  # noqa
 
         assert 'has_auth' in r['wis2box']
@@ -355,10 +355,10 @@ def test_message_api():
     assert b'BUFR' in r.content
 
     # we want to find a particular message with data ID for recommended data
-    url = f'{API_URL}/collections/messages/items?sortby=-datetime&q=cd-brazza_met_centre'  # noqa
+    url = f'{API_URL}/collections/messages/items?sortby=-datetime&q=cg-met'  # noqa
     r = SESSION.get(url).json()
 
-    target_data_id = "cd-brazza_met_centre:surface-weather-observations/WIGOS_0-20000-0-64406_20230803T090000" # noqa
+    target_data_id = "cg-met:surface-weather-observations/WIGOS_0-20000-0-64406_20230803T090000" # noqa
 
     msg = None
     for feature in r['features']:
