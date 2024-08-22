@@ -66,6 +66,7 @@ class ObservationDataCSV2BUFR(BaseAbstractData):
         payload = {
             'inputs': {
                 'channel': self.topic_hierarchy.replace('origin/a/wis2/', ''),
+                'metadata_id': self.metadata_id,
                 'template': self.template,
                 'notify': False,
                 'data': data
