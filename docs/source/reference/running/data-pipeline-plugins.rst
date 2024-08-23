@@ -98,6 +98,27 @@ A typical BUFR4 plugin workflow definition would be defined as follows:
          notify: true  # trigger GeoJSON publishing for API and UI
          file-pattern: '^.*\.bin$'
 
+``wis2box.data.cap_message.CAPMessageData``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This plugin takes the incoming XML file, then validates it against the
+`CAP v1.2 schema <https://docs.oasis-open.org/emergency/cap/v1.2/CAP-v1.2-os.html>`_
+and verifies the digital signature before publishing.
+
+The validation is performed using the `capvalidator <https://github.com/wmo-im/capvalidator>`_
+package.
+
+A typical CAP message plugin workflow definition would be defined as follows:
+
+.. code-block:: yaml
+
+   xml:
+       - plugin: wis2box.data.cap_message.CAPMessageData
+         notify: true
+          buckets:
+            - ${WIS2BOX_STORAGE_INCOMING}
+         file-pattern: '^.*\.xml$'
+
 ``wis2box.data.universal.UniversalData``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

@@ -1,0 +1,64 @@
+wis2box:
+    retention: P30D
+    topic_hierarchy: int-wmo-test/data/core/weather/advisories-warnings
+    centre_id: int-wmo-test
+    data_mappings:
+        plugins:
+            xml:
+                - plugin: wis2box.data.cap_message.CAPMessageData
+                  notify: true
+                  buckets:
+                      - ${WIS2BOX_STORAGE_INCOMING}
+                  file-pattern: '^.*\.xml$'
+
+mcf:
+    version: 1.0
+
+metadata:
+    identifier: urn:wmo:md:int_wmo_test:cap
+    hierarchylevel: dataset
+
+identification:
+    title: CAP Alerts test dataset
+    abstract: CAP Alerts test dataset
+    dates:
+        creation: 2023-03-26
+    keywords:
+        default:
+            keywords:
+                - CAP
+                - warnings
+                - alerts
+        wmo:
+            keywords:
+                - weather
+            keywords_type: themes
+            vocabulary:
+                name: Earth system disciplines as defined by the WMO Unified Data Policy, Resolution 1 (Cg-Ext(2021), Annex 1.
+                url: https://codes.wmo.int/topic-hierarchy/earth-system-discipline
+    extents:
+        spatial:
+            - bbox: [-180.0, -90.0, 180.0, 90.0]
+              crs: 4326
+        temporal:
+            - begin: 2024-07-02
+              end: null
+              resolution: P1H
+    wmo_data_policy: core
+
+contact:
+    host:
+        organization: WMO
+        url: https://wmo.int
+        individualname: Firstname Lastname
+        positionname: Position Name
+        phone: null
+        fax: null
+        address: null
+        city: null
+        administrativearea: null
+        postalcode: null
+        country: Switzerland
+        email: you@example.com
+        hoursofservice: 0700h - 1500h UTC
+        contactinstructions: email

@@ -36,13 +36,15 @@ from wis2box.api import (setup_collection, upsert_collection_item,
 
 from wis2box.data_mappings import get_data_mappings
 from wis2box.data.message import MessageData
+
 from wis2box.env import (DATADIR, DOCKER_BROKER,
-                         STORAGE_SOURCE, STORAGE_ARCHIVE)
+                         STORAGE_SOURCE, STORAGE_ARCHIVE,
+                         STORAGE_INCOMING)
 from wis2box.handler import Handler, NotHandledError
 import wis2box.metadata.discovery as discovery_metadata
 from wis2box.plugin import load_plugin, PLUGINS
 from wis2box.pubsub.message import gcm
-
+from wis2box.storage import put_data
 
 LOGGER = logging.getLogger(__name__)
 
@@ -99,23 +101,24 @@ class WIS2BoxSubscriber:
             msg = f'handle() error: {err}'
             raise err
 
-    def handle_publish(self, message):
+    def handle_publish(self, message, publisher='wis2box'):
         LOGGER.debug('Loading MessageData plugin to publish data from message') # noqa
         topic_hierarchy = message['channel']
         metadata_id = message.get('metadata_id')
+
         # if metadata_id not provided, log error and return
         if metadata_id is None:
             LOGGER.error('metadata_id not provided in message received on topic wis2box/data/publication') # noqa
         # ensure topic_hierarchy starts with 'origin/a/wis2/'
         if not topic_hierarchy.startswith('origin/a/wis2/'):
             topic_hierarchy = f'origin/a/wis2/{topic_hierarchy}'
+
         defs = {
             'topic_hierarchy': topic_hierarchy,
             '_meta': message['_meta'],
             'notify': True,
             'metadata_id': metadata_id
         }
-        MessageData(defs=defs)
         plugin = MessageData(defs=defs)
         try:
             input_bytes = base64.b64decode(message['data'].encode('utf-8'))
@@ -155,6 +158,26 @@ class WIS2BoxSubscriber:
             while len(mp.active_children()) == mp.cpu_count():
                 sleep(0.05)
             mp.Process(target=self.handle, args=(filepath,)).start()
+        elif topic == 'wis2box/cap/publication':
+            LOGGER.debug('Publishing data received by cap-editor')
+            # get filename and data from message and store in incoming-data
+            metadata_id = message.get('metadata_id')
+            if metadata_id is None:
+                LOGGER.error('metadata_id not found in message')
+                return False
+            filename = message.get('filename')
+            if filename is None:
+                LOGGER.error('filename not found in message')
+                return False
+            data = message.get('data')
+            if data is None:
+                LOGGER.error('data not found in message')
+                return False
+            # convert base64 encoded data to bytes
+            data_bytes = base64.b64decode(data.encode('utf-8'))
+            # store data in incoming-data
+            path = f'{STORAGE_INCOMING}/{metadata_id}/{filename}'
+            put_data(data_bytes, path)
         elif topic == 'wis2box/data/publication':
             LOGGER.debug('Publishing data')
             self.handle_publish(message)
