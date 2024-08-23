@@ -8,7 +8,7 @@ Receiving alerts by email
 
 This guide will walk you through the steps to configure Grafana to send email notifications when an alert is triggered on your dashboard. This process involves modifying configuration files and setting up an SMTP server to handle the outgoing emails.
 
-Copy the ``grafana.ini`` file from docker container
+Copy the ``grafana.ini`` file from Docker container
 ---------------------------------------------------
 
 First, you need to extract the ``grafana.ini`` file from your Grafana Docker container to your local system. For example:
@@ -34,7 +34,7 @@ Open the ``grafana.ini`` file you just copied in a text editor and locate the [s
    The password used in the ``grafana.ini`` SMTP configuration is not your regular email account password. 
    Detailed descriptions are provided at the bottom of this page.
 
-Mount ``grafana.ini`` to the grafana container
+Mount ``grafana.ini`` to the Grafana container
 ----------------------------------------------
 
 You now need to ensure that your modified ``grafana.ini`` is used by Grafana inside the Docker container. To do this, update the docker-compose-monitoring.yml file to mount the local ``grafana.ini`` file into the container:
@@ -57,7 +57,7 @@ For the changes to take effect, restart your wis2box environment:
 
 This command stops and then restarts your containers, ensuring that the new configuration is loaded.
 
-Setting up the notification channel in grafana
+Setting up the notification channel in Grafana
 ----------------------------------------------
 
 Log in to Grafana with your admin credentials:
@@ -78,10 +78,10 @@ Enter your email address in the appropriate field and save the notification chan
    :alt: notification channel detail
    :align: center
 
-Configuring alerts in your grafana dashboard
+Configuring alerts in your Grafana dashboard
 --------------------------------------------
 
-Now, set up alerts within your grafana dashboard:
+Now, set up alerts within your Grafana dashboard:
 
 * Open the dashboard where you want to add an alert.
 
@@ -98,10 +98,10 @@ Now, set up alerts within your grafana dashboard:
    :alt: add alert notification
    :align: center
 
-Final step: testing the setup
------------------------------
+Testing the setup
+-----------------
 
-After setting everything up, trigger an alert in your grafana dashboard to test if the email notifications are working. You should receive an email when the alert conditions are met.
+After setting everything up, trigger an alert in your Grafana dashboard to test if the email notifications are working. You should receive an email when the alert conditions are met.
 
 .. image:: ../../_static/receive-alert-email.png
    :width: 800px
