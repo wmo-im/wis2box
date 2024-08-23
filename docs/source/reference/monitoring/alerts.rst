@@ -37,7 +37,7 @@ Open the ``grafana.ini`` file you just copied in a text editor and locate the [s
 Mount ``grafana.ini`` to the grafana container
 ----------------------------------------------
 
-You now need to ensure that your modified ``grafana.ini``" is used by Grafana inside the Docker container. To do this, update the docker-compose-monitoring.yml file to mount the local ``grafana.ini`` file into the container:
+You now need to ensure that your modified ``grafana.ini`` is used by Grafana inside the Docker container. To do this, update the docker-compose-monitoring.yml file to mount the local ``grafana.ini`` file into the container:
 
 .. image:: ../../_static/mount-grafana.ini.png
    :width: 800px
