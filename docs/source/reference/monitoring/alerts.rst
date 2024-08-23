@@ -64,7 +64,7 @@ Log in to Grafana with your admin credentials:
 
 * Navigate to Alerting -> Notification channels.
 
-* Click "Add channel" and choose Email as the notification type.
+* Click "Add channel" and choose email as the notification type.
 
 .. image:: ../../_static/add-channel.png
    :width: 800px
@@ -81,15 +81,15 @@ Enter your email address in the appropriate field and save the notification chan
 Configuring alerts in your grafana dashboard
 --------------------------------------------
 
-Now, set up alerts within your Grafana dashboard:
+Now, set up alerts within your grafana dashboard:
 
 * Open the dashboard where you want to add an alert.
 
-* Go to the panel where you want to add the alert and click on the Alert tab.
+* Go to the panel where you want to add the alert and click on the "Alert" tab.
 
-* Set your alert conditions, then under Notifications, select the email notification channel you configured earlier.
+* Set your alert conditions, then under "Notifications", select the email notification channel you configured earlier.
 
-* Click Apply and save the dashboard.
+* Click "Apply" and save the dashboard.
 
 * Export and save the updated dashboard JSON to ensure the changes are persistent.
 
@@ -101,7 +101,7 @@ Now, set up alerts within your Grafana dashboard:
 Final step: testing the setup
 -----------------------------
 
-After setting everything up, trigger an alert in your Grafana dashboard to test if the email notifications are working. You should receive an email when the alert conditions are met.
+After setting everything up, trigger an alert in your grafana dashboard to test if the email notifications are working. You should receive an email when the alert conditions are met.
 
 .. image:: ../../_static/receive-alert-email.png
    :width: 800px
