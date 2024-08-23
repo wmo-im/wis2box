@@ -1,8 +1,8 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: mw-mw_met_centre/data/core/weather/surface-based-observations/synop
+    topic_hierarchy: mw-mw_met_centre-test/data/core/weather/surface-based-observations/synop
     country: mwi
-    centre_id: mw-mw_met_centre
+    centre_id: mw-mw_met_centre-test
     data_mappings:
         plugins:
             csv:
@@ -18,7 +18,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:wmo:md:mw-mw_met_centre:surface-weather-observations
+    identifier: urn:wmo:md:mw-mw_met_centre-test:surface-weather-observations
     hierarchylevel: dataset
 
 identification:

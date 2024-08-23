@@ -106,10 +106,12 @@ class WIS2BoxSubscriber:
         topic_hierarchy = message['channel']
         metadata_id = message.get('metadata_id')
 
+        # if metadata_id not provided, log error and return
         if metadata_id is None:
-            msg = 'metadata_id not found in message, cannot publish data'
-            LOGGER.error(msg)
-            return False
+            LOGGER.error('metadata_id not provided in message received on topic wis2box/data/publication') # noqa
+        # ensure topic_hierarchy starts with 'origin/a/wis2/'
+        if not topic_hierarchy.startswith('origin/a/wis2/'):
+            topic_hierarchy = f'origin/a/wis2/{topic_hierarchy}'
 
         defs = {
             'topic_hierarchy': topic_hierarchy,

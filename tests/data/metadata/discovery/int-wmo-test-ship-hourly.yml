@@ -1,6 +1,6 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: int-wmo-test/data/core/weather/surface-based-observations/wind_profiler
+    topic_hierarchy: int-wmo-test/data/core/weather/surface-based-observations/ship-hourly
     country: int
     centre_id: int-wmo-test
     data_mappings:
@@ -10,24 +10,27 @@ wis2box:
                   notify: true
                   buckets:
                       - ${WIS2BOX_STORAGE_INCOMING}
-                  file-pattern: '^WIGOS_\d-\d+-\d+-\w+_(\d{4}\d{2}\d{2}).*\.bin$'
+                  file-pattern: '^A_[A-Z0-9]{6}.*_._[A-Z]{4}_(\d{4}\d{2}\d{2}).*\.bin$'
 
 mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:wmo:md:int-wmo-test:surface-weather-observations:wind_profiler
+    identifier: urn:wmo:md:int-wmo-test:surface-weather-observations:ship-hourly
     hierarchylevel: dataset
 
 identification:
-    title: Example wind profiler data from Singapore
-    abstract: Example wind profiler data from Singapore downloaded from WIS2.0.
+    title: Example surface weather observations GOOS Voluntary Observing Ships
+    abstract: Example surface weather observations from GOOS Voluntary Observing Ships downloaded from the WIS.
     dates:
-        creation: 2024-03-01
+        creation: 2024-03-04
     keywords:
         default:
             keywords:
-                - wind profiler
+                - surface weather
+                - temperature
+                - observations
+                - ship
         wmo:
             keywords:
                 - weather
@@ -40,14 +43,14 @@ identification:
             - bbox: [-180.0, -90.0, 180.0, 90.0]
               crs: 4326
         temporal:
-            - begin: 2024-03-01
+            - begin: 2024-02-09
               end: null
               resolution: P1H
     rights: WMO Unified Policy for the International Exchange of Earth System Data
     url: https://example.org/fixme
 
 contact:
-    pointOfContact: &contact_poc
+    host: &contact_poc
         organization: World Meteorological Organisation
         url: https://www.wmo.int/
         individualname: Firstname Lastname
@@ -62,5 +65,3 @@ contact:
         email: you@example.org
         hoursofservice: 0800h - 1600h UTC
         contactinstructions: email
-
-    distributor: *contact_poc

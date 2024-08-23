@@ -35,7 +35,7 @@ DATADIR = Path('.').parent.absolute() / 'tests/data'
 
 URL = 'http://localhost'
 API_URL = f'{URL}/oapi'
-ID = 'urn:wmo:md:mw-mw_met_centre:surface-weather-observations'
+ID = 'urn:wmo:md:mw-mw_met_centre-test:surface-weather-observations'
 SESSION = Session()
 SESSION.hooks = {
    'response': lambda r, *args, **kwargs: r.raise_for_status()
@@ -49,15 +49,15 @@ def test_wis2downloader():
     DOWNLOAD_DIR = DATADIR / 'downloads'
 
     topic_nfiles_dict = {
-        'origin/a/wis2/mw-mw_met_centre/data/core/weather/surface-based-observations/synop': 23, # noqa
-        'origin/a/wis2/dz-alger_met_centre/data/core/weather/surface-based-observations/synop': 28, # noqa
+        'origin/a/wis2/mw-mw_met_centre-test/data/core/weather/surface-based-observations/synop': 23, # noqa
+        'origin/a/wis2/dz-meteoalgerie/data/core/weather/surface-based-observations/synop': 28, # noqa
         'origin/a/wis2/cn-cma/data/core/weather/prediction/forecast/medium-range/probabilistic/global': 10, # noqa
-        'origin/a/wis2/ro-rnimh/data/core/weather/surface-based-observations/synop': 49, # noqa
-        'origin/a/wis2/cd-brazza_met_centre/data/recommended/weather/surface-based-observations/synop': 0, # noqa
-        'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/buoy': 2, # noqa
-        'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/wind_profiler': 1, # noqa
-        'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/ship': 5, # noqa
-        'origin/a/wis2/it-roma_met_centre/data/core/weather/surface-based-observations/synop': 31 # noqa
+        'origin/a/wis2/ro-rnimh-test/data/core/weather/surface-based-observations/synop': 49, # noqa
+        'origin/a/wis2/cg-met/data/recommended/weather/surface-based-observations/synop': 0, # noqa
+        'origin/a/wis2/int-wmo-test/data/core/ocean/surface-based-observations/drifting-buoys': 2, # noqa
+        'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/wind-profile': 1, # noqa
+        'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/ship-hourly': 5, # noqa
+        'origin/a/wis2/it-meteoam/data/core/weather/surface-based-observations/synop': 31 # noqa
     }
 
     topic_nfiles_dict_found = {}
@@ -150,7 +150,7 @@ def test_metadata_discovery_publish():
     mqtt_link = [d for d in r['links'] if d['href'].startswith('mqtt')][0]
 
     assert 'everyone:everyone' in mqtt_link['href']
-    assert mqtt_link['channel'] == 'origin/a/wis2/mw-mw_met_centre/data/core/weather/surface-based-observations/synop'  # noqa
+    assert mqtt_link['channel'] == 'origin/a/wis2/mw-mw_met_centre-test/data/core/weather/surface-based-observations/synop'  # noqa
 
     params = {
         'q': 'temperature'
@@ -164,11 +164,11 @@ def test_metadata_discovery_publish():
     # test access of discovery metadata from notification message
 
     centre_ids = [
-        'mw-mw_met_centre',
-        'it-roma_met_centre',
-        'dz-alger_met_centre',
-        'ro-rnimh',
-        'cd-brazza_met_centre',
+        'mw-mw_met_centre-test',
+        'it-meteoam',
+        'dz-meteoalgerie',
+        'ro-rnimh-test',
+        'cg-met',
         'int-wmo-test'
     ]
 
@@ -196,7 +196,7 @@ def test_metadata_discovery_publish():
         r = r.json()
         assert r['conformsTo'][0] == 'http://wis.wmo.int/spec/wcmp/2/conf/core'
 
-        id_ = 'urn:wmo:md:cd-brazza_met_centre:surface-weather-observations'
+        id_ = 'urn:wmo:md:cg-met:surface-weather-observations'
         r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/{id_}').json()  # noqa
 
         assert 'has_auth' in r['wis2box']
@@ -298,11 +298,11 @@ def test_message_api():
     # test messages per test dataset
     counts = {
         'mw-mw_met_centre': 25,
-        'it-roma_met_centre': 33,
-        'dz-alger_met_centre': 29,
+        'it-meteoam': 33,
+        'dz-meteoalgerie': 29,
         'ro-rnimh': 50,
-        'cd-brazza_met_centre': 15,
-        'int-wmo-test': 11,
+        'cg-met': 15,
+        'int-wmo': 11,
         'cn-cma': 11
     }
     for key, value in counts.items():
@@ -317,7 +317,7 @@ def test_message_api():
     assert r['numberMatched'] == sum(counts.values())
 
     # we want to find a particular message with data ID for core data
-    target_data_id = 'mw-mw_met_centre:surface-weather-observations/WIGOS_0-454-2-AWSLOBI_20211111T125500'  # noqa
+    target_data_id = 'mw-mw_met_centre-test:surface-weather-observations/WIGOS_0-454-2-AWSLOBI_20211111T125500'  # noqa
 
     msg = None
     for feature in r['features']:
@@ -336,7 +336,7 @@ def test_message_api():
     assert props['datetime'] == '2021-11-11T12:55:00Z'
     assert props['wigos_station_identifier'] == '0-454-2-AWSLOBI'
     assert props['integrity']['method'] == 'sha512'
-    assert not props['data_id'].startswith(('wis2', 'origin/a/wis2'))
+    assert not props['data_id'].startswith(('origin/a/wis2', 'wis2'))
     assert props['data_id'].startswith('mw')
     assert props['content']['size'] == 247
     assert props['content']['encoding'] == 'base64'
@@ -355,10 +355,10 @@ def test_message_api():
     assert b'BUFR' in r.content
 
     # we want to find a particular message with data ID for recommended data
-    url = f'{API_URL}/collections/messages/items?sortby=-datetime&q=cd-brazza_met_centre'  # noqa
+    url = f'{API_URL}/collections/messages/items?sortby=-datetime&q=cg-met'  # noqa
     r = SESSION.get(url).json()
 
-    target_data_id = "cd-brazza_met_centre:surface-weather-observations/WIGOS_0-20000-0-64406_20230803T090000" # noqa
+    target_data_id = "cg-met:surface-weather-observations/WIGOS_0-20000-0-64406_20230803T090000" # noqa
 
     msg = None
     for feature in r['features']:
@@ -377,9 +377,8 @@ def test_message_api():
     assert props['datetime'] == '2023-08-03T09:00:00Z'
     assert props['wigos_station_identifier'] == '0-20000-0-64406'
     assert props['integrity']['method'] == 'sha512'
-    assert not props['data_id'].startswith('wis2')
-    assert not props['data_id'].startswith('origin/a/wis2')
-    assert props['data_id'].startswith('cd')
+    assert not props['data_id'].startswith(('origin/a/wis2', 'wis2'))
+    assert props['data_id'].startswith('cg')
     assert 'content' not in props
     assert 'gts' in props
     assert props['gts']['ttaaii'] == 'SICG20'
