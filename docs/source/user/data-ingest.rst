@@ -15,8 +15,8 @@ wis2box-webapp
 
 The wis2box-webapp is a web application that includes the following forms for data validation and ingestion:
 
-* user interface to ingest SYNOP data
-* user interface to ingest CSV data 
+* user interface to ingest `FM-12 SYNOP data <https://library.wmo.int/idviewer/35713/33>`_
+* user interface to ingest CSV data using the :ref:`AWS template<aws-template>`
 
 The wis2box-webapp is available on your host at `http://<your-public-ip>/wis2box-webapp`.
 
@@ -39,18 +39,20 @@ The plugins you have configured for your dataset mappings will determine the act
 The wis2box provides 3 types of built-in plugins to publish data in BUFR format:
 
 * `bufr2bufr` : the input is received in BUFR format and split by subset, where each subset is published as a separate bufr message
-* `synop2bufr` : the input is received in FM-12 SYNOP format and converted to BUFR format. The year and month are extracted from the file pattern
+* `synop2bufr` : the input is received in `FM-12 SYNOP format <https://library.wmo.int/idviewer/35713/33>`_ and converted to BUFR format. The year and month are extracted from the file pattern
 * `csv2bufr` : the input is received in csv format and converted to BUFR format
 
 To publish data for other data formats you can use the 'Universal' plugin, which will pass through the data without any conversion.
 Please note that you will need to ensure that the date timestamp can be extracted from the file pattern when using this plugin.
+
+.. _aws-template:
 
 The AWS template in csv2bufr plugin
 -----------------------------------
 
 When using the csv2bufr plugin, the columns are mapped to BUFR encoded values using a template as defined in the repository `csv2bufr-templates`_.
 
-An example of a CSV file that can be ingested using the 'AWS' mappings template can be downloaded here :download:`AWS-example <../_static/aws-minimal.csv>`
+An example of a CSV file that can be ingested using the 'AWS' mappings template can be downloaded here :download:`AWS-example <../_static/aws-example.csv>`
 
 The CSV columns description of the AWS template can be downloaded here :download:`AWS-reference <../_static/aws-minimal.csv>`
 
