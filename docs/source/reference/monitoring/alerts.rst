@@ -10,6 +10,7 @@ This guide will walk you through the steps to configure Grafana to send email no
 
 1. Copy the 'grafana.ini' File from Docker Container
 ----------------------------------------------------
+
 First, you need to extract the 'grafana.ini' file from your Grafana Docker container to your local system. For example:
 
 .. code-block:: bash
@@ -35,6 +36,7 @@ Open the 'grafana.ini' file you just copied in a text editor and locate the [smt
 
 3. Mount grafana.ini to the Grafana Container
 ---------------------------------------------
+
 You now need to ensure that your modified 'grafana.ini' is used by Grafana inside the Docker container. To do this, update the docker-compose-monitoring.yml file to mount the local grafana.ini file into the container:
 
 .. image:: ../../_static/mount-grafana.ini.png
@@ -46,6 +48,7 @@ This line tells Docker to use the local version of 'grafana.ini' when starting t
 
 4. Restart wis2box to Applying Changes
 --------------------------------------
+
 For the changes to take effect, restart your wis2box environment:
 
 .. code-block:: bash
@@ -56,6 +59,7 @@ This command stops and then restarts your containers, ensuring that the new conf
 
 5. Setting Up the Notification Channel in Grafana
 -------------------------------------------------
+
 Log in to Grafana with your admin credentials:
 
 (1) Navigate to Alerting -> Notification channels.
@@ -76,6 +80,7 @@ Enter your email address in the appropriate field and save the notification chan
 
 6. Configuring Alerts in Your Grafana Dashboard
 -----------------------------------------------
+
 Now, set up alerts within your Grafana dashboard:
 
 (1) Open the dashboard where you want to add an alert.
@@ -95,6 +100,7 @@ Now, set up alerts within your Grafana dashboard:
 
 7. Final Step: Testing the Setup
 --------------------------------
+
 After setting everything up, trigger an alert in your Grafana dashboard to test if the email notifications are working. You should receive an email when the alert conditions are met.
 
 .. image:: ../../_static/receive-alert-email.png
@@ -103,6 +109,7 @@ After setting everything up, trigger an alert in your Grafana dashboard to test 
    :align: center
 
 .. note::
+
     The most challenging part of this setup is obtaining the correct SMTP password. Here’s how to do it for different email providers:
 
     For Gmail:
