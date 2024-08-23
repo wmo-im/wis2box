@@ -106,7 +106,7 @@ This plugin takes the incoming XML file, then validates it against the
 and verifies the digital signature before publishing.
 
 The validation is performed using the `capvalidator <https://github.com/wmo-im/capvalidator>`_
-module.
+package.
 
 A typical CAP message plugin workflow definition would be defined as follows:
 
