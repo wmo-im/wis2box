@@ -3,26 +3,26 @@
 Alerts
 ======
 
-Receiving Alerts by Email
+Receiving alerts by email
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This guide will walk you through the steps to configure Grafana to send email notifications when an alert is triggered on your dashboard. This process involves modifying configuration files and setting up an SMTP server to handle the outgoing emails.
 
-Copy the 'grafana.ini' File from Docker Container
--------------------------------------------------
+Copy the ``grafana.ini`` file from docker container
+---------------------------------------------------
 
-First, you need to extract the 'grafana.ini' file from your Grafana Docker container to your local system. For example:
+First, you need to extract the ``grafana.ini`` file from your Grafana Docker container to your local system. For example:
 
 .. code-block:: bash
 
     docker cp grafana:/etc/grafana/grafana.ini /your-local-directory
     
-This command copies the 'grafana.ini' from the Docker container to your local machine for editing.
+This command copies the ``grafana.ini`` from the Docker container to your local machine for editing.
 
-Modify the 'grafana.ini' File
------------------------------
+Modify the ``grafana.ini`` file
+-------------------------------
 
-Open the 'grafana.ini' file you just copied in a text editor and locate the [smtp] section. You will need to enable SMTP and configure it to use your email provider's SMTP server. Here’s how you can configure it for an email account:
+Open the ``grafana.ini`` file you just copied in a text editor and locate the [smtp] section. You will need to enable SMTP and configure it to use your email provider's SMTP server. Here’s how you can configure it for an email account:
 
 .. image:: ../../_static/smtp-configuration.png
    :width: 800px
@@ -31,22 +31,22 @@ Open the 'grafana.ini' file you just copied in a text editor and locate the [smt
 
 .. note::
 
-   The password used in the 'grafana.ini' SMTP configuration is not your regular email account password. 
+   The password used in the ``grafana.ini`` SMTP configuration is not your regular email account password. 
    Detailed descriptions are provided at the bottom of this page.
 
-Mount grafana.ini to the Grafana Container
-------------------------------------------
+Mount ``grafana.ini`` to the grafana container
+----------------------------------------------
 
-You now need to ensure that your modified 'grafana.ini' is used by Grafana inside the Docker container. To do this, update the docker-compose-monitoring.yml file to mount the local grafana.ini file into the container:
+You now need to ensure that your modified "grafana.ini" is used by Grafana inside the Docker container. To do this, update the docker-compose-monitoring.yml file to mount the local "grafana.ini" file into the container:
 
 .. image:: ../../_static/mount-grafana.ini.png
    :width: 800px
    :alt: mount grafana
    :align: center
    
-This line tells Docker to use the local version of 'grafana.ini' when starting the Grafana container.
+This line tells Docker to use the local version of ``grafana.ini`` when starting the Grafana container.
 
-Restart wis2box to Applying Changes
+Restart wis2box to applying changes
 -----------------------------------
 
 For the changes to take effect, restart your wis2box environment:
@@ -57,7 +57,7 @@ For the changes to take effect, restart your wis2box environment:
 
 This command stops and then restarts your containers, ensuring that the new configuration is loaded.
 
-Setting Up the Notification Channel in Grafana
+Setting up the notification channel in grafana
 ----------------------------------------------
 
 Log in to Grafana with your admin credentials:
@@ -78,7 +78,7 @@ Enter your email address in the appropriate field and save the notification chan
    :alt: notification channel detail
    :align: center
 
-Configuring Alerts in Your Grafana Dashboard
+Configuring alerts in your grafana dashboard
 --------------------------------------------
 
 Now, set up alerts within your Grafana dashboard:
@@ -98,7 +98,7 @@ Now, set up alerts within your Grafana dashboard:
    :alt: add alert notification
    :align: center
 
-Final Step: Testing the Setup
+Final step: testing the setup
 -----------------------------
 
 After setting everything up, trigger an alert in your Grafana dashboard to test if the email notifications are working. You should receive an email when the alert conditions are met.
@@ -112,15 +112,15 @@ After setting everything up, trigger an alert in your Grafana dashboard to test 
 
     The most challenging part of this setup is obtaining the correct SMTP password. Here’s how to do it for different email providers:
 
-    For Gmail:
+    For gmail:
 
     * Enable Less Secure Apps: If you don't use 2FA, enable "Less secure app access" in your Google account settings.
     * Generate an App Password: If you use 2FA:
     * Go to your Google Account -> Security -> App passwords.
     * Generate a new app password for "Mail".
-    * Use this app password in the 'grafana.ini' password field.
+    * Use this app password in the ``grafana.ini`` password field.
 
-    For WMO Email or Other Providers:
+    For WMO email or other providers:
 
     * Check Provider Documentation: Different providers have different methods for generating app passwords or enabling SMTP.
     * Contact IT Support: If you're using a corporate email (like WMO email), contact your IT department to get the correct SMTP settings and password.
