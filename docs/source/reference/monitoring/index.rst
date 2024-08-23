@@ -49,4 +49,4 @@ Monitoring topics
 
    grafana
    exploring-logs
-   receive-alerts-by-email
+   alerts
