@@ -46,7 +46,7 @@ Monitoring topics
 -----------------
 
 .. toctree::
-   :maxdepth: 2
 
    grafana
    exploring-logs
+   alerts
