@@ -25,6 +25,17 @@ jobs:
         docker version
         docker compose version
         python3 -V
+    - name: setup wis2downloader
+      run: |
+        # make sure current user in docker group
+        sudo usermod -aG docker $(whoami)
+        # Add env parameters to tests/test.env
+        echo "" >> tests/test.env  #no new line at end of test.env file
+        echo "DOCKER_GID=$(getent group docker | cut -d: -f3)" >> tests/test.env
+        # make sure data dir is in group docker and has 775 permissions
+        mkdir -p tests/data/downloads
+        chown -R $(whoami):docker tests/data/downloads
+        chmod -R 775 tests/data/downloads
     - name: setup wis2box configuration, replace localhost with IP on host 📦
       run: |
         export IP=$(hostname -I | awk '{print $1}')

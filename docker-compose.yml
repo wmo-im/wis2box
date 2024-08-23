@@ -146,12 +146,14 @@ services:
 
   wis2downloader:
     container_name: wis2downloader
+    image: ghcr.io/wmo-im/wis2downloader:latest
     restart: always
-    build: ./wis2downloader
     env_file:
       - wis2box.env
+    user: 12135:${DOCKER_GID}
     volumes:
-      - ${WIS2BOX_HOST_DATADIR}/downloads:/app/downloads:rw
+      - ${WIS2BOX_HOST_DATADIR}/downloads:/home/wis2downloader/app/data/downloads
+
 
 volumes:
   es-data:
