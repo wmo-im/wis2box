@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Licensed to the Apache Software Foundation (ASF) under one 
+# Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
 # regarding copyright ownership.  The ASF licenses this file
@@ -12,8 +12,8 @@
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY 
-# KIND, either express or implied.  See the License for the 
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
 #
@@ -41,11 +41,13 @@ msg = {
     'data': data,
     'filename': filename.split('/')[-1]
 }
+
 # publish notification on internal broker
 private_auth = {
     'username': BROKER_USERNAME,
     'password': BROKER_PASSWORD
 }
+
 publish.single(topic='wis2box/cap/publication',
                payload=json.dumps(msg),
                qos=1,
