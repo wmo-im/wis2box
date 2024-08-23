@@ -123,20 +123,13 @@ def find_files(path: str, extension: str) -> list:
     return file_list
 
 
-def run(args, cmd, asciiPipe=False) -> str:
+def run(cmd, silence_stderr=False) -> None:
 
-    if args.simulate:
-        if asciiPipe:
-            print(f"simulation: {' '.join(cmd)} >/tmp/temp_buffer$$.txt")
-        else:
-            print(f"simulation: {' '.join(cmd)}")
-        return '`cat /tmp/temp_buffer$$.txt`'
+    if not silence_stderr:
+        subprocess.run(cmd)
     else:
-        if asciiPipe:
-            return subprocess.run(
-                cmd, stdout=subprocess.PIPE).stdout.decode('ascii')
-        else:
-            subprocess.run(cmd)
+        subprocess.run(cmd, stderr=subprocess.DEVNULL)
+
     return None
 
 
@@ -174,66 +167,64 @@ def make(args) -> None:
     container = "wis2box-management" if not args.args else ' '.join(args.args)
 
     if args.command == "config":
-        run(args, split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} config'))
+        run(split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} config'))
     elif args.command == "build":
-        run(args, split(
+        run(split(
             f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} build {containers}'))
     elif args.command in ["up", "start", "start-dev"]:
-        run(args, split(
-            'docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions'))
-        run(args, split(
-            'docker plugin enable loki'))
+        run(split(
+            'docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions'),
+            silence_stderr=True)
+        run(split('docker plugin enable loki'), silence_stderr=True)
         if containers:
-            run(args, split(f"{DOCKER_COMPOSE_COMMAND} {docker_compose_args} start {containers}"))
+            run(split(f"{DOCKER_COMPOSE_COMMAND} {docker_compose_args} start {containers}"))
         else:
             if args.command == 'start-dev':
-                run(args, split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} --file docker-compose.dev.yml up -d'))
+                run(split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} --file docker-compose.dev.yml up -d'))
             else:
-                run(args, split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} up -d'))
+                run(split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} up -d'))
     elif args.command == "execute":
-        run(args, ['docker', 'exec', '-i', 'wis2box-management', 'sh', '-c', containers])
+        run(['docker', 'exec', '-i', 'wis2box-management', 'sh', '-c', containers])
     elif args.command == "login":
-        run(args, split(f'docker exec -it {container} /bin/bash'))
+        run(split(f'docker exec -it {container} /bin/bash'))
     elif args.command == "login-root":
-        run(args, split(f'docker exec -u -0 -it {container} /bin/bash'))
+        run(split(f'docker exec -u -0 -it {container} /bin/bash'))
     elif args.command == "logs":
-        run(args, split(
+        run(split(
             f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} logs --follow {containers}'))
     elif args.command in ["stop", "down"]:
         if containers:
-            run(args, split(f"{DOCKER_COMPOSE_COMMAND} {docker_compose_args} {containers}"))
+            run(split(f"{DOCKER_COMPOSE_COMMAND} {docker_compose_args} {containers}"))
         else:
-            run(args, split(
+            run(split(
                 f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} down --remove-orphans {containers}'))
     elif args.command == "update":
-        run(args, split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} pull'))
+        run(split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} pull'))
     elif args.command == "prune":
-        run(args, split('docker builder prune -f'))
-        run(args, split('docker container prune -f'))
-        run(args, split('docker volume prune -f'))
-        _ = run(args,
-                split('docker images --filter dangling=true -q --no-trunc'),
-                asciiPipe=True)
-        run(args, split(f'docker rmi {_}'))
-        _ = run(args, split('docker ps -a -q'), asciiPipe=True)
-        run(args, split(f'docker rm {_}'))
+        run(split('docker builder prune -f'))
+        run(split('docker container prune -f'))
+        run( split('docker volume prune -f'))
+        _ = run(split('docker images --filter dangling=true -q --no-trunc'))
+        run(split(f'docker rmi {_}'))
+        _ = run(split('docker ps -a -q'))
+        run(split(f'docker rm {_}'))
     elif args.command == "restart":
         if containers:
-            run(args, split(
+            run(split(
                 f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} stop {containers}'))
-            run(args, split(
+            run(split(
                 f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} start {containers}'))
         else:
-            run(args, split(
+            run(split(
                 f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} down --remove-orphans'))
-            run(args, split(
+            run(split(
                 f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} up -d'))
     elif args.command == "status":
-        run(args, split(
+        run(split(
             f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} ps {containers}'))
     elif args.command == "lint":
         files = find_files(".", '.py')
-        run(args, ('python3', '-m', 'flake8', *files))
+        run(('python3', '-m', 'flake8', *files))
 
 
 if __name__ == "__main__":
