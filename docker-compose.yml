@@ -20,15 +20,6 @@ services:
     depends_on:
       - wis2box-api
 
-#  wis2box-ui-admin:
-#    container_name: wis2box-ui-admin
-#    image: ghcr.io/wmo-im/wis2box-ui-admin:latest
-#    restart: always
-#    env_file:
-#      - wis2box.env
-#    depends_on:
-#      - wis2box-api
-
   wis2box-webapp:
     container_name: wis2box-webapp
     image: ghcr.io/wmo-im/wis2box-webapp:latest
@@ -103,7 +94,7 @@ services:
 
   mosquitto:
     container_name: mosquitto
-    #image: ghcr.io/wmo-im/wis2box-broker:1.0.beta1
+    #image: ghcr.io/wmo-im/wis2box-broker:latest
     restart: always
     build:
       context: ./wis2box-broker
@@ -115,7 +106,7 @@ services:
     mem_limit: 1g
     memswap_limit: 1g
     restart: always
-    #image: ghcr.io/wmo-im/wis2box-management:1.0.beta1
+    #image: ghcr.io/wmo-im/wis2box-management:latest
     build:
       context: ./wis2box-management
     #user: wis2box:wis2box
@@ -153,7 +144,6 @@ services:
     user: 12135:${DOCKER_GID}
     volumes:
       - ${WIS2BOX_HOST_DATADIR}/downloads:/home/wis2downloader/app/data/downloads
-
 
 volumes:
   es-data:
