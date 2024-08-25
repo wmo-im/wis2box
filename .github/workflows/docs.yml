@@ -27,4 +27,4 @@ jobs:
       with:
         pre-build-command: "apt-get install -y pandoc"
         docs-folder: "docs/"
-        build-command: "sphinx-build -M html "source" "build" -W"
+        build-command: "sphinx-build -M html \"source\" \"build\" -W"
