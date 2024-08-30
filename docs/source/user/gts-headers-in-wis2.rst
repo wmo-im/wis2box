@@ -14,10 +14,12 @@ To enable the WIS2 to GTS Gateway to correctly identify the data to be republish
 
 .. code-block:: json
 
-   "properties": {
-     "gts": {
-       "ttaaii": "FTAE31",
-       "cccc": "VTBB"
+   {
+     "properties": {
+       "gts": {
+         "ttaaii": "FTAE31",
+         "cccc": "VTBB"
+       }
      }
    }
 
@@ -47,10 +49,12 @@ the corresponding GTS headers will be added to the WIS2 Notification Message as 
 
 .. code-block:: json
 
-   "properties": {
-     "gts": {
-       "ttaaii": "ISMD01",
-       "cccc": "LIBB"
+   {
+     "properties": {
+       "gts": {
+         "ttaaii": "ISMD01",
+         "cccc": "LIBB"
+       }
      }
    }
 

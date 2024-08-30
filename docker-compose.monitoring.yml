@@ -42,7 +42,7 @@ services:
     restart: unless-stopped
     env_file:
       - wis2box.env
-    #image: ghcr.io/wmo-im/wis2box-mqtt-metrics-collector:1.0.beta1
+    #image: ghcr.io/wmo-im/wis2box-mqtt-metrics-collector:latest
     build:
       context: ./wis2box-mqtt-metrics-collector
     depends_on:
