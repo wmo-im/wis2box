@@ -167,8 +167,9 @@ def sub_mqtt_metrics(client, userdata, msg):
         wsi = 'none'
         if 'wigos_station_identifier' in m['properties']:
             wsi = m['properties']['wigos_station_identifier']
-        # if label wsi is not present in notify_wsi_total, set it to 0 and sleep 5 seconds before incrementing
+        # if label wsi is not in notify_wsi_total, set to 0 and sleep 5s
         if wsi not in notify_wsi_total._metrics:
+            logger.info(f"new station: {wsi}, sleep 5s before incrementing")
             notify_wsi_total.labels(wsi).inc(0)
             failure_wsi_total.labels(wsi).inc(0)
             station_wsi.labels(wsi).set(1)
