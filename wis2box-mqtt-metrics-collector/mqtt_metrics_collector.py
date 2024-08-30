@@ -29,6 +29,7 @@ import random
 
 import sys
 import json
+import time
 
 from prometheus_client import start_http_server, Counter, Gauge
 
@@ -166,6 +167,13 @@ def sub_mqtt_metrics(client, userdata, msg):
         wsi = 'none'
         if 'wigos_station_identifier' in m['properties']:
             wsi = m['properties']['wigos_station_identifier']
+        # if label wsi is not in notify_wsi_total, set to 0 and sleep 5s
+        if wsi not in notify_wsi_total._metrics:
+            logger.info(f"new station: {wsi}, sleep 5s before incrementing")
+            notify_wsi_total.labels(wsi).inc(0)
+            failure_wsi_total.labels(wsi).inc(0)
+            station_wsi.labels(wsi).set(1)
+            time.sleep(5)
         notify_wsi_total.labels(wsi).inc(1)
         failure_wsi_total.labels(wsi).inc(0)
         station_wsi.labels(wsi).set(1)
