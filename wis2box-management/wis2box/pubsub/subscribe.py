@@ -154,6 +154,7 @@ class WIS2BoxSubscriber:
             filepath = f'{STORAGE_SOURCE}/{key}'
             if key.startswith(STORAGE_ARCHIVE):
                 LOGGER.info(f'Do not process archived-data: {key}')
+                return
             # start a new process to handle the received data
             while len(mp.active_children()) == mp.cpu_count():
                 sleep(0.05)
