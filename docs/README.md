@@ -6,7 +6,7 @@ format.  [Jupyter](https://jupyter.org) notebooks are also used for in-depth cod
 
 ## Setup
 To update the documentation, ensure that Sphinx, nbsphinx and Jupyter are installed on your system (hint:
-run `pip install -r requirements-dev.txt` to install the dependencies).  From here, `make html` will
+run `pip install -r requirements.txt` to install the dependencies).  From here, `./make html` will
 build the documentation, which you can serve using any standard web server.
 
 ## Jupyter
