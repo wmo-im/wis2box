@@ -45,7 +45,7 @@ MQTT Configuration
 Begin by logging in to the CAP Composer.
 
 .. note::
-   We will assume that you have the necessary admin rights to configure the CAP Composer. If you do not, please contact your CAP Composer administrator.
+   We will assume that you have the necessary admin rights to configure the CAP Composer. If you do not, please contact your CAP focal point.
 
 Navigate to 'CAP Alerts' -> 'MQTT Brokers' in the left-hand menu.
 
