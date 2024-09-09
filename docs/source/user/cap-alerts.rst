@@ -3,7 +3,11 @@
 Publishing CAP Alerts to a wis2box
 ==================================
 
-Here we explain how one can use the `CAP Composer <https://github.com/wmo-raf/cap-composer>`_ to automate the publishing of CAP alerts to a wis2box.
+Overview
+--------
+The Common Alerting Protocol (CAP) is a simple but general format for exchanging all-hazard emergency alerts and public warnings over all kinds of networks, see the full specification `here <https://docs.oasis-open.org/emergency/cap/v1.2/CAP-v1.2.html>`_.
+
+This section provides guidance one how one can use the `CAP Composer <https://github.com/wmo-raf/cap-composer>`_ to automate the publishing of CAP alerts to a wis2box.
 
 Requirements
 ------------
@@ -47,7 +51,7 @@ Begin by logging in to the CAP Composer.
 .. note::
    We will assume that you have the necessary admin rights to configure the CAP Composer. If you do not, please contact your CAP focal point.
 
-Navigate to 'CAP Alerts' -> 'MQTT Brokers' in the left-hand menu.
+Navigate to 'CAP Alerts', then 'MQTT Brokers' in the left-hand menu.
 
 .. image:: ../_static/cap/mqtt_brokers_menu.png
    :alt: MQTT Brokers Menu
@@ -79,7 +83,7 @@ You will be redirected back to the 'MQTT Brokers' page, where you should see the
 
 Publishing an Alert
 -------------------
-Let's begin by creating a CAP alert. This can be done by navigating to 'CAP Alerts' -> 'Alerts' in the left-hand menu, and clicking the *Add Alert* button in the top-right corner.
+Let's begin by creating a CAP alert. This can be done by navigating to 'CAP Alerts', then 'Alerts' in the left-hand menu, and clicking the *Add Alert* button in the top-right corner.
 
 .. image:: ../_static/cap/alerts_menu.png
    :alt: Alerts Menu
@@ -99,7 +103,7 @@ On clicking the *Publish* button, the alert XML file will automatically be creat
 .. note::
    If you are a CAP composer, you will only be able to submit the alert for moderation. It is then the responsibility of the CAP approver to approve and publish the alert.
 
-You can view the status of the published alert in the 'CAP Alerts' -> 'MQTT Broker Events' section of the CAP Composer.
+You can view the status of the published alert in the 'CAP Alerts', then 'MQTT Broker Events' section of the CAP Composer.
 
 .. image:: ../_static/cap/mqtt_event_list.png
    :alt: MQTT Event List
