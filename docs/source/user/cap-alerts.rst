@@ -111,8 +111,8 @@ You can view the status of the published alert in the 'CAP Alerts', then 'MQTT B
 
 Additional diagnostic information can be found by clicking the *Inspect* button.
 
-Verifying Receipt of a Published Alert
---------------------------------------
+Verifying Receipt of a Published Alert and Viewing the Alert
+------------------------------------------------------------
 We can verify that the alert has been successfully published to the wis2box by monitoring the dataset in the wis2box-webapp.
 
 Navigate to the 'Monitoring' page in the wis2box-webapp, and select the dataset that you created in the previous steps.
@@ -124,6 +124,16 @@ Navigate to the 'Monitoring' page in the wis2box-webapp, and select the dataset 
    :alt: Monitoring Dashboard
    :width: 800
 
-Provided the publication was successful, you will see a bar in the 'Notifications' section. If you scroll down to the 'Published Data' section, the signed and verified CAP alert should appear in the table to download and inspect.
+Provided the publication was successful, you will see a bar in the 'Notifications' section. If you scroll down to the 'Published Data' section, the signed and verified CAP alert should appear in the table to download and view.
 
-TO DO: Add image here that shows the 'Inspect Alert' button.
+.. image:: ../_static/cap/download_view_alert.png
+   :alt: Published Data
+   :width: 800
+
+On clicking the *View Alert* button, you should see a visualization of the CAP alert you created earlier.
+
+.. image:: ../_static/cap/alert_preview.png
+   :alt: View Alert
+   :width: 800
+
+Congratulations! You have successfully published a CAP alert to a wis2box using the CAP Composer.
