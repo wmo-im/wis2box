@@ -20,12 +20,12 @@ Process Outline
 ---------------
 For automated publishing of CAP alerts created by the CAP Composer to a wis2box, we will need to perform the following steps:
 
-1. *Dataset Creation:* Configure the dataset in the wis2box to store the CAP alerts.
+1. *Dataset Creation:* Configure the dataset in wis2box to store the CAP alerts.
 2. *MQTT Configuration:* Configure your wis2box broker details in the CAP Composer.
 
 Dataset Creation
 ----------------
-Firstly, there must be a dataset in the wis2box for the CAP alerts to be stored. To create a dataset, simply navigate to the 'Dataset Editor' page in the wis2box-webapp, available on your host at `http://<your-public-ip>/wis2box-webapp`.
+Firstly, there must be a dataset in wis2box for the CAP alerts to be stored. To create a dataset, simply navigate to the 'Dataset Editor' page in wis2box-webapp, available on your host at `http://<your-public-ip>/wis2box-webapp`.
 
 .. note::
    For more information on how to create a dataset, please see the :ref:`adding-datasets` section of the wis2box setup guide.
@@ -115,9 +115,9 @@ Additional diagnostic information can be found by clicking the *Inspect* button.
 
 Verifying Receipt of a Published Alert and Viewing the Alert
 ------------------------------------------------------------
-We can verify that the alert has been successfully published to the wis2box by monitoring the dataset in the wis2box-webapp.
+We can verify that the alert has been successfully published to wis2box by monitoring the dataset in wis2box-webapp.
 
-Navigate to the 'Monitoring' page in the wis2box-webapp, and select the dataset that you created in the previous steps.
+Navigate to the 'Monitoring' page in wis2box-webapp, and select the dataset that you created in the previous steps.
 
 .. note::
    If you do not see the dataset, ensure that the datetime range selected includes the time of the alert publication.
