@@ -163,6 +163,7 @@ The values of ``WIS2BOX_WEBAPP_USERNAME`` and ``WIS2BOX_WEBAPP_PASSWORD`` can be
 
 
 .. _adding-datasets:
+
 Adding datasets
 ---------------
 
