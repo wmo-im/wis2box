@@ -1,7 +1,7 @@
 .. _cap-alerts:
 
-Publishing CAP Alerts to a wis2box
-==================================
+Connecting the CAP Composer with a wis2box
+============================================
 
 Overview
 --------
@@ -18,7 +18,7 @@ In addition to a running wis2box, you will need to install, configure, and run t
 
 Process Outline
 ---------------
-For automated publishing of CAP alerts to a wis2box, we will need to perform the following steps:
+For automated publishing of CAP alerts created by the CAP Composer to a wis2box, we will need to perform the following steps:
 
 1. *Dataset Creation:* Configure the dataset in the wis2box to store the CAP alerts.
 2. *MQTT Configuration:* Configure your wis2box broker details in the CAP Composer.
