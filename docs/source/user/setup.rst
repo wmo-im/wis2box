@@ -3,7 +3,7 @@
 Installation and configuration
 ==============================
 
-This section summarizes the steps required to install a wis2box instance and setup your own datasets using initial configuration files 
+This section summarizes the steps required to install a wis2box instance and setup your own datasets using initial configuration files
 provided by using the ``wis2box-create-config.py`` script.
 
 Ensure you have Docker, Docker Compose and Python installed on your host, as detailed in :ref:`getting-started`.
@@ -32,11 +32,11 @@ Run the following command to create the initial configuration files for your wis
 
 .. note::
 
-    The ``wis2box-create-config.py`` script will ask for a directory to store the configuration files. 
+    The ``wis2box-create-config.py`` script will ask for a directory to store the configuration files.
     Please provide the **absolute** path to the directory where you want to store the configuration files, for example ``/home/wis2box-user/wis2box-data``.
     This directory will be mapped to ``/data/wis2box`` **inside** the wis2box-management container.
 
-   The script will also ask for the URL of your wis2box. Please provide the public URL of your wis2box, for example ``http://mywis2box.example.com``. 
+   The script will also ask for the URL of your wis2box. Please provide the public URL of your wis2box, for example ``http://mywis2box.example.com``.
    For testing purpose you can also provide the internal IP address you use to access the host, for example ``http://192.168.0.3`` and you change the URL in configuration files at a later point in time.
 
    The script will propose to automatically create a password for ``WIS2BOX_WEBAPP_PASSWORD``. This password is used to access the wis2box-webapp interface.
@@ -68,7 +68,7 @@ This might take a while the first time, as Docker images will be downloaded.
 
    The ``wis2box-ctl.py`` program is used as a convenience utility around a set of Docker Compose commands.
    You can customize the ports exposed on your host by editing ``docker-compose.override.yml``.
-   
+
 .. note::
 
    In case you get errors from the Docker daemon stating 'Permission denied', such as:
@@ -76,9 +76,9 @@ This might take a while the first time, as Docker images will be downloaded.
    ``docker.errors.DockerException: Error while fetching server API version: ('Connection aborted.', PermissionError(13, 'Permission denied'))``
 
    Please ensure your username is added to the Docker group using the command:
-   
+
    ``sudo usermod -aG docker <your-username>``.
-   
+
    Logout and log back in so that your group membership is re-evaluated.
 
 
@@ -109,7 +109,7 @@ Check that all services are Up and not unhealthy:
    wis2box-webapp           sh /wis2box-webapp/ ...          Up (healthy)   4173/tcp
 
 
-Refer to the :ref:`troubleshooting` section if this is not the case. 
+Refer to the :ref:`troubleshooting` section if this is not the case.
 
 
 Runtime configuration
@@ -162,6 +162,8 @@ The values of ``WIS2BOX_WEBAPP_USERNAME`` and ``WIS2BOX_WEBAPP_PASSWORD`` can be
    cat wis2box.env | grep WIS2BOX_WEBAPP
 
 
+.. _adding-datasets:
+
 Adding datasets
 ---------------
 
@@ -190,8 +192,8 @@ A popup will appear where you can define your "centre-id" and the type of datase
    The centre-id has to be lowercase and use alphanumeric characters only.
    The dropdown list shows all currently registered centre-ids on WIS2 as well as any centre-id you have already created in wis2box.
 
-There are 2 pre-defined dataset types for "weather/surface-based-observations/synop" and "weather/surface-based-observations/temp". 
-We recommend using these pre-defined dataset types to publish your "synop" and "temp" data, respectively. 
+There are multiple predefined datasets, such as "weather/surface-based-observations/synop", "weather/surface-based-observations/temp", and "weather/advisories-warnings".
+We recommend using these particular predefined dataset types to publish your "synop", "temp", and CAP alert data, respectively.
 The predefined dataset will predefine the topic and data mappings for you.
 If you want to create a dataset for a different topic, you can select "other" and define the topic and data mappings yourself.
 
@@ -207,7 +209,7 @@ Before publishing the new dataset make to click "Validate form" to check if all 
   :alt: wis2box webapp dataset editor page, validate form
 
 Each dataset is associated with data-mappings plugins that transform the data from the input source format before the data is published.
-If you are using the pre-defined dataset types for "synop" and "temp" data, the data mappings plugins will be pre-defined for you.
+If you are using the predefined dataset types for "synop", "temp", or CAP alert data, the data mappings plugins will be predefined for you.
 Otherwise, you will need to define the data mappings plugins for your dataset.
 
 Finally, click "submit" to publish the dataset:
