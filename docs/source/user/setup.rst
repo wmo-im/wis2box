@@ -163,6 +163,7 @@ The values of ``WIS2BOX_WEBAPP_USERNAME`` and ``WIS2BOX_WEBAPP_PASSWORD`` can be
 
 
 .. _adding-datasets:
+
 Adding datasets
 ---------------
 
@@ -191,8 +192,8 @@ A popup will appear where you can define your "centre-id" and the type of datase
    The centre-id has to be lowercase and use alphanumeric characters only.
    The dropdown list shows all currently registered centre-ids on WIS2 as well as any centre-id you have already created in wis2box.
 
-There are 2 pre-defined dataset types for "weather/surface-based-observations/synop", "weather/surface-based-observations/temp", and "weather/advisories-warnings".
-We recommend using these pre-defined dataset types to publish your "synop", "temp", and CAP alert data, respectively.
+There are multiple predefined datasets, such as "weather/surface-based-observations/synop", "weather/surface-based-observations/temp", and "weather/advisories-warnings".
+We recommend using these particular predefined dataset types to publish your "synop", "temp", and CAP alert data, respectively.
 The predefined dataset will predefine the topic and data mappings for you.
 If you want to create a dataset for a different topic, you can select "other" and define the topic and data mappings yourself.
 
@@ -208,7 +209,7 @@ Before publishing the new dataset make to click "Validate form" to check if all 
   :alt: wis2box webapp dataset editor page, validate form
 
 Each dataset is associated with data-mappings plugins that transform the data from the input source format before the data is published.
-If you are using the pre-defined dataset types for "synop" and "temp" data, the data mappings plugins will be pre-defined for you.
+If you are using the predefined dataset types for "synop", "temp", or CAP alert data, the data mappings plugins will be predefined for you.
 Otherwise, you will need to define the data mappings plugins for your dataset.
 
 Finally, click "submit" to publish the dataset:
