@@ -191,8 +191,8 @@ A popup will appear where you can define your "centre-id" and the type of datase
    The centre-id has to be lowercase and use alphanumeric characters only.
    The dropdown list shows all currently registered centre-ids on WIS2 as well as any centre-id you have already created in wis2box.
 
-There are 2 pre-defined dataset types for "weather/surface-based-observations/synop", "weather/surface-based-observations/temp", and "weather/advisories-warnings".
-We recommend using these pre-defined dataset types to publish your "synop", "temp", and CAP alert data, respectively.
+There are multiple pre-defined datasets, such as "weather/surface-based-observations/synop", "weather/surface-based-observations/temp", and "weather/advisories-warnings".
+We recommend using these particular pre-defined dataset types to publish your "synop", "temp", and CAP alert data, respectively.
 The predefined dataset will predefine the topic and data mappings for you.
 If you want to create a dataset for a different topic, you can select "other" and define the topic and data mappings yourself.
 
