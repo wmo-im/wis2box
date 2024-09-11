@@ -36,6 +36,8 @@ When creating a new dataset for CAP alerts, ensure that the **weather/advisories
    :alt: Select Template
    :width: 400
 
+This template will use the 'CAPMessageData' data plugin, see more information on this plugin in the :ref:`cap-message-data-plugin` section of the data pipeline plugins documentation.
+
 Enter the relevant missing information and create the dataset using your processes/wis2box token.
 
 .. image:: ../_static/cap/submit_dataset.png

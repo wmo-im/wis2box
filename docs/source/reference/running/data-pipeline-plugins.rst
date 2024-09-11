@@ -98,6 +98,7 @@ A typical BUFR4 plugin workflow definition would be defined as follows:
          notify: true  # trigger GeoJSON publishing for API and UI
          file-pattern: '^.*\.bin$'
 
+.. _cap-message-data-plugin
 ``wis2box.data.cap_message.CAPMessageData``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
