@@ -14,7 +14,7 @@ Requirements
 In addition to a running wis2box, you will need to install, configure, and run the CAP Composer.
 
 .. note::
-   For information on how to do this, please consult the `CAP Composer documentation <https://nmhs-cms.readthedocs.io/en/stable/_docs/Manage-CAP-Alerts.html>`_.
+   For information on how to do this, please consult the `CAP Composer documentation <https://github.com/wmo-raf/cap-composer?tab=readme-ov-file#readme>`_.
 
 Process Outline
 ---------------
