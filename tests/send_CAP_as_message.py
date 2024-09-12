@@ -37,7 +37,7 @@ with open(filename, 'rb') as file:
     data = base64.b64encode(file.read()).decode()
 
 msg = {
-    'metadata_id': 'urn:wmo:md:int_wmo_test:cap',
+    'metadata_id': 'urn:wmo:md:int-wmo-test:cap',
     'data': data,
     'filename': filename.split('/')[-1]
 }
