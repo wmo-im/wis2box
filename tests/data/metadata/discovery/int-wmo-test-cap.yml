@@ -15,7 +15,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:wmo:md:int_wmo_test:cap
+    identifier: urn:wmo:md:int-wmo-test:cap
     hierarchylevel: dataset
 
 identification:
@@ -32,10 +32,10 @@ identification:
         wmo:
             keywords:
                 - weather
-            keywords_type: themes
+            keywords_type: theme
             vocabulary:
                 name: Earth system disciplines as defined by the WMO Unified Data Policy, Resolution 1 (Cg-Ext(2021), Annex 1.
-                url: https://codes.wmo.int/topic-hierarchy/earth-system-discipline
+                url: https://codes.wmo.int/wis/topic-hierarchy/earth-system-discipline
     extents:
         spatial:
             - bbox: [-180.0, -90.0, 180.0, 90.0]
@@ -44,12 +44,13 @@ identification:
             - begin: 2024-07-02
               end: null
               resolution: P1H
-    wmo_data_policy: core
+    rights: WMO Unified Policy for the International Exchange of Earth System Data
+    url: https://example.org/fixme
 
 contact:
-    host:
-        organization: WMO
-        url: https://wmo.int
+    host: &contact_poc
+        organization: World Meteorological Organisation
+        url: https://www.wmo.int/
         individualname: Firstname Lastname
         positionname: Position Name
         phone: null
@@ -58,7 +59,7 @@ contact:
         city: null
         administrativearea: null
         postalcode: null
-        country: Switzerland
-        email: you@example.com
-        hoursofservice: 0700h - 1500h UTC
+        country: null
+        email: null
+        hoursofservice: 0800h - 1600h UTC
         contactinstructions: email

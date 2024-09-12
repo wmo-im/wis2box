@@ -57,7 +57,8 @@ def test_wis2downloader():
         'origin/a/wis2/int-wmo-test/data/core/ocean/surface-based-observations/drifting-buoys': 2, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/wind-profile': 1, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/ship-hourly': 5, # noqa
-        'origin/a/wis2/it-meteoam/data/core/weather/surface-based-observations/synop': 31 # noqa
+        'origin/a/wis2/it-meteoam/data/core/weather/surface-based-observations/synop': 31, # noqa
+        'origin/a/wis2/int-wmo-test/data/core/weather/advisories-warnings': 1 # noqa	
     }
 
     topic_nfiles_dict_found = {}
@@ -125,7 +126,7 @@ def test_metadata_discovery_publish():
     """Test discovery metadata publishing"""
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items').json()
-    assert r['numberMatched'] == 9
+    assert r['numberMatched'] == 10
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/{ID}').json()  # noqa
 
@@ -302,7 +303,7 @@ def test_message_api():
         'dz-meteoalgerie': 29,
         'ro-rnimh': 50,
         'cg-met': 15,
-        'int-wmo': 11,
+        'int-wmo': 13,
         'cn-cma': 11
     }
     for key, value in counts.items():
