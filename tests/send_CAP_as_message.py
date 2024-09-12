@@ -29,7 +29,7 @@ BROKER_PASSWORD = 'wis2box'
 BROKER_HOST = 'localhost'
 BROKER_PORT = '1883'
 
-filename = 'tests/data/cap/sc_example.xml'
+filename = 'tests/data/CAP/sc_example.xml'
 
 # create a message containing the CAP alert in
 #  the data field as base64 encoded bytes
