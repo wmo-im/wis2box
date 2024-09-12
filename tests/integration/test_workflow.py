@@ -303,7 +303,7 @@ def test_message_api():
         'dz-meteoalgerie': 29,
         'ro-rnimh': 50,
         'cg-met': 15,
-        'int-wmo': 12,
+        'int-wmo': 13,
         'cn-cma': 11
     }
     for key, value in counts.items():
