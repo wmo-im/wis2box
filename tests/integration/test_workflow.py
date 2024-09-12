@@ -126,7 +126,7 @@ def test_metadata_discovery_publish():
     """Test discovery metadata publishing"""
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items').json()
-    assert r['numberMatched'] == 9
+    assert r['numberMatched'] == 10
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/{ID}').json()  # noqa
 
@@ -303,7 +303,7 @@ def test_message_api():
         'dz-meteoalgerie': 29,
         'ro-rnimh': 50,
         'cg-met': 15,
-        'int-wmo': 11,
+        'int-wmo': 12,
         'cn-cma': 11
     }
     for key, value in counts.items():
