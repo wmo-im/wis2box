@@ -4,7 +4,7 @@ Getting started
 ===============
 
 wis2box can be run on any Linux instance (bare metal or cloud hosted VM) with Python, Docker and Docker Compose installed. 
-The recommended OS is Ubuntu 20.04 LTS.
+The recommended OS is Ubuntu 22.04 LTS.
 
 .. note::
 
