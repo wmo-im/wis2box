@@ -62,8 +62,7 @@ class CAPMessageData(BaseAbstractData):
         :returns: `bool` of result
         """
 
-        suffix = filename.split('.')[-1]
-        rmk = filename.split('.')[0]
+        [rmk, suffix] = filename.rsplit('.', 1)
         input_bytes = self.as_bytes(input_data)
 
         # get the sent date from the CAP XML
