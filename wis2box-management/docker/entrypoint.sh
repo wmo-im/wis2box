@@ -65,15 +65,14 @@ if [ ! -d /home/wis2box/.htpasswd/ ]; then
 fi
 
 # create /home/wis2box/.htpasswd/webapp if not exists
-# otherwise, delete the file and create it
+# otherwise, re-create webapp user credentials from the environment
 # in case of failure continue
 if [ ! -f /home/wis2box/.htpasswd/webapp ]; then
     echo "Creating /home/wis2box/.htpasswd/webapp"
     htpasswd -bc /home/wis2box/.htpasswd/webapp $WIS2BOX_WEBAPP_USERNAME $WIS2BOX_WEBAPP_PASSWORD || true
 else
-    rm /home/wis2box/.htpasswd/webapp
-    echo "Re-creating /home/wis2box/.htpasswd/webapp"
-    htpasswd -bc /home/wis2box/.htpasswd/webapp $WIS2BOX_WEBAPP_USERNAME $WIS2BOX_WEBAPP_PASSWORD || true
+    echo "Re-creating webapp user credentials in /home/wis2box/.htpasswd/webapp"
+    htpasswd -b /home/wis2box/.htpasswd/webapp $WIS2BOX_WEBAPP_USERNAME $WIS2BOX_WEBAPP_PASSWORD || true
 fi
 
 # Check if the path is restricted and capture the output
