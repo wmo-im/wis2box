@@ -174,6 +174,7 @@ def sub_mqtt_metrics(client, userdata, msg):
 
 
 def process_buffered_messages():
+    logger.info("Processing buffered messages")
     global message_buffer
 
     with buffer_lock:
@@ -214,6 +215,7 @@ def process_buffered_messages():
 
 # Call this function periodically, e.g., in a separate thread
 def periodic_buffer_processing():
+    logger.info("Starting periodic buffer processing")
     while True:
         process_buffered_messages()
         time.sleep(5)  # Adjust sleep time as needed
