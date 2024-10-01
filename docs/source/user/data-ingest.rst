@@ -150,7 +150,7 @@ See below a Python example to upload data using the MinIO package:
         endpoint=endpoint,
         access_key=WIS2BOX_STORAGE_USERNAME,
         secret_key=WIS2BOX_STORAGE_PASSWORD,
-        secure=is_secure=False)
+        secure=False)
     
     filename = filepath.split('/')[-1]
     client.fput_object('wis2box-incoming', minio_path+filename, filepath)
