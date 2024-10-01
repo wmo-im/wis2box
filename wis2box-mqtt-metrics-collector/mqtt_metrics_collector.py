@@ -136,7 +136,6 @@ def sub_connect(client, userdata, flags, rc, properties=None):
 
     logger.info(f"on connection to subscribe: {mqtt.connack_string(rc)}")
     for s in ["wis2box/#", '$SYS/broker/messages/#']:
-        print(f'subscribe to: {s}')
         client.subscribe(s, qos=1)
 
 
@@ -174,7 +173,6 @@ def sub_mqtt_metrics(client, userdata, msg):
 
 
 def process_buffered_messages():
-    logger.info("Processing buffered messages")
     global message_buffer
 
     with buffer_lock:
@@ -182,6 +180,7 @@ def process_buffered_messages():
         message_buffer = []
 
     for topic, msg in messages_to_process:
+        print(f"Processing message on topic={topic}")
         m = json.loads(msg.payload.decode('utf-8'))
         if str(topic).startswith('wis2box/stations'):
             update_stations_gauge(m['station_list'])
@@ -190,8 +189,8 @@ def process_buffered_messages():
             if 'wigos_station_identifier' in m['properties']:
                 wsi = m['properties']['wigos_station_identifier']
             # if label wsi is not in notify_wsi_total, set to 0 and sleep 5s
-            if wsi not in notify_wsi_total._metrics:
-                logger.info(f"new station={wsi}, sleep 5s before incrementing")
+            if (wsi,) not in notify_wsi_total._metrics:
+                print(f"wsi={wsi} not in existing WSIs: {[key[0] for key in notify_wsi_total._metrics.keys()]}")
                 notify_wsi_total.labels(wsi).inc(0)
                 failure_wsi_total.labels(wsi).inc(0)
                 station_wsi.labels(wsi).set(1)
@@ -215,10 +214,9 @@ def process_buffered_messages():
 
 # Call this function periodically, e.g., in a separate thread
 def periodic_buffer_processing():
-    logger.info("Starting periodic buffer processing")
     while True:
         process_buffered_messages()
-        time.sleep(5)  # Adjust sleep time as needed
+        time.sleep(1)  # Adjust sleep time as needed
 
 
 def gather_mqtt_metrics():
