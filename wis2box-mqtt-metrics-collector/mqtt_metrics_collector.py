@@ -153,16 +153,16 @@ def sub_mqtt_metrics(client, userdata, msg):
 
     logger.debug(f"Received message on topic={msg.topic}")
 
-    if str(msg.topic).startswith('$SYS/broker/messages/sent'):
+    if msg.topic.startswith('$SYS/broker/messages/sent'):
         broker_msg_sent.set(msg.payload)
-    elif str(msg.topic).startswith('$SYS/broker/messages/received'):
+    elif msg.topic.startswith('$SYS/broker/messages/received'):
         broker_msg_received.set(msg.payload)
-    elif str(msg.topic).startswith('$SYS/broker/messages/stored'):
+    elif msg.topic.startswith('$SYS/broker/messages/stored'):
         broker_msg_received.set(msg.payload)
-    elif str(msg.topic).startswith('$SYS/broker/messages/dropped'):
+    elif msg.topic.startswith('$SYS/broker/messages/dropped'):
         broker_msg_received.set(msg.payload)
 
-    if str(msg.topic).startswith('$SYS'):
+    if msg.topic.startswith('$SYS'):
         return
 
     with buffer_lock:
@@ -181,9 +181,9 @@ def process_buffered_messages():
 
     for topic, msg in messages_to_process:
         m = json.loads(msg.payload.decode('utf-8'))
-        if str(topic).startswith('wis2box/stations'):
+        if topic.startswith('wis2box/stations'):
             update_stations_gauge(m['station_list'])
-        elif str(topic).startswith('wis2box/notifications'):
+        elif topic.startswith('wis2box/notifications'):
             wsi = 'none'
             if 'wigos_station_identifier' in m['properties']:
                 wsi = m['properties']['wigos_station_identifier']
@@ -196,14 +196,14 @@ def process_buffered_messages():
             notify_wsi_total.labels(wsi).inc(1)
             failure_wsi_total.labels(wsi).inc(0)
             notify_total.inc(1)
-        elif str(topic).startswith('wis2box/failure'):
+        elif topic.startswith('wis2box/failure'):
             wsi = 'none'
             if 'wigos_station_identifier' in m:
                 wsi = m['wigos_station_identifier']
                 notify_wsi_total.labels(wsi).inc(0)
                 failure_wsi_total.labels(wsi).inc(1)
             failure_total.inc(1)
-        elif str(topic).startswith('wis2box/storage'):
+        elif topic.startswith('wis2box/storage'):
             if str(m["Key"]).startswith('wis2box-incoming'):
                 storage_incoming_total.inc(1)
             if str(m["Key"]).startswith('wis2box-public'):
