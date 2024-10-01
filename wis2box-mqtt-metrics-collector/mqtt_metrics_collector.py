@@ -180,7 +180,6 @@ def process_buffered_messages():
         message_buffer = []
 
     for topic, msg in messages_to_process:
-        print(f"Processing message on topic={topic}")
         m = json.loads(msg.payload.decode('utf-8'))
         if str(topic).startswith('wis2box/stations'):
             update_stations_gauge(m['station_list'])
@@ -190,7 +189,6 @@ def process_buffered_messages():
                 wsi = m['properties']['wigos_station_identifier']
             # if label wsi is not in notify_wsi_total, set to 0 and sleep 5s
             if (wsi,) not in notify_wsi_total._metrics:
-                print(f"wsi={wsi} not in existing WSIs: {[key[0] for key in notify_wsi_total._metrics.keys()]}")
                 notify_wsi_total.labels(wsi).inc(0)
                 failure_wsi_total.labels(wsi).inc(0)
                 station_wsi.labels(wsi).set(1)
