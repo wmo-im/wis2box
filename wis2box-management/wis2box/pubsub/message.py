@@ -44,8 +44,8 @@ class SecureHashAlgorithms(Enum):
 
 
 DATA_OBJECT_MIMETYPES = {
-    'bufr4': 'application/x-bufr',
-    'grib2': 'application/x-grib2',
+    'bufr4': 'application/bufr',
+    'grib2': 'application/grib2',
     'geojson': 'application/json'
 }
 
@@ -183,7 +183,7 @@ class WISNotificationMessage(PubSubMessage):
                 }
             },
             'links': links,
-            'generated-by': f'wis2box {__version__}'
+            'generated_by': f'wis2box {__version__}'
         }
 
         if metadata_id is not None:

@@ -345,7 +345,7 @@ def test_message_api():
 
     link_rel = msg['links'][0]
 
-    assert link_rel['type'] == 'application/x-bufr'
+    assert link_rel['type'] == 'application/bufr'
 
     r = SESSION.get(link_rel['href'])
 
@@ -387,6 +387,6 @@ def test_message_api():
 
     link_rel = msg['links'][0]
 
-    assert link_rel['type'] == 'application/x-bufr'
+    assert link_rel['type'] == 'application/bufr'
     assert link_rel['security']['default']['type'] == 'http'
     assert link_rel['security']['default']['scheme'] == 'bearer'
