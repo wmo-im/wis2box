@@ -4,7 +4,7 @@ Getting started
 ===============
 
 wis2box can be run on any Linux instance (bare metal or cloud hosted VM) with Python, Docker and Docker Compose installed. 
-The recommended OS is Ubuntu 22.04 LTS.
+The recommended OS is Ubuntu (20.04 LTS, 22.04 LTS or 24.04 LTS).
 
 .. note::
 
@@ -84,6 +84,16 @@ The following commands be used to setup the required software on Ubuntu (20.04 L
     sudo pip3 install pip --upgrade
     sudo pip3 install pyopenssl --upgrade
     sudo pip3 install requests==2.26.0 urllib3==1.26.0
+
+For Ubuntu 24.04 LTS, you will need to use a virtual environment to install the required Python packages:
+
+.. code-block:: bash
+
+    python3 -m venv wis2box
+    source wis2box/bin/activate
+    pip3 install pip --upgrade
+    pip3 install pyopenssl --upgrade
+    pip3 install requests==2.26.0 urllib3==1.26.0
 
 The following commands can be used to inspect the available versions of Python, Docker and Docker Compose on your system:
 
