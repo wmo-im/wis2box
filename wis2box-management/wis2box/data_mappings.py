@@ -121,6 +121,10 @@ def validate_and_load(path: str,
         msg = f'Could not match {path} to dataset, path should include one of the following: {options}'  # noqa
         raise ValueError(msg)
 
+    if 'plugins' not in data_mappings[metadata_id]:
+        msg = f'No plugins defined in data-mappings for metadata_id={metadata_id}' # noqa
+        LOGGER.error(msg)
+        raise ValueError(msg)
     plugins = data_mappings[metadata_id]['plugins']
 
     if file_type is None:
