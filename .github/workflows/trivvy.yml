@@ -50,15 +50,11 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-      - name: Build wis2downloader
-        if: always()
-        run: |
-          docker build -t wis2downloader:test wis2downloader
       - name: Run Trivy vulnerability scanner on wis2downloader
         if: always()
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: 'wis2downloader:test'
+          image-ref: 'ghcr.io/wmo-im/wis2downloader:latest'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
