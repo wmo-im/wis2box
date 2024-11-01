@@ -19,7 +19,7 @@
 #
 ###############################################################################
 
-FROM eclipse-mosquitto:2.0.15
+FROM eclipse-mosquitto:2.0.20
 
 RUN mkdir -p /data/wis2box/mosquitto
 RUN ln -s /mosquitto /data/wis2box/mosquitto
