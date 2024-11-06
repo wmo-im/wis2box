@@ -35,4 +35,10 @@ for i in `env | grep -Ee "\<WIS2BOX_BROKER_USERNAME_[[:alnum:]]+"`; do
     echo "topic readwrite ${!topic}" >>  /mosquitto/config/acl.conf
 done
 
+# set ownership of mosquitto files
+chown -R mosquitto:mosquitto /mosquitto
+
+# set permission of acl.conf to 0700
+chmod 0700 /mosquitto/config/acl.conf
+
 /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf
