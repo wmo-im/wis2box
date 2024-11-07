@@ -1,6 +1,6 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: int-wmo-test/data/core/weather/surface-based-observations/ship-hourly
+    topic_hierarchy: int-wmo-test/data/core/weather/surface-based-observations/ship
     country: int
     centre_id: int-wmo-test
     data_mappings:
@@ -16,7 +16,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:wmo:md:int-wmo-test:surface-weather-observations:ship-hourly
+    identifier: urn:wmo:md:int-wmo-test:surface-weather-observations:ship
     hierarchylevel: dataset
 
 identification:
