@@ -1,0 +1,69 @@
+wis2box:
+    retention: P30D
+    topic_hierarchy: example-test/data/core/weather/surface-based-observations/daily
+    country: int
+    centre_id: example-test
+    data_mappings:
+        plugins:
+            csv:
+                - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
+                  template: daycli-template
+                  notify: true
+                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.csv$'
+            bufr4:
+                - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
+                  file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
+
+mcf:
+    version: 1.0
+
+metadata:
+    identifier: urn:wmo:md:example-test:surface-weather-observations:daily
+    hierarchylevel: dataset
+
+identification:
+    title: Daily values from land stations (DAYCLI) 
+    abstract: Daily values from land stations (DAYCLI)
+    dates:
+        creation: 2024-03-04
+    keywords:
+        default:
+            keywords:
+                - surface weather
+                - temperature
+                - observations
+                - daily
+        wmo:
+            keywords:
+                - weather
+            keywords_type: theme
+            vocabulary:
+                name: Earth system disciplines as defined by the WMO Unified Data Policy, Resolution 1 (Cg-Ext(2021), Annex 1.
+                url: https://codes.wmo.int/wis/topic-hierarchy/earth-system-discipline
+    extents:
+        spatial:
+            - bbox: [-180.0, -90.0, 180.0, 90.0]
+              crs: 4326
+        temporal:
+            - begin: 2024-02-09
+              end: null
+              resolution: P1H
+    rights: WMO Unified Policy for the International Exchange of Earth System Data
+    url: https://example.org/fixme
+
+contact:
+    host: &contact_poc
+        organization: World Meteorological Organisation
+        url: https://www.wmo.int/
+        individualname: Firstname Lastname
+        positionname: Position Name
+        phone: null
+        fax: null
+        address: null
+        city: null
+        administrativearea: null
+        postalcode: null
+        country: null
+        email: you@example.org
+        hoursofservice: 0800h - 1600h UTC
+        contactinstructions: email

@@ -184,6 +184,19 @@ jobs:
         curl -s http://localhost/data/metadata/$DISCOVERY_METADATA_ID.json --output /tmp/$DISCOVERY_METADATA_ID
         pywcmp ets validate /tmp/$DISCOVERY_METADATA_ID
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
+    - name: add example-test daycli
+      env:
+        TOPIC_HIERARCHY: origin/a/wis2/example-test/data/core/weather/surface-based-observations/daily
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/example-test-daycli.yml
+        DISCOVERY_METADATA_ID: urn:wmo:md:example-test:surface-weather-observations:daily
+        STATION_METADATA: /data/wis2box/metadata/station/example-daycli-test.csv
+        TEST_DATA: /data/wis2box/observations/example-daycli-test
+      run: |
+        python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
+        python3 wis2box-ctl.py execute wis2box metadata station publish-collection --path $STATION_METADATA --topic-hierarchy $TOPIC_HIERARCHY
+        curl -s http://localhost/data/metadata/$DISCOVERY_METADATA_ID.json --output /tmp/$DISCOVERY_METADATA_ID
+        pywcmp ets validate /tmp/$DISCOVERY_METADATA_ID
+        python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
     - name: add China GRIB2 data (universal pipeline) 🇨🇳
       env:
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/cn-grapes-geps-global.yml
