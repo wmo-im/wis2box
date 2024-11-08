@@ -1,6 +1,6 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: example-test/data/core/weather/surface-based-observations/daily
+    topic_hierarchy: example-test/data/core/climate/surface-based-observations/daily
     country: int
     centre_id: example-test
     data_mappings:
@@ -18,7 +18,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:wmo:md:example-test:surface-weather-observations:daily
+    identifier: urn:wmo:md:example-test:surface-climate-observations:daily
     hierarchylevel: dataset
 
 identification:
@@ -29,10 +29,12 @@ identification:
     keywords:
         default:
             keywords:
-                - surface weather
                 - temperature
-                - observations
+                - snow depth
+                - precipitation
+                - climate
                 - daily
+                - daycli
         wmo:
             keywords:
                 - weather
