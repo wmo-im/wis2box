@@ -184,13 +184,13 @@ jobs:
         curl -s http://localhost/data/metadata/$DISCOVERY_METADATA_ID.json --output /tmp/$DISCOVERY_METADATA_ID
         pywcmp ets validate /tmp/$DISCOVERY_METADATA_ID
         python3 wis2box-ctl.py execute wis2box data ingest -mdi $DISCOVERY_METADATA_ID -p $TEST_DATA
-    - name: add int-daycli-test daycli
+    - name: add int-daycli-test data (csv2bufr)
       env:
         TOPIC_HIERARCHY: origin/a/wis2/int-daycli-test/data/core/climate/surface-based-observations/daily
-        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/int-daycli-test-daycli.yml
+        DISCOVERY_METADATA: /data/wis2box/metadata/discovery/int-daycli-test.yml
         DISCOVERY_METADATA_ID: urn:wmo:md:int-daycli-test:surface-climate-observations:daily
-        STATION_METADATA: /data/wis2box/metadata/station/example-int-daycli-test.csv
-        TEST_DATA: /data/wis2box/observations/example-int-daycli-test
+        STATION_METADATA: /data/wis2box/metadata/station/daycli-test.csv
+        TEST_DATA: /data/wis2box/observations/daycli-test
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection --path $STATION_METADATA --topic-hierarchy $TOPIC_HIERARCHY
