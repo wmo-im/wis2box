@@ -161,7 +161,7 @@ def test_metadata_discovery_publish():
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items',
                     params=params).json()
 
-    assert r['numberMatched'] == 8
+    assert r['numberMatched'] == 9
 
     # test access of discovery metadata from notification message
 
@@ -310,7 +310,7 @@ def test_message_api():
         'int-daycli-test': 30
     }
     for key, value in counts.items():
-        url = f'{API_URL}/collections/messages/items?sortby=-datetime&q={key}&limit=1'  # noqa
+        url = f'{API_URL}/collections/messages/items?sortby=-datetime&data_id={key}&limit=1'  # noqa
         r = SESSION.get(url).json()
         assert r['numberMatched'] == value
 
