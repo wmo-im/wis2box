@@ -9,7 +9,7 @@ wis2box:
                 - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
                   template: daycli-template
                   notify: true
-                  file-pattern: '^*\.csv$'
+                  file-pattern: '^.*\.csv$'
             bufr4:
                 - plugin: wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON
                   file-pattern: '^WIGOS_(\d-\d+-\d+-\w+)_.*\.bufr4$'
