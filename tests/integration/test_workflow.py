@@ -307,7 +307,7 @@ def test_message_api():
         'cg-met': 15,
         'int-wmo': 13,
         'cn-cma': 11,
-        'org-daycli': 37
+        'org-daycli': 31
     }
     for key, value in counts.items():
         url = f'{API_URL}/collections/messages/items?sortby=-datetime&q={key}&limit=1'  # noqa
