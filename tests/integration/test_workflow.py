@@ -59,7 +59,7 @@ def test_wis2downloader():
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/ship': 5, # noqa
         'origin/a/wis2/it-meteoam/data/core/weather/surface-based-observations/synop': 31, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/advisories-warnings': 1, # noqa
-        'int-daycli-test/data/core/climate/surface-based-observations/daily': 30 # noqa
+        'origin/a/wis2/org-daycli-test/data/core/climate/surface-based-observations/daily': 30 # noqa
     }
 
     topic_nfiles_dict_found = {}
@@ -172,7 +172,7 @@ def test_metadata_discovery_publish():
         'ro-rnimh-test',
         'cg-met',
         'int-wmo-test',
-        'int-daycli-test'
+        'org-daycli-test'
     ]
 
     for centre_id in centre_ids:
@@ -307,10 +307,10 @@ def test_message_api():
         'cg-met': 15,
         'int-wmo': 13,
         'cn-cma': 11,
-        'int-daycli-test': 30
+        'org-daycli-test': 30
     }
     for key, value in counts.items():
-        url = f'{API_URL}/collections/messages/items?sortby=-datetime&data_id={key}&limit=1'  # noqa
+        url = f'{API_URL}/collections/messages/items?sortby=-datetime&q={key}&limit=1'  # noqa
         r = SESSION.get(url).json()
         assert r['numberMatched'] == value
 

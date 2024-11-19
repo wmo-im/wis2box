@@ -1,8 +1,8 @@
 wis2box:
     retention: P30D
-    topic_hierarchy: int-daycli-test/data/core/climate/surface-based-observations/daily
+    topic_hierarchy: org-daycli-test/data/core/climate/surface-based-observations/daily
     country: int
-    centre_id: int-daycli-test
+    centre_id: org-daycli-test
     data_mappings:
         plugins:
             csv:
@@ -18,7 +18,7 @@ mcf:
     version: 1.0
 
 metadata:
-    identifier: urn:wmo:md:int-daycli-test:surface-climate-observations:daily
+    identifier: urn:wmo:md:org-daycli-test:surface-climate-observations:daily
     hierarchylevel: dataset
 
 identification:
