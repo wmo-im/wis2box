@@ -58,7 +58,8 @@ def test_wis2downloader():
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/wind-profile': 1, # noqa
         'origin/a/wis2/int-wmo-test/data/core/weather/surface-based-observations/ship': 5, # noqa
         'origin/a/wis2/it-meteoam/data/core/weather/surface-based-observations/synop': 31, # noqa
-        'origin/a/wis2/int-wmo-test/data/core/weather/advisories-warnings': 1 # noqa	
+        'origin/a/wis2/int-wmo-test/data/core/weather/advisories-warnings': 1, # noqa
+        'origin/a/wis2/org-daycli-test/data/core/climate/surface-based-observations/daily': 30 # noqa
     }
 
     topic_nfiles_dict_found = {}
@@ -118,15 +119,15 @@ def test_metadata_station_publish():
 
     stations = r.json()
 
-    assert stations['numberReturned'] == 103
-    assert stations['numberMatched'] == 103
+    assert stations['numberReturned'] == 104
+    assert stations['numberMatched'] == 104
 
 
 def test_metadata_discovery_publish():
     """Test discovery metadata publishing"""
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items').json()
-    assert r['numberMatched'] == 10
+    assert r['numberMatched'] == 11
 
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items/{ID}').json()  # noqa
 
@@ -160,7 +161,7 @@ def test_metadata_discovery_publish():
     r = SESSION.get(f'{API_URL}/collections/discovery-metadata/items',
                     params=params).json()
 
-    assert r['numberMatched'] == 8
+    assert r['numberMatched'] == 9
 
     # test access of discovery metadata from notification message
 
@@ -170,7 +171,8 @@ def test_metadata_discovery_publish():
         'dz-meteoalgerie',
         'ro-rnimh-test',
         'cg-met',
-        'int-wmo-test'
+        'int-wmo-test',
+        'org-daycli-test'
     ]
 
     for centre_id in centre_ids:
@@ -304,7 +306,8 @@ def test_message_api():
         'ro-rnimh': 50,
         'cg-met': 15,
         'int-wmo': 13,
-        'cn-cma': 11
+        'cn-cma': 11,
+        'org-daycli': 31
     }
     for key, value in counts.items():
         url = f'{API_URL}/collections/messages/items?sortby=-datetime&q={key}&limit=1'  # noqa
