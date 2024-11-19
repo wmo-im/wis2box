@@ -335,8 +335,6 @@ def publish_from_csv(path: Path, new_topic: str = None) -> None:
             if wigos_station_identifier in stations:
                 feature = stations[wigos_station_identifier]
                 topics = feature['properties'].get('topics', [])
-            # remove topics not in valid_topics
-            topics = [x for x in topics if x in valid_topics]
             # add new_topic if not already in topics
             if new_topic is not None:
                 topic2 = new_topic
@@ -378,8 +376,7 @@ def publish_from_csv(path: Path, new_topic: str = None) -> None:
                    'topics': topics,
                    # TODO: update with real-time status as per https://codes.wmo.int/wmdr/_ReportingStatus  # noqa
                    'status': 'operational'
-                },
-                'links': topics
+                }
             }
 
             LOGGER.debug('Checking properties against WMDR code lists')
