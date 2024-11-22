@@ -235,7 +235,6 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
     LOGGER.debug('Publishing discovery metadata')
     try:
         new_links = []
-
         if isinstance(metadata, dict):
             LOGGER.info('Adding WCMP2 record from dictionary')
             record = metadata
@@ -266,14 +265,21 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
             LOGGER.error(msg)
             raise RuntimeError(msg)
 
+        LOGGER.info('Checking if record / auth enabled')
         oar = Records(DOCKER_API_URL)
         try:
-            LOGGER.debug('Checking if record / auth enabled')
-            r = oar.collection_item('discovery-metadata', record['id']).json()
-            if r['wis2box'].get('has_auth', False):
+            records = oar.collection_items('discovery-metadata')
+            # find record in existing records
+            r = next((r for r in records['features'] if r['id'] == record['id']), None) # noqa
+            if r is None:
+                LOGGER.debug('Record not found in existing records')
+            elif r['wis2box'].get('has_auth', False):
+                LOGGER.debug('Auth enabled, adding to record')
                 record['wis2box']['has_auth'] = True
+            else:
+                LOGGER.debug('No auth defined')
         except Exception:
-            LOGGER.debug('No auth defined')
+            LOGGER.error('Failed to check for auth')
 
         LOGGER.debug('Publishing to API')
         upsert_collection_item('discovery-metadata', record)

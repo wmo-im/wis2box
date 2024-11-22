@@ -212,29 +212,28 @@ class WISNotificationMessage(PubSubMessage):
             }
             self.message['links'].append(link)
 
-        LOGGER.debug(f'Checking for access control (metadata id: {metadata_id})')  # noqa
-        try:
-            oar = Records(DOCKER_API_URL)
-            record = oar.collection_item('discovery-metadata', metadata_id)
-
-            if record['wis2box'].get('has_auth'):
-                LOGGER.debug('Updating message with access control')
-
-                for link in self.message['links']:
-                    if link['href'] == public_file_url:
-                        LOGGER.debug('Adding security object to link')
-                        link['security'] = {
-                            'default': {
-                                'type': 'http',
-                                'scheme': 'bearer',
-                                'description': 'Please contact the data provider for access'  # noqa
+        # check if metadata record exists and has access control
+        if metadata_id is not None:
+            LOGGER.debug(f'Find metadata record with id={metadata_id}')
+            try:
+                oar = Records(DOCKER_API_URL)
+                record = oar.collection_item('discovery-metadata', metadata_id)
+                if record and record['wis2box'].get('has_auth'):
+                    LOGGER.debug('Updating message with access control')
+                    for link in self.message['links']:
+                        if link['href'] == public_file_url:
+                            LOGGER.debug('Adding security object to link')
+                            link['security'] = {
+                                'default': {
+                                    'type': 'http',
+                                    'scheme': 'bearer',
+                                    'description': 'Please contact the data provider for access'  # noqa
+                                }
                             }
-                        }
-
-                LOGGER.debug('Removing inline content')
-                self.message['properties'].pop('content', None)
-        except Exception as err:
-            LOGGER.debug(f'Cannot locate metadata record: {err}')
+                    LOGGER.debug('Removing inline content')
+                    self.message['properties'].pop('content', None)
+            except Exception as err:
+                LOGGER.warning(f'No item with metadata_id={metadata_id}: {err}') # noqa
 
 
 def gcm() -> dict:

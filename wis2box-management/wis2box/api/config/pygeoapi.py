@@ -81,10 +81,13 @@ class PygeoapiConfig(BaseConfig):
         :returns: `dict` of collection configuration
         """
 
-        r = self.http.get(f'{self.url}/{name}')
-        r.raise_for_status()
-
-        return r.json()
+        LOGGER.debug(f'get_collection name={name}')
+        for key in self.list_collections():
+            if key == name:
+                r = self.http.get(f'{self.url}/{name}')
+                r.raise_for_status()
+                return r.json()
+        LOGGER.debug(f'Collection {name} not found')
 
     def get_collection_data(self, name: str) -> dict:
         """
@@ -111,8 +114,10 @@ class PygeoapiConfig(BaseConfig):
         """
 
         if self.has_collection(name):
+            LOGGER.debug(f'Collection {name} already exists, updating')
             r = self.http.put(f'{self.url}/{name}', json=collection)
         else:
+            LOGGER.debug(f'Collection {name} does not exist, creating')
             content = {name: collection}
             r = self.http.post(self.url, json=content)
 
@@ -139,12 +144,8 @@ class PygeoapiConfig(BaseConfig):
 
         :returns: `bool` of collection result
         """
-
-        try:
-            r = self.http.get(f'{self.url}/{name}')
-        except Exception:
-            return False
-        return r.ok
+        LOGGER.debug(f'Check if collection {name} is in {[key for key in self.list_collections()]}') # noqa
+        return name in self.list_collections()
 
     def prepare_collection(self, meta: dict) -> bool:
         """
