@@ -232,6 +232,28 @@ def delete_collections_by_retention(days: int) -> None:
     backend.delete_collections_by_retention(days)
 
 
+def get_plugins(record: dict) -> list:
+    """
+    Get plugins from record
+
+    :param record: `dict` of record
+
+    :returns: `list` of plugins
+    """
+
+    plugins = []
+
+    try:
+        dm = record['wis2box']['data_mappings']
+        for filetype in dm['plugins'].keys():
+            for p in dm['plugins'][filetype]:
+                plugins.append(p['plugin'])
+    except Exception as e:
+        LOGGER.info(f"No plugins found for record-id={record['id']} : {e}")
+
+    return plugins
+
+
 @click.group()
 def api():
     """API management"""
@@ -258,10 +280,15 @@ def setup(ctx, verbosity):
     except Exception as err:
         click.echo(f'Issue loading discovery-metadata: {err}')
         return False
+    # loop over records and add data-collection when bufr2geojson is used
     for record in records['features']:
         metadata_id = record['id']
+        plugins = get_plugins(record)
+        LOGGER.info(f'Plugins used by {metadata_id}: {plugins}')
+        if 'wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON' not in plugins: # noqa
+            continue
         if metadata_id not in api_collections:
-            click.echo(f'Adding collection: {metadata_id}')
+            click.echo(f'Adding data-collection for: {metadata_id}')
             from wis2box.data import gcm
             meta = gcm(record)
             setup_collection(meta=meta)
