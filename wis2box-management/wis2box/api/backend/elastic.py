@@ -103,6 +103,57 @@ MAPPINGS = {
     }
 }
 
+MAPPINGS_OBS = {
+    'properties': {
+        'geometry': {
+            'type': 'geo_shape'
+        },
+        'properties': {
+            'properties': {
+                'name': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {'type': 'keyword'}
+                    }
+                },
+                'observationTime': {
+                    'type': 'date',
+                    'fields': {
+                        'raw': {'type': 'keyword'}
+                    }
+                },
+                'phenomenonTime': {
+                    'type': 'text'
+                },
+                'wigos_station_identifier': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {'type': 'keyword'}
+                    }
+                },
+                'units': {
+                    'type': 'text'
+                },
+                'value': {
+                    'type': 'float',
+                    'coerce': True
+                },
+                'description': {
+                    'type': 'text'
+                },
+                'reportId': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {
+                            'type': 'keyword'
+                        }
+                    }
+                },
+            }
+        }
+    }
+}
+
 MAPPINGS_STATIONS = {
     'properties': {
         'geometry': {
@@ -216,8 +267,10 @@ class ElasticBackend(BaseBackend):
 
         if collection_id == 'stations':
             mappings = MAPPINGS_STATIONS
-        else:
+        elif collection_id in ['discovery-metadata', 'messages']:
             mappings = MAPPINGS
+        else:
+            mappings = MAPPINGS_OBS
 
         es_index = self.es_id(collection_id)
 
@@ -316,8 +369,11 @@ class ElasticBackend(BaseBackend):
                     '_id': feature['id'],
                     '_source': feature
                 }
-
-        helpers.bulk(self.conn, gendata(items))
+        success, errors = helpers.bulk(self.conn, gendata(items), raise_on_error=False) # noqa
+        if errors:
+            for error in errors:
+                LOGGER.error(f"Indexing error: {error}")
+            raise RuntimeError(f"Upsert failed with {len(errors)} errors")
 
     def delete_collection_item(self, collection_id: str, item_id: str) -> str:
         """
