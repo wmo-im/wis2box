@@ -35,7 +35,8 @@ from pygeometa.schemas.wmo_wcmp2 import WMOWCMP2OutputSchema
 from wis2box import cli_helpers
 from wis2box.api import (delete_collection_item, remove_collection,
                          setup_collection, upsert_collection_item)
-from wis2box.data_mappings import refresh_data_mappings
+from wis2box.data_mappings import refresh_data_mappings, get_plugins
+
 from wis2box.env import (API_URL, BROKER_PUBLIC, DOCKER_API_URL,
                          STORAGE_PUBLIC, STORAGE_SOURCE, URL)
 from wis2box.metadata.base import BaseMetadata
@@ -76,17 +77,7 @@ class DiscoveryMetadata(BaseMetadata):
         if md['identification']['extents']['temporal'][0].get('begin', 'BEGIN_DATE') is None:  # noqa
             today = date.today().strftime('%Y-%m-%d')
             md['identification']['extents']['temporal'][0]['begin'] = today
-
-        LOGGER.debug('Adding distribution links')
-        oafeat_link, mqp_link, canonical_link = self.get_distribution_links(
-            identifier, mqtt_topic, format_='mcf')
-
-        md['distribution'] = {
-            'oafeat': oafeat_link,
-            'mqtt': mqp_link,
-            'canonical': canonical_link
-        }
-
+        
         LOGGER.debug('Adding data policy')
         md['identification']['wmo_data_policy'] = mqtt_topic.split('/')[5]
 
@@ -94,6 +85,13 @@ class DiscoveryMetadata(BaseMetadata):
         record = WMOWCMP2OutputSchema().write(md, stringify=False)
         record['properties']['wmo:topicHierarchy'] = mqtt_topic
         record['wis2box'] = mcf['wis2box']
+
+        LOGGER.debug('Adding distribution links')
+        distribution_links = self.get_distribution_links(
+            record,
+            format_='wcmp2')
+        # update links, do not extend or we get duplicates
+        record['links'] = distribution_links
 
         if record['properties']['contacts'][0].get('organization') is None:
             record['properties']['contacts'][0]['organization'] = record['properties']['contacts'][0].pop('name', "NOTSET")  # noqa
@@ -118,26 +116,35 @@ class DiscoveryMetadata(BaseMetadata):
 
         return record
 
-    def get_distribution_links(self, identifier: str, topic: str,
+    def get_distribution_links(self,
+                               record: dict,
                                format_='mcf') -> list:
         """
         Generates distribution links
 
-        :param identifier: `str` of metadata identifier
-        :param topic: `str` of associated topic
+        :param record: `dict` of discovery metadata record
         :param format_: `str` of format (`mcf` or `wcmp2`)
 
         :returns: `list` of distribution links
         """
 
         LOGGER.debug('Adding distribution links')
-        oafeat_link = {
-            'href': f"{API_URL}/collections/{identifier}?f=json",
-            'type': 'application/json',
-            'name': identifier,
-            'description': identifier,
-            'rel': 'collection'
-        }
+        
+        identifier = record['id']
+        topic = record['properties']['wmo:topicHierarchy']
+
+        oafeat_link = None
+        plugins = get_plugins(record)
+        # check if any plugin-names contains 2geojson
+        has_2geojson = any('2geojson' in plugin for plugin in plugins)
+        if has_2geojson:
+            oafeat_link = {
+                'href': f"{API_URL}/collections/{identifier}?f=json",
+                'type': 'application/json',
+                'name': identifier,
+                'description': f'Observations in json format for {identifier}',
+                'rel': 'collection'
+            }
 
         mqp_link = {
             'href': get_broker_public_endpoint(),
@@ -240,7 +247,7 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
             record = metadata
             dm = DiscoveryMetadata()
             distribution_links = dm.get_distribution_links(
-                record['id'], record['properties']['wmo:topicHierarchy'],
+                record,
                 format_='wcmp2')
             # update links, do not extend or we get duplicates
             record['links'] = distribution_links

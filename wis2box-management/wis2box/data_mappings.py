@@ -31,6 +31,28 @@ from wis2box.plugin import load_plugin, PLUGINS
 LOGGER = logging.getLogger(__name__)
 
 
+def get_plugins(record: dict) -> list:
+    """
+    Get plugins from record
+
+    :param record: `dict` of record
+
+    :returns: `list` of plugins
+    """
+
+    plugins = []
+
+    try:
+        dm = record['wis2box']['data_mappings']
+        for filetype in dm['plugins'].keys():
+            for p in dm['plugins'][filetype]:
+                plugins.append(p['plugin'])
+    except Exception as e:
+        LOGGER.info(f"No plugins found for record-id={record['id']} : {e}")
+
+    return plugins
+
+
 def refresh_data_mappings():
     # load plugin for local broker and publish refresh request
     defs_local = {

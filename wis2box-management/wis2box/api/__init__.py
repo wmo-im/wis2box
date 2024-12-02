@@ -30,6 +30,8 @@ from owslib.ogcapi.records import Records
 from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
+from wis2box.data_mappings import get_plugins
+
 from wis2box.env import (DOCKER_API_URL, API_URL)
 
 LOGGER = logging.getLogger(__name__)
@@ -232,28 +234,6 @@ def delete_collections_by_retention(days: int) -> None:
     backend.delete_collections_by_retention(days)
 
 
-def get_plugins(record: dict) -> list:
-    """
-    Get plugins from record
-
-    :param record: `dict` of record
-
-    :returns: `list` of plugins
-    """
-
-    plugins = []
-
-    try:
-        dm = record['wis2box']['data_mappings']
-        for filetype in dm['plugins'].keys():
-            for p in dm['plugins'][filetype]:
-                plugins.append(p['plugin'])
-    except Exception as e:
-        LOGGER.info(f"No plugins found for record-id={record['id']} : {e}")
-
-    return plugins
-
-
 @click.group()
 def api():
     """API management"""
@@ -285,7 +265,9 @@ def setup(ctx, verbosity):
         metadata_id = record['id']
         plugins = get_plugins(record)
         LOGGER.info(f'Plugins used by {metadata_id}: {plugins}')
-        if 'wis2box.data.bufr2geojson.ObservationDataBUFR2GeoJSON' not in plugins: # noqa
+        # check if any plugin-names contains 2geojson
+        has_2geojson = any('2geojson' in plugin for plugin in plugins)
+        if has_2geojson is False:
             continue
         if metadata_id not in api_collections:
             click.echo(f'Adding data-collection for: {metadata_id}')
