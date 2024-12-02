@@ -81,17 +81,13 @@ class DiscoveryMetadata(BaseMetadata):
         LOGGER.debug('Adding data policy')
         md['identification']['wmo_data_policy'] = mqtt_topic.split('/')[5]
 
+        # md set 'distribution' to empty object, we add links later
+        md['distribution'] = {}
+
         LOGGER.debug('Generating OARec discovery metadata')
         record = WMOWCMP2OutputSchema().write(md, stringify=False)
         record['properties']['wmo:topicHierarchy'] = mqtt_topic
         record['wis2box'] = mcf['wis2box']
-
-        LOGGER.debug('Adding distribution links')
-        distribution_links = self.get_distribution_links(
-            record,
-            format_='wcmp2')
-        # update links, do not extend or we get duplicates
-        record['links'] = distribution_links
 
         if record['properties']['contacts'][0].get('organization') is None:
             record['properties']['contacts'][0]['organization'] = record['properties']['contacts'][0].pop('name', "NOTSET")  # noqa
@@ -128,12 +124,12 @@ class DiscoveryMetadata(BaseMetadata):
         :returns: `list` of distribution links
         """
 
-        LOGGER.debug('Adding distribution links')
+        LOGGER.info('Adding distribution links')
         
         identifier = record['id']
         topic = record['properties']['wmo:topicHierarchy']
 
-        oafeat_link = None
+        links = []
         plugins = get_plugins(record)
         # check if any plugin-names contains 2geojson
         has_2geojson = any('2geojson' in plugin for plugin in plugins)
@@ -145,6 +141,7 @@ class DiscoveryMetadata(BaseMetadata):
                 'description': f'Observations in json format for {identifier}',
                 'rel': 'collection'
             }
+            links.append(oafeat_link)
 
         mqp_link = {
             'href': get_broker_public_endpoint(),
@@ -154,6 +151,7 @@ class DiscoveryMetadata(BaseMetadata):
             'rel': 'items',
             'channel': topic
         }
+        links.append(mqp_link)
 
         canonical_link = {
             'href': f"{API_URL}/collections/discovery-metadata/items/{identifier}",  # noqa
@@ -162,12 +160,13 @@ class DiscoveryMetadata(BaseMetadata):
             'description': identifier,
             'rel': 'canonical'
         }
+        links.append(canonical_link)
 
         if format_ == 'mcf':
-            for link in [oafeat_link, mqp_link, canonical_link]:
+            for link in links:
                 link['url'] = link.pop('href')
 
-        return oafeat_link, mqp_link, canonical_link
+        return links
 
 
 def publish_broker_message(record: dict, storage_path: str,
@@ -246,21 +245,20 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
             LOGGER.info('Adding WCMP2 record from dictionary')
             record = metadata
             dm = DiscoveryMetadata()
-            distribution_links = dm.get_distribution_links(
-                record,
-                format_='wcmp2')
-            # update links, do not extend or we get duplicates
-            record['links'] = distribution_links
-            for link in record['links']:
-                if 'description' in link:
-                    link['title'] = link.pop('description')
-                if 'url' in link:
-                    link['href'] = link.pop('url')
         else:
-            LOGGER.debug('Transforming MCF into WCMP2 record')
+            LOGGER.info('Transforming MCF into WCMP2 record')
             dm = DiscoveryMetadata()
             record_mcf = dm.parse_record(metadata)
             record = dm.generate(record_mcf)
+
+        distribution_links = dm.get_distribution_links(record, format_='wcmp2')
+        # update links, do not extend or we get duplicates
+        record['links'] = distribution_links
+        for link in record['links']:
+            if 'description' in link:
+                link['title'] = link.pop('description')
+            if 'url' in link:
+                link['href'] = link.pop('url')
 
         if 'x-wmo' in record['id']:
             msg = 'Change x-wmo to wmo in metadata identifier'
