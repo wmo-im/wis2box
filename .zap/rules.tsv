@@ -21,3 +21,4 @@
 10036	IGNORE	"Server Leaks Version Information via ""Server"" HTTP Response Header Field"	Low
 10110	IGNORE	Dangerous JS Functions	Low
 10105	IGNORE	Authentication Credentials Captured	Medium
+10003	IGNORE	Vulnerable JS Library	Medium
