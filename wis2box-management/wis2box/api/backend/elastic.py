@@ -116,10 +116,18 @@ MAPPINGS_OBS = {
                         'raw': {'type': 'keyword'}
                     }
                 },
-                'observationTime': {
+                'reportTime': {
                     'type': 'date',
                     'fields': {
                         'raw': {'type': 'keyword'}
+                    }
+                },
+                'reportId': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {
+                            'type': 'keyword'
+                        }
                     }
                 },
                 'phenomenonTime': {
@@ -140,14 +148,6 @@ MAPPINGS_OBS = {
                 },
                 'description': {
                     'type': 'text'
-                },
-                'reportId': {
-                    'type': 'text',
-                    'fields': {
-                        'raw': {
-                            'type': 'keyword'
-                        }
-                    }
                 },
             }
         }
