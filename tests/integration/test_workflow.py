@@ -214,14 +214,19 @@ def test_metadata_discovery_publish():
 def test_data_ingest():
     """Test data ingest/process publish"""
 
-    item_api_url = f'{API_URL}/collections/{ID}/items/WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500-82'  # noqa
+    item_api_url = f'{API_URL}/collections/{ID}/items/0-454-2-AWSNAMITAMBO-202107071455-15'  # noqa
 
     item_api = SESSION.get(item_api_url).json()
 
-    assert item_api['reportId'] == 'WIGOS_0-454-2-AWSNAMITAMBO_20210707T145500'
-    assert item_api['properties']['resultTime'] == '2021-07-07T14:55:00Z'  # noqa
-    item_source = f'2021-07-07/wis/{ID}/{item_api["reportId"]}.bufr4' # noqa
-    r = SESSION.get(f'{URL}/data/{item_source}')  # noqa
+    assert item_api['reportId'] == '0-454-2-AWSNAMITAMBO-202107071455'
+    assert item_api['properties']['reportTime'] == '2021-07-07T14:55:00Z'  # noqa
+    assert item_api['properties']['wigos_station_identifier'] == '0-454-2-AWSNAMITAMBO'  # noqa
+    assert item_api['properties']['name'] == 'global_solar_radiation_integrated_over_period_specified' # noqa
+    assert item_api['properties']['value'] == 0.0
+    assert item_api['properties']['unit'] == 'J m-2'
+    assert item_api['properties']['phenomenonTime'] == '2021-07-06T14:55:00Z/2021-07-07T14:55:00Z'  # noqa
+
+
     assert r.status_code == codes.ok
 
 

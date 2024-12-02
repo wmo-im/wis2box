@@ -130,7 +130,7 @@ def gcm(mcf: Union[dict, str]) -> dict:
         'bbox': bbox,
         'links': generated['links'],
         'id_field': 'id',
-        'time_field': 'observationTime',
+        'time_field': 'reportTime',
         'title_field': 'id'
     }
 
