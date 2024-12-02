@@ -124,8 +124,8 @@ def gcm(mcf: Union[dict, str]) -> dict:
         'id': generated['id'],
         'type': 'feature',
         'topic_hierarchy': generated['properties']['wmo:topicHierarchy'].replace('origin/a/wis2/', '').replace('/', '.'),  # noqa: E501
-        'title': f'bufr2geojson output ({generated["id"]})',
-        'description': f'Output published by bufr2geojson for dataset with id={generated["id"]}', # noqa
+        'title': f'Observations in json format for {generated["id"]}',
+        'description': f'Observations in json format for {generated["id"]}', # noqa
         'keywords': generated['properties']['keywords'],
         'bbox': bbox,
         'links': generated['links'],
