@@ -124,13 +124,13 @@ def gcm(mcf: Union[dict, str]) -> dict:
         'id': generated['id'],
         'type': 'feature',
         'topic_hierarchy': generated['properties']['wmo:topicHierarchy'].replace('origin/a/wis2/', '').replace('/', '.'),  # noqa: E501
-        'title': generated['properties']['title'],
-        'description': generated['properties']['description'],
+        'title': f'Observations in json format for {generated["id"]}',
+        'description': f'Observations in json format for {generated["id"]}', # noqa
         'keywords': generated['properties']['keywords'],
         'bbox': bbox,
         'links': generated['links'],
         'id_field': 'id',
-        'time_field': 'resultTime',
+        'time_field': 'reportTime',
         'title_field': 'id'
     }
 
@@ -145,7 +145,7 @@ def add_collection_data(metadata: str):
     """
 
     meta = gcm(metadata)
-
+    LOGGER.info(f'Adding data-collection for {meta["id"]}')
     setup_collection(meta=meta)
 
     return
