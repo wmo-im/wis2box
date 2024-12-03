@@ -218,7 +218,7 @@ def test_data_ingest():
 
     item_api = SESSION.get(item_api_url).json()
 
-    assert item_api['reportId'] == '0-454-2-AWSNAMITAMBO-202107071455'
+    assert item_api['properties']['reportId'] == '0-454-2-AWSNAMITAMBO-202107071455'
     assert item_api['properties']['reportTime'] == '2021-07-07T14:55:00Z'  # noqa
     assert item_api['properties']['wigos_station_identifier'] == '0-454-2-AWSNAMITAMBO'  # noqa
     assert item_api['properties']['name'] == 'global_solar_radiation_integrated_over_period_specified' # noqa
