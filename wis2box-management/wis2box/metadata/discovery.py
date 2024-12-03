@@ -63,8 +63,6 @@ class DiscoveryMetadata(BaseMetadata):
 
         md = deepcopy(mcf)
 
-        identifier = md['metadata']['identifier']
-
         local_topic = mcf['wis2box']['topic_hierarchy'].replace('.', '/')
         mqtt_topic = f'origin/a/wis2/{local_topic}'
 
@@ -77,7 +75,7 @@ class DiscoveryMetadata(BaseMetadata):
         if md['identification']['extents']['temporal'][0].get('begin', 'BEGIN_DATE') is None:  # noqa
             today = date.today().strftime('%Y-%m-%d')
             md['identification']['extents']['temporal'][0]['begin'] = today
-        
+
         LOGGER.debug('Adding data policy')
         md['identification']['wmo_data_policy'] = mqtt_topic.split('/')[5]
 
@@ -125,7 +123,7 @@ class DiscoveryMetadata(BaseMetadata):
         """
 
         LOGGER.info('Adding distribution links')
-        
+
         identifier = record['id']
         topic = record['properties']['wmo:topicHierarchy']
 

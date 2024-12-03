@@ -406,30 +406,42 @@ class ElasticBackend(BaseBackend):
         indices = self.conn.indices.get(index='*').keys()
 
         before = datetime_days_ago(days)
+        # also delete future data
+        after = datetime_days_ago(-1)
 
-        query_by_date = {
+        msg_query_by_date = {
             'query': {
                 'bool': {
-                    'should': [{
-                        'range': {
-                            'properties.resultTime': {
-                                'lte': before
-                            }
-                        }
-                    }, {
-                        'range': {
-                            'properties.pubTime': {
-                                'lte': before
-                            }
-                        }
-                    }]
+                    'should': [
+                        {'range': {'properties.pubTime': {'lte': before}}},
+                        {'range': {'properties.pubTime': {'gte': after}}}
+                    ]
+                }
+            }
+        }
+        obs_query_by_date = {
+            'query': {
+                'bool': {
+                    'should': [
+                        {'range': {'properties.reportTime': {'lte': before}}},
+                        {'range': {'properties.reportTime': {'gte': after}}}
+                    ]
                 }
             }
         }
 
         for index in indices:
-            LOGGER.debug(f'deleting documents older than {days} days ({before})')  # noqa
-            self.conn.delete_by_query(index=index, **query_by_date)
+            if index == 'messages':
+                query_by_date = msg_query_by_date
+            elif index.startswith('urn-wmo-md'):
+                query_by_date = obs_query_by_date
+            else:
+                # don't run delete-query on other indexes
+                LOGGER.info(f'items for index={index} will not be deleted')
+                continue
+            LOGGER.info(f'deleting documents from index={index} older than {days} days ({before}) or newer than {after}')  # noqa
+            result = self.conn.delete_by_query(index=index, **query_by_date)
+            LOGGER.info(f'deleted {result["deleted"]} documents from index={index}')  # noqa
 
         return
 
