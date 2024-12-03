@@ -223,7 +223,7 @@ def test_data_ingest():
     assert item_api['properties']['wigos_station_identifier'] == '0-454-2-AWSNAMITAMBO'  # noqa
     assert item_api['properties']['name'] == 'global_solar_radiation_integrated_over_period_specified' # noqa
     assert item_api['properties']['value'] == 0.0
-    assert item_api['properties']['unit'] == 'J m-2'
+    assert item_api['properties']['units'] == 'J m-2'
     assert item_api['properties']['phenomenonTime'] == '2021-07-06T14:55:00Z/2021-07-07T14:55:00Z'  # noqa
 
 
