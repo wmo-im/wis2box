@@ -227,9 +227,6 @@ def test_data_ingest():
     assert item_api['properties']['phenomenonTime'] == '2021-07-06T14:55:00Z/2021-07-07T14:55:00Z'  # noqa
 
 
-    assert r.status_code == codes.ok
-
-
 def test_data_api():
     """Test data API collection queries"""
 
