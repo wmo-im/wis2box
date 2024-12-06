@@ -133,7 +133,7 @@ class DiscoveryMetadata(BaseMetadata):
         has_2geojson = any('2geojson' in plugin for plugin in plugins)
         if has_2geojson:
             oafeat_link = {
-                'href': f"{API_URL}/collections/{identifier}?f=json",
+                'href': f"{API_URL}/collections/{identifier}/items",
                 'type': 'application/json',
                 'name': identifier,
                 'description': f'Observations in json format for {identifier}',
