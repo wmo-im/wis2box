@@ -29,7 +29,8 @@ services:
 
   wis2box-api:
     container_name: wis2box-api
-    image: ghcr.io/wmo-im/wis2box-api:latest
+    image: wis2box-api:issue-806
+    #image: ghcr.io/wmo-im/wis2box-api:latest
     restart: always
     env_file:
       - wis2box.env
@@ -110,6 +111,8 @@ services:
       context: ./wis2box-broker
     env_file:
       - wis2box.env
+    volumes:
+      - mosquitto-config:/mosquitto/config
 
   wis2box-management:
     container_name: wis2box-management
@@ -160,3 +163,4 @@ volumes:
   minio-data:
   auth-data:
   htpasswd:
+  mosquitto-config:
