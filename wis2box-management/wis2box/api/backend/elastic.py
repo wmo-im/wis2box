@@ -80,7 +80,7 @@ MAPPINGS = {
                 'phenomenonTime': {
                     'type': 'text',
                     'fields': {
-                        'raw': { 'type': 'keyword'}
+                        'raw': {'type': 'keyword'}
                     }
                 },
                 'wigos_station_identifier': {
