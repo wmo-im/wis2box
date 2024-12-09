@@ -24,7 +24,7 @@ Please ensure that you follow these best practices to ensure your wis2box-instan
 
 The wis2box development team is not responsible for the security of your wis2box-instance and it is your responsibility to ensure that your wis2box instance is secure.
 
-GitHub issues and discussions provide a resourece and forum to discuss general wis2box features, bugs and updates.  For specific security related questions, please write to ``wis2-support at wmo.int``.
+GitHub issues and discussions provide a resource and forum to discuss general wis2box features, bugs and updates.  For specific security related questions, please write to ``wis2-support at wmo.int``.
 
 web-proxy (nginx)
 ^^^^^^^^^^^^^^^^^
@@ -39,6 +39,7 @@ wis2box runs a local nginx container allowing access to the following HTTP based
    UI (wis2box-ui),`WIS2BOX_URL/`
    Storage (incoming data) (minio:wis2box-incoming),`WIS2BOX_URL/wis2box-incoming`
    Storage (public data) (minio:wis2box-public),`WIS2BOX_URL/data`
+   Websockets (WIS2-notifications),`WIS2BOX_URL/mqtt`
 
 You can edit ``nginx/nginx.conf`` to control which services are exposed through the nginx-container include in your stack.
 
@@ -141,6 +142,19 @@ By exposing port 1883 on your host, the Global Broker will be able to subscribe 
 .. note::
 
    The ``everyone`` user is defined by default for public readonly access (``origin/#``) as per WIS2 Node requirements.
+
+When you add SSL to your wis2box instance, the internal MQTT broker will be accessible on port 8883 on the host running wis2box using the MQTT over SSL protocol (MQTTS).
+
+The mosquitto-service within wis2box also has websockets enabled and is proxied on '/mqtt' by the nginx container. 
+
+The broker-address for the Global Broker to subscribe to WIS2 notifications using the mosquitto-service within wis2box is:
+
+- `mqtt://everyone:everyone@WIS2BOX_HOST:1883` - for MQTT without SSL
+- `mqtts://everyone:everyone@WIS2BOX_HOST:8883` - for MQTT with SSL
+- `ws://everyone:everyone@WIS2BOX_HOST/mqtt:80` - for MQTT over websockets without SSL
+- `wss://everyone:everyone@WIS2BOX_HOST/mqtt:443` - for MQTT over websockets with SSL
+
+Where ``WIS2BOX_HOST`` is the hostname or IP address of the host running wis2box.	
 
 External broker
 ---------------
