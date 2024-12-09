@@ -132,8 +132,9 @@ class DiscoveryMetadata(BaseMetadata):
         # check if any plugin-names contains 2geojson
         has_2geojson = any('2geojson' in plugin for plugin in plugins)
         if has_2geojson:
+            # default view is descending by reportTime
             oafeat_link = {
-                'href': f"{API_URL}/collections/{identifier}/items",
+                'href': f"{API_URL}/collections/{identifier}/items?sortby=-reportTime", # noqa
                 'type': 'application/json',
                 'name': identifier,
                 'description': f'Observations in json format for {identifier}',
