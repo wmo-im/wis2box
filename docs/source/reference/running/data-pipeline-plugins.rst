@@ -32,7 +32,21 @@ A typical csv2bufr plugin workflow definition would by defined as follows:
 
    csv:
        - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
-         template: /data/wis2box/synop_bufr.json  # locally created csv2bufr mapping (located in $WIS2BOX_HOST_DATADIR)
+         template: aws-template # using one of the built-in templates
+         notify: true  # trigger GeoJSON publishing for API and UI
+         file-pattern: '^.*\.csv$'
+
+The default templates are defined by the `csv2bufr-templates`_ repository.
+
+In the case the user wants to use a custom template, the template should be located in the ``$WIS2BOX_HOST_DATADIR/mappings`` directory.
+
+The plugin configuration would then be defined as follows:
+
+.. code-block:: yaml
+
+   csv:
+       - plugin: wis2box.data.csv2bufr.ObservationDataCSV2BUFR
+         template: /data/wis2box/mappings/my_own_template.json  # locally created csv2bufr mapping (located in $WIS2BOX_HOST_DATADIR/mappings)
          notify: true  # trigger GeoJSON publishing for API and UI
          file-pattern: '^.*\.csv$'
 
@@ -146,5 +160,7 @@ For example, to publish GRIB2 data matching the file-pattern ``^.*_(\d{8})\d{2}.
 See :ref:`data-mappings` for a full example data mapping configuration.
 
 .. _`csv2bufr`: https://csv2bufr.readthedocs.io
+.. _`csv2bufr-templates`: https://github.com/wmo-im/csv2bufr-templates
 .. _`bufr2geojson`: https://github.com/wmo-im/bufr2geojson
 .. _`synop2bufr`: https://synop2bufr.readthedocs.io
+
