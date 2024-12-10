@@ -29,8 +29,7 @@ services:
 
   wis2box-api:
     container_name: wis2box-api
-    image: wis2box-api:issue-806
-    #image: ghcr.io/wmo-im/wis2box-api:latest
+    image: ghcr.io/wmo-im/wis2box-api:latest
     restart: always
     env_file:
       - wis2box.env
