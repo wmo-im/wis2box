@@ -40,6 +40,8 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost/oapi/admin/resources"]
       interval: 5s
       retries: 100
+    volumes:
+      - ${WIS2BOX_HOST_DATADIR}/mappings:/data/wis2box/mappings:ro
 
   minio:
     container_name: wis2box-minio
@@ -51,7 +53,9 @@ services:
       - wis2box.env
     environment:
       - MINIO_BROWSER_LOGIN_ANIMATION=off
-    command: server --console-address ":9001" /data
+      - MINIO_BROWSER_REDIRECT=false
+      - MINIO_UPDATE=off
+    command: server --quiet --console-address ":9001" /data
     # in a production-setup minio needs to be
     volumes:
       - minio-data:/data
@@ -76,6 +80,15 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - cluster.name=es-wis2box
       - xpack.security.enabled=false
+      - ingest.geoip.downloader.enabled=false
+      - xpack.ml.enabled=false
+      - xpack.watcher.enabled=false
+      - xpack.graph.enabled=false
+      - xpack.monitoring.enabled=false
+      - disk.threshold.enabled=false
+      - ingest.enabled=false
+      - index.number_of_shards=1
+      - index.number_of_replicas=0
     mem_limit: 1.5g
     memswap_limit: 1.5g
     volumes:
@@ -100,6 +113,8 @@ services:
       context: ./wis2box-broker
     env_file:
       - wis2box.env
+    volumes:
+      - mosquitto-config:/mosquitto/config
 
   wis2box-management:
     container_name: wis2box-management
@@ -150,3 +165,4 @@ volumes:
   minio-data:
   auth-data:
   htpasswd:
+  mosquitto-config:
