@@ -84,11 +84,8 @@ services:
       - xpack.ml.enabled=false
       - xpack.watcher.enabled=false
       - xpack.graph.enabled=false
-      - xpack.monitoring.enabled=false
-      - disk.threshold.enabled=false
-      - ingest.enabled=false
-      - index.number_of_shards=1
-      - index.number_of_replicas=0
+      - xpack.monitoring.templates.enabled=false
+      - cluster.routing.allocation.disk.threshold_enabled=false
     mem_limit: 1.5g
     memswap_limit: 1.5g
     volumes:
