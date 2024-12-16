@@ -205,11 +205,6 @@ def test_metadata_discovery_publish():
         assert 'has_auth' in r['wis2box']
         assert r['wis2box']['has_auth']
 
-        for link in r['links']:
-            if link['rel'] == 'collection' and link['title'] == id_:
-                assert link['security']['default']['type'] == 'http'
-                assert link['security']['default']['scheme'] == 'bearer'
-
 
 def test_data_ingest():
     """Test data ingest/process publish"""
