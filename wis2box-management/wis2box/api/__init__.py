@@ -30,7 +30,6 @@ from owslib.ogcapi.records import Records
 from wis2box import cli_helpers
 from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
-from wis2box.data import gcm
 from wis2box.data_mappings import get_plugins
 
 from wis2box.env import (DOCKER_API_URL, API_URL)
@@ -272,6 +271,7 @@ def setup(ctx, verbosity):
             continue
         if metadata_id not in api_collections:
             click.echo(f'Adding data-collection for: {metadata_id}')
+            from wis2box.data import gcm
             meta = gcm(record)
             setup_collection(meta=meta)
 
