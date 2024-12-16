@@ -76,4 +76,7 @@ fi
 # set permission of acl.conf to 0700
 chmod 0700 /mosquitto/config/acl.conf
 
+# set owner of mosquitto config folder to mosquitto
+chown -R mosquitto:mosquitto /mosquitto/config
+
 /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf
