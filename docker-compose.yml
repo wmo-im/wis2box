@@ -110,8 +110,6 @@ services:
       context: ./wis2box-broker
     env_file:
       - wis2box.env
-    volumes:
-      - mosquitto-config:/mosquitto/config
 
   wis2box-management:
     container_name: wis2box-management
@@ -162,4 +160,3 @@ volumes:
   minio-data:
   auth-data:
   htpasswd:
-  mosquitto-config:

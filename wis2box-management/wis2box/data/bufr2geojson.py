@@ -70,7 +70,7 @@ class ObservationDataBUFR2GeoJSON(ObservationDataGeoJSON):
         for item in result['items']:
             id = item['id']
 
-            data_date = item['properties']['resultTime']
+            data_date = item['properties']['reportTime']
             self.output_data[id] = {
                 '_meta': {
                     'identifier': id,

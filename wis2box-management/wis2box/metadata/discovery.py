@@ -35,7 +35,8 @@ from pygeometa.schemas.wmo_wcmp2 import WMOWCMP2OutputSchema
 from wis2box import cli_helpers
 from wis2box.api import (delete_collection_item, remove_collection,
                          setup_collection, upsert_collection_item)
-from wis2box.data_mappings import refresh_data_mappings
+from wis2box.data_mappings import refresh_data_mappings, get_plugins
+
 from wis2box.env import (API_URL, BROKER_PUBLIC, DOCKER_API_URL,
                          STORAGE_PUBLIC, STORAGE_SOURCE, URL)
 from wis2box.metadata.base import BaseMetadata
@@ -62,8 +63,6 @@ class DiscoveryMetadata(BaseMetadata):
 
         md = deepcopy(mcf)
 
-        identifier = md['metadata']['identifier']
-
         local_topic = mcf['wis2box']['topic_hierarchy'].replace('.', '/')
         mqtt_topic = f'origin/a/wis2/{local_topic}'
 
@@ -77,18 +76,11 @@ class DiscoveryMetadata(BaseMetadata):
             today = date.today().strftime('%Y-%m-%d')
             md['identification']['extents']['temporal'][0]['begin'] = today
 
-        LOGGER.debug('Adding distribution links')
-        oafeat_link, mqp_link, canonical_link = self.get_distribution_links(
-            identifier, mqtt_topic, format_='mcf')
-
-        md['distribution'] = {
-            'oafeat': oafeat_link,
-            'mqtt': mqp_link,
-            'canonical': canonical_link
-        }
-
         LOGGER.debug('Adding data policy')
         md['identification']['wmo_data_policy'] = mqtt_topic.split('/')[5]
+
+        # md set 'distribution' to empty object, we add links later
+        md['distribution'] = {}
 
         LOGGER.debug('Generating OARec discovery metadata')
         record = WMOWCMP2OutputSchema().write(md, stringify=False)
@@ -118,26 +110,37 @@ class DiscoveryMetadata(BaseMetadata):
 
         return record
 
-    def get_distribution_links(self, identifier: str, topic: str,
+    def get_distribution_links(self,
+                               record: dict,
                                format_='mcf') -> list:
         """
         Generates distribution links
 
-        :param identifier: `str` of metadata identifier
-        :param topic: `str` of associated topic
+        :param record: `dict` of discovery metadata record
         :param format_: `str` of format (`mcf` or `wcmp2`)
 
         :returns: `list` of distribution links
         """
 
-        LOGGER.debug('Adding distribution links')
-        oafeat_link = {
-            'href': f"{API_URL}/collections/{identifier}?f=json",
-            'type': 'application/json',
-            'name': identifier,
-            'description': identifier,
-            'rel': 'collection'
-        }
+        LOGGER.info('Adding distribution links')
+
+        identifier = record['id']
+        topic = record['properties']['wmo:topicHierarchy']
+
+        links = []
+        plugins = get_plugins(record)
+        # check if any plugin-names contains 2geojson
+        has_2geojson = any('2geojson' in plugin for plugin in plugins)
+        if has_2geojson:
+            # default view is descending by reportTime
+            oafeat_link = {
+                'href': f'{API_URL}/collections/{identifier}/items?sortby=-reportTime', # noqa
+                'type': 'application/json',
+                'name': identifier,
+                'description': f'Observations in json format for {identifier}',
+                'rel': 'collection'
+            }
+            links.append(oafeat_link)
 
         mqp_link = {
             'href': get_broker_public_endpoint(),
@@ -147,6 +150,7 @@ class DiscoveryMetadata(BaseMetadata):
             'rel': 'items',
             'channel': topic
         }
+        links.append(mqp_link)
 
         canonical_link = {
             'href': f"{API_URL}/collections/discovery-metadata/items/{identifier}",  # noqa
@@ -155,12 +159,13 @@ class DiscoveryMetadata(BaseMetadata):
             'description': identifier,
             'rel': 'canonical'
         }
+        links.append(canonical_link)
 
         if format_ == 'mcf':
-            for link in [oafeat_link, mqp_link, canonical_link]:
+            for link in links:
                 link['url'] = link.pop('href')
 
-        return oafeat_link, mqp_link, canonical_link
+        return links
 
 
 def publish_broker_message(record: dict, storage_path: str,
@@ -239,21 +244,20 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
             LOGGER.info('Adding WCMP2 record from dictionary')
             record = metadata
             dm = DiscoveryMetadata()
-            distribution_links = dm.get_distribution_links(
-                record['id'], record['properties']['wmo:topicHierarchy'],
-                format_='wcmp2')
-            # update links, do not extend or we get duplicates
-            record['links'] = distribution_links
-            for link in record['links']:
-                if 'description' in link:
-                    link['title'] = link.pop('description')
-                if 'url' in link:
-                    link['href'] = link.pop('url')
         else:
-            LOGGER.debug('Transforming MCF into WCMP2 record')
+            LOGGER.info('Transforming MCF into WCMP2 record')
             dm = DiscoveryMetadata()
             record_mcf = dm.parse_record(metadata)
             record = dm.generate(record_mcf)
+
+        distribution_links = dm.get_distribution_links(record, format_='wcmp2')
+        # update links, do not extend or we get duplicates
+        record['links'] = distribution_links
+        for link in record['links']:
+            if 'description' in link:
+                link['title'] = link.pop('description')
+            if 'url' in link:
+                link['href'] = link.pop('url')
 
         if 'x-wmo' in record['id']:
             msg = 'Change x-wmo to wmo in metadata identifier'

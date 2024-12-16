@@ -78,7 +78,10 @@ MAPPINGS = {
                     }
                 },
                 'phenomenonTime': {
-                    'type': 'text'
+                    'type': 'text',
+                    'fields': {
+                        'raw': {'type': 'keyword'}
+                    }
                 },
                 'wigos_station_identifier': {
                     'type': 'text',
@@ -98,6 +101,57 @@ MAPPINGS = {
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+MAPPINGS_OBS = {
+    'properties': {
+        'geometry': {
+            'type': 'geo_shape'
+        },
+        'properties': {
+            'properties': {
+                'name': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {'type': 'keyword'}
+                    }
+                },
+                'reportTime': {
+                    'type': 'date',
+                    'fields': {
+                        'raw': {'type': 'keyword'}
+                    }
+                },
+                'reportId': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {
+                            'type': 'keyword'
+                        }
+                    }
+                },
+                'phenomenonTime': {
+                    'type': 'text'
+                },
+                'wigos_station_identifier': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {'type': 'keyword'}
+                    }
+                },
+                'units': {
+                    'type': 'text'
+                },
+                'value': {
+                    'type': 'float',
+                    'coerce': True
+                },
+                'description': {
+                    'type': 'text'
+                },
             }
         }
     }
@@ -216,8 +270,10 @@ class ElasticBackend(BaseBackend):
 
         if collection_id == 'stations':
             mappings = MAPPINGS_STATIONS
-        else:
+        elif collection_id in ['discovery-metadata', 'messages']:
             mappings = MAPPINGS
+        else:
+            mappings = MAPPINGS_OBS
 
         es_index = self.es_id(collection_id)
 
@@ -316,8 +372,11 @@ class ElasticBackend(BaseBackend):
                     '_id': feature['id'],
                     '_source': feature
                 }
-
-        helpers.bulk(self.conn, gendata(items))
+        success, errors = helpers.bulk(self.conn, gendata(items), raise_on_error=False) # noqa
+        if errors:
+            for error in errors:
+                LOGGER.error(f"Indexing error: {error}")
+            raise RuntimeError(f"Upsert failed with {len(errors)} errors")
 
     def delete_collection_item(self, collection_id: str, item_id: str) -> str:
         """
@@ -350,30 +409,42 @@ class ElasticBackend(BaseBackend):
         indices = self.conn.indices.get(index='*').keys()
 
         before = datetime_days_ago(days)
+        # also delete future data
+        after = datetime_days_ago(-1)
 
-        query_by_date = {
+        msg_query_by_date = {
             'query': {
                 'bool': {
-                    'should': [{
-                        'range': {
-                            'properties.resultTime': {
-                                'lte': before
-                            }
-                        }
-                    }, {
-                        'range': {
-                            'properties.pubTime': {
-                                'lte': before
-                            }
-                        }
-                    }]
+                    'should': [
+                        {'range': {'properties.pubTime': {'lte': before}}},
+                        {'range': {'properties.pubTime': {'gte': after}}}
+                    ]
+                }
+            }
+        }
+        obs_query_by_date = {
+            'query': {
+                'bool': {
+                    'should': [
+                        {'range': {'properties.reportTime': {'lte': before}}},
+                        {'range': {'properties.reportTime': {'gte': after}}}
+                    ]
                 }
             }
         }
 
         for index in indices:
-            LOGGER.debug(f'deleting documents older than {days} days ({before})')  # noqa
-            self.conn.delete_by_query(index=index, **query_by_date)
+            if index == 'messages':
+                query_by_date = msg_query_by_date
+            elif index.startswith('urn-wmo-md'):
+                query_by_date = obs_query_by_date
+            else:
+                # don't run delete-query on other indexes
+                LOGGER.info(f'items for index={index} will not be deleted')
+                continue
+            LOGGER.info(f'deleting documents from index={index} older than {days} days ({before}) or newer than {after}')  # noqa
+            result = self.conn.delete_by_query(index=index, **query_by_date)
+            LOGGER.info(f'deleted {result["deleted"]} documents from index={index}')  # noqa
 
         return
 

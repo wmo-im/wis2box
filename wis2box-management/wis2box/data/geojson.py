@@ -39,7 +39,7 @@ class ObservationDataGeoJSON(BaseAbstractData):
         LOGGER.debug('Procesing GeoJSON data')
         data_ = json.loads(input_data)
         identifier = data_['id']
-        data_date = data_['properties']['resultTime']
+        data_date = data_['properties']['reportTime']
         self.output_data[identifier] = {
             '_meta': {
                 'identifier': identifier,
