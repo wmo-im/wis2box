@@ -134,7 +134,7 @@ class DiscoveryMetadata(BaseMetadata):
         if has_2geojson:
             # default view is descending by reportTime
             oafeat_link = {
-                'href': f"{API_URL}/collections/{identifier}/items?sortby=-reportTime", # noqa
+                'href': f'{API_URL}/collections/{identifier}/items?sortby=-reportTime', # noqa
                 'type': 'application/json',
                 'name': identifier,
                 'description': f'Observations in json format for {identifier}',
