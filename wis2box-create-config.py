@@ -437,6 +437,11 @@ def create_host_datadir() -> str:
                 exit()
         print(f"The directory {host_datadir} has been created.")
 
+        # add mappings directory
+        mappings_dir = host_datadir / 'mappings'
+        mappings_dir.mkdir(parents=True)
+
+        # add downloads directory
         download_dir = host_datadir / 'downloads'
         download_dir.mkdir(mode=0o775)
         if not WINDOWS:
