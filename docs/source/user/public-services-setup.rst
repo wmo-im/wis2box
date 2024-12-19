@@ -39,7 +39,7 @@ wis2box runs a local nginx container allowing access to the following HTTP based
    UI (wis2box-ui),`WIS2BOX_URL/`
    Storage (incoming data) (minio:wis2box-incoming),`WIS2BOX_URL/wis2box-incoming`
    Storage (public data) (minio:wis2box-public),`WIS2BOX_URL/data`
-   Websockets (WIS2-notifications),`WIS2BOX_URL/mqtt`
+   Websockets (WIS2 notifications),`WIS2BOX_URL/mqtt`
 
 You can edit ``nginx/nginx.conf`` to control which services are exposed through the nginx-container include in your stack.
 
@@ -145,9 +145,9 @@ By exposing port 1883 on your host, the Global Broker will be able to subscribe 
 
 When you add SSL to your wis2box instance, the internal MQTT broker will be accessible on port 8883 on the host running wis2box using the MQTT over SSL protocol (MQTTS).
 
-The mosquitto-service within wis2box also has websockets enabled and is proxied on '/mqtt' by the nginx container. 
+The mosquitto service within wis2box also has websockets enabled and is proxied on '/mqtt' by the nginx container. 
 
-The broker-address for the Global Broker to subscribe to WIS2 notifications using the mosquitto-service within wis2box is:
+The broker address for the Global Broker to subscribe to WIS2 notifications using the mosquitto service within wis2box is as follows:
 
 - `mqtt://everyone:everyone@WIS2BOX_HOST:1883` - for MQTT without SSL
 - `mqtts://everyone:everyone@WIS2BOX_HOST:8883` - for MQTT with SSL
