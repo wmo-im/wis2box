@@ -177,9 +177,9 @@ Web application configuration provides the ability to customize web components. 
     WIS2BOX_BASEMAP_ATTRIBUTION="<a href="https://osm.org/copyright">OpenStreetMap</a> contributors"  # attribution of map tile server
     WIS2BOX_UI_CLUSTER=False # default setting of the cluster toggle
     WIS2BOX_UI_LANG="en" # default language, one of: ar, en, es, fr, ru, zh
-    WIS2BOX_LOGO=http://example.com/logo.png # use custom organization logo in the UI
-    WIS2BOX_CUSTOM_BACKGROUND_COLOR="#014e9e" # use custom background color for header and footer 
-    WIS2BOX_DISABLE_SEPARATOR_IMAGE=false # boolean to disable WMO separator
+    WIS2BOX_UI_LOGO=http://example.com/logo.png # use custom organization logo in the UI
+    WIS2BOX_UI_BANNER_COLOR="#014e9e" # use custom background color for header and footer 
+    WIS2BOX_UI_DISABLE_SEPARATOR_IMAGE=false # boolean to disable WMO separator
 
 Other
 ^^^^^

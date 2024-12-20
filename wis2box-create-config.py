@@ -338,7 +338,7 @@ def create_wis2box_env(host_datadir: str) -> None:
         fh.write('# wis2box public URL\n')
         fh.write(f'WIS2BOX_URL={wis2box_url}\n')
         fh.write('WIS2BOX_UI_CLUSTER=false\n')
-        fh.write(f'WIS2BOX_LOGO="{get_custom_ui_logo() or ""}"\n')
+        fh.write(f'WIS2BOX_UI_LOGO="{get_custom_ui_logo() or ""}"\n')
         fh.write(f'WIS2BOX_UI_LANG={get_default_ui_language()}\n')
         fh.write('\n')
         fh.write('# api\n')
