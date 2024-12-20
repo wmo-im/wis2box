@@ -287,7 +287,7 @@ def get_custom_ui_logo():
     """
     Prompt the user to enter a custom UI logo path or URL.
 
-    :returns: string or URL logo
+    :returns: string of URL logo
     """
     while True:
         logo = input("Enter the path or URL for the custom UI logo (leave blank to skip): ").strip()
@@ -296,7 +296,11 @@ def get_custom_ui_logo():
             return logo if logo else None
 
 def get_default_ui_language():
-    """Prompt the user to enter a default UI language and validate against possible values."""
+    """
+    Prompt the user to enter a default UI language and validate against possible values.
+    
+    :returns: string of languge
+    """
     valid_languages = ['en', 'fr', 'es', 'ar', 'zh', 'ru']  # Extend the list as needed
     while True:
         language = input("Enter the default UI language (e.g., 'fr' for French, 'ar' for Arabic, leave blank for 'en'): ").strip() or 'en'
