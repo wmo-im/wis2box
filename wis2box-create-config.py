@@ -283,6 +283,7 @@ def get_wis2box_url() -> str:
 
     return wis2box_url
 
+
 def get_custom_ui_logo():
     """
     Prompt the user to enter a custom UI logo path or URL.
@@ -290,26 +291,31 @@ def get_custom_ui_logo():
     :returns: string of URL logo
     """
     while True:
-        logo = input("Enter the path or URL for the custom UI logo (leave blank to skip): ").strip()
-        confirm = input(f"Confirm custom UI logo: '{logo or 'Default'}'? (y/n): ").strip().lower()
+        logo = input("Enter the URL for the custom UI logo (leave blank to skip): ").strip() # noqa
+        msg = f"Confirm custom UI logo: '{logo or 'Default'}'? (y/n): "
+        confirm = input(msg).strip().lower()
         if confirm == 'y':
             return logo if logo else None
 
+
 def get_default_ui_language():
     """
-    Prompt the user to enter a default UI language and validate against possible values.
-    
+    Prompt the user to enter a default UI language and
+    validate against possible values.
+
     :returns: string of languge
     """
-    valid_languages = ['en', 'fr', 'es', 'ar', 'zh', 'ru']  # Extend the list as needed
+    valid_languages = ['en', 'fr', 'es', 'ar', 'zh', 'ru']
     while True:
-        language = input("Enter the default UI language (e.g., 'fr' for French, 'ar' for Arabic, leave blank for 'en'): ").strip() or 'en'
+        language = input("Enter the default UI language (e.g., 'fr' for French, 'ar' for Arabic, leave blank for 'en'): ").strip() or 'en' # noqa
         if language in valid_languages:
-            confirm = input(f"Confirm default UI language: '{language}'? (y/n): ").strip().lower()
+            msg = f"Confirm default UI language: '{language}'? (y/n): "
+            confirm = input(msg).strip().lower()
             if confirm == 'y':
                 return language
         else:
-            print(f"Invalid language. Please choose from: {', '.join(valid_languages)}.")
+            print(f"Invalid language. Please choose from: {', '.join(valid_languages)}.") # noqa
+
 
 def create_wis2box_env(host_datadir: str) -> None:
     """
