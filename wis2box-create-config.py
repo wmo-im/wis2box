@@ -26,7 +26,7 @@ from pathlib import Path
 import random
 import string
 from string import Template
-from typing import Tuple
+from typing import Tuple, Union
 
 # Identify platform type
 WINDOWS = False
@@ -284,6 +284,39 @@ def get_wis2box_url() -> str:
     return wis2box_url
 
 
+def get_custom_ui_logo():
+    """
+    Prompt the user to enter a custom UI logo path or URL.
+
+    :returns: string of URL logo
+    """
+    while True:
+        logo = input("Enter the URL for the custom UI logo (leave blank to skip): ").strip() # noqa
+        msg = f"Confirm custom UI logo: '{logo or 'Default'}'? (y/n): "
+        confirm = input(msg).strip().lower()
+        if confirm == 'y':
+            return logo or None
+
+
+def get_default_ui_language() -> Union[str, None]:
+    """
+    Prompt the user to enter a default UI language and
+    validate against possible values.
+
+    :returns: string of languge
+    """
+    valid_languages = ['en', 'fr', 'es', 'ar', 'zh', 'ru']
+    while True:
+        language = input("Enter the default UI language (e.g., 'fr' for French, 'ar' for Arabic, leave blank for 'en'): ").strip() or 'en' # noqa
+        if language in valid_languages:
+            msg = f"Confirm default UI language: '{language}'? (y/n): "
+            confirm = input(msg).strip().lower()
+            if confirm == 'y':
+                return language
+        else:
+            print(f"Invalid language. Please choose from: {', '.join(valid_languages)}.") # noqa
+
+
 def create_wis2box_env(host_datadir: str) -> None:
     """
     creates the wis2box.env file in the host_datadir
@@ -305,7 +338,8 @@ def create_wis2box_env(host_datadir: str) -> None:
         fh.write('# wis2box public URL\n')
         fh.write(f'WIS2BOX_URL={wis2box_url}\n')
         fh.write('WIS2BOX_UI_CLUSTER=false\n')
-        fh.write('WIS2BOX_UI_LANG=en\n')
+        fh.write(f'WIS2BOX_UI_LOGO="{get_custom_ui_logo() or ""}"\n')
+        fh.write(f'WIS2BOX_UI_LANG={get_default_ui_language()}\n')
         fh.write('\n')
         fh.write('# api\n')
         fh.write('WIS2BOX_API_TYPE=pygeoapi\n')
