@@ -26,7 +26,7 @@ from pathlib import Path
 import random
 import string
 from string import Template
-from typing import Tuple
+from typing import Tuple, Union
 
 # Identify platform type
 WINDOWS = False
@@ -295,10 +295,10 @@ def get_custom_ui_logo():
         msg = f"Confirm custom UI logo: '{logo or 'Default'}'? (y/n): "
         confirm = input(msg).strip().lower()
         if confirm == 'y':
-            return logo if logo else None
+            return logo or None
 
 
-def get_default_ui_language():
+def get_default_ui_language() -> Union[str, None]:
     """
     Prompt the user to enter a default UI language and
     validate against possible values.

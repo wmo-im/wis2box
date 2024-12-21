@@ -169,7 +169,8 @@ Restart the mosquitto container for the changes to take effect with the command:
 Web application
 ^^^^^^^^^^^^^^^
 
-Web application configuration provides the ability to customize web components. All of these are optional.
+Web application configuration provides the ability to customize web components.
+All of the below directives are optional.
 
 .. code-block:: bash
 
