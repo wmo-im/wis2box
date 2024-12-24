@@ -152,7 +152,7 @@ class WIS2BoxSubscriber:
             LOGGER.debug('Storing data')
             key = str(message['Key'])
             # if key ends with / then it is a directory
-            if key[-1] == '/':
+            if key.endswith('/'):
                 LOGGER.info(f'Do not process directories: {key}')
                 return
             filepath = f'{STORAGE_SOURCE}/{key}'
