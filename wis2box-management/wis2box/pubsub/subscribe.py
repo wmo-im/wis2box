@@ -148,9 +148,13 @@ class WIS2BoxSubscriber:
             # store notification in messages collection
             upsert_collection_item('messages', message)
         elif (topic == 'wis2box/storage' and
-              message.get('EventName', '') == 's3:ObjectCreated:Put'):
+              message.get('EventName', '') in ['s3:ObjectCreated:Put', 's3:ObjectCreated:CompleteMultipartUpload']): # noqa
             LOGGER.debug('Storing data')
             key = str(message['Key'])
+            # if key ends with / then it is a directory
+            if key.endswith('/'):
+                LOGGER.info(f'Do not process directories: {key}')
+                return
             filepath = f'{STORAGE_SOURCE}/{key}'
             if key.startswith(STORAGE_ARCHIVE):
                 LOGGER.info(f'Do not process archived-data: {key}')

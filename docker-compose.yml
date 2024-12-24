@@ -55,10 +55,10 @@ services:
       - MINIO_BROWSER_LOGIN_ANIMATION=off
       - MINIO_BROWSER_REDIRECT=false
       - MINIO_UPDATE=off
-    command: server --quiet --console-address ":9001" /data
-    # in a production-setup minio needs to be
+    command: server --quiet --console-address ":9001" --sftp="address=:8022" --sftp="ssh-private-key=/home/miniouser/.ssh/id_rsa" /data
     volumes:
       - minio-data:/data
+      - ${WIS2BOX_HOST_DATADIR}/.ssh:/home/miniouser/.ssh:ro
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 5s
@@ -128,8 +128,6 @@ services:
       - ${WIS2BOX_HOST_DATADIR}:/data/wis2box:rw
       - htpasswd:/home/wis2box/.htpasswd:rw
     depends_on:
-      minio:
-        condition: service_healthy
       mosquitto:
         condition: service_started
       wis2box-api:

@@ -11,6 +11,7 @@ services:
     ports:
       - "9000:9000"
       - "9001:9001"
+      - "8022:8022"
     deploy:
       replicas: 1
 

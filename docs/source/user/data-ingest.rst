@@ -171,44 +171,28 @@ See below a Python example to upload data using the MinIO package:
 
         pip3 install minio
         
-wis2box-ftp
------------
+Uploading data to MinIO over SFTP
+---------------------------------
 
-You can add an additional service to allow your data to be accessible over FTP.
+Data can also be uploaded via MinIO using SFTP.
 
-To use the ``docker-compose.wis2box-ftp.yml`` template included in wis2box, create a new file called ``ftp.env`` using any text editor, and add the following content:
+By default the SFTP service is enabled on port 8022. You can connect to the SFTP service using the MinIO storage username and password.
+Using a client such as WinSCP, a user can connect to the SFTP service to visualize the bucket structure in the SFTP client as shown below:
 
-.. code-block:: bash
-
-    MYHOSTNAME=hostname.domain.tld
-
-    FTP_USER=wis2box
-    FTP_PASS=wis2box123
-    FTP_HOST=${MYHOSTNAME}
-
-    WIS2BOX_STORAGE_ENDPOINT=http://${MYHOSTNAME}:9000
-    WIS2BOX_STORAGE_USERNAME=wis2box
-    WIS2BOX_STORAGE_PASSWORD=XXXXXXXX
-
-    LOGGING_LEVEL=INFO
-
-ensure ``MYHOSTNAME`` is set to **your** hostname (fully qualified domain name) and ``WIS2BOX_STORAGE_PASSWORD`` is set to **your** MinIO password.
-
-Then start the ``wis2box-ftp`` service with the following command:
-
-.. code-block:: bash
-
-    docker compose -f docker-compose.wis2box-ftp.yml --env-file ftp.env up -d
-
-When using the wis2box-ftp service to ingest data, please note that the topic is determined by the directory structure in which the data arrives.
-
-For example, to correctly ingest data on the topic ``it-meteoam/data/core/weather/surface-based-observations/synop`` you need to copy the data into the directory ``/it-meteoam/data/core/weather/surface-based-observations/synop`` on the FTP server:
-
-.. image:: ../_static/winscp_wis2box-ftp_example.png
+.. image:: ../_static/winscp_minio_sftp.png
     :width: 600
-    :alt: Screenshot of WinSCP showing directory structure in wis2box-ftp
+    :alt: Screenshot of WinSCP showing directory structure of MinIO over SFTP
 
-See the GitHub repository `wis2box-ftp`_ for more information on this service.
+To utilize this functionality, data needs to be uploaded to the ``wis2box-incoming`` bucket, in a directory that matches the dataset metadata identifier or the topic in the data mappings.
+
+For example using the command line from the host running wis2box:
+
+.. code-block:: bash
+
+    sftp -P 8022 -oBatchMode=no -o StrictHostKeyChecking=no wis2box@localhost << EOF
+        mkdir wis2box-incoming/urn:wmo:md:it-meteoam:surface-weather-observations.synop
+        put /path/to/your/datafile.csv wis2box-incoming/urn:wmo:md:it-meteoam:surface-weather-observations.synop 
+    EOF
 
 wis2box-data-subscriber
 -----------------------
@@ -248,7 +232,6 @@ WIS2 network by enabling external access to your public services.
 Next: :ref:`public-services-setup`
 
 .. _`MinIO`: https://min.io/docs/minio/container/index.html
-.. _`wis2box-ftp`: https://github.com/wmo-im/wis2box-ftp
 .. _`wis2box-data-subscriber`: https://github.com/wmo-im/wis2box-data-subscriber
 .. _`WIS2 topic hierarchy`: https://github.com/wmo-im/wis2-topic-hierarchy
 .. _`csv2bufr-templates`: https://github.com/wmo-im/csv2bufr-templates

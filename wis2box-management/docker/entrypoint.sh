@@ -29,6 +29,20 @@ set -e
 #ensure environment-variables are available for cronjob
 printenv | grep -v "no_proxy" >> /etc/environment
 
+# create .ssh directory if not exists
+if [ ! -d /data/wis2box/.ssh ]; then
+    echo "Creating /data/wis2box/.ssh"
+    mkdir /data/wis2box/.ssh
+fi
+
+# create private key file if not exists
+if [ ! -f /data/wis2box/.ssh/id_rsa ]; then
+    echo "Creating /home/wis2box/.ssh/id_rsa"
+    # generate private key
+    ssh-keygen -t rsa -b 4096 -f /data/wis2box/.ssh/id_rsa -N ""
+    chmod 600 /data/wis2box/.ssh/id_rsa
+fi
+
 # wis2box commands
 # TODO: avoid re-creating environment if it already exists
 # TODO: catch errors and avoid bounce in conjuction with restart: always
