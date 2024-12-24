@@ -137,7 +137,7 @@ jobs:
         DISCOVERY_METADATA: /data/wis2box/metadata/discovery/cd-surface-weather-observations.yml
         DISCOVERY_METADATA_ID: urn:wmo:md:cg-met:surface-weather-observations
         STATION_METADATA: /data/wis2box/metadata/station/congo.csv
-        TEST_DATA: /data/wis2box/observations/congo
+        TEST_DATA: tests/data/observations/congo
       run: |
         python3 wis2box-ctl.py execute wis2box dataset publish $DISCOVERY_METADATA
         python3 wis2box-ctl.py execute wis2box metadata station publish-collection --path $STATION_METADATA --topic-hierarchy $TOPIC_HIERARCHY
@@ -146,7 +146,7 @@ jobs:
         python3 wis2box-ctl.py execute wis2box auth add-token --metadata-id $DISCOVERY_METADATA_ID -p token123 -y
         sshpass -p 'minio123' sftp -P 8022 -oBatchMode=no -o StrictHostKeyChecking=no wis2box@localhost << EOF
         mkdir wis2box-incoming/$DISCOVERY_METADATA_ID
-        put tests$TEST_DATA/* wis2box-incoming/$DISCOVERY_METADATA_ID/
+        put $TEST_DATA/* wis2box-incoming/$DISCOVERY_METADATA_ID/
         exit
         EOF
     - name: add example hourly ship data (bufr2bufr) WMO
