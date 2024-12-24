@@ -171,19 +171,19 @@ See below a Python example to upload data using the MinIO package:
 
         pip3 install minio
         
-uploading data to MinIO over SFTP
+Uploading data to MinIO over SFTP
 ---------------------------------
 
-As of wis2box-RC1, you can also upload data to MinIO using SFTP.
+Data can also be uploaded via MinIO using SFTP.
 
 By default the SFTP service is enabled on port 8022. You can connect to the SFTP service using the MinIO storage username and password.
-You can use a client like WinSCP to connect to the SFTP service and you will see the bucket structure in the SFTP client as shown in the screenshot below:
+Using a client such as WinSCP, a user can connect to the SFTP service to visualize the bucket structure in the SFTP client as shown below:
 
 .. image:: ../_static/winscp_minio_sftp.png
     :width: 600
     :alt: Screenshot of WinSCP showing directory structure of MinIO over SFTP
 
-To start trigger the wis2box data flow data needs to be uploaded to the ``wis2box-incoming`` bucket, in a directory that matches the dataset metadata identifier or the topic in the data mappings.
+To utilize this functionality, data needs to be uploaded to the ``wis2box-incoming`` bucket, in a directory that matches the dataset metadata identifier or the topic in the data mappings.
 
 For example using the command line from the host running wis2box:
 
