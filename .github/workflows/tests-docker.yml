@@ -145,8 +145,8 @@ jobs:
         #pywcmp ets validate /tmp/$DISCOVERY_METADATA_ID  # uncomment once wis2box improves support for recommended data
         python3 wis2box-ctl.py execute wis2box auth add-token --metadata-id $DISCOVERY_METADATA_ID -p token123 -y
         sshpass -p 'minio123' sftp -oBatchMode=no -o StrictHostKeyChecking=no minio@localhost << EOF
-        mkdir $DISCOVERY_METADATA_ID
-        put $TEST_DATA/* $DISCOVERY_METADATA_ID/
+        mkdir wis2box-incoming/$DISCOVERY_METADATA_ID
+        put $TEST_DATA/* wis2box-incoming/$DISCOVERY_METADATA_ID/
         exit
         EOF
     - name: add example hourly ship data (bufr2bufr) WMO
