@@ -185,6 +185,15 @@ You can use a client like WinSCP to connect to the SFTP service and you will see
 
 To start trigger the wis2box data flow data needs to be uploaded to the ``wis2box-incoming`` bucket, in a directory that matches the dataset metadata identifier or the topic in the data mappings.
 
+For example using the command line from the host running wis2box:
+
+.. code-block:: bash
+
+    sftp -P 8022 -oBatchMode=no -o StrictHostKeyChecking=no wis2box@localhost << EOF
+        mkdir wis2box-incoming/urn:wmo:md:it-meteoam:surface-weather-observations.synop
+        put /path/to/your/datafile.csv wis2box-incoming/urn:wmo:md:it-meteoam:surface-weather-observations.synop 
+    EOF
+
 wis2box-data-subscriber
 -----------------------
 
@@ -223,7 +232,6 @@ WIS2 network by enabling external access to your public services.
 Next: :ref:`public-services-setup`
 
 .. _`MinIO`: https://min.io/docs/minio/container/index.html
-.. _`wis2box-ftp`: https://github.com/wmo-im/wis2box-ftp
 .. _`wis2box-data-subscriber`: https://github.com/wmo-im/wis2box-data-subscriber
 .. _`WIS2 topic hierarchy`: https://github.com/wmo-im/wis2-topic-hierarchy
 .. _`csv2bufr-templates`: https://github.com/wmo-im/csv2bufr-templates
