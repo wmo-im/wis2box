@@ -144,7 +144,7 @@ jobs:
         curl -s http://localhost/data/metadata/$DISCOVERY_METADATA_ID.json --output /tmp/$DISCOVERY_METADATA_ID
         #pywcmp ets validate /tmp/$DISCOVERY_METADATA_ID  # uncomment once wis2box improves support for recommended data
         python3 wis2box-ctl.py execute wis2box auth add-token --metadata-id $DISCOVERY_METADATA_ID -p token123 -y
-        sshpass -p 'minio123' sftp -oBatchMode=no -o StrictHostKeyChecking=no wis2box@localhost << EOF
+        sshpass -p 'minio123' sftp -P 8022 -oBatchMode=no -o StrictHostKeyChecking=no wis2box@localhost << EOF
         mkdir wis2box-incoming/$DISCOVERY_METADATA_ID
         put $TEST_DATA/* wis2box-incoming/$DISCOVERY_METADATA_ID/
         exit
