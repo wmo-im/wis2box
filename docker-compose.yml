@@ -147,7 +147,7 @@ services:
 
   wis2downloader:
     container_name: wis2downloader
-    image: ghcr.io/wmo-im/wis2downloader:latest
+    image: ghcr.io/wmo-im/wis2downloader:v0.3.2
     restart: always
     env_file:
       - wis2box.env
