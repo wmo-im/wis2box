@@ -1,11 +1,12 @@
+# NOTE: this service currently only works with Campbell scientific data loggers version CR1000X
+
 services:
   wis2box-data-subscriber:
     container_name: wis2box-data-subscriber
     image: ghcr.io/wmo-im/wis2box-data-subscriber
     environment:
-      - LOGGING_LEVEL=${WIS2BOX_LOGGING_LOGLEVEL:-WARNING}
+      - LOGGING_LEVEL=INFO
       - CENTRE_ID=${CENTRE_ID}
-      - COUNTRY_ID=${COUNTRY_ID}
       - AWS_BROKER=mqtt://${WIS2BOX_BROKER_USERNAME}:${WIS2BOX_BROKER_PASSWORD}@localhost:1883
       - MINIO_BUCKET=wis2box-incoming
       - MINIO_ENDPOINT=http://localhost:9000
