@@ -182,6 +182,15 @@ All of the below directives are optional.
     WIS2BOX_UI_BANNER_COLOR="#014e9e" # use custom background color for header and footer 
     WIS2BOX_UI_DISABLE_SEPARATOR_IMAGE=false # boolean to disable WMO separator
 
+.. note::
+    ``WIS2BOX_UI_LOGO`` requires a full URL to the image file.
+
+    If you want to use a local image you can upload your image in the "wis2box-public" bucket of the MinIO storage and use the URL of the image in the configuration.
+
+    Note that the web proxy exposes the "wis2box-public" bucket as the ``/data/`` endpoint.
+    If your wis2box uses the URL ``https://wis2box.example.com`` and the uploaded image is named ``logo.png``, 
+    you would set ``WIS2BOX_UI_LOGO=https://wis2box.example.com/data/logo.png``.
+
 Other
 ^^^^^
 
