@@ -37,6 +37,7 @@ wis2box runs a local nginx container allowing access to the following HTTP based
 
    API (wis2box-api),`WIS2BOX_URL/oapi`
    UI (wis2box-ui),`WIS2BOX_URL/`
+   wis2box-webapp,`WIS2BOX_URL/wis2box-webapp`
    Storage (incoming data) (minio:wis2box-incoming),`WIS2BOX_URL/wis2box-incoming`
    Storage (public data) (minio:wis2box-public),`WIS2BOX_URL/data`
    Websockets (WIS2 notifications),`WIS2BOX_URL/mqtt`
@@ -64,8 +65,8 @@ After updating ``WIS2BOX_URL``, please stop and start wis2box using ``wis2box-ct
   python3 wis2box-ctl.py login
   wis2box metadata discovery republish
 
-wis2box API
------------
+API (wis2box-api)
+-----------------
 
 The wis2box API uses `pygeoapi`_,  which implements the `OGC API`_ suite of standards, to provide programmatic access to the data collections hosted in wis2box.
 
@@ -79,23 +80,37 @@ The wis2box API uses `pygeoapi`_,  which implements the `OGC API`_ suite of stan
   A dedicated Docker volume ``es-data`` is created on your host when you start wis2box. 
   As long as this volume is not deleted you can remove/update the containers in wis2box without losing data.
 
-wis2box user interface
-----------------------
+User Interface (wis2box-ui)
+---------------------------
 
 The wis2box user interface uses the wis2box API to visualize the data configured and shared through wis2box.
 
-The 'MAP' or 'EXPLORE' option of each dataset allows you to visualize Weather Observations per station for data published in the '../synop' collection
-and requires the 'bufr2geojson' plugin to be configured for your dataset.
+On the homepage you can see the datasets configured in your wis2box instance. For each dataset you can view the metadata and the messages published for that dataset:
+
+.. image:: ../_static/wis2box-ui-datasets.png
+  :width: 800
+  :alt: wis2box UI homepage
+
+Datasets that have a plugin configured to convert data to GeoJSON will also have the 'OBSERVATIONS' option that provides a link to the wis2box API to access the data in GeoJSON format.
+
+For data published under the 'weather/surface-based-observations/synop' topic, the user interface provides the 'EXPLORE' option to visualize the data on a map and the 'MAP' to visualize Weather Observations per station, which requires the 'bufr2geojson' plugin to be configured for your dataset.
 
 .. image:: ../_static/wis2box-map-view.png
   :width: 800
   :alt: wis2box UI map visualization
 
+From the 'MAP' view, you can click on a station to view the data for that station in a graph:
+
 .. image:: ../_static/wis2box-data-view.png
   :width: 800
   :alt: wis2box UI data graph visualization
 
-Please note that the user interface currently only supports the visualization of Weather Observations per station for data published in the '../synop' collection.
+You can set a custom logo and background color for the UI by setting the following environment variables in the ``wis2box.env`` file:
+
+.. code-block:: bash
+
+  WIS2BOX_UI_LOGO=http://example.com/logo.png
+  WIS2BOX_UI_BANNER_COLOR="#014e9e"
 
 wis2box-webapp
 --------------
@@ -158,6 +173,8 @@ Where ``WIS2BOX_HOST`` is the hostname or IP address of the host running wis2box
 
 External broker
 ---------------
+
+By default, wis2box uses its own internal MQTT broker to also function as a public broker to publish WIS2 notifications.
 
 If you do not wish to expose the internal MQTT broker on wis2box, you can configure wis2box to publish WIS2 notifications to an external broker by setting the environment variable ``WIS2BOX_BROKER_PUBLIC``.
 
