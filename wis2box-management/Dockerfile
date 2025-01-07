@@ -54,7 +54,7 @@ RUN apt-get update -y && apt-get install -y ${DEBIAN_PACKAGES} \
     # create directory for wmdr codelists
     && mkdir -p /home/wis2box/wmdr-codelists 
 
-# copy wdmr codelists
+# copy wmdr codelists
 COPY ./wmdr-codelists /home/wis2box/wmdr-codelists
 
 # copy the app

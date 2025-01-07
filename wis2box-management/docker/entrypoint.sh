@@ -59,9 +59,6 @@ wis2box environment test
 service cron start
 service cron status
 
-echo "Caching topic hierarchy CSVs"
-pywis-topics bundle sync
-
 # check if WIS2BOX_WEBAPP_USERNAME and WIS2BOX_WEBAPP_PASSWORD are set, otherwise set them
 if [ -z "$WIS2BOX_WEBAPP_USERNAME" ]; then
     echo "WARNING: WIS2BOX_WEBAPP_USERNAME is not set in wis2box.env, using WIS2BOX_WEBAPP_USERNAME=wis2box-user"
