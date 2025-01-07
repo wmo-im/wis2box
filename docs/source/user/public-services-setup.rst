@@ -169,7 +169,32 @@ The broker address for the Global Broker to subscribe to WIS2 notifications usin
 - `ws://everyone:everyone@WIS2BOX_HOST/mqtt:80` - for MQTT over websockets without SSL
 - `wss://everyone:everyone@WIS2BOX_HOST/mqtt:443` - for MQTT over websockets with SSL
 
-Where ``WIS2BOX_HOST`` is the hostname or IP address of the host running wis2box.	
+Where ``WIS2BOX_HOST`` is the hostname or IP address of the host running wis2box.
+
+.. note::
+
+   The Global Broker will use the ``everyone`` user to subscribe to the internal MQTT broker on wis2box.
+
+If you want to create additional users for the internal MQTT broker, you can do so by logging into the mosquitto container and using the ``mosquitto_passwd`` command:
+
+.. code-block:: bash
+
+  docker exec -it mosquitto /bin/sh
+
+Then, to add a new user, use the following command:
+
+.. code-block:: bash
+
+  mosquitto_passwd -b /mosquitto/config/password.txt <username> <password>
+
+After adding a new user, you can edit the file ``/mosquitto/config/acl.conf`` to add or change access rights for mosquitto users. 
+
+For example to allow a user to publish to the topic ``wis2box/cap/publication``, you would add the following line to the ``acl.conf`` file:
+
+.. code-block:: bash
+
+  user <username>
+  topic readwrite wis2box/cap/publication
 
 External broker
 ---------------
