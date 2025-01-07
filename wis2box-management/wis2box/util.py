@@ -34,6 +34,26 @@ import yaml
 LOGGER = logging.getLogger(__name__)
 
 
+def str2bool(value: Union[bool, str]) -> bool:
+    """
+    helper function to return Python boolean
+    type (source: https://stackoverflow.com/a/715468)
+
+    :param value: value to be evaluated
+
+    :returns: `bool` of whether the value is boolean-ish
+    """
+
+    value2 = False
+
+    if isinstance(value, bool):
+        value2 = value
+    else:
+        value2 = value.lower() in ('yes', 'true', 't', '1', 'on')
+
+    return value2
+
+
 def get_typed_value(value) -> Union[float, int, str]:
     """
     Derive true type from data value

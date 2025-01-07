@@ -29,6 +29,7 @@ from typing import Union
 from capvalidator import validate_cap_message, get_dates
 
 from wis2box.data.base import BaseAbstractData
+from wis2box.util import str2bool
 
 LOGGER = logging.getLogger(__name__)
 
@@ -77,7 +78,8 @@ class CAPMessageData(BaseAbstractData):
         _meta['relative_filepath'] = self.get_local_filepath(_meta['data_date'])  # noqa
 
         # check CAP signature based on ENV variable, default is False
-        check_cap_signature = os.getenv('CHECK_CAP_SIGNATURE', False)
+        check_cap_signature = str2bool(os.getenv('CHECK_CAP_SIGNATURE', False))
+
         LOGGER.info(f'Checking CAP signature: {check_cap_signature}')
         # validate the CAP XML string content using the capvalidator package
         result = validate_cap_message(input_bytes, strict=check_cap_signature)
