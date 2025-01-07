@@ -20,7 +20,9 @@
 ###############################################################################
 
 from datetime import datetime
+import os
 import logging
+
 from pathlib import Path
 from typing import Union
 
@@ -74,8 +76,11 @@ class CAPMessageData(BaseAbstractData):
         # add relative filepath to _meta
         _meta['relative_filepath'] = self.get_local_filepath(_meta['data_date'])  # noqa
 
+        # check CAP signature based on ENV variable, default is False
+        check_cap_signature = os.getenv('CHECK_CAP_SIGNATURE', False)
+        LOGGER.info(f'Checking CAP signature: {check_cap_signature}')
         # validate the CAP XML string content using the capvalidator package
-        result = validate_cap_message(input_bytes, strict=False)
+        result = validate_cap_message(input_bytes, strict=check_cap_signature)
         if not result.passed:
             LOGGER.error(
                 f'Invalid CAP XML, not publishing. Reason: {result.message}')

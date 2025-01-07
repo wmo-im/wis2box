@@ -119,7 +119,7 @@ A typical BUFR4 plugin workflow definition would be defined as follows:
 
 This plugin takes the incoming XML file, then validates it against the
 `CAP v1.2 schema <https://docs.oasis-open.org/emergency/cap/v1.2/CAP-v1.2-os.html>`_
-and verifies the digital signature before publishing.
+and optionally verifies the digital signature before publishing.
 
 The validation is performed using the `capvalidator <https://github.com/wmo-im/capvalidator>`_
 package.
@@ -134,6 +134,12 @@ A typical CAP message plugin workflow definition would be defined as follows:
           buckets:
             - ${WIS2BOX_STORAGE_INCOMING}
          file-pattern: '^.*\.xml$'
+
+By default the XML signature validation is set to ``False``. To enable the validation add the following environment variable to your ``wis2box.env`` file:
+
+.. code-block:: bash
+
+    CHECK_CAP_SIGNATURE=True
 
 ``wis2box.data.universal.UniversalData``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
