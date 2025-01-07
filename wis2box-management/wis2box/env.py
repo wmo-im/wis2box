@@ -59,13 +59,17 @@ STORAGE_SOURCE = os.environ.get('WIS2BOX_STORAGE_SOURCE', 'http://minio:9000')
 STORAGE_USERNAME = os.environ.get('WIS2BOX_STORAGE_USERNAME', 'wis2box')
 STORAGE_PASSWORD = os.environ.get('WIS2BOX_STORAGE_PASSWORD', 'minio123')
 STORAGE_INCOMING = os.environ.get('WIS2BOX_STORAGE_INCOMING', 'wis2box-incoming') # noqa
-STORAGE_ARCHIVE = os.environ.get('WIS2BOX_STORAGE_ARCHIVE', 'wis2box-archive')
 STORAGE_PUBLIC = os.environ.get('WIS2BOX_STORAGE_PUBLIC', 'wis2box-public')
 
 try:
     STORAGE_DATA_RETENTION_DAYS = int(os.environ.get('WIS2BOX_STORAGE_DATA_RETENTION_DAYS')) # noqa
 except TypeError:
     STORAGE_DATA_RETENTION_DAYS = None
+
+try:
+    STORAGE_API_RETENTION_DAYS = int(os.environ.get('WIS2BOX_STORAGE_API_RETENTION_DAYS')) # noqa
+except TypeError:
+    STORAGE_API_RETENTION_DAYS = None
 
 LOGLEVEL = os.environ.get('WIS2BOX_LOGGING_LOGLEVEL', 'ERROR')
 LOGFILE = os.environ.get('WIS2BOX_LOGGING_LOGFILE', 'stdout')
@@ -159,7 +163,6 @@ def create(ctx, verbosity):
 
     storages = {
         STORAGE_INCOMING: 'private',
-        STORAGE_ARCHIVE: 'private',
         STORAGE_PUBLIC: 'readonly'
     }
     for key, value in storages.items():

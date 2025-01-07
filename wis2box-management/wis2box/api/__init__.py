@@ -32,7 +32,8 @@ from wis2box.api.backend import load_backend
 from wis2box.api.config import load_config
 from wis2box.data_mappings import get_plugins
 
-from wis2box.env import (DOCKER_API_URL, API_URL)
+from wis2box.env import (DOCKER_API_URL, API_URL, STORAGE_API_RETENTION_DAYS,
+                         STORAGE_DATA_RETENTION_DAYS)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -302,6 +303,31 @@ def delete_collection(ctx, collection, verbosity):
         click.echo('Collection deleted')
 
 
+@click.command()
+@click.pass_context
+@click.option('--days', '-d', help='Number of days of data to keep in API-backend', type=int) # noqa
+@cli_helpers.OPTION_VERBOSITY
+def clean(ctx, days, verbosity):
+    """Clean data from API backend older than X days"""
+
+    if days is not None:
+        click.echo(f'Using days={days}')
+        days_ = days
+    elif STORAGE_API_RETENTION_DAYS is not None:
+        click.echo(f'Using STORAGE_API_RETENTION_DAYS={STORAGE_API_RETENTION_DAYS}') # noqa
+        days_ = STORAGE_API_RETENTION_DAYS
+    else:
+        click.echo(f'Using STORAGE_DATA_RETENTION_DAYS={STORAGE_DATA_RETENTION_DAYS}') # noqa
+        days_ = STORAGE_DATA_RETENTION_DAYS
+
+    if days_ is None or days_ < 0:
+        click.echo('No api data retention set. Skipping')
+    else:
+        LOGGER.debug('Cleaning API data backend')
+        delete_collections_by_retention(days_)
+
+
 api.add_command(setup)
 api.add_command(add_collection)
 api.add_command(delete_collection)
+api.add_command(clean)

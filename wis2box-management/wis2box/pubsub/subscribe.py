@@ -38,8 +38,7 @@ from wis2box.data_mappings import get_data_mappings
 from wis2box.data.message import MessageData
 
 from wis2box.env import (DATADIR, DOCKER_BROKER,
-                         STORAGE_SOURCE, STORAGE_ARCHIVE,
-                         STORAGE_INCOMING)
+                         STORAGE_SOURCE, STORAGE_INCOMING)
 from wis2box.handler import Handler, NotHandledError
 import wis2box.metadata.discovery as discovery_metadata
 from wis2box.plugin import load_plugin, PLUGINS
@@ -156,9 +155,6 @@ class WIS2BoxSubscriber:
                 LOGGER.info(f'Do not process directories: {key}')
                 return
             filepath = f'{STORAGE_SOURCE}/{key}'
-            if key.startswith(STORAGE_ARCHIVE):
-                LOGGER.info(f'Do not process archived-data: {key}')
-                return
             # start a new process to handle the received data
             while len(mp.active_children()) == mp.cpu_count():
                 sleep(0.05)
