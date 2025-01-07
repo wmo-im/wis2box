@@ -7,6 +7,9 @@ Data retention
 wis2box is configured to set data retention according to your requirements. Data retention is managed
 via the ``WIS2BOX_STORAGE_DATA_RETENTION_DAYS`` and ``WIS2BOX_STORAGE_API_RETENTION_DAYS`` environment variables as part of configuring wis2box. 
 
+Once a day, at UTC midnight, wis2box will run the commands ``wis2box data clean`` and ``wis2box api clean`` to remove data older than the specified retention period 
+(cronjob defined in ``wis2box-management/docker/wis2box.cron``). 
+
 Cleaning (storage)
 -----------------
 
