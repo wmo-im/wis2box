@@ -111,7 +111,7 @@ services:
     env_file:
       - wis2box.env
     volumes:
-      - ${WIS2BOX_HOST_DATADIR}/mosquitto:/mosquitto/config
+      - mosquitto-config:/mosquitto/config
 
   wis2box-management:
     container_name: wis2box-management
