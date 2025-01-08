@@ -205,7 +205,7 @@ When defining your dataset, you will need to specify a Local ID, which serves as
 
 .. note::
 
-   Once the dataset is created, the Local ID cannot be changed. To use a different Local ID, you will need to delete and recreate the dataset.
+   If you do not provide a Local ID a randomly generated ID will be assigned. It is strongly suggested to define your own human-readable ID instead. Once the dataset is created, the Local ID cannot be changed. To use a different Local ID, you will need to delete and recreate the dataset.
 
 Please select "Continue to form" to start defining your dataset.
 
