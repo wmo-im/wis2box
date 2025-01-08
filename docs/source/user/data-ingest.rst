@@ -40,7 +40,7 @@ The wis2box provides 3 types of built-in plugins to publish data in BUFR format:
 
 * `bufr2bufr` : the input is received in BUFR format and split by subset, where each subset is published as a separate bufr message
 * `synop2bufr` : the input is received in `FM-12 SYNOP format <https://library.wmo.int/idviewer/35713/33>`_ and converted to BUFR format. The year and month are extracted from the file pattern
-* `csv2bufr` : the input is received in CSV format and converted to BUFR format, a mapping template is used to convert the CSV columns to BUFR encoded values. Custom mapping templates need to be placed in the ``$WIS2BOX_HOST_DATADIR/mappings`` directory. See :ref:`csv2bufr-templates` for examples of mapping templates
+* `csv2bufr` : the input is received in CSV format and converted to BUFR format, a mapping template is used to convert the CSV columns to BUFR encoded values. Custom mapping templates need to be placed in the ``$WIS2BOX_HOST_DATADIR/mappings`` directory. See the repository at `csv2bufr-templates`_ for examples of mapping templates.
 
 To publish data for other data formats you can use the 'Universal' plugin, which will pass through the data without any conversion.
 Please note that you will need to ensure that the date timestamp can be extracted from the file pattern when using this plugin.
