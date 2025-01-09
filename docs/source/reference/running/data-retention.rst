@@ -11,7 +11,7 @@ Once a day, at UTC midnight, wis2box will run the commands ``wis2box data clean`
 (cronjob defined in ``wis2box-management/docker/wis2box.cron``). 
 
 Cleaning (storage)
------------------
+------------------
 
 Cleaning applies to storage defined by ``WIS2BOX_STORAGE_PUBLIC`` and ``WIS2BOX_STORAGE_INCOMING`` and involves the deletion of files after set amount of time.
 
@@ -27,7 +27,7 @@ Cleaning is performed by default daily at 0Z by the system, and can also be run 
    wis2box data clean --days=30
 
 
-Cleaning (api)
+Cleaning (API)
 --------------
 
 Cleaning applies to data in the API backend and involves the deletion of records after a set amount of time.
