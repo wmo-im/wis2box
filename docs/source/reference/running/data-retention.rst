@@ -5,12 +5,15 @@ Data retention
 ==============
 
 wis2box is configured to set data retention according to your requirements. Data retention is managed
-via the ``WIS2BOX_STORAGE_DATA_RETENTION_DAYS`` environment variable as part of configuring wis2box. 
+via the ``WIS2BOX_STORAGE_DATA_RETENTION_DAYS`` and ``WIS2BOX_STORAGE_API_RETENTION_DAYS`` environment variables as part of configuring wis2box. 
 
-Cleaning
---------
+Once a day, at UTC midnight, wis2box will run the commands ``wis2box data clean`` and ``wis2box api clean`` to remove data older than the specified retention period 
+(cronjob defined in ``wis2box-management/docker/wis2box.cron``). 
 
-Cleaning applies to storage defined by ``WIS2BOX_STORAGE_PUBLIC`` and involves the deletion of files after set amount of time.
+Cleaning (storage)
+------------------
+
+Cleaning applies to storage defined by ``WIS2BOX_STORAGE_PUBLIC`` and ``WIS2BOX_STORAGE_INCOMING`` and involves the deletion of files after set amount of time.
 
 Cleaning is performed by default daily at 0Z by the system, and can also be run interactively with:
 
@@ -24,15 +27,17 @@ Cleaning is performed by default daily at 0Z by the system, and can also be run 
    wis2box data clean --days=30
 
 
-Archiving
----------
+Cleaning (API)
+--------------
 
-Archiving applies to storage defined by ``WIS2BOX_STORAGE_INCOMING`` and involves moving files to the storage defined by ``WIS2BOX_STORAGE_ARCHIVE``. 
+Cleaning applies to data in the API backend and involves the deletion of records after a set amount of time.
 
-Archive is performed on incoming data by default daily at 1Z by the system, and can also be run interactively with:
+Cleaning is performed by default daily at 0Z by the system, and can also be run interactively with:
 
 .. code-block:: bash
 
-   wis2box data archive
+   # delete data older than WIS2BOX_STORAGE_API_RETENTION_DAYS by default
+   wis2box api clean
 
-Only files with a timestamp older than one hour are considered for archiving.
+   # delete data older than --days (force override)
+   wis2box api clean --days=30

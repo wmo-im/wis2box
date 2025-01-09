@@ -19,51 +19,24 @@
 #
 ###############################################################################
 
-from datetime import datetime, timedelta, timezone
 import logging
+from datetime import datetime, timedelta, timezone
 from typing import Union
 
 import click
 
 from wis2box import cli_helpers
 from wis2box.api import (setup_collection, remove_collection,
-                         delete_collections_by_retention,
                          reindex_collection)
 from wis2box.data_mappings import get_data_mappings
-from wis2box.env import (STORAGE_SOURCE, STORAGE_ARCHIVE, STORAGE_PUBLIC,
-                         STORAGE_DATA_RETENTION_DAYS, STORAGE_INCOMING)
+from wis2box.env import (STORAGE_SOURCE, STORAGE_PUBLIC, STORAGE_INCOMING,
+                         STORAGE_DATA_RETENTION_DAYS)
 from wis2box.handler import Handler
 from wis2box.metadata.discovery import DiscoveryMetadata
-from wis2box.storage import put_data, move_data, list_content, delete_data
-from wis2box.util import older_than, walk_path
+from wis2box.storage import put_data, list_content, delete_data
+from wis2box.util import walk_path
 
 LOGGER = logging.getLogger(__name__)
-
-
-def archive_data(source_path: str, archive_path: str) -> None:
-    """
-    Archive data based on today's date (YYYY-MM-DD)
-
-    :param source_path: `str` of base storage-path for source
-    :param arcive_path: `str` of base storage-path for archive
-
-    :returns: `None`
-    """
-
-    today_dir = f"{archive_path}/{datetime.now().date().strftime('%Y-%m-%d')}"
-    LOGGER.debug(f'Archive directory={today_dir}')
-    datetime_now = datetime.now(timezone.utc)
-    LOGGER.debug(f'datetime_now={datetime_now}')
-    for obj in list_content(source_path):
-        storage_path = obj['fullpath']
-        archive_path = f"{today_dir}/{obj['filename']}"
-        LOGGER.debug(f"filename={obj['filename']}")
-        LOGGER.debug(f"last_modified={obj['last_modified']}")
-        if obj['last_modified'] < datetime_now - timedelta(hours=1):
-            LOGGER.debug(f'Moving {storage_path} to {archive_path}')
-            move_data(storage_path, archive_path)
-        else:
-            LOGGER.debug(f"{storage_path} created less than 1 h ago, skip")
 
 
 def clean_data(source_path: str, days: int) -> None:
@@ -76,21 +49,24 @@ def clean_data(source_path: str, days: int) -> None:
     :returns: `None`
     """
 
-    LOGGER.debug(f'Clean files in {source_path} older than {days} day(s)')
+    before = datetime.now(timezone.utc) - timedelta(days=days)
+    LOGGER.info(f'Deleting data older than {before} from {source_path}')
+    nfiles_deleted = 0
     for obj in list_content(source_path):
         if obj['basedir'] == 'metadata':
             LOGGER.debug('Skipping metadata')
             continue
+        # don't delete files in the base-directory
+        if obj['basedir'] == '' or obj['basedir'] == obj['filename']:
+            continue
         storage_path = obj['fullpath']
-        if older_than(obj['basedir'], days):
-            LOGGER.debug(f"{obj['basedir']} is older than {days} days")
-            LOGGER.debug(f'Deleting {storage_path}')
+        LOGGER.debug(f"filename={obj['filename']}")
+        LOGGER.debug(f"last_modified={obj['last_modified']}")
+        if obj['last_modified'] < before:
+            LOGGER.debug(f"Deleting {storage_path}")
             delete_data(storage_path)
-        else:
-            LOGGER.debug(f"{obj['basedir']} less than {days} days old")
-
-    LOGGER.debug('Cleaning API indexes')
-    delete_collections_by_retention(days)
+            nfiles_deleted += 1
+    LOGGER.info(f'Deleted {nfiles_deleted} files from {source_path}')
 
 
 def gcm(mcf: Union[dict, str]) -> dict:
@@ -159,35 +135,28 @@ def data():
 
 @click.command()
 @click.pass_context
-@cli_helpers.OPTION_VERBOSITY
-def archive(ctx, verbosity):
-    """Move data from incoming storage to archive storage"""
-
-    source_path = f'{STORAGE_SOURCE}/{STORAGE_INCOMING}'
-    archive_path = f'{STORAGE_SOURCE}/{STORAGE_ARCHIVE}'
-
-    click.echo(f'Archiving data from {source_path} to {archive_path}')
-    archive_data(source_path, archive_path)
-
-
-@click.command()
-@click.pass_context
 @click.option('--days', '-d', help='Number of days of data to keep', type=int)
 @cli_helpers.OPTION_VERBOSITY
 def clean(ctx, days, verbosity):
-    """Clean data directories and API indexes"""
+    """Clean data from storage older than X days"""
 
     if days is not None:
+        click.echo(f'Using data retention days: {days}')
         days_ = days
     else:
+        click.echo(f'Using default data retention days: {STORAGE_DATA_RETENTION_DAYS}') # noqa
         days_ = STORAGE_DATA_RETENTION_DAYS
 
     if days_ is None or days_ < 0:
         click.echo('No data retention set. Skipping')
     else:
-        storage_path = f'{STORAGE_SOURCE}/{STORAGE_PUBLIC}'
-        click.echo(f'Deleting data > {days_} day(s) old from {storage_path}')
-        clean_data(storage_path, days_)
+        storage_path_public = f'{STORAGE_SOURCE}/{STORAGE_PUBLIC}'
+        click.echo(f'Deleting data > {days_} day(s) old from {storage_path_public}') # noqa
+        clean_data(storage_path_public, days_)
+        storage_path_incoming = f'{STORAGE_SOURCE}/{STORAGE_INCOMING}'
+        click.echo(f'Deleting data > {days_} day(s) old from {storage_path_incoming}') # noqa
+        clean_data(storage_path_incoming, days_)
+        click.echo('Done')
 
 
 @click.command()
@@ -286,7 +255,6 @@ def add_collection_items(ctx, topic_hierarchy, path, recursive, verbosity):
     click.echo('Done')
 
 
-data.add_command(archive)
 data.add_command(clean)
 data.add_command(ingest)
 data.add_command(add_collection)
