@@ -67,7 +67,7 @@ except TypeError:
     STORAGE_DATA_RETENTION_DAYS = None
 
 try:
-    STORAGE_API_RETENTION_DAYS = int(os.environ.get('WIS2BOX_STORAGE_API_RETENTION_DAYS')) # noqa
+    STORAGE_API_RETENTION_DAYS = int(os.environ.get('WIS2BOX_STORAGE_API_RETENTION_DAYS', 100)) # noqa
 except TypeError:
     STORAGE_API_RETENTION_DAYS = None
 
