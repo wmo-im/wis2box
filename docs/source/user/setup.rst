@@ -199,6 +199,16 @@ If you want to create a dataset for a different topic, you can select "other" an
 
 Please select "Continue to form" to start defining your dataset.
 
+When defining your dataset, you will need to specify a Local ID, which serves as a short and unique identifier for the dataset within your organization. The Local ID is used to generate the WCMP2 identifier for your metadata record.
+
+.. image:: ../_static/wis2box-webapp-dataset_editor_local_id.png
+  :width: 800
+  :alt: wis2box webapp dataset editor page, localID
+
+.. note::
+
+   If you do not provide a Local ID a randomly generated ID will be assigned. It is strongly suggested to define your own human-readable ID instead. Once the dataset is created, the Local ID cannot be changed. To use a different Local ID, you will need to delete and recreate the dataset.
+
 Make sure to provide a "description" for your dataset, review and add keywords and choose an appropriate bounding box.
 You will also need to provide some contact information for the dataset.
 
