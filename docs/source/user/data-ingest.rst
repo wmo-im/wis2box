@@ -10,29 +10,8 @@ The wis2box storage is provided using a `MinIO`_ container that provides S3-comp
 Any file received in the ``wis2box-incoming`` storage bucket will trigger an action to process the file. 
 What action to take is determined by the data mappings that were setup in the previous section.
 
-wis2box-webapp
---------------
-
-The wis2box-webapp is a web application that includes the following forms for data validation and ingestion:
-
-* user interface to ingest `FM-12 SYNOP data <https://library.wmo.int/idviewer/35713/33>`_
-* user interface to ingest CSV data using the :ref:`AWS template<aws-template>`
-
-The wis2box-webapp is available on your host at `http://<your-public-ip>/wis2box-webapp`.
-
-Interactive data ingestion requires an execution token, which can be generated using the ``wis2box auth add-token`` command inside the wis2box-management container:
-
-.. code-block:: bash
-
-    python3 wis2box-ctl.py login
-    wis2box auth add-token --path processes/wis2box
-
-.. note::
-
-   Be sure to record the token value, as it will not be shown again. If you lose the token, you can generate a new one.
-
 data mappings plugins
----------------------
+^^^^^^^^^^^^^^^^^^^^^
 
 The plugins you have configured for your dataset mappings will determine the actions taken when data is received in the MinIO storage bucket.
 
@@ -40,21 +19,10 @@ The wis2box provides 3 types of built-in plugins to publish data in BUFR format:
 
 * `bufr2bufr` : the input is received in BUFR format and split by subset, where each subset is published as a separate bufr message
 * `synop2bufr` : the input is received in `FM-12 SYNOP format <https://library.wmo.int/idviewer/35713/33>`_ and converted to BUFR format. The year and month are extracted from the file pattern
-* `csv2bufr` : the input is received in CSV format and converted to BUFR format, a mapping template is used to convert the CSV columns to BUFR encoded values. Custom mapping templates need to be placed in the ``$WIS2BOX_HOST_DATADIR/mappings`` directory. See :ref:`csv2bufr-templates` for examples of mapping templates
+* `csv2bufr` : the input is received in CSV format and converted to BUFR format, a mapping template is required to convert the CSV columns to BUFR encoded values. See :ref:`csv2bufr-plugin` for information on how to configure the csv2bufr plugin.
 
 To publish data for other data formats you can use the 'Universal' plugin, which will pass through the data without any conversion.
 Please note that you will need to ensure that the date timestamp can be extracted from the file pattern when using this plugin.
-
-.. _aws-template:
-
-The AWS template in csv2bufr plugin
------------------------------------
-
-When using the csv2bufr plugin, the columns are mapped to BUFR encoded values using a template as defined in the repository `csv2bufr-templates`_.
-
-An example of a CSV file that can be ingested using the 'AWS' mappings template can be downloaded here :download:`AWS-example <../_static/aws-example.csv>`
-
-The CSV columns description of the AWS template can be downloaded here :download:`AWS-reference <../_static/aws-minimal.csv>`
 
 
 MinIO user interface
@@ -193,6 +161,27 @@ For example using the command line from the host running wis2box:
         mkdir wis2box-incoming/urn:wmo:md:it-meteoam:surface-weather-observations.synop
         put /path/to/your/datafile.csv wis2box-incoming/urn:wmo:md:it-meteoam:surface-weather-observations.synop 
     EOF
+
+wis2box-webapp
+--------------
+
+The wis2box-webapp is a web application that includes the following forms for data validation and ingestion:
+
+* user interface to ingest `FM-12 SYNOP data <https://library.wmo.int/idviewer/35713/33>`_
+* user interface to ingest CSV data using the csv2bufr-plugin and using the predefined "AWS-template" mapping.
+
+The wis2box-webapp is available on your host at `http://<your-public-ip>/wis2box-webapp`.
+
+Interactive data ingestion requires an execution token, which can be generated using the ``wis2box auth add-token`` command inside the wis2box-management container:
+
+.. code-block:: bash
+
+    python3 wis2box-ctl.py login
+    wis2box auth add-token --path processes/wis2box
+
+.. note::
+
+   Be sure to record the token value, as it will not be shown again. If you lose the token, you can generate a new one.
 
 wis2box-data-subscriber
 -----------------------

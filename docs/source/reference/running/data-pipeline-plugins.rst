@@ -18,13 +18,16 @@ Default pipeline plugins
 wis2box provides a number of data pipeline plugins by default, which users can be used "out of the box".  The
 list below describes each plugin and provides an example data mappings configuration.
 
+.. _csv2bufr-plugin:
+
 ``wis2box.data.csv2bufr.ObservationDataCSV2BUFR``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This plugin converts CSV observation data into BUFR using ``csv2bufr``.  A csv2bufr template
-can be configured to process the data accordingly.  In addition, ``file-pattern`` can be used
-to filter on incoming data based on a regular expression.  Consult the `csv2bufr`_ documentation
-for more information on configuration and templating.
+This plugin converts CSV observation data into BUFR using `csv2bufr`_. 
+
+A `template` is required to convert the CSV columns to BUFR encoded values.  See `csv2bufr-examples`_ on how to create a template or use one of the built-in templates.
+
+A ``file-pattern`` is used to filter on incoming data based on a regular expression.  
 
 A typical csv2bufr plugin workflow definition would by defined as follows:
 
@@ -38,7 +41,7 @@ A typical csv2bufr plugin workflow definition would by defined as follows:
 
 The default templates are defined by the `csv2bufr-templates`_ repository.
 
-In the case the user wants to use a custom template, the template should be located in the ``$WIS2BOX_HOST_DATADIR/mappings`` directory.
+To use a custom template, the template should be located in the ``$WIS2BOX_HOST_DATADIR/mappings`` directory and the `wis2box.env` file should include `CSV2BUFR_TEMPLATES=${WIS2BOX_DATADIR}/mappings`.	
 
 The plugin configuration would then be defined as follows:
 
@@ -50,6 +53,7 @@ The plugin configuration would then be defined as follows:
          notify: true  # trigger GeoJSON publishing for API and UI
          file-pattern: '^.*\.csv$'
 
+Environment variables can be set in `wis2box.env` to customize the behavior of the csv2bufr-plugin within the wis2box, see `csv2bufr-environment-variables`_ for the full list of environment variables.
 
 ``wis2box.data.bufr4.ObservationDataBUFR2GeoJSON``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -165,7 +169,9 @@ For example, to publish GRIB2 data matching the file-pattern ``^.*_(\d{8})\d{2}.
 
 See :ref:`data-mappings` for a full example data mapping configuration.
 
-.. _`csv2bufr`: https://csv2bufr.readthedocs.io
+.. _`csv2bufr`: https://csv2bufr.readthedocs.io/en/v0.8.5/
+.. _`csv2bufr-examples`: https://csv2bufr.readthedocs.io/en/v0.8.5/example.html
+.. _`csv2bufr-environment-variables`: https://csv2bufr.readthedocs.io/en/v0.8.5/installation.html#environment-variables
 .. _`csv2bufr-templates`: https://github.com/wmo-im/csv2bufr-templates
 .. _`bufr2geojson`: https://github.com/wmo-im/bufr2geojson
 .. _`synop2bufr`: https://synop2bufr.readthedocs.io
