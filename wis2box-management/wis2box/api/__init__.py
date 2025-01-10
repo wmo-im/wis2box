@@ -277,7 +277,7 @@ def setup(ctx, verbosity):
                 meta = gcm(record)
                 setup_collection(meta=meta)
             except Exception as err:
-                click.echo(f'ERROR adding data-collection for: {metadata_id}: {err}')
+                click.echo(f'ERROR adding data-collection for: {metadata_id}: {err}') # noqa
 
 
 @click.command()
