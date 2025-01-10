@@ -272,9 +272,12 @@ def setup(ctx, verbosity):
             continue
         if metadata_id not in api_collections:
             click.echo(f'Adding data-collection for: {metadata_id}')
-            from wis2box.data import gcm
-            meta = gcm(record)
-            setup_collection(meta=meta)
+            try:
+                from wis2box.data import gcm
+                meta = gcm(record)
+                setup_collection(meta=meta)
+            except Exception as err:
+                click.echo(f'ERROR adding data-collection for: {metadata_id}: {err}')
 
 
 @click.command()
