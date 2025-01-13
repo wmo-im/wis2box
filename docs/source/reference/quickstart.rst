@@ -24,12 +24,11 @@ To run with the 'quickstart' configuration, copy this file to ``wis2box.env`` in
     cp tests/test.env wis2box.env
 
 
-Build and update wis2box:
+Build and update wis2box from the source code:
 
 .. code-block:: bash
 
-    python3 wis2box-ctl.py build
-    python3 wis2box-ctl.py update
+    python3 wis2box-ctl.py update-local-build
 
 
 Start wis2box and login to the wis2box-management container:
