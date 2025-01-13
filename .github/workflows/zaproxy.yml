@@ -11,7 +11,7 @@ jobs:
     - name: build and start containers using tests/test.env ⚙️
       run: |
         cp tests/test.env wis2box.env
-        python3 wis2box-ctl.py build
+        python3 wis2box-ctl.py update-local-build
         python3 wis2box-ctl.py start
         python3 wis2box-ctl.py status -a
         sleep 30
