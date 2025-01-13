@@ -43,13 +43,9 @@ jobs:
         sed -i "s/localhost/$IP/g" wis2box.env
         cat wis2box.env
         python3 wis2box-ctl.py config
-    - name: build wis2box
+    - name: build wis2box and check status ⚙️
       run: |
-        python3 wis2box-ctl.py build
-        python3 wis2box-ctl.py update
-    - name: start containers ⚙️
-      run: |
-        python3 wis2box-ctl.py start
+        python3 wis2box-ctl.py update-local-build
         python3 wis2box-ctl.py status -a
     - name: show environment and check collections exist ⚙️
       run: |
