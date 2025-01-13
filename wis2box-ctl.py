@@ -25,6 +25,7 @@ import os
 import re
 import requests
 import subprocess
+import shutil
 
 
 if subprocess.call(['docker', 'compose'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) > 0:
@@ -41,25 +42,17 @@ DOCKER_COMPOSE_ARGS = """
     """
 
 parser = argparse.ArgumentParser(
-    description='manage a compposition of docker containers to implement a wis 2 box',
-    formatter_class=argparse.RawTextHelpFormatter)
+    description='Manage a composition of Docker containers to implement wis2box',
+    formatter_class=argparse.RawTextHelpFormatter
+)
 
-parser.add_argument(
-    '--ssl',
-    dest='ssl',
-    action='store_true',
-    help='run wis2box with SSL enabled')
-
-parser.add_argument(
-    '--simulate',
-    dest='simulate',
-    action='store_true',
-    help='simulate execution by printing action rather than executing')
+parser.add_argument('--simulate',
+                    action='store_true',
+                    help='Simulate execution by printing action rather than executing')
 
 commands = [
     'build',
     'config',
-    'down',
     'execute',
     'lint',
     'logs',
@@ -70,40 +63,53 @@ commands = [
     'start-dev',
     'status',
     'stop',
-    'up',
     'update',
+    'update-local-build',
+    'update-latest-tags'
 ]
 
 parser.add_argument('command',
                     choices=commands,
-                    help="""
+                    help="""The command to execute:
     - config: validate and view Docker configuration
-    - build [containers]: build all services
-    - start [containers]: start system
-    - start-dev [containers]: start system in local development mode
-    - login [container]: login to the container (default: wis2box-management)
-    - login-root [container]: login to the container as root
-    - stop: stop [container] system
+    - build: build all services
+    - start: start system
+    - start-dev: start system in local development mode
+    - login: login to the container (default: wis2box-management)
+    - stop: stop system
     - update: update Docker images
     - prune: cleanup dangling containers and images
-    - restart [containers]: restart one or all containers
-    - status [containers|-a]: view status of wis2box containers
+    - restart: restart containers
+    - status: view status of wis2box containers
     - lint: run PEP8 checks against local Python code
     """)
 
-parser.add_argument('args', nargs=argparse.REMAINDER)
+parser.add_argument('args', nargs=argparse.REMAINDER, help='Additional arguments for the command')
 
 args = parser.parse_args()
-
-# define ENUM for docker image usage, LATEST or LOCAL
-LOCAL = 0
-LATEST = 1
 
 LOCAL_IMAGES = [
     'wis2box-management',
     'wis2box-broker',
     'wis2box-mqtt-metrics-collector'
 ]
+
+def remove_docker_images(filter: str) -> None:
+    # Get the IDs of images matching the filter
+    result = subprocess.run(
+        ['docker', 'images', '--filter', f'reference={filter}', '-q', '--no-trunc'],
+        capture_output=True,
+        text=True
+    )
+    
+    image_ids = result.stdout.strip()
+    if image_ids:  # If there are images to remove
+        for image_id in image_ids.splitlines():
+            try:
+                subprocess.run(['docker', 'rmi', image_id], check=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+            except subprocess.CalledProcessError as e:
+                # do nothing
+                pass
 
 def build_local_images() -> None:
     """
@@ -163,30 +169,56 @@ def get_latest_image_tag(image: str) -> str:
     return tags[0]
     
 
-def update_docker_images(image_type: int) -> None:
+def update_docker_images(use_local_build: bool = False, use_latest: bool = False) -> None:
     """
     Write docker-compose.yml using docker-compose.base.yml as base
-    and set image-versions based on the latest available images in wmoim
+    
 
-    image_type: int. LATEST or LOCAL
-
+    use_local_build: required, boolean. If True, build local images
+    use_tags: required, boolean. If True, pull last tagged release for image. If False, use local images or tag='latest' # noqa
+    
     :returns: None.
     """
     
+    if os.path.exists('docker-compose.yml'):
+        print('Backing up current docker-compose.yml to docker-compose.yml.bak')
+        shutil.copy('docker-compose.yml', 'docker-compose.yml.bak')
+
+    if use_local_build:
+        print('Building local images')
+        build_local_images()
+
+    print('Updating docker-compose.yml')
+
     with open('docker-compose.base.yml', 'r') as f:
         lines = f.readlines()
-    
         with open('docker-compose.yml', 'w') as f:
             for line in lines:
-                if 'image: wmoim/' in line and image_type == LATEST:
+                if 'image: wmoim/' in line:
                     image = line.split('wmoim/')[1].split(':')[0]
-                    print(f'Get latest image tag for {image}')
-                    tag = get_latest_image_tag(image)
+                    
+                    # determine the tag to use
+                    tag = 'latest'
+                    if image in LOCAL_IMAGES and use_local_build:
+                        tag = 'local'
+                    elif image not in LOCAL_IMAGES and use_local_build:
+                        tag = 'latest'
+                    elif not use_latest:
+                        print(f'Get latest image tag for {image}')
+                        tag = get_latest_image_tag(image)
+                    
+                    # pull the image if it is not local, o
+                    if tag != 'local':
+                        print(f'Pulling wmoim/{image}:{tag}')
+                        # pull the latest tag for the image
+                        run(split(f'docker pull wmoim/{image}:{tag}'))
+                    
+                    # update the image tag in the docker-compose.yml
                     print(f'Set {image} to {tag}')
                     f.write(f'    image: wmoim/{image}:{tag}\n')
                 else:
                     f.write(line)
-
+        print('docker-compose.yml updated')
         return None
 
 def split(value: str) -> list:
@@ -251,11 +283,8 @@ def make(args) -> None:
             if 'WIS2BOX_SSL_CERT' in line:
                 ssl_cert = line.split('=')[1].strip()
     docker_compose_args = DOCKER_COMPOSE_ARGS
-    if args.ssl or (ssl_key and ssl_cert):
+    if (ssl_key and ssl_cert):
         docker_compose_args +=" --file docker-compose.ssl.yml"
-    if args.ssl and not (ssl_key and ssl_cert):
-        print("ERROR: SSL is enabled but WIS2BOX_SSL_KEY and WIS2BOX_SSL_CERT are not set in wis2box.env")
-        exit(1)
     # if you selected a bunch of them, default to all
     containers = "" if not args.args else ' '.join(args.args)
 
@@ -264,13 +293,9 @@ def make(args) -> None:
 
     if args.command == "config":
         run(split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} config'))
-    elif args.command == "build":
-        build_local_images()
-        update_docker_images(LOCAL)
     elif args.command in ["up", "start", "start-dev"]:
-        # if docker-compose.yml does not exist, run update to create it
         if not os.path.exists('docker-compose.yml'):
-            update_docker_images(LATEST)
+            update_docker_images()
         run(split(
             'docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions'),
             silence_stderr=True)
@@ -282,6 +307,22 @@ def make(args) -> None:
                 run(split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} --file docker-compose.dev.yml up -d'))
             else:
                 run(split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} up -d'))
+    elif args.command in ["update", "update-local-build", "update-latest-tags"]:
+        if args.command == "update-local-build":
+            update_docker_images(use_local_build=True)
+        elif args.command == "update-use-latest":
+            update_docker_images(use_local_build=False, use_latest=True)
+        else:
+            update_docker_images()
+        # restart all containers
+        run(split(
+                f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} down --remove-orphans'))
+        run(split(
+                f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} up -d'))
+        # perform cleanup of images after update, unless updating local build
+        if not args.command == "update-local-build":
+            remove_docker_images('wmoim/wis2*')
+            remove_docker_images('ghcr.io/wmo-im/wis2*')
     elif args.command == "execute":
         run(['docker', 'exec', '-i', 'wis2box-management', 'sh', '-c', containers])
     elif args.command == "login":
@@ -297,24 +338,14 @@ def make(args) -> None:
         else:
             run(split(
                 f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} down --remove-orphans {containers}'))
-    elif args.command == "update":
-        update_docker_images(LATEST)
-        # restart all containers
-        run(split(
-                f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} down --remove-orphans'))
-        run(split(
-                f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} up -d'))
-        # prune dangling images
-        _ = run(split('docker images --filter dangling=true -q --no-trunc'))
-        run(split(f'docker rmi {_}'))
     elif args.command == "prune":
         run(split('docker builder prune -f'))
         run(split('docker container prune -f'))
         run( split('docker volume prune -f'))
-        _ = run(split('docker images --filter dangling=true -q --no-trunc'))
-        run(split(f'docker rmi {_}'))
-        _ = run(split('docker ps -a -q'))
-        run(split(f'docker rm {_}'))
+        # prune any unused images starting with wmoim/wis2
+        remove_docker_images('wmoim/wis2*')
+        # prune any unused images starting with ghcr.io/wmo-im/wis2
+        remove_docker_images('ghcr.io/wmo-im/wis2*')
     elif args.command == "restart":
         if containers:
             run(split(
