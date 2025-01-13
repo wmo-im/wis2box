@@ -49,3 +49,4 @@ tests/data/.ssh/id_rsa
 tests/data/.ssh/id_rsa.pub
 
 docker-compose.yml
+docker-compose.yml.bak
