@@ -194,7 +194,7 @@ def update_docker_images(use_local_build: bool = False, use_latest: bool = False
         lines = f.readlines()
         with open('docker-compose.yml', 'w') as f:
             for line in lines:
-                if 'image: wmoim/' in line:
+                if 'image: wmoim/wis2box' in line:
                     image = line.split('wmoim/')[1].split(':')[0]
                     
                     # determine the tag to use
@@ -321,8 +321,8 @@ def make(args) -> None:
                 f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} up -d'))
         # perform cleanup of images after update, unless updating local build
         if not args.command == "update-local-build":
-            remove_docker_images('wmoim/wis2*')
-            remove_docker_images('ghcr.io/wmo-im/wis2*')
+            remove_docker_images('wmoim/wis2box*')
+            remove_docker_images('ghcr.io/wmo-im/wis2box*')
     elif args.command == "execute":
         run(['docker', 'exec', '-i', 'wis2box-management', 'sh', '-c', containers])
     elif args.command == "login":
@@ -342,10 +342,10 @@ def make(args) -> None:
         run(split('docker builder prune -f'))
         run(split('docker container prune -f'))
         run( split('docker volume prune -f'))
-        # prune any unused images starting with wmoim/wis2
-        remove_docker_images('wmoim/wis2*')
-        # prune any unused images starting with ghcr.io/wmo-im/wis2
-        remove_docker_images('ghcr.io/wmo-im/wis2*')
+        # prune any unused images starting with wmoim/wis2box
+        remove_docker_images('wmoim/wis2box*')
+        # prune any unused images starting with ghcr.io/wmo-im/wis2box
+        remove_docker_images('ghcr.io/wmo-im/wis2box*')
     elif args.command == "restart":
         if containers:
             run(split(

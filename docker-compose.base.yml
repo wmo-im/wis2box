@@ -155,7 +155,7 @@ services:
 
   wis2downloader:
     container_name: wis2downloader
-    image: wmoim/wis2downloader:latest
+    image: wmoim/wis2downloader:v0.3.2
     restart: always
     env_file:
       - wis2box.env
