@@ -13,7 +13,7 @@ services:
 
   wis2box-ui:
     container_name: wis2box-ui
-    image: wmoim/wis2box-ui:latest
+    image: ghcr.io/wmo-im/wis2box-ui:latest
     restart: always
     env_file:
       - wis2box.env
@@ -22,14 +22,14 @@ services:
 
   wis2box-webapp:
     container_name: wis2box-webapp
-    image: wmoim/wis2box-webapp:latest
+    image: ghcr.io/wmo-im/wis2box-webapp:latest
     env_file:
       - wis2box.env
     restart: always
 
   wis2box-api:
     container_name: wis2box-api
-    image: wmoim/wis2box-api:latest
+    image: ghcr.io/wmo-im/wis2box-api:latest
     restart: always
     env_file:
       - wis2box.env
@@ -104,7 +104,7 @@ services:
 
   mosquitto:
     container_name: mosquitto
-    image: wmoim/wis2box-broker:local
+    image: ghcr.io/wmo-im/wis2box-broker:latest
     restart: always
     env_file:
       - wis2box.env
@@ -113,7 +113,7 @@ services:
 
   wis2box-management:
     container_name: wis2box-management
-    image: wmoim/wis2box-management:local
+    image: ghcr.io/wmo-im/wis2box-management:latest
     mem_limit: 1g
     memswap_limit: 1g
     restart: always
@@ -135,7 +135,7 @@ services:
     restart: unless-stopped
     env_file:
       - wis2box.env
-    image: wmoim/wis2box-mqtt-metrics-collector:local
+    image: ghcr.io/wmo-im/wis2box-mqtt-metrics-collector:latest
     depends_on:
       - mosquitto
       - wis2box-management
@@ -144,7 +144,7 @@ services:
 
   wis2box-auth:
     container_name: wis2box-auth
-    image: wmoim/wis2box-auth:latest
+    image: ghcr.io/wmo-im/wis2box-auth:latest
     restart: always
     env_file:
       - wis2box.env
