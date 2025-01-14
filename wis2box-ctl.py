@@ -125,20 +125,20 @@ def build_local_images() -> None:
         run(split(f'docker build -t ghcr.io/wmo-im/{image}:local {image}'))
     return None
     
-def get_latest_release_tag(image: str, major_release: str = '') -> str:
+def get_latest_release_tag(image: str, wis2box_version: str = '') -> str:
     """
 
     Fetches the latest release tag for a GitHub repository.
     
     :param image: required, string. The name of the image repository.
-    :param major_release: required, string. The major release version.
+    :param wis2box_version: required, string. The major release version.
 
     :return: The latest release tag or an error message if not found.
     """
     url = f'https://api.github.com/repos/wmo-im/{image}/releases'
     headers = {'Accept': 'application/vnd.github.v3+json'}
     
-    print(f'Fetching latest release tag from GitHub for {image} using wis2box-version={major_release}')
+    print(f'Fetching latest release tag from GitHub for {image} using wis2box-version={wis2box_version}')
 
     options = []
     try:
@@ -147,7 +147,7 @@ def get_latest_release_tag(image: str, major_release: str = '') -> str:
             releases = response.json()
             for release in releases:
                 print(release['tag_name'])
-                if major_release in release['tag_name']:
+                if wis2box_version in release['tag_name']:
                     options.append(release['tag_name'])
         else:
             print(f'Error fetching latest release tag for {image}: {response.status_code}')
@@ -156,7 +156,7 @@ def get_latest_release_tag(image: str, major_release: str = '') -> str:
 
     # throw error if options is empty
     if not options:
-        raise ValueError(f'No release tags found for {image} with major release {major_release}')
+        raise ValueError(f'No release tags found for {image} with major release {wis2box_version}')
 
     # sort descending and return the first element
     options.sort(reverse=True)
