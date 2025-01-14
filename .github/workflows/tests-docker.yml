@@ -45,7 +45,7 @@ jobs:
         python3 wis2box-ctl.py config
     - name: build wis2box locally ⚙️
       run: |
-        python3 wis2box-ctl.py update-local-build
+        python3 wis2box-ctl.py update
     - name: start containers ⚙️
       run: |
         python3 wis2box-ctl.py start
