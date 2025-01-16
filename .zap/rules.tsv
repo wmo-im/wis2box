@@ -22,3 +22,4 @@
 10110	IGNORE	Dangerous JS Functions	Low
 10105	IGNORE	Authentication Credentials Captured	Medium
 10003	IGNORE	Vulnerable JS Library	Medium
+90004	IGNORE	Insufficient Site Isolation Against Spectre Vulnerability	Low
