@@ -1,0 +1,20 @@
+{
+    "version": "1.0b8",
+    "manifest": {
+        "nginx": "alpine",
+        "ghcr.io/wmo-im/wis2box-ui": "1.0b8",
+        "ghcr.io/wmo-im/wis2box-webapp": "0.2.1",
+        "ghcr.io/wmo-im/wis2box-api": "1.0b8",
+        "minio/minio": "RELEASE.2024-08-03T04-33-23Z-cpuv1",
+        "docker.elastic.co/elasticsearch/elasticsearch": "8.6.2",
+        "ghcr.io/wmo-im/wis2box-broker": "1.0b8",
+        "ghcr.io/wmo-im/wis2box-management": "1.0b8",
+        "ghcr.io/wmo-im/wis2box-auth": "1.0b8",
+        "ghcr.io/wmo-im/wis2downloader": "v0.3.1",
+        "grafana/loki": "2.4.1",
+        "ghcr.io/wmo-im/mqtt-metrics-collector": "1.0b8",
+        "prom/prometheus": "v2.37.0",
+        "grafana/grafana-oss": "9.0.3",
+        "quay.io/prometheuscommunity/elasticsearch-exporter": "latest"
+    }
+}
