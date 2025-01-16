@@ -36,10 +36,11 @@ jobs:
         mkdir -p tests/data/downloads
         chown -R $(whoami):docker tests/data/downloads
         chmod -R 775 tests/data/downloads
-    - name: setup wis2box configuration, replace localhost with IP on host 📦
+    - name: setup wis2box configuration, replace localhost with IP on host, use LOCAL_BUILD as wis2box.version 📦
       run: |
         export IP=$(hostname -I | awk '{print $1}')
         cp tests/test.env wis2box.env
+        echo "LOCAL_BUILD" > wis2box.version
         sed -i "s/localhost/$IP/g" wis2box.env
         cat wis2box.env
         python3 wis2box-ctl.py config

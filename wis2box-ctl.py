@@ -22,10 +22,11 @@
 
 import argparse
 import os
-import re
 import requests
 import subprocess
 import shutil
+
+from packaging.version import Version
 
 # read wis2box.version file if it exists
 WIS2BOX_VERSION = 'LOCAL_BUILD'
@@ -92,9 +93,9 @@ parser.add_argument('args', nargs=argparse.REMAINDER, help='Additional arguments
 args = parser.parse_args()
 
 LOCAL_IMAGES = [
-    'wis2box-management',
-    'wis2box-broker',
-    'wis2box-mqtt-metrics-collector'
+    'ghcr.io/wmo-im/wis2box-management',
+    'ghcr.io/wmo-im/wis2box-broker',
+    'ghcr.io/wmo-im/wis2box-mqtt-metrics-collector'
 ]
 
 def remove_docker_images(filter: str) -> None:
@@ -125,49 +126,76 @@ def build_local_images() -> None:
         run(split(f'docker build -t ghcr.io/wmo-im/{image}:local {image}'))
     return None
     
-def get_latest_release_tag(image: str, wis2box_version: str = '') -> str:
+def get_resolved_version(base_version: str) -> str:
     """
+    Fetches the latest release tag for the wis2box-images repository.
 
-    Fetches the latest release tag for a GitHub repository.
-    
-    :param image: required, string. The name of the image repository.
-    :param wis2box_version: required, string. The major release version.
+    :rbase_version: required, string. The major release version.
 
     :return: The latest release tag or an error message if not found.
     """
-    url = f'https://api.github.com/repos/wmo-im/{image}/releases'
+
+    # NOTE using maaikelimper/wis2box-images for demo purposes, should be wmo-im/wis2box-images
+    url = f'https://api.github.com/repos/maaikelimper/wis2box-images/releases'
     headers = {'Accept': 'application/vnd.github.v3+json'}
     
-    print(f'Fetching latest release tag from GitHub for {image} using wis2box-version={wis2box_version}')
-
     options = []
     try:
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
             releases = response.json()
             for release in releases:
-                print(release['tag_name'])
-                if wis2box_version in release['tag_name']:
+                if base_version in release['tag_name']:
                     options.append(release['tag_name'])
         else:
-            print(f'Error fetching latest release tag for {image}: {response.status_code}')
+            print(f'Error fetching latest release tag for {base_version}: {response.status_code}')
     except requests.exceptions.RequestException as e:
-        print(f'Error fetching latest release tag for {image}: {e}')
+        print(f'Error fetching latest release tag for {base_version}: {e}')
 
     # throw error if options is empty
     if not options:
-        raise ValueError(f'No release tags found for {image} with major release {wis2box_version}')
+        raise ValueError(f'No wis2box-release found matching wis2box-version={base_version}')
 
-    # sort descending and return the first element
-    options.sort(reverse=True)
-    return options[0]
+    # Use semantic versioning for sorting
+    sorted_versions = sorted(options, key=lambda v: Version(v), reverse=True)
+
+    resolved_version = sorted_versions[0]
+    return resolved_version
+
+def get_latest_release_tag(image: str, resolved_version: str = '') -> str:
+    """
+
+    Fetches the latest release tag for a GitHub repository.
+    
+    :param image: required, string. The name of the image repository.
+    :param base_version: required, string. The major release version.
+
+    :return: The latest release tag or an error message if not found.
+    """
+    
+    # look up the image tag for the release by downloading the wis2box-images.json file
+    # NOTE using maaikelimper/wis2box-images for demo purposes, should be wmo-im/wis2box-images
+    url = f'https://github.com/maaikelimper/wis2box-images/releases/download/{resolved_version}/wis2box-images.json'
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            images = response.json()
+            if image in images:
+                return images[image]
+        else:
+            print(f'Error fetching image tag for {image} from {url}: {response.status_code}')
+    except requests.exceptions.RequestException as e:
+        print(f'Error fetching image tag for {image} from {url}: {e}')
+
+    # throw error if image tag is not found
+    raise ValueError(f'No image tag found for {image} in {url}')
             
-def update_docker_images(wis2box_version: str) -> None:
+def update_docker_images(base_version: str) -> None:
     """
     Write docker-compose.yml using docker-compose.base.yml as base
     
 
-    :param wis2box_version: required, string. The version of wis2box to use.
+    :param base_version: required, string. The version of wis2box to use.
     
     :returns: None.
     """
@@ -176,31 +204,35 @@ def update_docker_images(wis2box_version: str) -> None:
         print('Backing up current docker-compose.yml to docker-compose.yml.bak')
         shutil.copy('docker-compose.yml', 'docker-compose.yml.bak')
 
-    if wis2box_version == 'LOCAL_BUILD':
+    if base_version == 'LOCAL_BUILD':
         print('Building local images')
         build_local_images()
 
-    print(f'Updating docker-compose.yml for wis2box_version={wis2box_version}')
+    resolved_version = base_version
+    if base_version != 'LOCAL_BUILD':
+        resolved_version = get_resolved_version(base_version)
+
+    print(f'Updating docker-compose.yml, using base_version={resolved_version}')
 
     with open('docker-compose.base.yml', 'r') as f:
         lines = f.readlines()
         with open('docker-compose.yml', 'w') as f:
             for line in lines:
-                if 'image: ghcr.io/wmo-im/wis2box' in line:
-                    image = line.split('ghcr.io/wmo-im/')[1].split(':')[0]
+                if 'image: ' in line:
+                    image = line.split('image: ')[1].split(':')[0]
                     tag = 'latest'
-                    if image in LOCAL_IMAGES and wis2box_version == 'LOCAL_BUILD':
+                    if image in LOCAL_IMAGES and base_version == 'LOCAL_BUILD':
                         tag = 'local'
-                    elif wis2box_version != 'LOCAL_BUILD':
-                        tag = get_latest_release_tag(image, wis2box_version)
+                    elif base_version != 'LOCAL_BUILD':
+                        tag = get_latest_release_tag(image, resolved_version)
                     # pull the image if it is not local
                     if tag != 'local':
-                        print(f'Pulling ghcr.io/wmo-im/{image}:{tag}')
+                        print(f'Pulling {image}:{tag}')
                         # pull the latest tag for the image
-                        run(split(f'docker pull ghcr.io/wmo-im/{image}:{tag}'))
+                        run(split(f'docker pull {image}:{tag}'))
                     # update the image tag in the docker-compose.yml
                     print(f'Set {image} to {tag}')
-                    f.write(f'    image: ghcr.io/wmo-im/{image}:{tag}\n')
+                    f.write(f'    image: {image}:{tag}\n')
                 else:
                     f.write(line)
         print('docker-compose.yml updated')
