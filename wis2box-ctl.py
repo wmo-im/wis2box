@@ -177,7 +177,12 @@ def get_latest_release_tag(image: str, resolved_version: str = '') -> str:
     
     # look up the image tag for the release by downloading the wis2box-images.json file
     # NOTE using maaikelimper/wis2box-images for demo purposes, should be wmo-im/wis2box-images
-    url = f'https://github.com/maaikelimper/wis2box-images/releases/download/{resolved_version}/wis2box-images.json'
+    github_repo = 'maaikelimper/wis2box-images'
+
+    url = f'https://github.com/{github_repo}/releases/download/{resolved_version}/wis2box-images.json'
+    if resolved_version == 'LOCAL_BUILD':
+        # use the version of images in main branch
+        url = f'https://raw.githubusercontent.com/{github_repo}/refs/heads/main/wis2box-images.json'
     try:
         response = requests.get(url)
         if response.status_code == 200:
@@ -222,10 +227,10 @@ def update_docker_images(base_version: str) -> None:
             for line in lines:
                 if 'image: ' in line:
                     image = line.split('image: ')[1].split(':')[0]
-                    tag = 'latest'
+                    tag = ''
                     if image in LOCAL_IMAGES and base_version == 'LOCAL_BUILD':
                         tag = 'local'
-                    elif base_version != 'LOCAL_BUILD':
+                    else:
                         tag = get_latest_release_tag(image, resolved_version)
                     # pull the image if it is not local
                     if tag != 'local':
