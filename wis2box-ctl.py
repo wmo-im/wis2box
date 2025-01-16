@@ -121,9 +121,11 @@ def build_local_images() -> None:
 
     :returns: None.
     """
+
     for image in LOCAL_IMAGES:
         print(f'Building {image}')
-        run(split(f'docker build -t ghcr.io/wmo-im/{image}:local {image}'))
+        context = image.split('/')[-1]
+        run(split(f'docker build -t {image}:local {context}'))
     return None
     
 def get_resolved_version(base_version: str) -> str:
