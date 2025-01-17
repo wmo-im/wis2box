@@ -45,3 +45,5 @@ wis2box.env
 docker/.env
 
 .ipynb_checkpoints
+
+docker-compose.images-*.yml

@@ -21,21 +21,28 @@
 ###############################################################################
 
 import argparse
+import glob
 import os
+import requests
 import subprocess
+
+from packaging.version import Version
 
 if subprocess.call(['docker', 'compose'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) > 0:
     DOCKER_COMPOSE_COMMAND = 'docker-compose'
 else:
     DOCKER_COMPOSE_COMMAND = 'docker compose'
 
-DOCKER_COMPOSE_ARGS = """
+DOCKER_COMPOSE_ARGS = f"""
     --file docker-compose.yml
     --file docker-compose.override.yml
     --file docker-compose.monitoring.yml
     --env-file wis2box.env
     --project-name wis2box_project
     """
+
+# NOTE using maaikelimper/wis2box-release for demo purposes, should be wmo-im/wis2box-release
+GITHUB_RELEASE_REPO = 'maaikelimper/wis2box-release'
 
 parser = argparse.ArgumentParser(
     description='manage a compposition of docker containers to implement a wis 2 box',
@@ -133,6 +140,123 @@ def run(cmd, silence_stderr=False) -> None:
     return None
 
 
+def get_resolved_version() -> None:
+    """
+    Determine the latest matching release tag from the wis2box-release repository.
+
+    :return: The latest release tag or an error message if not found.
+    """
+
+    # read the base version from wis2box.version
+    if not os.path.exists('wis2box.version'):
+        print('wis2box.version file does not exist')
+        exit(1)
+
+    base_version = None
+    with open('wis2box.version', 'r') as f:
+        base_version = f.readline().strip()
+
+    if base_version == 'LOCAL_BUILD':
+        return base_version
+
+    url = f'https://api.github.com/repos/{GITHUB_RELEASE_REPO}/releases'
+    headers = {'Accept': 'application/vnd.github.v3+json'}
+    options = []
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            releases = response.json()
+            for release in releases:
+                if base_version in release['tag_name']:
+                    options.append(release['tag_name'])
+        else:
+            print(f'Error fetching latest release tag for {base_version}: {response.status_code}')
+    except requests.exceptions.RequestException as e:
+        print(f'Error fetching latest release tag for {base_version}: {e}')
+
+    return None
+
+def remove_old_docker_images() -> None:
+    """
+    Remove any image in docker-compose.images-*.yml.bak
+    that is not in docker-compose.images-*.yml
+
+    :return: None.
+    """
+    old_images = []
+    new_images = []
+    if os.path.exists('docker-compose.images-*.yml.bak'):
+        with open('docker-compose.images-*.yml.bak', 'r') as f:
+            for line in f:
+                if 'image' in line:
+                    old_images.append(line.split(':')[1].strip())
+    if os.path.exists('docker-compose.images-*.yml'):
+        with open('docker-compose.images-*.yml', 'r') as f:
+            for line in f:
+                if 'image' in line:
+                    new_images.append(line.split(':')[1].strip())
+    for image in old_images:
+        if image not in new_images:
+            run(split(f'docker rmi {image}'))
+
+def update_images_yml() -> str:
+    """
+
+    Update the docker-compose.images-*.yml file to the latest release tag.
+
+    :return: The latest release tag or an error message if not found.
+    """
+    
+    # get the latest release tag
+    version = get_resolved_version()
+    if version == 'LOCAL_BUILD':
+        # use the version of images in main branch
+        url = f'https://raw.githubusercontent.com/{GITHUB_RELEASE_REPO}/refs/heads/main/docker-compose.images.yml'
+    else:
+        url = f'https://github.com/{GITHUB_RELEASE_REPO}/releases/download/{version}/docker-compose.images.yml'
+
+    current_version = 'Undefined'
+    # find currently used version of docker-compose.images-*.yml
+    for file in os.listdir('.'):
+        if file.startswith('docker-compose.images-') and file.endswith('.yml'):
+            current_version = file.split('-')[2].split('.')[0]
+            
+    if current_version == version:
+        print(f'Using latest version {version}, no update of images file required')
+        return
+    
+    if version not in ['LOCAL_BUILD', '']:
+        # ask the user if they want to update the docker-compose.images-*.yml file
+        print(f'Current version={current_version}, latest version={version}')
+        query = f'Would you like to update ? (y/n/exit)'
+        print(query)
+        response = input()
+        while response not in ['y', 'n', 'exit']:
+            print(query)
+            response = input()
+        if response == 'n':
+            return
+        if response == 'exit':
+            exit(0)
+        if response == 'y':
+            print(f'Updating wis2box to version {version}')
+    
+    # download the file and store as docker-compose.images-{resolved_version}.yml
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open(f'docker-compose.images-{version}.yml', 'wb') as f:
+                f.write(response.content)
+        else:
+            print(f'Error fetching docker-compose.images.yml: {response.status_code}')
+    except requests.exceptions.RequestException as e:
+        print(f'Error fetching docker-compose.images.yml: {e}')
+        raise e
+    
+    # rename the current docker-compose.images-*.yml file
+    if current_version != 'Undefined':
+        os.rename(f'docker-compose.images-{current_version}.yml', f'docker-compose.images-{current_version}.yml.bak')
+
 def make(args) -> None:
     """
     Serves as pseudo Makefile using Python subprocesses.
@@ -154,7 +278,15 @@ def make(args) -> None:
                 ssl_key = line.split('=')[1].strip()
             if 'WIS2BOX_SSL_CERT' in line:
                 ssl_cert = line.split('=')[1].strip()
-    docker_compose_args = DOCKER_COMPOSE_ARGS
+
+    if not glob.glob('docker-compose.images-*.yml'):
+        print("No docker-compose.images-*.yml files found, creating one")
+        update_images_yml()
+
+    docker_image_file = glob.glob('docker-compose.images-*.yml')[0]
+
+    docker_compose_args = DOCKER_COMPOSE_ARGS + f' --file {docker_image_file}'
+    print(docker_compose_args)
     if args.ssl or (ssl_key and ssl_cert):
         docker_compose_args +=" --file docker-compose.ssl.yml"
     if args.ssl and not (ssl_key and ssl_cert):
@@ -172,6 +304,7 @@ def make(args) -> None:
         run(split(
             f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} build {containers}'))
     elif args.command in ["up", "start", "start-dev"]:
+        # if no docker-compose.images-*.yml files exist, run get_images()
         run(split(
             'docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions'),
             silence_stderr=True)
@@ -199,7 +332,15 @@ def make(args) -> None:
             run(split(
                 f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} down --remove-orphans {containers}'))
     elif args.command == "update":
+        update_images_yml()
         run(split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} pull'))
+        # restart all containers
+        run(split(
+                f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} down --remove-orphans'))
+        run(split(
+                f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} up -d'))
+        remove_old_docker_images()
+        
     elif args.command == "prune":
         run(split('docker builder prune -f'))
         run(split('docker container prune -f'))
