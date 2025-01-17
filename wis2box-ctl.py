@@ -33,7 +33,7 @@ if subprocess.call(['docker', 'compose'], stdout=subprocess.DEVNULL, stderr=subp
 else:
     DOCKER_COMPOSE_COMMAND = 'docker compose'
 
-DOCKER_COMPOSE_ARGS = f"""
+DOCKER_COMPOSE_ARGS = """
     --file docker-compose.yml
     --file docker-compose.override.yml
     --file docker-compose.monitoring.yml
@@ -286,7 +286,6 @@ def make(args) -> None:
     docker_image_file = glob.glob('docker-compose.images-*.yml')[0]
 
     docker_compose_args = DOCKER_COMPOSE_ARGS + f' --file {docker_image_file}'
-    print(docker_compose_args)
     if args.ssl or (ssl_key and ssl_cert):
         docker_compose_args +=" --file docker-compose.ssl.yml"
     if args.ssl and not (ssl_key and ssl_cert):
