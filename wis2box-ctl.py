@@ -44,7 +44,7 @@ DOCKER_COMPOSE_ARGS = """
 GITHUB_RELEASE_REPO = 'wmo-im/wis2box-release'
 
 parser = argparse.ArgumentParser(
-    description='manage a compposition of docker containers to implement a wis 2 box',
+    description='manage a composition of docker containers to implement a WIS2-in-a-box',
     formatter_class=argparse.RawTextHelpFormatter)
 
 parser.add_argument(
@@ -175,6 +175,7 @@ def get_resolved_version() -> None:
 
     return None
 
+
 def remove_old_docker_images() -> None:
     """
     Remove any image in docker-compose.images-*.yml.bak
@@ -182,21 +183,29 @@ def remove_old_docker_images() -> None:
 
     :return: None.
     """
+
     old_images = []
     new_images = []
-    if os.path.exists('docker-compose.images-*.yml.bak'):
-        with open('docker-compose.images-*.yml.bak', 'r') as f:
+    
+    docker_image_files_old = glob.glob('docker-compose.images-*.yml.bak')
+    for file in docker_image_files_old:
+        with open(file, 'r') as f:
             for line in f:
-                if 'image' in line:
-                    old_images.append(line.split(':')[1].strip())
-    if os.path.exists('docker-compose.images-*.yml'):
-        with open('docker-compose.images-*.yml', 'r') as f:
+                if 'image:' in line:
+                    old_images.append(line.split(':', 1)[1].strip())
+
+    docker_image_files_new = glob.glob('docker-compose.images-*.yml')
+    for file in docker_image_files_new:
+        with open(file, 'r') as f:
             for line in f:
-                if 'image' in line:
-                    new_images.append(line.split(':')[1].strip())
+                if 'image:' in line:
+                    new_images.append(line.split(':', 1)[1].strip())
+
     for image in old_images:
         if image not in new_images:
-            run(split(f'docker rmi {image}'))
+            print(f'Removing {image}')
+            subprocess.run(['docker', 'rmi', image], stderr=subprocess.DEVNULL)
+    
 
 def update_images_yml() -> str:
     """
@@ -314,6 +323,7 @@ def make(args) -> None:
                 run(split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} --file docker-compose.dev.yml up -d'))
             else:
                 run(split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} up -d'))
+                remove_old_docker_images()
     elif args.command == "execute":
         run(['docker', 'exec', '-i', 'wis2box-management', 'sh', '-c', containers])
     elif args.command == "login":
@@ -332,13 +342,13 @@ def make(args) -> None:
     elif args.command == "update":
         update_images_yml()
         run(split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} pull'))
-        # restart all containers
-        run(split(
+        # if the argument "--restart" is passed, restart all containers and clean old images
+        if "--restart" in args.args:
+            run(split(
                 f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} down --remove-orphans'))
-        run(split(
+            run(split(
                 f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} up -d'))
-        remove_old_docker_images()
-        
+            remove_old_docker_images()
     elif args.command == "prune":
         run(split('docker builder prune -f'))
         run(split('docker container prune -f'))

@@ -47,3 +47,4 @@ docker/.env
 .ipynb_checkpoints
 
 docker-compose.images-*.yml
+docker-compose.images-*.yml.bak
