@@ -41,8 +41,7 @@ DOCKER_COMPOSE_ARGS = """
     --project-name wis2box_project
     """
 
-# NOTE using maaikelimper/wis2box-release for demo purposes, should be wmo-im/wis2box-release
-GITHUB_RELEASE_REPO = 'maaikelimper/wis2box-release'
+GITHUB_RELEASE_REPO = 'wmo-im/wis2box-release'
 
 parser = argparse.ArgumentParser(
     description='manage a compposition of docker containers to implement a wis 2 box',
