@@ -139,6 +139,38 @@ def run(cmd, silence_stderr=False) -> None:
     return None
 
 
+def fetch_data_from_url(url: str, headers: dict = {}) -> bytes:
+    """
+    Fetch data from a given URL.
+
+    :param url: required, string. URL to fetch data from.
+    :param headers: optional, dict. Headers to send with the request.
+
+    :returns: bytes. The response data.
+    """
+
+    parsed_url = urlparse(url)
+    full_path = parsed_url.path
+    if parsed_url.query:  # Include query string if it exists
+        full_path += '?' + parsed_url.query
+    try:
+        conn = http.client.HTTPSConnection(parsed_url.netloc)
+        conn.request("GET", full_path, headers=headers)
+        response = conn.getresponse()
+        # Follow redirect if status is 301 or 302
+        if response.status in (301, 302):
+            location = response.getheader('Location')
+            if location:
+                conn.close()
+                return fetch_data_from_url(location, headers)
+        elif response.status != 200:
+            print(f"Error fetching URL: {response.status}")
+            exit(1)
+        return response.read()
+    except Exception as e:
+        print(f"Error fetching URL: {e}")
+        exit(1)
+
 def get_resolved_version() -> str:
     """
     Determine the latest matching release tag from the wis2box-release repository.
@@ -160,43 +192,13 @@ def get_resolved_version() -> str:
         'Accept': 'application/vnd.github.v3+json',
         'User-Agent': 'wis2box'
     }
-    # Function to make an HTTP request and handle redirects
-    def fetch_url(host, path):
-        conn = http.client.HTTPSConnection(host)
-        conn.request("GET", path, headers=headers)
-        response = conn.getresponse()
-        # Follow redirect if status is 301 or 302
-        if response.status in (301, 302):
-            location = response.getheader('Location')
-            if location:
-                print(f"Redirecting to {location}")
-                conn.close()
-                parsed_url = urlparse(location)
-                return fetch_url(parsed_url.netloc, parsed_url.path)
-        return response
-
-    parsed_url = urlparse(url)
-    host = parsed_url.netloc
-    path = parsed_url.path
 
     options = []
-    try:
-        response = fetch_url(host, path)
-        if response.status == 200:
-            data = response.read()
-            releases = json.loads(data.decode('utf-8'))
-            for release in releases:
-                    if base_version in release['tag_name']:
-                        options.append(release['tag_name'])
-            else:
-                print(f'No matching versions found for VERSION.txt={base_version}')
-                exit(1)
-        else:
-            print(f'Error fetching latest release tag: {response.status}')
-            exit(1)
-    except Exception as e:
-        print(f'Error fetching latest release tag: {e}')
-        exit(1)
+    data = fetch_data_from_url(url, headers)
+    releases = json.loads(data.decode('utf-8'))
+    for release in releases:
+        if base_version in release['tag_name']:
+            options.append(release['tag_name'])
 
     if options:
         # Sort options by the patch version (assuming format vX.Y.Z)
@@ -246,16 +248,16 @@ def remove_old_docker_images() -> None:
             print(f'Removing {image}')
             subprocess.run(['docker', 'rmi', image], stderr=subprocess.DEVNULL)
     
-    # ask user to remove the old docker-compose.images-*.yml.bak file
-    if docker_image_files_old:
-        query = f'Remove {docker_image_files_old[0]} ? (y/n)'
+    # ask user to remove the old docker-compose.images-*.yml.bak files
+    for file_ in docker_image_files_old:
+        query = f'Remove {file_} ? (y/n)'
         print(query)
         response = input()
         while response not in ['y', 'n']:
             print(query)
             response = input()
         if response == 'y':
-            os.remove(docker_image_files_old[0])
+            os.remove(file_)
 
 def update_images_yml() -> str:
     """
@@ -279,7 +281,7 @@ def update_images_yml() -> str:
     for file in os.listdir('.'):
         if file.startswith('docker-compose.images-') and file.endswith('.yml'):
             current_version = file.split('-')[2].split('.')[0]
-            
+
     if current_version == version:
         print(f'Using latest version {version}, no update of images file required')
         return
@@ -301,31 +303,16 @@ def update_images_yml() -> str:
             print(f'Updating wis2box to version {version}')
     
     # download the file and store as docker-compose.images-{version}.yml
-    try:
-        conn = http.client.HTTPSConnection(url_host)
-        conn.request("GET", url_path)
-        response = conn.getresponse()
-        if response.status == 200:
-            # Write the content to a new file
-            with open(f'docker-compose.images-{version}.yml', 'wb') as f:
-                f.write(response.read())
-        elif response.status == 302:
-            url = response.getheader('Location')
-
-        else:
-            print(f'Error fetching docker-compose.images.yml: {response.status}')
-            print(f'{response.read()}')
-            exit(1)
-        conn.close()
-    except Exception as e:
-        print(f'Error fetching docker-compose.images.yml: {e}')
-        raise e
+    data = fetch_data_from_url(f'https://{url_host}{url_path}')
+    with open(f'docker-compose.images-{version}.yml', 'wb') as f:
+        f.write(data)
     
-    # rename the current docker-compose.images-*.yml file
-    if os.path.exists(f'docker-compose.images-{current_version}.yml'):
-        os.rename(f'docker-compose.images-{current_version}.yml',
-                  f'docker-compose.images-{current_version}.yml.bak')
-
+    # rename any other docker-compose.images-*.yml file to .bak
+    image_files = glob.glob('docker-compose.images-*.yml')
+    for file in image_files:
+        if file != f'docker-compose.images-{version}.yml':
+            os.rename(file, file + '.bak')
+    
 def make(args) -> None:
     """
     Serves as pseudo Makefile using Python subprocesses.
@@ -351,9 +338,11 @@ def make(args) -> None:
     if not glob.glob('docker-compose.images-*.yml'):
         print("No docker-compose.images-*.yml files found, creating one")
         update_images_yml()
+        # update docker_compose_args with the latest docker-compose.images-*.yml file
+        docker_image_file = glob.glob('docker-compose.images-*.yml')[0]
+        docker_compose_args = DOCKER_COMPOSE_ARGS + f' --file {docker_image_file}'
 
     docker_image_file = glob.glob('docker-compose.images-*.yml')[0]
-
     docker_compose_args = DOCKER_COMPOSE_ARGS + f' --file {docker_image_file}'
     if args.ssl or (ssl_key and ssl_cert):
         docker_compose_args +=" --file docker-compose.ssl.yml"
@@ -402,6 +391,9 @@ def make(args) -> None:
                 f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} down --remove-orphans {containers}'))
     elif args.command == "update":
         update_images_yml()
+        # update docker_compose_args with the latest docker-compose.images-*.yml file
+        docker_image_file = glob.glob('docker-compose.images-*.yml')[0]
+        docker_compose_args = DOCKER_COMPOSE_ARGS + f' --file {docker_image_file}'
         run(split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} pull'))
         # if the argument "--restart" is passed, restart all containers and clean old images
         if "--restart" in args.args:
