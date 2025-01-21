@@ -67,7 +67,7 @@ wis2box requires the following prior to installation:
    Docker Engine, 20.10.14 or higher
    Docker Compose, 2.0 or higher
 
-The following commands be used to setup the required software on Ubuntu (20.04 LTS, 22.04 LTS) systems:
+The following commands be used to setup the required software on Ubuntu (22.04 LTS) systems:
 
 .. note::
 
@@ -83,7 +83,7 @@ The following commands be used to setup the required software on Ubuntu (20.04 L
     sudo apt-get install -y docker-ce docker-compose-plugin unzip python3-pip
     sudo pip3 install pip --upgrade
     sudo pip3 install pyopenssl --upgrade
-    sudo pip3 install requests==2.26.0 urllib3==1.26.0 packages
+    sudo pip3 install urllib3==1.26.0
 
 For Ubuntu 24.04 LTS, you will need to use a virtual environment to install the required Python packages:
 
@@ -93,7 +93,7 @@ For Ubuntu 24.04 LTS, you will need to use a virtual environment to install the 
     source wis2box/bin/activate
     pip3 install pip --upgrade
     pip3 install pyopenssl --upgrade
-    pip3 install requests==2.26.0 urllib3==1.26.0
+    pip3 install urllib3==1.26.0
 
 The following commands can be used to inspect the available versions of Python, Docker and Docker Compose on your system:
 

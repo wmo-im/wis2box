@@ -22,8 +22,9 @@
 
 import argparse
 import glob
+import http.client
+import json
 import os
-import requests
 import subprocess
 
 from packaging.version import Version
@@ -146,38 +147,58 @@ def get_resolved_version() -> None:
     :return: The latest release tag or an error message if not found.
     """
 
-    # read the base version from wis2box.version
-    if not os.path.exists('wis2box.version'):
-        print('wis2box.version file does not exist')
+    # read the base version from VERSION.txt
+    if not os.path.exists('VERSION.txt'):
+        print('VERSION.txt file does not exist')
         exit(1)
 
     base_version = None
-    with open('wis2box.version', 'r') as f:
+    with open('VERSION.txt', 'r') as f:
         base_version = f.readline().strip()
 
     if base_version == 'LOCAL_BUILD':
         return base_version
 
-    url = f'https://api.github.com/repos/{GITHUB_RELEASE_REPO}/releases'
+    api_host = 'api.github.com'
+    api_path = f'/repos/{GITHUB_RELEASE_REPO}/releases'
     headers = {'Accept': 'application/vnd.github.v3+json'}
     options = []
     try:
-        response = requests.get(url, headers=headers)
-        if response.status_code == 200:
-            releases = response.json()
+        # Create an HTTP connection to the GitHub API
+        conn = http.client.HTTPSConnection(api_host)
+        conn.request("GET", api_path, headers=headers)
+
+        # Get the response
+        response = conn.getresponse()
+        if response.status == 200:
+            # Parse the JSON response
+            releases = json.loads(response.read().decode('utf-8'))
             for release in releases:
                 if base_version in release['tag_name']:
                     options.append(release['tag_name'])
         else:
-            print(f'Error fetching latest release tag for {base_version}: {response.status_code}')
-    except requests.exceptions.RequestException as e:
+            print(f'Error fetching latest release tag for {base_version}: {response.status}')
+            exit(1)
+        conn.close()
+    except Exception as e:
         print(f'Error fetching latest release tag for {base_version}: {e}')
+        exit(1)
 
     if options:
-        options.sort(key=lambda v: Version(v), reverse=True)
+        # Sort options by the patch version (assuming format vX.Y.Z)
+        def extract_patch_version(tag):
+            try:
+                # Split the version string by dots after removing the 'v' prefix
+                parts = tag.lstrip('v').split('.')
+                # Return the patch version as an integer (last part)
+                return int(parts[2]) if len(parts) > 2 else 0
+            except (ValueError, IndexError):
+                # malformed version string are sorted last
+                return -1
+        options.sort(key=extract_patch_version, reverse=True)
         return options[0]
     else:
-        print(f'No matching versions found for wis2box.version={base_version}')
+        print(f'No matching versions found for VERSION.txt={base_version}')
         exit(1)
 
     return None
@@ -196,15 +217,15 @@ def remove_old_docker_images() -> None:
     new_images = []
     
     docker_image_files_old = glob.glob('docker-compose.images-*.yml.bak')
-    for file in docker_image_files_old:
-        with open(file, 'r') as f:
+    for file_ in docker_image_files_old:
+        with open(file_, 'r') as f:
             for line in f:
                 if 'image:' in line:
                     old_images.append(line.split(':', 1)[1].strip())
 
     docker_image_files_new = glob.glob('docker-compose.images-*.yml')
-    for file in docker_image_files_new:
-        with open(file, 'r') as f:
+    for file_ in docker_image_files_new:
+        with open(file_, 'r') as f:
             for line in f:
                 if 'image:' in line:
                     new_images.append(line.split(':', 1)[1].strip())
@@ -214,6 +235,16 @@ def remove_old_docker_images() -> None:
             print(f'Removing {image}')
             subprocess.run(['docker', 'rmi', image], stderr=subprocess.DEVNULL)
     
+    # ask user to remove the old docker-compose.images-*.yml.bak file
+    if docker_image_files_old:
+        query = f'Remove {docker_image_files_old[0]} ? (y/n)'
+        print(query)
+        response = input()
+        while response not in ['y', 'n']:
+            print(query)
+            response = input()
+        if response == 'y':
+            os.remove(docker_image_files_old[0])
 
 def update_images_yml() -> str:
     """
@@ -226,10 +257,11 @@ def update_images_yml() -> str:
     # get the latest release tag
     version = get_resolved_version()
     if version == 'LOCAL_BUILD':
-        # use the version of images in main branch
-        url = f'https://raw.githubusercontent.com/{GITHUB_RELEASE_REPO}/refs/heads/main/docker-compose.images.yml'
+        url_host = 'raw.githubusercontent.com'
+        url_path = f'/{GITHUB_RELEASE_REPO}/refs/heads/main/docker-compose.images.yml'
     else:
-        url = f'https://github.com/{GITHUB_RELEASE_REPO}/releases/download/{version}/docker-compose.images.yml'
+        url_host = 'github.com'
+        url_path = f'/{GITHUB_RELEASE_REPO}/releases/download/{version}/docker-compose.images.yml'
 
     current_version = 'Undefined'
     # find currently used version of docker-compose.images-*.yml
@@ -241,7 +273,7 @@ def update_images_yml() -> str:
         print(f'Using latest version {version}, no update of images file required')
         return
     
-    if version not in ['LOCAL_BUILD', '']:
+    if version not in ['LOCAL_BUILD', 'Undefined']:
         # ask the user if they want to update the docker-compose.images-*.yml file
         print(f'Current version={current_version}, latest version={version}')
         query = f'Would you like to update ? (y/n/exit)'
@@ -257,21 +289,27 @@ def update_images_yml() -> str:
         if response == 'y':
             print(f'Updating wis2box to version {version}')
     
-    # download the file and store as docker-compose.images-{resolved_version}.yml
+    # download the file and store as docker-compose.images-{version}.yml
     try:
-        response = requests.get(url)
-        if response.status_code == 200:
+        conn = http.client.HTTPSConnection(url_host)
+        conn.request("GET", url_path)
+        response = conn.getresponse()
+        if response.status == 200:
+            # Write the content to a new file
             with open(f'docker-compose.images-{version}.yml', 'wb') as f:
-                f.write(response.content)
+                f.write(response.read())
         else:
-            print(f'Error fetching docker-compose.images.yml: {response.status_code}')
-    except requests.exceptions.RequestException as e:
+            print(f'Error fetching docker-compose.images.yml: {response.status}')
+            return
+        conn.close()
+    except Exception as e:
         print(f'Error fetching docker-compose.images.yml: {e}')
         raise e
     
     # rename the current docker-compose.images-*.yml file
-    if current_version != 'Undefined':
-        os.rename(f'docker-compose.images-{current_version}.yml', f'docker-compose.images-{current_version}.yml.bak')
+    if os.path.exists(f'docker-compose.images-{current_version}.yml'):
+        os.rename(f'docker-compose.images-{current_version}.yml',
+                  f'docker-compose.images-{current_version}.yml.bak')
 
 def make(args) -> None:
     """

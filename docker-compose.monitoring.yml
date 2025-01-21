@@ -24,7 +24,7 @@ services:
   loki:
     <<: *logging
     container_name: loki
-    image: docker-compose-images-yml
+    image: WIS2BOX-RELEASE
     restart: always
     command: -config.file=/etc/loki/loki-config.yml
     volumes:
@@ -42,7 +42,7 @@ services:
     restart: unless-stopped
     env_file:
       - wis2box.env
-    image: docker-compose-images-yml
+    image: WIS2BOX-RELEASE
     depends_on:
       - mosquitto
       - wis2box-management
@@ -52,7 +52,7 @@ services:
   # prometheus to collect metrics
   prometheus:
     <<: *logging
-    image: docker-compose-images-yml
+    image: WIS2BOX-RELEASE
     container_name: prometheus
     restart: always
     volumes:
@@ -83,7 +83,7 @@ services:
     restart: always
     env_file:
       - wis2box.env
-    image: docker-compose-images-yml
+    image: WIS2BOX-RELEASE
     volumes:
       - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/datasources:/etc/grafana/provisioning/datasources
@@ -112,7 +112,7 @@ services:
   elasticsearch-exporter:
     <<: *logging
     container_name: elasticsearch-exporter
-    image: docker-compose-images-yml
+    image: WIS2BOX-RELEASE
     command:
       - '--es.uri=http://elasticsearch:9200'
       - '--es.indices_settings'

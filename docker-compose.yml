@@ -1,7 +1,7 @@
 services:
   web-proxy:
     container_name: nginx
-    image: docker-compose-images-yml
+    image: WIS2BOX-RELEASE
     restart: always
     env_file:
       - wis2box.env
@@ -13,7 +13,7 @@ services:
 
   wis2box-ui:
     container_name: wis2box-ui
-    image: docker-compose-images-yml
+    image: WIS2BOX-RELEASE
     restart: always
     env_file:
       - wis2box.env
@@ -22,14 +22,14 @@ services:
 
   wis2box-webapp:
     container_name: wis2box-webapp
-    image: docker-compose-images-yml
+    image: WIS2BOX-RELEASE
     env_file:
       - wis2box.env
     restart: always
 
   wis2box-api:
     container_name: wis2box-api
-    image: docker-compose-images-yml
+    image: WIS2BOX-RELEASE
     restart: always
     env_file:
       - wis2box.env
@@ -45,7 +45,7 @@ services:
 
   minio:
     container_name: wis2box-minio
-    image: docker-compose-images-yml
+    image: WIS2BOX-RELEASE
     mem_limit: 512m
     memswap_limit: 512m
     restart: always
@@ -70,7 +70,7 @@ services:
 
   elasticsearch:
     container_name: elasticsearch
-    image: docker-compose-images-yml
+    image: WIS2BOX-RELEASE
     restart: always
     environment:
       - discovery.type=single-node
@@ -104,7 +104,7 @@ services:
 
   mosquitto:
     container_name: mosquitto
-    image: docker-compose-images-yml
+    image: WIS2BOX-RELEASE
     restart: always
     env_file:
       - wis2box.env
@@ -116,7 +116,7 @@ services:
     mem_limit: 1g
     memswap_limit: 1g
     restart: always
-    image: docker-compose-images-yml
+    image: WIS2BOX-RELEASE
     env_file:
       - wis2box.env
     volumes:
@@ -131,7 +131,7 @@ services:
 
   wis2box-auth:
     container_name: wis2box-auth
-    image: docker-compose-images-yml
+    image: WIS2BOX-RELEASE
     restart: always
     env_file:
       - wis2box.env
@@ -142,7 +142,7 @@ services:
 
   wis2downloader:
     container_name: wis2downloader
-    image: docker-compose-images-yml
+    image: WIS2BOX-RELEASE
     restart: always
     env_file:
       - wis2box.env
