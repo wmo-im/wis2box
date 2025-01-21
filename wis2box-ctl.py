@@ -173,7 +173,15 @@ def get_resolved_version() -> None:
     except requests.exceptions.RequestException as e:
         print(f'Error fetching latest release tag for {base_version}: {e}')
 
+    if options:
+        options.sort(key=lambda v: Version(v), reverse=True)
+        return options[0]
+    else:
+        print(f'No matching versions found for wis2box.version={base_version}')
+        exit(1)
+
     return None
+
 
 
 def remove_old_docker_images() -> None:

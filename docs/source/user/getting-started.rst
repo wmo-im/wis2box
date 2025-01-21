@@ -83,7 +83,7 @@ The following commands be used to setup the required software on Ubuntu (20.04 L
     sudo apt-get install -y docker-ce docker-compose-plugin unzip python3-pip
     sudo pip3 install pip --upgrade
     sudo pip3 install pyopenssl --upgrade
-    sudo pip3 install requests==2.26.0 urllib3==1.26.0
+    sudo pip3 install requests==2.26.0 urllib3==1.26.0 packages
 
 For Ubuntu 24.04 LTS, you will need to use a virtual environment to install the required Python packages:
 
