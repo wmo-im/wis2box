@@ -159,7 +159,8 @@ def get_resolved_version() -> None:
 
     api_host = 'api.github.com'
     api_path = f'/repos/{GITHUB_RELEASE_REPO}/releases'
-    headers = {'Accept': 'application/vnd.github.v3+json'}
+    headers = {'Accept': 'application/vnd.github.v3+json',
+               'User-Agent': 'wis2box'}
     options = []
     try:
         # Create an HTTP connection to the GitHub API
