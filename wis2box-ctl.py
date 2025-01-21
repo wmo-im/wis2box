@@ -27,8 +27,6 @@ import json
 import os
 import subprocess
 
-from packaging.version import Version
-
 if subprocess.call(['docker', 'compose'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) > 0:
     DOCKER_COMPOSE_COMMAND = 'docker-compose'
 else:
