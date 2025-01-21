@@ -26,6 +26,7 @@ import http.client
 import json
 import os
 import subprocess
+from urllib.parse import urlparse
 
 if subprocess.call(['docker', 'compose'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) > 0:
     DOCKER_COMPOSE_COMMAND = 'docker-compose'
@@ -138,49 +139,63 @@ def run(cmd, silence_stderr=False) -> None:
     return None
 
 
-def get_resolved_version() -> None:
+def get_resolved_version() -> str:
     """
     Determine the latest matching release tag from the wis2box-release repository.
 
     :return: The latest release tag or an error message if not found.
     """
 
-    # read the base version from VERSION.txt
     if not os.path.exists('VERSION.txt'):
         print('VERSION.txt file does not exist')
         exit(1)
-
-    base_version = None
     with open('VERSION.txt', 'r') as f:
         base_version = f.readline().strip()
-
+    
     if base_version == 'LOCAL_BUILD':
         return base_version
+    # otherwise, fetch the latest release tag from GITHUB_RELEASE_REPO
+    url = f'https://api.github.com/repos/{GITHUB_RELEASE_REPO}/releases'
+    headers = {
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'wis2box'
+    }
+    # Function to make an HTTP request and handle redirects
+    def fetch_url(host, path):
+        conn = http.client.HTTPSConnection(host)
+        conn.request("GET", path, headers=headers)
+        response = conn.getresponse()
+        # Follow redirect if status is 301 or 302
+        if response.status in (301, 302):
+            location = response.getheader('Location')
+            if location:
+                print(f"Redirecting to {location}")
+                conn.close()
+                parsed_url = urlparse(location)
+                return fetch_url(parsed_url.netloc, parsed_url.path)
+        return response
 
-    api_host = 'api.github.com'
-    api_path = f'/repos/{GITHUB_RELEASE_REPO}/releases'
-    headers = {'Accept': 'application/vnd.github.v3+json',
-               'User-Agent': 'wis2box'}
+    parsed_url = urlparse(url)
+    host = parsed_url.netloc
+    path = parsed_url.path
+
     options = []
     try:
-        # Create an HTTP connection to the GitHub API
-        conn = http.client.HTTPSConnection(api_host)
-        conn.request("GET", api_path, headers=headers)
-
-        # Get the response
-        response = conn.getresponse()
+        response = fetch_url(host, path)
         if response.status == 200:
-            # Parse the JSON response
-            releases = json.loads(response.read().decode('utf-8'))
+            data = response.read()
+            releases = json.loads(data.decode('utf-8'))
             for release in releases:
-                if base_version in release['tag_name']:
-                    options.append(release['tag_name'])
+                    if base_version in release['tag_name']:
+                        options.append(release['tag_name'])
+            else:
+                print(f'No matching versions found for VERSION.txt={base_version}')
+                exit(1)
         else:
-            print(f'Error fetching latest release tag for {base_version}: {response.status}')
+            print(f'Error fetching latest release tag: {response.status}')
             exit(1)
-        conn.close()
     except Exception as e:
-        print(f'Error fetching latest release tag for {base_version}: {e}')
+        print(f'Error fetching latest release tag: {e}')
         exit(1)
 
     if options:
@@ -199,9 +214,6 @@ def get_resolved_version() -> None:
     else:
         print(f'No matching versions found for VERSION.txt={base_version}')
         exit(1)
-
-    return None
-
 
 
 def remove_old_docker_images() -> None:
@@ -297,9 +309,13 @@ def update_images_yml() -> str:
             # Write the content to a new file
             with open(f'docker-compose.images-{version}.yml', 'wb') as f:
                 f.write(response.read())
+        elif response.status == 302:
+            url = response.getheader('Location')
+
         else:
             print(f'Error fetching docker-compose.images.yml: {response.status}')
-            return
+            print(f'{response.read()}')
+            exit(1)
         conn.close()
     except Exception as e:
         print(f'Error fetching docker-compose.images.yml: {e}')
