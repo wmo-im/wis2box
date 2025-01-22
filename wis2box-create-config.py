@@ -338,8 +338,8 @@ def create_wis2box_env(host_datadir: str) -> None:
         fh.write('# wis2box public URL\n')
         fh.write(f'WIS2BOX_URL={wis2box_url}\n')
         fh.write('WIS2BOX_UI_CLUSTER=false\n')
-        fh.write(f'WIS2BOX_UI_LOGO="{get_custom_ui_logo() or ""}"\n')
-        fh.write(f'WIS2BOX_UI_LANG={get_default_ui_language()}\n')
+        fh.write('WIS2BOX_UI_LOGO=\n')
+        fh.write('WIS2BOX_UI_LANG="en"\n')
         fh.write('\n')
         fh.write('# api\n')
         fh.write('WIS2BOX_API_TYPE=pygeoapi\n')
@@ -470,7 +470,15 @@ def create_host_datadir() -> str:
                 print("Please check the path and your permissions.")
                 exit()
         print(f"The directory {host_datadir} has been created.")
+    except Exception:
+        print("ERROR:")
+        print(f"The directory {host_datadir} could not be created.")
+        print("Please provide an absolute path to the directory.")
+        print("and check your permissions.")
+        exit()
 
+    # failing to create mappings and downloads directories is not critical
+    try:
         # add mappings directory
         mappings_dir = host_datadir / 'mappings'
         mappings_dir.mkdir(parents=True)
@@ -480,13 +488,8 @@ def create_host_datadir() -> str:
         download_dir.mkdir(mode=0o775)
         if not WINDOWS:
             shutil.chown(download_dir, group='docker')
-
-    except Exception:
-        print("ERROR:")
-        print(f"The directory {host_datadir} could not be created.")
-        print("Please provide an absolute path to the directory.")
-        print("and check your permissions.")
-        exit()
+    except Exception as e:
+        print(f'ERROR: {e}')
 
     return host_datadir
 
