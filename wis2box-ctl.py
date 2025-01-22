@@ -181,7 +181,7 @@ def get_resolved_version() -> str:
     if not os.path.exists('VERSION.txt'):
         print('VERSION.txt file does not exist')
         exit(1)
-    with open('VERSION.txt', 'r') as f:
+    with open('VERSION.txt') as f:
         base_version = f.readline().strip()
     
     if base_version == 'LOCAL_BUILD':
@@ -231,14 +231,14 @@ def remove_old_docker_images() -> None:
     
     docker_image_files_old = glob.glob('docker-compose.images-*.yml.bak')
     for file_ in docker_image_files_old:
-        with open(file_, 'r') as f:
+        with open(file_) as f:
             for line in f:
                 if 'image:' in line:
                     old_images.append(line.split(':', 1)[1].strip())
 
     docker_image_files_new = glob.glob('docker-compose.images-*.yml')
     for file_ in docker_image_files_new:
-        with open(file_, 'r') as f:
+        with open(file_) as f:
             for line in f:
                 if 'image:' in line:
                     new_images.append(line.split(':', 1)[1].strip())
@@ -328,7 +328,7 @@ def make(args) -> None:
     # check if WIS2BOX_SSL_KEY and WIS2BOX_SSL_CERT are set
     ssl_key = None
     ssl_cert = None
-    with open('wis2box.env', 'r') as f:
+    with open('wis2box.env') as f:
         for line in f:
             if 'WIS2BOX_SSL_KEY' in line:
                 ssl_key = line.split('=')[1].strip()
