@@ -16,9 +16,9 @@ and download the .zip file from the Assets section.
 
 .. code-block:: bash
 
-   wget https://github.com/wmo-im/wis2box/releases/download/1.0b8/wis2box-setup-1.0b8.zip
-   unzip wis2box-setup-1.0b8.zip
-   cd wis2box-1.0b8
+   wget https://github.com/wmo-im/wis2box/releases/download/1.0.0rc1/wis2box-setup-1.0.0rc1.zip
+   unzip wis2box-setup-1.0.0rc1.zip
+   cd wis2box-1.0.0rc1
 
 
 Create initial configuration files
