@@ -37,7 +37,7 @@ RUN if [ "$WIS2BOX_PIP3_EXTRA_PACKAGES" = "None" ]; \
 RUN apt-get update -y && apt-get install -y ${DEBIAN_PACKAGES} \
     # install wis2box data pipeline dependencies
     && pip3 install --no-cache-dir \
-    https://github.com/wmo-cop/pyoscar/archive/refs/tags/0.7.0.zip \
+    https://github.com/wmo-cop/pyoscar/archive/refs/tags/0.9.0.zip \
     https://github.com/geopython/pygeometa/archive/refs/tags/0.16.0.zip \
     https://github.com/wmo-im/pywis-topics/archive/refs/tags/0.2.0.zip \
     # install cap validator
