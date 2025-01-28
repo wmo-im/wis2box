@@ -46,7 +46,7 @@ Environment variables can be set in `wis2box.env` to customize the behavior of t
 Using the csv2bufr plugin with a custom template
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
-For example, to create a custom template for the csv2bufr plugin, follow these steps:
+To create a custom template for the csv2bufr plugin in the wis2box, you can follow these steps:
 
 Login to the wis2box-api container:
 
