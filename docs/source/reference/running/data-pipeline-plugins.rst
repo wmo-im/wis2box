@@ -52,7 +52,7 @@ Login to the wis2box-api container:
 
 .. code-block:: bash
 
-    python3 wis2box-ct.py login wis2box-api
+    python3 wis2box-ctl.py login wis2box-api
 
 Within the wis2box-api container you can using the command `csv2bufr mappings create` and provide the BUFR-descriptors you want to encode as arguments.
 Make sure to redirect the output to a file in the `/data/wis2box/mappings` directory (which is mapped to the host system at `$WIS2BOX_HOST_DATADIR/mappings`)
