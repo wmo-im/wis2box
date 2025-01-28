@@ -41,7 +41,7 @@ services:
       interval: 5s
       retries: 100
     volumes:
-      - ${WIS2BOX_HOST_DATADIR}/mappings:/data/wis2box/mappings:ro
+      - ${WIS2BOX_HOST_DATADIR}/mappings:/data/wis2box/mappings:rw
 
   minio:
     container_name: wis2box-minio
