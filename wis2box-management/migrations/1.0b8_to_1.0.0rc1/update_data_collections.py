@@ -50,10 +50,11 @@ def update_datasets(days: int = 5):
     for obj in list_content(storage_path_public):
         # check if obj['basedir'] is formatted like YYYY-MM-DD
         if not re.match(r'^\d{4}-\d{2}-\d{2}$', obj['basedir']):
-            print(f'Skipping {obj['basedir']}')
             continue
-        print(f'basedir: {obj['basedir']}')
-        print(f'filename: {obj['filename']}')
+        # check if filename is .bufr4
+        if not obj['filename'].endswith('.bufr4'):
+            continue
+        # check if older than days
         if older_than(obj['basedir'], days):
             continue
         else:
