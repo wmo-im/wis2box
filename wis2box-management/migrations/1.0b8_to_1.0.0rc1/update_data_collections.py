@@ -78,4 +78,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     # Execute
     LOGGER.info('Running wis2box migration from 1.0b8 to 1.0.0rc1 (update data collections)')  # noqa
-    update_datasets(days_to_backfill=args.days_to_backfill)
+    update_datasets(days=args.days_to_backfill)
