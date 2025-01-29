@@ -308,7 +308,7 @@ def update_images_yml() -> str:
             current_version = file.split('-')[2].split('.')[0]
 
     if current_version == version:
-        print(f'Using latest version {version}, no update of images file required')
+        print(f'Current-version={version}, no update of images file required')
         # docker pull the images to ensure they are up to date
         with open(f'docker-compose.images-{version}.yml', 'r') as f:
             for line in f:
