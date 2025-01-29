@@ -61,7 +61,7 @@ def update_datasets(days: int = 5):
             # re-upload data
             storage_path = obj['fullpath']
             print(f'Re-uploading {storage_path}')
-            put_data(storage_path, get_data(storage_path))
+            put_data(get_data(storage_path),storage_path)
             # sleep 1. second to allow for the data to be processed
             time.sleep(1.)
 
@@ -76,4 +76,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     # Execute
     LOGGER.info('Running wis2box migration from 1.0b8 to 1.0.0rc1 (update data collections)')  # noqa
-    update_datasets(days_to_backfill=args.days_to_backfill)
+    update_datasets(days=args.days_to_backfill)
