@@ -178,6 +178,11 @@ def get_resolved_version() -> str:
     :return: The latest release tag or an error message if not found.
     """
 
+    # check if we running in a local build environment
+    if os.path.exists('.git') and os.path.isdir('wis2box-management'):
+        print('wis2box-management directory exists, assuming local build')
+        return 'LOCAL_BUILD'
+    # otherwise we are in a release environment and VERSION.txt should exist
     if not os.path.exists('VERSION.txt'):
         print('VERSION.txt file does not exist')
         exit(1)
