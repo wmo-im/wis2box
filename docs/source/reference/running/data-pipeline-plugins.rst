@@ -85,7 +85,7 @@ After creating the custom template, you can use it in the csv2bufr plugin config
 
 And/or you can select the new template in the Plugin Configuration of the Dataset Mappings Editor in the wis2box-webapp:
 
-.. image:: ../_static/csv2bufr_custom_template.png
+.. image:: /_static/csv2bufr_custom_template.png
    :alt: csv2bufr custom template
    :align: center
 
