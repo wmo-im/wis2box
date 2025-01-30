@@ -62,7 +62,7 @@ def update_datasets(days: int = 5):
             # re-upload data
             storage_path = obj['fullpath']
             print(f'Re-process {storage_path}')
-            put_data(storage_path, get_data(storage_path))
+            put_data(data=get_data(storage_path), path=storage_path)
             # sleep 1. second to allow for the data to be processed
             time.sleep(1.)
 
