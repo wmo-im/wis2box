@@ -273,7 +273,7 @@ def build_local_images() -> None:
 
     image_file = glob.glob('docker-compose.images-*.yml')[0]
     # overwrite the image tag with the local image
-    with open(image_file, 'r') as f:
+    with open(image_file) as f:
         data = f.readlines()
     with open(image_file, 'w') as f:
         for line in data:
@@ -310,7 +310,7 @@ def update_images_yml() -> str:
     if current_version == version:
         print(f'Current version={version}, no update of images file required')
         # docker pull the images to ensure they are up to date
-        with open(f'docker-compose.images-{version}.yml', 'r') as f:
+        with open(f'docker-compose.images-{version}.yml') as f:
             for line in f:
                 if 'image:' in line:
                     image = line.split(':', 1)[1].strip()
