@@ -304,7 +304,7 @@ def update_images_yml() -> str:
     current_version = 'Undefined'
     # find currently used version of docker-compose.images-*.yml
     for file_ in os.listdir('.'):
-        if file_.startswith('docker-compose.images-') and file.endswith('.yml'):
+        if file_.startswith('docker-compose.images-') and file_.endswith('.yml'):
             current_version = file_.split('images-')[1].split('.yml')[0]
 
     if current_version == version:
