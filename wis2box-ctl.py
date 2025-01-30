@@ -303,9 +303,9 @@ def update_images_yml() -> str:
 
     current_version = 'Undefined'
     # find currently used version of docker-compose.images-*.yml
-    for file in os.listdir('.'):
-        if file.startswith('docker-compose.images-') and file.endswith('.yml'):
-            current_version = file.split('-')[2].split('.')[0]
+    for file_ in os.listdir('.'):
+        if file_.startswith('docker-compose.images-') and file.endswith('.yml'):
+            current_version = file_.split('images-')[1].split('.yml')[0]
 
     if current_version == version:
         print(f'Current version={version}, no update of images file required')
@@ -343,9 +343,9 @@ def update_images_yml() -> str:
                      
     # rename any other docker-compose.images-*.yml file to .bak
     image_files = glob.glob('docker-compose.images-*.yml')
-    for file in image_files:
-        if file != f'docker-compose.images-{version}.yml':
-            os.rename(file, file + '.bak')
+    for file_ in image_files:
+        if file_ != f'docker-compose.images-{version}.yml':
+            os.rename(file_, file_ + '.bak')
     
 def make(args) -> None:
     """
