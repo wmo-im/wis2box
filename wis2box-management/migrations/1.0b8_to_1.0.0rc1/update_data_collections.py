@@ -64,7 +64,7 @@ def update_datasets(days: int = 5):
             print(f'Re-process {storage_path}')
             put_data(data=get_data(storage_path), path=storage_path)
             # sleep 1. second to allow for the data to be processed
-            time.sleep(1.)
+            time.sleep(1)
 
 
 if __name__ == '__main__':
