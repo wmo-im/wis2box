@@ -43,6 +43,8 @@ DOCKER_COMPOSE_ARGS = """
 
 GITHUB_RELEASE_REPO = 'wmo-im/wis2box-release'
 
+LOCAL_BUILD_IMAGES = ['wis2box-broker', 'wis2box-management', 'wis2box-mqtt-metrics-collector']
+
 parser = argparse.ArgumentParser(
     description='manage a composition of docker containers to implement a WIS2-in-a-box',
     formatter_class=argparse.RawTextHelpFormatter)
@@ -264,6 +266,24 @@ def remove_old_docker_images() -> None:
         if response == 'y':
             os.remove(file_)
 
+def build_local_images() -> None:
+    for image in LOCAL_BUILD_IMAGES:
+        print(f'Building {image}')
+        run(split(f'docker build -t {image} ./{image}'))
+
+    image_file = glob.glob('docker-compose.images-*.yml')[0]
+    # overwrite the image tag with the local image
+    with open(image_file) as f:
+        data = f.readlines()
+    with open(image_file, 'w') as f:
+        for line in data:
+            if 'image: ' in line:
+                image = line.split(':', 1)[1].strip()
+                image_name = image.split(':')[0].split('/')[-1]
+                if image_name in LOCAL_BUILD_IMAGES:
+                    line = f'    image: {image_name}\n'
+            f.write(line)
+
 def update_images_yml() -> str:
     """
 
@@ -283,12 +303,21 @@ def update_images_yml() -> str:
 
     current_version = 'Undefined'
     # find currently used version of docker-compose.images-*.yml
-    for file in os.listdir('.'):
-        if file.startswith('docker-compose.images-') and file.endswith('.yml'):
-            current_version = file.split('-')[2].split('.')[0]
+    for file_ in os.listdir('.'):
+        if file_.startswith('docker-compose.images-') and file_.endswith('.yml'):
+            current_version = file_.split('images-')[1].split('.yml')[0]
 
     if current_version == version:
-        print(f'Using latest version {version}, no update of images file required')
+        print(f'Current version={version}, no update of images file required')
+        # docker pull the images to ensure they are up to date
+        with open(f'docker-compose.images-{version}.yml') as f:
+            for line in f:
+                if 'image:' in line:
+                    image = line.split(':', 1)[1].strip()
+                    if image in LOCAL_BUILD_IMAGES:
+                        continue
+                    print(f'Pulling {image}')
+                    run(split(f'docker pull {image}'))
         return
     
     if version not in ['LOCAL_BUILD', 'Undefined']:
@@ -311,12 +340,12 @@ def update_images_yml() -> str:
     data = fetch_data_from_url(f'https://{url_host}{url_path}')
     with open(f'docker-compose.images-{version}.yml', 'wb') as f:
         f.write(data)
-    
+                     
     # rename any other docker-compose.images-*.yml file to .bak
     image_files = glob.glob('docker-compose.images-*.yml')
-    for file in image_files:
-        if file != f'docker-compose.images-{version}.yml':
-            os.rename(file, file + '.bak')
+    for file_ in image_files:
+        if file_ != f'docker-compose.images-{version}.yml':
+            os.rename(file_, file_ + '.bak')
     
 def make(args) -> None:
     """
@@ -363,8 +392,7 @@ def make(args) -> None:
     if args.command == "config":
         run(split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} config'))
     elif args.command == "build":
-        run(split(
-            f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} build {containers}'))
+        build_local_images()
     elif args.command in ["up", "start", "start-dev"]:
         # if no docker-compose.images-*.yml files exist, run get_images()
         run(split(
@@ -399,7 +427,6 @@ def make(args) -> None:
         # update docker_compose_args with the latest docker-compose.images-*.yml file
         docker_image_file = glob.glob('docker-compose.images-*.yml')[0]
         docker_compose_args = DOCKER_COMPOSE_ARGS + f' --file {docker_image_file}'
-        run(split(f'{DOCKER_COMPOSE_COMMAND} {docker_compose_args} pull'))
         # if the argument "--restart" is passed, restart all containers and clean old images
         if "--restart" in args.args:
             run(split(
