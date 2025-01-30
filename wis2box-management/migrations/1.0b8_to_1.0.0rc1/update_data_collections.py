@@ -32,6 +32,7 @@ from wis2box.util import older_than
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
 setup_logger(loglevel=LOG_LEVEL)
 
+
 def update_datasets(days: int = 5):
     LOGGER.info('Recreating backend collections')
     api_backend = load_backend()
@@ -60,10 +61,11 @@ def update_datasets(days: int = 5):
         else:
             # re-upload data
             storage_path = obj['fullpath']
-            print(f'Re-uploading {storage_path}')
+            print(f'Re-process {storage_path}')
             put_data(storage_path, get_data(storage_path))
             # sleep 1. second to allow for the data to be processed
             time.sleep(1.)
+
 
 if __name__ == '__main__':
     # Parse command-line arguments
@@ -72,7 +74,7 @@ if __name__ == '__main__':
                         action='store',
                         help='Number of days to backfill',
                         type=int,
-                        default=5)	
+                        default=5)
     args = parser.parse_args()
     # Execute
     LOGGER.info('Running wis2box migration from 1.0b8 to 1.0.0rc1 (update data collections)')  # noqa
