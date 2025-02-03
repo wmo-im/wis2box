@@ -34,6 +34,12 @@ from wis2box.env import AUTH_URL, DOCKER_API_URL
 
 LOGGER = logging.getLogger(__name__)
 
+VALID_PATHS = [
+    'collections/stations',
+    'processes/wis2box',
+    'wis2downloader'
+]
+
 
 def create_token(path: str, token: str) -> bool:
     """
@@ -160,7 +166,11 @@ def add_token(ctx, metadata_id, path, yes, token):
             raise click.ClickException(f'Metadata identifier {metadata_id} not found in data mappings') # noqa
         path = metadata_id
     elif path is not None:
-        path = path
+        if path not in VALID_PATHS:
+            msg = f'Not a valid path, valid paths are {VALID_PATHS}'
+            raise click.ClickException(msg)
+        else:
+            path = path
     else:
         raise click.ClickException('Missing path or metadata_id')
 
