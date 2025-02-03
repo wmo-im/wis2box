@@ -39,6 +39,7 @@ jobs:
         rules_file_name: '.zap/rules.tsv'
         allow_issue_writing: 'false'
         fail_action: 'true'
+        artifact_name: 'zap-ui'
     - name: ZAP baseline Scan on wis2box-webapp 🕵️‍♂️
       uses: zaproxy/action-baseline@v0.14.0
       env:
@@ -49,3 +50,4 @@ jobs:
         rules_file_name: '.zap/rules.tsv'
         allow_issue_writing: 'false'
         fail_action: 'true'
+        artifact_name: 'zap-webapp'
