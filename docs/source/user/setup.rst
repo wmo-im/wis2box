@@ -62,7 +62,17 @@ Run the following command to start wis2box:
 
    python3 wis2box-ctl.py start
 
-This might take a while the first time, as Docker images will be downloaded.
+When running this command for the first time, you will see the following output:
+
+.. code-block:: bash
+
+   No docker-compose.images-*.yml files found, creating one
+   Current version=Undefined, latest version=1.0.0rc1
+   Would you like to update ? (y/n/exit)
+
+Select ``y`` and the the script will create the file ``docker-compose.images-1.0.0rc1.yml`` file, download the required Docker images and start the services.
+
+Downloading the images may take some time depending on your internet connection speed. This step is only required the first time you start wis2box.
 
 .. note::
 
