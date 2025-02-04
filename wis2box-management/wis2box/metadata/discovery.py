@@ -252,7 +252,7 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
 
         if 'language' in record['properties']:
             _ = record['properties'].pop('language')
-        
+
         distribution_links = dm.get_distribution_links(record, format_='wcmp2')
         # update links, do not extend or we get duplicates
         record['links'] = distribution_links
