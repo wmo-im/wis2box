@@ -90,6 +90,9 @@ class DiscoveryMetadata(BaseMetadata):
         if record['properties']['contacts'][0].get('organization') is None:
             record['properties']['contacts'][0]['organization'] = record['properties']['contacts'][0].pop('name', "NOTSET")  # noqa
 
+        if 'language' in record['properties']:
+            _ = record['properties'].pop('language')
+
         try:
             phone = record['properties']['contacts'][0]['phones'][0]['value']
             if isinstance(phone, int):
