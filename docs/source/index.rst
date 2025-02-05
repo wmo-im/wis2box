@@ -2,12 +2,11 @@
 What is WIS2 in a box?
 ======================
 
-WIS2 in a box (wis2box) is a **Reference Implementation of a WIS2 Node**.
-It is developed and supported by WMO Secretariat and Members to **help accelerate the implementation of WIS 2.0**.
+WIS2 in a box (wis2box) is a Reference Implementation of a WIS2 Node, designed to help accelerate international data and metadata exchange on WIS 2.0.
 
-wis2box was designed to be to be **cost-effective** and **low-barrier** to operate, to enable any WMO Member to publish and receive internationally exchanged weather data.
+wis2box was designed to be to be cost-effective and low barrier to operate, to enable any WMO Member to publish and receive internationally exchanged weather data.
 
-**wis2box is Free and Open Source** and released under the `Apache License <https://docs.wis2box.wis.wmo.int/en/latest/community/license.html>`_
+wis2box is Free and Open Source and released under the `Apache License <https://docs.wis2box.wis.wmo.int/en/latest/community/license.html>`_.
 
 wis2box consists of multiple software packages that provide all services required to run a WIS2 Node, namely:
 
@@ -18,9 +17,9 @@ wis2box consists of multiple software packages that provide all services require
 - `github.com/wmo-im/wis2box-auth <https://github.com/wmo-im/wis2box-auth>`_ Access control functionality to datasets exposed via wis2box and to apply authentication API services used by wis2box-webapp
 - `github.com/wmo-im/wis2downloader <https://github.com/wmo-im/wis2downloader>`_ Subscription and download capability for access to data published by other WIS2 Nodes
 
-**WIS2 in a box is released using a Deployment Bundle that simplifies the setup of a WIS2 Node by providing all required services as Docker containers.**
+WIS2 in a box is released using a Deployment Bundle that simplifies the setup of a WIS2 Node by providing all required services as Docker containers.
 
-The release archive consists of a set of Docker Compose files and Python scripts, referencing pre-built Docker images stored in the wis2box software repositories on GitHub
+The release archive consists of a set of Docker Compose files and Python scripts, referencing pre-built Docker images stored in the wis2box software repositories on GitHub.
 
 In addition to the wis2box software packages mentioned above, wis2box  leverages the following Free and Open Source Software (FOSS):
 
