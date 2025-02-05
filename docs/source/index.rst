@@ -1,6 +1,6 @@
-=======
-Welcome
-=======
+======================
+What is WIS2 in a box?
+======================
 
 WIS2 in a box (wis2box) is a **Reference Implementation of a WIS2 Node**.
 It is developed and supported by WMO Secretariat and Members to **help accelerate the implementation of WIS 2.0**.
