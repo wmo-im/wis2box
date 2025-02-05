@@ -1,35 +1,55 @@
-=======
-Welcome
-=======
+======================
+What is WIS2 in a box?
+======================
 
-WIS2 in a box (wis2box) is a Free and Open Source (FOSS) Reference Implementation of a WMO WIS2 Node. The project provides a plug and play toolset to ingest, process, and publish weather/climate/water data using standards-based approaches in alignment with the WIS2 principles.  wis2box also provides access to all data in the `WIS2 network <https://community.wmo.int/activity-areas/wis>`_.  wis2box is designed to have a low barrier to entry for data providers, providing enabling infrastructure and services for data discovery, access, and visualization.
+WIS2 in a box (wis2box) is a Reference Implementation of a WIS2 Node, designed to help accelerate international data and metadata exchange on WIS 2.0.
 
-wis2box enables World Meteorological Organization (WMO) members to publish and download data through the WIS2 network. The main features are:
+wis2box was designed to be to be cost-effective and low barrier to operate, to enable any WMO Member to publish and receive internationally exchanged weather data.
 
-* WIS2 compliant: easily register your wis2box to WIS2 infrastructure, conformant to WMO data and metadata standards
-* WIS2 compliance: enables sharing of data to WIS2 using standards in compliance with WIS2 technical regulations
-* event driven or interactive data ingest/process/publishing pipelines
-* visualization of stations/data on interactive maps
-* discovery metadata management and publishing
-* download/access of data from WIS 2 network to your local environment
-* standards-based data services and access mechanisms:
-* robust and extensible plugin framework. Write your own data processing engines and integrate seamlessly into wis2box!
-* Free and Open Source (FOSS)
-* containerized: use of Docker, enabling easy deployment to cloud or on-premises infrastructure
+wis2box is Free and Open Source and released under the `Apache License <https://docs.wis2box.wis.wmo.int/en/latest/community/license.html>`_.
 
-wis2box deployments currently sharing data on the WIS2 network can be found at https://demo.wis2box.wis.wmo.int.
+wis2box consists of multiple software packages that provide all services required to run a WIS2 Node, namely:
+
+- `github.com/wmo-im/wis2box <https://github.com/wmo-im/wis2box>`_ Core services to publish WIS2 Discovery Metadata and  Notification Messages
+- `github.com/wmo-im/wis2box-api <https://github.com/wmo-im/wis2box-api>`_  Application Programming Interface that provides an OGC API to discover, access, and visualize notifications, data -collections and configuration (datasets, stations) and which provides support for data handling of WMO encodings and formats
+- `github.com/wmo-im/wis2box-ui <https://github.com/wmo-im/wis2box-ui>`_ User interface to display datasets and provide visualizations for ingested data
+- `github.com/wmo-im/wis2box-webapp <https://github.com/wmo-im/wis2box-webappp>`_ Web -application to interactively configure wis2box and monitor published data
+- `github.com/wmo-im/wis2box-auth <https://github.com/wmo-im/wis2box-auth>`_ Access control functionality to datasets exposed via wis2box and to apply authentication API services used by wis2box-webapp
+- `github.com/wmo-im/wis2downloader <https://github.com/wmo-im/wis2downloader>`_ Subscription and download capability for access to data published by other WIS2 Nodes
+
+WIS2 in a box is released using a Deployment Bundle that simplifies the setup of a WIS2 Node by providing all required services as Docker containers.
+
+The release archive consists of a set of Docker Compose files and Python scripts, referencing pre-built Docker images stored in the wis2box software repositories on GitHub.
+
+In addition to the wis2box software packages mentioned above, wis2box  leverages the following Free and Open Source Software (FOSS):
+
+- storage using `MinIO <https://min.io/docs/minio/container/index.html>`_
+- MQTT broker using `mosquitto <https://mosquitto.org/>`_ 
+- Web proxy using `nginx <https://nginx.org/en/>`_
+- `OGC API <https://ogcapi.ogc.org/>`_ capability using `pygeoapi <https://pygeoapi.io/>`_
+- API backend using `Elasticsearch <https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html>`_
+- Monitoring dashboards using `Grafana <https://grafana.com/docs/grafana/latest/setup-grafana/configure-docker/>`_	
+- Metrics collection using `Prometheus <https://prometheus.io/>`_
+- Log storage using `Loki <https://grafana.com/docs/loki/latest/setup/install/docker/>`_	
+- WMO format encoding/decoding using `ecCodes <https://confluence.ecmwf.int/display/ECC>`_ 
+
+Requirements to run a WIS2 Node using the wis2box deployment bundle:
+
+1.	**Host instance that is routed to the public Internet**, hosted in the cloud or in a high-performance on-premise data-centre
+2.	**Host OS using Ubuntu with Python, Docker and Docker Compose pre-installed**
+
+Please follow :ref:`getting-started` for more information on the host-requirements and to start running a WIS2 Node using the wis2box deployment bundle.
 
 User guide
 ==========
 
-The user guide helps you setup your own wis2box instance.
+The user guide provides step-by-step instructions to start running a WIS2 Node using the wis2box deployment bundle.
 
 .. toctree::
    :maxdepth: 1
    :caption: User guide
    :name: toc-user
 
-   user/introduction
    user/getting-started
    user/setup
    user/data-ingest
