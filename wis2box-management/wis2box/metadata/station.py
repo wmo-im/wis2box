@@ -323,6 +323,16 @@ def publish_from_csv(path: Path, new_topic: str = None) -> None:
     LOGGER.debug(f'Publishing station list from {path}')
     station_list = []
     with path.open() as fh:
+        # checking if file is in standard utf-8
+        try:
+            _ = fh.readlines()
+        except UnicodeDecodeError as err:
+            msg = f'Invalid utf-8 in station metadata file: {err}'
+            LOGGER.error(msg)
+            raise RuntimeError(msg)
+
+        fh.seek(0)
+
         reader = csv.DictReader(fh)
 
         for row in reader:
