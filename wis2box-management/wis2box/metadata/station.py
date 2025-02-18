@@ -28,7 +28,6 @@ import json
 import logging
 from pathlib import Path
 from typing import Iterator, Tuple, Union
-import codecs
 
 from elasticsearch import Elasticsearch
 from owslib.ogcapi.features import Features
