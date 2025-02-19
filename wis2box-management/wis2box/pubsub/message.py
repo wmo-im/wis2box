@@ -158,7 +158,7 @@ class WISNotificationMessage(PubSubMessage):
 
         if operation == 'update':
             link_rel = 'update'
-            
+
         links = [{
                 'rel': link_rel,
                 'type': mimetype,
