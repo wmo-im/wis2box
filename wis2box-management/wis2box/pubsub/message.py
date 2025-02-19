@@ -154,19 +154,17 @@ class WISNotificationMessage(PubSubMessage):
         if self.datetime is None:
             LOGGER.warning('Missing data datetime')
 
+        link_rel = 'canonical'
+
+        if operation == 'update':
+            link_rel = 'update'
+            
         links = [{
-                'rel': 'canonical',
+                'rel': link_rel,
                 'type': mimetype,
                 'href': public_file_url,
                 'length': self.length
         }]
-        if operation == 'update':
-            links.append({
-                'rel': 'update',
-                'type': mimetype,
-                'href': public_file_url,
-                'length': self.length
-            })
 
         self.message = {
             'id': str(uuid.uuid4()),
