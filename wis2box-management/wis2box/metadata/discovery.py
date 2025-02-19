@@ -125,9 +125,11 @@ class DiscoveryMetadata(BaseMetadata):
         LOGGER.info('Adding distribution links')
 
         identifier = record['id']
-        topic = record['properties']['wmo:topicHierarchy']
+        topic = record['properties'].get('wmo:topicHierarchy')
 
         links = []
+        if 'links' in record:
+            links = record['links']
         plugins = get_plugins(record)
         # check if any plugin-names contains 2geojson
         has_2geojson = any('2geojson' in plugin for plugin in plugins)
