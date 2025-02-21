@@ -314,7 +314,13 @@ def publish_discovery_metadata(metadata: Union[dict, str]):
         put_data(data_bytes, storage_path, 'application/geo+json')
 
         LOGGER.debug('Publishing message')
-        centre_id = record['properties']['wmo:topicHierarchy'].split('/')[3]
+        # check that id starts with 'urn:wmo:md:'
+        if not record['id'].startswith('urn:wmo:md:'):
+            msg = f'Invalid WCMP2 id: {record["id"]}, does not start with urn:wmo:md:'  # noqa
+            LOGGER.error(msg)
+            raise RuntimeError(msg)
+        # parse centre id from identifier
+        centre_id = record['id'].split(':')[3]
         try:
             message = publish_broker_message(record, storage_path,
                                              centre_id)
