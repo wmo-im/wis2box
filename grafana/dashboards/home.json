@@ -654,6 +654,17 @@
           "hide": false,
           "queryType": "range",
           "refId": "D"
+        },
+                {
+          "datasource": {
+            "type": "loki",
+            "uid": "P55348B596EBB51C3"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "{container_name=\"wis2box-api\"} |= `ECCODES ERROR`",
+          "queryType": "range",
+          "refId": "E"
         }
       ],
       "title": "wis2box ERRORs and WARNINGs",
