@@ -58,7 +58,7 @@ def test_pywispubsub():
         'cg-met:surface-weather-observations': 0, # noqa
         'int-wmo-test:surface-weather-observations:drifting-buoys': 2, # noqa
         'int-wmo-test:surface-weather-observations:wind-profile': 1, # noqa
-        'int-wmo-test:surface-weather-observations:ship': 5, # noqa
+        'int-wmo-test:surface-weather-observations:ship': 6, # noqa
         'it-meteoam:surface-weather-observations': 31, # noqa
         'int-wmo-test:cap': 1, # noqa
         'org-daycli-test:surface-climate-observations:daily': 30 # noqa
@@ -121,8 +121,8 @@ def test_metadata_station_publish():
 
     stations = r.json()
 
-    assert stations['numberReturned'] == 104
-    assert stations['numberMatched'] == 104
+    assert stations['numberReturned'] == 105
+    assert stations['numberMatched'] == 105
 
 
 def test_metadata_discovery_publish():
@@ -321,7 +321,7 @@ def test_message_api():
         'dz-meteoalgerie:surface': 28,  # excludes metadata
         'ro-rnimh': 50,
         'cg-met:surface': 14,  # excludes metadata
-        'int-wmo': 13,
+        'int-wmo': 14,
         'cn-cma:grapes': 10,  # excludes metadata
         'org-daycli': 31
     }
