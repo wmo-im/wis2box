@@ -26,6 +26,7 @@ import logging
 from owslib.ogcapi.records import Features, Records
 
 from wis2box import cli_helpers
+from wis2box.api import upsert_collection_item
 from wis2box.env import HOST_DATADIR, DATADIR, DOCKER_API_URL
 from wis2box.metadata.discovery import discovery_metadata
 from wis2box.metadata.station import station
@@ -110,13 +111,13 @@ def import_metadata(ctx, filepath, verbosity):
     oar = Records(DOCKER_API_URL)
     oaf = Features(DOCKER_API_URL)
 
-    dataset_prev_ids = oar.collection_items('discovery-metadata').get(
+    dataset_prev_items = oar.collection_items('discovery-metadata').get(
         'features', []
     )
-    station_prev_ids = oaf.collection_items('stations').get('features', [])
+    station_prev_items = oaf.collection_items('stations').get('features', [])
 
-    dataset_count = len(dataset_prev_ids)
-    station_count = len(station_prev_ids)
+    dataset_count = len(dataset_prev_items)
+    station_count = len(station_prev_items)
 
     if dataset_count > 0 or station_count > 0:
         click.echo(
@@ -129,8 +130,8 @@ def import_metadata(ctx, filepath, verbosity):
             click.echo('Import cancelled.')
             return
 
-    dataset_ids = {item.get('id') for item in dataset_prev_ids}
-    station_ids = {item.get('id') for item in station_prev_ids}
+    dataset_ids = {item.get('id') for item in dataset_prev_items}
+    station_ids = {item.get('id') for item in station_prev_items}
 
     for item in dataset_items:
         identifier = item.get('id')
@@ -138,11 +139,10 @@ def import_metadata(ctx, filepath, verbosity):
             raise click.ClickException('Discovery metadata item missing id')
 
         if identifier in dataset_ids:
-            click.echo(f'Update dataset with id={identifier}')
-            oar.collection_item_update('discovery-metadata', identifier, item)
+            click.echo(f'Overwriting discovery item with id={identifier}')
         else:
-            click.echo(f'Add new dataset with id={identifier}')
-            oar.collection_item_create('discovery-metadata', item)
+            click.echo(f'Adding new discovery item with id={identifier}')
+        upsert_collection_item('discovery-metadata', item)
 
     for item in station_items:
         identifier = item.get('id')
@@ -150,11 +150,10 @@ def import_metadata(ctx, filepath, verbosity):
             raise click.ClickException('Station item missing id')
 
         if identifier in station_ids:
-            click.echo(f'Update station with id={identifier}')
-            oaf.collection_item_update('stations', identifier, item)
+            click.echo(f'Overwriting station item with id={identifier}')
         else:
-            click.echo(f'Add new station with id={identifier}')
-            oaf.collection_item_create('stations', item)
+            click.echo(f'Adding new station item with id={identifier}')
+        upsert_collection_item('stations', item)
 
     click.echo('Import complete.')
 
