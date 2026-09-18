@@ -26,7 +26,7 @@ import logging
 from owslib.ogcapi.records import Features, Records
 
 from wis2box import cli_helpers
-from wis2box.env import DATADIR, DOCKER_API_URL
+from wis2box.env import HOST_DATADIR, DATADIR, DOCKER_API_URL
 from wis2box.metadata.discovery import discovery_metadata
 from wis2box.metadata.station import station
 from wis2box.util import json_serial
@@ -58,9 +58,9 @@ def export_metadata(ctx, verbosity):
             f'Could not retrieve discovery-metadata items: {err}'
         )
 
-    discovery_items = []
+    dataset_items = []
     for record in records['features']:
-        discovery_items.append(record)
+        dataset_items.append(record)
 
     try:
         oaf = Features(DOCKER_API_URL)
@@ -75,18 +75,91 @@ def export_metadata(ctx, verbosity):
         station_items.append(record)
 
     payload = {
-        'discovery-metadata': discovery_items,
+        'discovery-metadata': dataset_items,
         'stations': station_items
     }
 
     with open(export_file, 'w', encoding='utf-8') as fh:
         json.dump(payload, fh, default=json_serial)
 
-    click.echo(f'Exported {len(discovery_items)} discovery-metadata items')
+    click.echo(f'Exported {len(dataset_items)} discovery-metadata items')
     click.echo(f'Exported {len(station_items)} stations items')
     click.echo(f'Wrote metadata export to {export_file}')
+    export_file_on_host = HOST_DATADIR / 'export' / 'metadata-export.json'
+    click.echo(f'Available on docker-host at {export_file_on_host}')
+
+
+@click.command('import')
+@click.pass_context
+@cli_helpers.ARGUMENT_FILEPATH
+@cli_helpers.OPTION_VERBOSITY
+def import_metadata(ctx, filepath, verbosity):
+    """Import discovery metadata and stations from JSON export."""
+
+    try:
+        payload = json.load(filepath)
+    except Exception as err:
+        raise click.ClickException(f'Could not read import file: {err}')
+
+    if not isinstance(payload, dict):
+        raise click.ClickException('Import file must contain a JSON object')
+
+    dataset_items = payload.get('discovery-metadata', [])
+    station_items = payload.get('stations', [])
+
+    oar = Records(DOCKER_API_URL)
+    oaf = Features(DOCKER_API_URL)
+
+    dataset_prev_ids = oar.collection_items('discovery-metadata').get(
+        'features', []
+    )
+    station_prev_ids = oaf.collection_items('stations').get('features', [])
+
+    dataset_count = len(dataset_prev_ids)
+    station_count = len(station_prev_ids)
+
+    if dataset_count > 0 or station_count > 0:
+        click.echo(
+            'WARNING: Existing items found in collections. '
+            f'datasets={dataset_count}, '
+            f'stations={station_count}. '
+            'Items with the same id will be overwritten.'
+        )
+        if not click.confirm('Do you want to continue? [y/N]', default=False):
+            click.echo('Import cancelled.')
+            return
+
+    dataset_ids = {item.get('id') for item in dataset_prev_ids}
+    station_ids = {item.get('id') for item in station_prev_ids}
+
+    for item in dataset_items:
+        identifier = item.get('id')
+        if identifier is None:
+            raise click.ClickException('Discovery metadata item missing id')
+
+        if identifier in dataset_ids:
+            click.echo(f'Update dataset with id={identifier}')
+            oar.collection_item_update('discovery-metadata', identifier, item)
+        else:
+            click.echo(f'Add new dataset with id={identifier}')
+            oar.collection_item_create('discovery-metadata', item)
+
+    for item in station_items:
+        identifier = item.get('id')
+        if identifier is None:
+            raise click.ClickException('Station item missing id')
+
+        if identifier in station_ids:
+            click.echo(f'Update station with id={identifier}')
+            oaf.collection_item_update('stations', identifier, item)
+        else:
+            click.echo(f'Add new station with id={identifier}')
+            oaf.collection_item_create('stations', item)
+
+    click.echo('Import complete.')
 
 
 metadata.add_command(discovery_metadata)
 metadata.add_command(station)
 metadata.add_command(export_metadata)
+metadata.add_command(import_metadata)
