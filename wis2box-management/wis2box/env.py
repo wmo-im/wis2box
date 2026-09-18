@@ -39,6 +39,8 @@ except (OSError, TypeError):
     LOGGER.error(msg)
     raise EnvironmentError(msg)
 
+HOST_DATADIR = Path(os.environ.get('WIS2BOX_HOST_DATADIR', DATADIR))
+
 API_TYPE = os.environ.get('WIS2BOX_API_TYPE', 'pygeoapi')
 API_URL = os.environ.get('WIS2BOX_API_URL', 'http://localhost/oapi')
 API_BACKEND_TYPE = os.environ.get('WIS2BOX_API_BACKEND_TYPE', 'Elasticsearch')
