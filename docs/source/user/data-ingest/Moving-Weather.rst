@@ -1,7 +1,7 @@
 .. _Moving-Weather:
 
 Using IBL Moving Weather
-====================
+========================
 
 `IBL Moving Weather <https://www.iblsoft.com/products/moving-weather/>`_ is a commercial solution providing an automated meteorological switching system (MSS) used for the routine distribution of meteorological messages as well as for generic file switching.
 
