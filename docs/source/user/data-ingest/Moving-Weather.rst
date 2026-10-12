@@ -28,11 +28,11 @@ The upload directory should be set to `/wis2box-incoming/<your-metadata-identifi
 
 Provide the MinIO storage username and password defined in your wis2box.env file to enable authentication.
 
-Make sure to use `%FN` in the temporary file name format to avoid Moving Weather creating temporary files.
+Make sure to use `%FN` (instead of the default `.%FN`) in the temporary file name format to avoid Moving Weather creating temporary files.
 
 .. image:: ../../_static/MW-sftp-configuration-example.png
     :width: 1000
     :alt: MW SFTP configuration example
 
-**NOTE**: the MinIO-SFTP does not support renaming the temporary files uploaded via SFTP, using `%FN` means that the final name will be used from the upload from the beginning.  
+**NOTE**: the MinIO-SFTP does not support renaming the temporary files uploaded via SFTP, using `%FN` means that the final name will be used for the upload from the beginning.  
 
