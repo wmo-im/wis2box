@@ -34,5 +34,5 @@ Make sure to use `%FN` in the temporary file name format to avoid Moving Weather
     :width: 1000
     :alt: MW SFTP configuration example
 
-**NOTE*: the MinIO-SFTP does not support renaming the temporary files uploaded via SFTP, using `%FN` means that the final name will be used from the upload from the beginning.  
+**NOTE**: the MinIO-SFTP does not support renaming the temporary files uploaded via SFTP, using `%FN` means that the final name will be used from the upload from the beginning.  
 
