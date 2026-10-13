@@ -57,6 +57,7 @@ The user guide provides step-by-step instructions to start running a WIS2 Node u
    user/data-ingest
    user/gts-headers-in-wis2
    user/public-services-setup
+   user/export-import-for-backup
    user/wis2node-operations
    user/cap-alerts
    user/downloading-data
