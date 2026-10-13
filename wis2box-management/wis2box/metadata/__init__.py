@@ -34,6 +34,25 @@ from wis2box.util import json_serial
 
 LOGGER = logging.getLogger(__name__)
 
+def get_all_collection_items(client, collection_id: str) -> list:
+    """Retrieve all items of a collection in pages of PAGE_SIZE"""
+
+    items = []
+    offset = 0
+    max_items = 100
+
+    while True:
+        response = client.collection_items(
+            collection_id, limit=max_items, offset=offset
+        )
+        features = response.get('features', [])
+        items.extend(features)
+        if len(features) < max_items:
+            break
+        offset += max_items
+
+    return items
+
 
 @click.group()
 def metadata():
@@ -52,28 +71,22 @@ def export_metadata(ctx, verbosity):
     export_file = export_dir / 'metadata-export.json'
 
     try:
-        oar = Records(DOCKER_API_URL)
-        records = oar.collection_items('discovery-metadata', limit=1000)
+        dataset_items = get_all_collection_items(
+            Records(DOCKER_API_URL), 'discovery-metadata'
+        )
     except Exception as err:
         raise click.ClickException(
             f'Could not retrieve discovery-metadata items: {err}'
         )
 
-    dataset_items = []
-    for record in records['features']:
-        dataset_items.append(record)
-
     try:
-        oaf = Features(DOCKER_API_URL)
-        records = oaf.collection_items('stations', limit=1000)
+        station_items = get_all_collection_items(
+            Features(DOCKER_API_URL), 'stations'
+        )
     except Exception as err:
         raise click.ClickException(
             f'Could not retrieve stations items: {err}'
         )
-
-    station_items = []
-    for record in records['features']:
-        station_items.append(record)
 
     payload = {
         'discovery-metadata': dataset_items,
