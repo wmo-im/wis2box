@@ -34,6 +34,7 @@ from wis2box.util import json_serial
 
 LOGGER = logging.getLogger(__name__)
 
+
 def get_all_collection_items(client, collection_id: str) -> list:
     """Retrieve all items of a collection in pages of PAGE_SIZE"""
 
