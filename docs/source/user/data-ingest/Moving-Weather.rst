@@ -1,11 +1,11 @@
 .. _Moving-Weather:
 
-Using Moving Weather
-====================
+Using IBL Moving Weather
+========================
 
-`Moving Weather <https://www.iblsoft.com/products/moving-weather/>`_ is a commercial solution providing an automated meteorological switching system (MSS) used for the routine distribution of meteorological messages as well as for generic file switching.
+`IBL Moving Weather <https://www.iblsoft.com/products/moving-weather/>`_ is a commercial solution providing an automated meteorological switching system (MSS) used for the routine distribution of meteorological messages as well as for generic file switching.
 
-WMO Members using Moving Weather can enable automated data ingestion into wis2box using the SFTP functionality of MinIO.
+WMO Members using IBL Moving Weather can enable automated data ingestion into wis2box using the SFTP functionality of MinIO.
 
 Configuring MW to send data into wis2box SFTP
 ---------------------------------------------
@@ -26,12 +26,13 @@ Assuming the wis2box instance and MW are hosted on the same network can you prov
 
 The upload directory should be set to `/wis2box-incoming/<your-metadata-identifier>`, where <your-metadata-identifier> is the dataset identifier or the topic in the data mappings configured for your dataset in wis2box.
 
-Finally, provide the MinIO storage username and password defined in your wis2box.env file to enable authentication.
+Provide the MinIO storage username and password defined in your wis2box.env file to enable authentication.
+
+Make sure to use `%FN` (instead of the default `.%FN`) in the temporary file name format to avoid Moving Weather creating temporary files.
 
 .. image:: ../../_static/MW-sftp-configuration-example.png
     :width: 1000
     :alt: MW SFTP configuration example
 
-**Make sure to leave leave Temp. file name format empty**: the MinIO-SFTP does not support renaming the temporary files uploaded via SFTP,
- so the temporary file name format should be left empty to avoid issues with the data ingest process.  
+**NOTE**: the MinIO-SFTP does not support renaming the temporary files uploaded via SFTP, using `%FN` means that the final name will be used for the upload from the beginning.  
 
