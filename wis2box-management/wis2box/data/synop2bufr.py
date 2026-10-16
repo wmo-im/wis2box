@@ -54,6 +54,12 @@ class ObservationDataSYNOP2BUFR(BaseAbstractData):
             LOGGER.debug('input_data is a Path')
             filename = input_data.name
 
+        file_size = self.get_size(input_data)
+        if file_size == 0:
+            msg = f'{filename} is empty (0 bytes)'
+            LOGGER.error(msg)
+            raise ValueError(msg)
+
         file_match = self.validate_filename_pattern(filename)
 
         if file_match is None:

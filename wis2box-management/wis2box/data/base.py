@@ -316,6 +316,24 @@ class BaseAbstractData:
         raise NotImplementedError()
 
     @staticmethod
+    def get_size(input_data: Union[Path, bytes]) -> int:
+        """Return input data size in bytes
+
+        :param input_data: `Path` or `bytes` of data
+
+        :returns: `int` of data size in bytes
+        """
+
+        if isinstance(input_data, Path):
+            return input_data.stat().st_size
+        elif isinstance(input_data, bytes):
+            return len(input_data)
+        else:
+            msg = f'Invalid data type: {type(input_data)}'
+            LOGGER.error(msg)
+            raise TypeError(msg)
+
+    @staticmethod
     def as_bytes(input_data):
         """Return input data as bytes
 

@@ -65,6 +65,12 @@ class CAPMessageData(BaseAbstractData):
         :returns: `bool` of result
         """
 
+        file_size = self.get_size(input_data)
+        if file_size == 0:
+            msg = f'{filename} is empty (0 bytes)'
+            LOGGER.error(msg)
+            raise ValueError(msg)
+
         [rmk, suffix] = filename.rsplit('.', 1)
         input_bytes = self.as_bytes(input_data)
 

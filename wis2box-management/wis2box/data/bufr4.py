@@ -54,6 +54,12 @@ class ObservationDataBUFR(BaseAbstractData):
             LOGGER.debug('input_data is a Path')
             filename = input_data.name
 
+        file_size = self.get_size(input_data)
+        if file_size == 0:
+            msg = f'{filename} is empty (0 bytes)'
+            LOGGER.error(msg)
+            raise ValueError(msg)
+
         if self.validate_filename_pattern(filename) is None:
             msg = f'{filename} did not match {self.file_filter}'
             LOGGER.error(msg)
