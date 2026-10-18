@@ -51,7 +51,9 @@ class MQTTPubSubClient(BasePubSubClient):
 
         msg = f'Connecting to broker {self.broker} with id {self.client_id}'
         LOGGER.debug(msg)
-        self.conn = mqtt_client.Client(self.client_id)
+        self.conn = mqtt_client.Client(
+            callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2,
+            client_id=self.client_id)
 
         self.conn.enable_logger(logger=LOGGER)
 

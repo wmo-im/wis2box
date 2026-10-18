@@ -4,8 +4,8 @@ iso3166
 isodate
 minio
 OWSLib
-paho-mqtt<2
+paho-mqtt>=2
 pygeometa
-pywcmp==0.13.1
+pywcmp==0.14.5
 PyYAML
 requests
