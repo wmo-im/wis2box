@@ -6,6 +6,6 @@ minio
 OWSLib
 paho-mqtt>=2
 pygeometa
-pywcmp==0.14.5
+pywcmp==0.13.1
 PyYAML
 requests
