@@ -181,7 +181,10 @@ class WISNotificationMessage(PubSubMessage):
         if operation == 'update':
             link_rel = 'update'
 
-        if self.geometry['type'] not in ['Point', 'Polygon']:
+        if self.geometry is None:
+            geometry_ = self.geometry
+        elif self.geometry['type'] not in ['Point', 'Polygon']:
+            LOGGER.debug(f"geometry type: {self.geometry['type']}; suppressing")  # noqa
             geometry_ = None
         else:
             geometry_ = self.geometry
