@@ -45,7 +45,7 @@ A basic example of a MQTT-subscriber-loop in python to extract the URL from the 
           client_specific_function(link['href'])
 
     # Create an MQTT client and connect to the broker
-    client = mqtt_client.Client('MyDataClientID')
+    client = mqtt_client.Client(callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2, client_id='MyDataClientID')
     client = username_pw_set('everyone', 'everyone')
     client.tls_set(tls_version=2)
     client.connect('globalbroker.meteo.fr', port=8883)

@@ -19,25 +19,20 @@
 #
 ###############################################################################
 
+import json
 import os
 import logging
-
-import requests
-
-import paho.mqtt.client as mqtt
+from queue import Queue
 import random
-
 import sys
-import json
+from threading import Thread
 import time
 
-from queue import Queue
-from threading import Thread
-
-from prometheus_client import start_http_server, Counter, Gauge
-
-# de-register default-collectors
-from prometheus_client import REGISTRY, PROCESS_COLLECTOR, PLATFORM_COLLECTOR
+import paho.mqtt.client as mqtt
+from prometheus_client import (Counter, Gauge, PROCESS_COLLECTOR,
+                               PLATFORM_COLLECTOR, REGISTRY,
+                               start_http_server)
+import requests
 
 message_buffer = []
 
@@ -51,9 +46,10 @@ REGISTRY.unregister(
 WIS2BOX_LOGGING_LOGLEVEL = os.environ.get('WIS2BOX_LOGGING_LOGLEVEL')
 # gotta log to stdout so docker logs sees the python-logs
 logging.basicConfig(stream=sys.stdout)
-# create our own logger using same log-level as wis2box
-logger = logging.getLogger('mqtt_metrics_collector')
-logger.setLevel(WIS2BOX_LOGGING_LOGLEVEL)
+# create our own LOGGER using same log-level as wis2box
+
+LOGGER = logging.getLogger('mqtt_metrics_collector')
+LOGGER.setLevel(WIS2BOX_LOGGING_LOGLEVEL)
 
 INTERRUPT = False
 
@@ -132,7 +128,7 @@ class MetricsCollector:
                 json_data = json.loads(res.content)
                 if 'description' in json_data:
                     if json_data['description'] == 'Collection not found':
-                        logger.warning("Station collection not (yet) found in wis2box-api, sleep and try again") # noqa
+                        LOGGER.warning("Station collection not (yet) found in wis2box-api, sleep and try again") # noqa
                         time.sleep(1)
                     else:
                         msg = f' wis2box-api returned unexpected response: {json_data}' # noqa
@@ -145,20 +141,21 @@ class MetricsCollector:
                 raise Exception(msg)
         self.update_stations_gauge(station_list)
 
-    def sub_connect(self, client, userdata, flags, rc, properties=None):
+    def sub_connect(self, client, userdata, flags, reason_code, properties):
         """
         function executed 'on_connect' for paho.mqtt.client
 
         :param client: client-object associated to 'on_connect'
         :param userdata: userdata
         :param flags: flags
-        :param rc: return-code received 'on_connect'
+        :param reason_code: return-code received 'on_connect'
         :param properties: properties
 
         :returns: `None`
         """
 
-        logger.info(f"on connection to subscribe: {mqtt.connack_string(rc)}")
+        msg = f"on connection to subscribe: {mqtt.connack_string(reason_code)}"
+        LOGGER.info(msg)
         for s in ["wis2box/#", '$SYS/broker/messages/#']:
             client.subscribe(s, qos=1)
 
@@ -174,7 +171,7 @@ class MetricsCollector:
         :returns: `None`
         """
 
-        logger.debug(f"Received message on topic={msg.topic}")
+        LOGGER.debug(f"Received message on topic={msg.topic}")
 
         if msg.topic.startswith('$SYS/broker/messages/'):
             if msg.topic.endswith('/sent'):
@@ -201,7 +198,7 @@ class MetricsCollector:
                 elif topic.startswith('wis2box/notifications'):
                     wsi = m['properties'].get('wigos_station_identifier', 'none') # noqa
                     if (wsi,) not in notify_wsi_total._metrics:
-                        logger.warning(f"New station detected: {wsi}, init metrics") # noqa
+                        LOGGER.warning(f"New station detected: {wsi}, init metrics") # noqa
                         station_wsi.labels(wsi).set(1)
                         notify_wsi_total.labels(wsi).inc(0)
                         failure_wsi_total.labels(wsi).inc(0)
@@ -239,8 +236,11 @@ class MetricsCollector:
         r = random.Random()
         client_id = f"mqtt_metrics_collector_{r.randint(1, 1000):04d}"
         try:
-            logger.info(f"setup connection: host={broker_host}, user={broker_username}") # noqa
-            client = mqtt.Client(client_id=client_id, protocol=mqtt.MQTTv5)
+            LOGGER.info(f"setup connection: host={broker_host}, user={broker_username}") # noqa
+            client = mqtt.Client(
+                callback_api_version=mqtt.CallbackAPIVersion.VERSION2,
+                client_id=client_id, protocol=mqtt.MQTTv5)
+
             client.on_connect = self.sub_connect
             client.on_message = self.sub_mqtt_metrics
             client.username_pw_set(broker_username, broker_password)
@@ -248,7 +248,7 @@ class MetricsCollector:
             print("Connected to broker, start MQTT-loop")
             client.loop_start()  # Start MQTT loop in background
         except Exception as err:
-            logger.error(f"Failed to setup MQTT-client with error: {err}")
+            LOGGER.error(f"Failed to setup MQTT-client with error: {err}")
 
     def start(self):
         """

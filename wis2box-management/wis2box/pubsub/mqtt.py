@@ -51,7 +51,9 @@ class MQTTPubSubClient(BasePubSubClient):
 
         msg = f'Connecting to broker {self.broker} with id {self.client_id}'
         LOGGER.debug(msg)
-        self.conn = mqtt_client.Client(self.client_id)
+        self.conn = mqtt_client.Client(
+            callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2,
+            client_id=self.client_id)
 
         self.conn.enable_logger(logger=LOGGER)
 
@@ -112,7 +114,7 @@ class MQTTPubSubClient(BasePubSubClient):
         :returns: `None`
         """
 
-        def on_connect(client, userdata, flags, rc):
+        def on_connect(client, userdata, flags, rc, properties):
             if rc == 0:
                 LOGGER.debug(f'Connected to broker {self.broker}')
                 LOGGER.debug(f'Subscribing to topic {topic} ')
@@ -122,7 +124,7 @@ class MQTTPubSubClient(BasePubSubClient):
                 msg = 'Failed to connect to MQTT-broker:'
                 LOGGER.error(f'{msg} {mqtt_client.connack_string(rc)}')
 
-        def on_disconnect(client, userdata, rc):
+        def on_disconnect(client, userdata, flags, rc, properties):
             LOGGER.debug(f'Disconnected from {self.broker}')
 
         LOGGER.debug(f'Subscribing to broker {self.broker}, topic {topic}')
@@ -149,7 +151,7 @@ class MQTTPubSubClient(BasePubSubClient):
         :returns: `bool` of test result
         """
 
-        def on_connect(client, userdata, flags, rc):
+        def on_connect(client, userdata, flags, rc, properties):
             if rc == 0:
                 LOGGER.debug(f'Test: Connected to broker {self.broker}')
                 client.subscribe(topic, qos=1)
