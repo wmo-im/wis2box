@@ -181,6 +181,14 @@ class WISNotificationMessage(PubSubMessage):
         if operation == 'update':
             link_rel = 'update'
 
+        if self.geometry is None:
+            geometry_ = self.geometry
+        elif self.geometry['type'] not in ['Point', 'Polygon']:
+            LOGGER.debug(f"geometry type: {self.geometry['type']}; suppressing")  # noqa
+            geometry_ = None
+        else:
+            geometry_ = self.geometry
+
         links = [{
                 'rel': link_rel,
                 'type': mimetype,
@@ -192,7 +200,7 @@ class WISNotificationMessage(PubSubMessage):
             'id': str(uuid.uuid4()),
             'type': 'Feature',
             'conformsTo': ['http://wis.wmo.int/spec/wnm/1/conf/core'],
-            'geometry': self.geometry,
+            'geometry': geometry_,
             'properties': {
                 'data_id': data_id,
                 'datetime': self.datetime,
