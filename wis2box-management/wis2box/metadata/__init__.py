@@ -20,12 +20,39 @@
 ###############################################################################
 
 import click
+import json
 import logging
 
+from owslib.ogcapi.records import Features, Records
+
+from wis2box import cli_helpers
+from wis2box.api import upsert_collection_item
+from wis2box.env import HOST_DATADIR, DATADIR, DOCKER_API_URL
 from wis2box.metadata.discovery import discovery_metadata
 from wis2box.metadata.station import station
+from wis2box.util import json_serial
 
 LOGGER = logging.getLogger(__name__)
+
+
+def get_all_collection_items(client, collection_id: str) -> list:
+    """Retrieve all items of a collection in pages of PAGE_SIZE"""
+
+    items = []
+    offset = 0
+    max_items = 100
+
+    while True:
+        response = client.collection_items(
+            collection_id, limit=max_items, offset=offset
+        )
+        features = response.get('features', [])
+        items.extend(features)
+        if len(features) < max_items:
+            break
+        offset += max_items
+
+    return items
 
 
 @click.group()
@@ -34,5 +61,118 @@ def metadata():
     pass
 
 
+@click.command('export')
+@click.pass_context
+@cli_helpers.OPTION_VERBOSITY
+def export_metadata(ctx, verbosity):
+    """Export discovery and station metadata to metadata-export.json."""
+
+    export_dir = DATADIR / 'export'
+    export_dir.mkdir(parents=True, exist_ok=True)
+    export_file = export_dir / 'metadata-export.json'
+
+    try:
+        dataset_items = get_all_collection_items(
+            Records(DOCKER_API_URL), 'discovery-metadata'
+        )
+    except Exception as err:
+        raise click.ClickException(
+            f'Could not retrieve discovery-metadata items: {err}'
+        )
+
+    try:
+        station_items = get_all_collection_items(
+            Features(DOCKER_API_URL), 'stations'
+        )
+    except Exception as err:
+        raise click.ClickException(
+            f'Could not retrieve stations items: {err}'
+        )
+
+    payload = {
+        'discovery-metadata': dataset_items,
+        'stations': station_items
+    }
+
+    with open(export_file, 'w', encoding='utf-8') as fh:
+        json.dump(payload, fh, default=json_serial)
+
+    click.echo(f'Exported {len(dataset_items)} discovery-metadata items')
+    click.echo(f'Exported {len(station_items)} stations items')
+    click.echo(f'Wrote metadata export to {export_file}')
+    export_file_on_host = HOST_DATADIR / 'export' / 'metadata-export.json'
+    click.echo(f'Available on docker-host at {export_file_on_host}')
+
+
+@click.command('import')
+@click.pass_context
+@cli_helpers.ARGUMENT_FILEPATH
+@cli_helpers.OPTION_VERBOSITY
+def import_metadata(ctx, filepath, verbosity):
+    """Import discovery metadata and stations from JSON export."""
+
+    try:
+        payload = json.load(filepath)
+    except Exception as err:
+        raise click.ClickException(f'Could not read import file: {err}')
+
+    if not isinstance(payload, dict):
+        raise click.ClickException('Import file must contain a JSON object')
+
+    dataset_items = payload.get('discovery-metadata', [])
+    station_items = payload.get('stations', [])
+
+    oar = Records(DOCKER_API_URL)
+    oaf = Features(DOCKER_API_URL)
+
+    dataset_prev_items = oar.collection_items('discovery-metadata').get(
+        'features', []
+    )
+    station_prev_items = oaf.collection_items('stations').get('features', [])
+
+    dataset_count = len(dataset_prev_items)
+    station_count = len(station_prev_items)
+
+    if dataset_count > 0 or station_count > 0:
+        click.echo(
+            'WARNING: Existing items found in collections. '
+            f'datasets={dataset_count}, '
+            f'stations={station_count}. '
+            'Items with the same id will be overwritten.'
+        )
+        if not click.confirm('Do you want to continue? [y/N]', default=False):
+            click.echo('Import cancelled.')
+            return
+
+    dataset_ids = {item.get('id') for item in dataset_prev_items}
+    station_ids = {item.get('id') for item in station_prev_items}
+
+    for item in dataset_items:
+        identifier = item.get('id')
+        if identifier is None:
+            raise click.ClickException('Discovery metadata item missing id')
+
+        if identifier in dataset_ids:
+            click.echo(f'Overwriting discovery item with id={identifier}')
+        else:
+            click.echo(f'Adding new discovery item with id={identifier}')
+        upsert_collection_item('discovery-metadata', item)
+
+    for item in station_items:
+        identifier = item.get('id')
+        if identifier is None:
+            raise click.ClickException('Station item missing id')
+
+        if identifier in station_ids:
+            click.echo(f'Overwriting station item with id={identifier}')
+        else:
+            click.echo(f'Adding new station item with id={identifier}')
+        upsert_collection_item('stations', item)
+
+    click.echo('Import complete.')
+
+
 metadata.add_command(discovery_metadata)
 metadata.add_command(station)
+metadata.add_command(export_metadata)
+metadata.add_command(import_metadata)
